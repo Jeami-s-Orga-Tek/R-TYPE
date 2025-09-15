@@ -1,0 +1,16 @@
+*.o
+*.a
+*.so
+.vscode
+*.out
+*.~
+\#*\#
+*.gcno
+*.gcda
+*.hi
+coding-style-reports.log
+vgcore.*
+*.zip
+build
+r-type_server
+r-type_client
