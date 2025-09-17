@@ -13,6 +13,7 @@
 #include <chrono>
 #include <thread>
 #include "Button.hpp"
+#include "Menu.hpp"
 
 using boost::asio::ip::udp;
 
@@ -75,26 +76,26 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "R-Type Client");
     window.setFramerateLimit(60);
+
+    Menu menu(window.getSize());
+    if (!menu.loadResources()) {
+        std::cerr << "Erreur" << std::endl;
+    }
     
     sf::Font font;
     if (!font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
-        std::cerr << "Impossible de charger la police, utilisation de la police par défaut" << std::endl;
+        std::cerr << "Erreur" << std::endl;
     }
-    Button connectButton(sf::Vector2f(300, 250), sf::Vector2f(200, 50), "Connecter au Serveur", font);
+    sf::Vector2u windowSize = window.getSize();
+    Button connectButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), 
+                        sf::Vector2f(200, 50), "Connecter au Serveur", font);
  
-    sf::Text title;
-    title.setFont(font);
-    title.setString("R-Type Client");
-    title.setCharacterSize(48);
-    title.setFillColor(sf::Color::White);
-    title.setPosition(250, 100);
-    
     sf::Text statusText;
     statusText.setFont(font);
     statusText.setString("Cliquez sur le bouton pour vous connecter");
     statusText.setCharacterSize(16);
     statusText.setFillColor(sf::Color::Yellow);
-    statusText.setPosition(200, 350);
+    statusText.setPosition(windowSize.x/2 - 150, windowSize.y - 130);
     
     bool isConnected = false;
     
@@ -111,15 +112,21 @@ int main()
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
                 window.close();
             }
+            if (event.type == sf::Event::Resized) {
+                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                window.setView(sf::View(visibleArea));
+                menu.updateWindowSize(sf::Vector2u(event.size.width, event.size.height));
+                connectButton = Button(sf::Vector2f(event.size.width/2 - 100, event.size.height - 200), 
+                    sf::Vector2f(200, 50), "Connecter au Serveur", font);
+                statusText.setPosition(event.size.width/2 - 150, event.size.height - 130);
+            }
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    
                     if (connectButton.isClicked(mousePos)) {
                         std::cout << "Bouton de connexion cliqué!" << std::endl;
                         statusText.setString("Connexion en cours...");
                         statusText.setFillColor(sf::Color::Yellow);
-                        
                         if (connectToServer("127.0.0.1", 8080)) {
                             statusText.setString("Connecté au serveur!");
                             statusText.setFillColor(sf::Color::Green);
@@ -132,17 +139,17 @@ int main()
                     }
                 }
             }
-            
             if (event.type == sf::Event::MouseMoved) {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 connectButton.setHovered(connectButton.isClicked(mousePos));
             }
+            menu.handleEvent(event, window);
         }
+        menu.update();
         window.clear(sf::Color::Black);
-        window.draw(title);
+        menu.draw(window);
         connectButton.draw(window);
         window.draw(statusText);
-        
         if (isConnected) {
             sf::CircleShape indicator(10);
             indicator.setFillColor(sf::Color::Green);
