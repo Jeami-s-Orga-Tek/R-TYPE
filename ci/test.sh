@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
 set -e
-ctest --test-dir build --output-on-failure
+
+mkdir -p build
+
+cd build
+
+ctest --output-on-failure
