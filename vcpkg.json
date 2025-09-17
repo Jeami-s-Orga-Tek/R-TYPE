@@ -7,9 +7,6 @@
     "sdl2-ttf",
     "boost-asio",
     "boost-system",
-    "sfml",
-    "sfml-audio",
-    "sfml-graphics",
-    "sfml-window"
+    "sfml"
   ]
 }
