@@ -56,7 +56,7 @@ jobs:
           submodules: recursive
 
       - name: Install Chocolatey dependencies
-        run: choco install -y cmake ninja python
+        run: choco install -y cmake --version=3.20.0 ninja python
 
       - name: Configure CMake
         run: cmake -S . -B $env:BUILD_DIR -G "Ninja" -DCMAKE_BUILD_TYPE=Release
