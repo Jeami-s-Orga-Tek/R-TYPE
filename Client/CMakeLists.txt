@@ -9,10 +9,10 @@ include_directories(include)
 
 file(GLOB SOURCES src/*.cpp)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(SFML REQUIRED sfml-all)
+include(../cmake/CPM.cmake)
 
-CPMAddPackage("gh:sfml/sfml#3.0.0")
+CPMAddPackage("gh:sfml/sfml#2.6.2")
+
 CPMAddPackage(
   NAME Boost
   VERSION 1.86.0
@@ -24,9 +24,14 @@ CPMAddPackage(
 
 add_executable(r-type_client ${SOURCES})
 
-target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIRS})
-target_link_libraries(r-type_client PRIVATE 
-    ${SFML_LIBRARIES}
-    ${Boost_LIBRARIES}
-    pthread
+link_directories(${CMAKE_BINARY_DIR}/libengine)
+target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+target_link_libraries(r-type_client PRIVATE
+  engine
+  sfml-graphics
+  sfml-window
+  sfml-system
+  ${SFML_LIBRARIES}
+  ${Boost_LIBRARIES}
+  pthread
 )
