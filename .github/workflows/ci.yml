@@ -26,20 +26,8 @@ jobs:
           sudo apt-get install -y build-essential cmake ninja-build git python3 python3-pip \
             autoconf automake libtool libltdl-dev libx11-dev libxext-dev libglu1-mesa-dev libfreetype6-dev
 
-      - name: Cache vcpkg
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/vcpkg
-          key: vcpkg-${{ hashFiles('vcpkg.json') }}
-
-      - name: Install project dependencies
-        run: |
-          git clone https://github.com/microsoft/vcpkg.git vcpkg
-          ./vcpkg/bootstrap-vcpkg.sh
-          ./vcpkg/vcpkg install --triplet x64-linux
-
       - name: Configure CMake
-        run: cmake -S . -B $BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
+        run: cmake -S . -B $BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release
 
       - name: Build project
         run: cmake --build $BUILD_DIR --parallel
@@ -69,21 +57,8 @@ jobs:
       - name: Install Chocolatey dependencies
         run: choco install -y cmake ninja python
 
-      - name: Cache vcpkg
-        uses: actions/cache@v4
-        with:
-          path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-          key: vcpkg-windows-${{ hashFiles('vcpkg.json') }}
-
-      - name: Install project dependencies
-        run: |
-          git clone https://github.com/microsoft/vcpkg.git vcpkg
-          .\vcpkg\bootstrap-vcpkg.bat
-          .\vcpkg\vcpkg.exe install --triplet x64-windows
-        shell: powershell
-
       - name: Configure CMake
-        run: cmake -S . -B $env:BUILD_DIR -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=.\vcpkg\scripts\buildsystems\vcpkg.cmake
+        run: cmake -S . -B $env:BUILD_DIR -G "Ninja" -DCMAKE_BUILD_TYPE=Release
         shell: powershell
 
       - name: Build project
