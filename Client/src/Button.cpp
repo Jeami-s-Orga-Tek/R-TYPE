@@ -17,12 +17,13 @@ Button::Button(sf::Vector2f position, sf::Vector2f size, const std::string& text
     
     label.setFont(font);
     label.setString(text);
-    label.setCharacterSize(20);
+    label.setCharacterSize(24);
     label.setFillColor(sf::Color::White);
+    label.setStyle(sf::Text::Bold);
     sf::FloatRect textBounds = label.getLocalBounds();
     label.setPosition(
-        position.x + (size.x - textBounds.width) / 2,
-        position.y + (size.y - textBounds.height) / 2
+        position.x + (size.x - textBounds.width) / 2 - textBounds.left,
+        position.y + (size.y - textBounds.height) / 2 - textBounds.top
     );
 }
 

@@ -83,16 +83,18 @@ int main()
     }
     
     sf::Font font;
-    if (!font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
-        std::cerr << "Erreur" << std::endl;
+    if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
+        std::cerr << "Impossible de charger la police Carlito, essai avec Symbola..." << std::endl;
+        if (!font.loadFromFile("/usr/share/fonts/gdouros-symbola/Symbola.ttf")) {
+            std::cerr << "Erreur: Impossible de charger toutes les polices disponibles!" << std::endl;
+        }
     }
     sf::Vector2u windowSize = window.getSize();
     Button connectButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), 
-                        sf::Vector2f(200, 50), "Connecter au Serveur", font);
+                        sf::Vector2f(200, 50), "Connect", font);
  
     sf::Text statusText;
     statusText.setFont(font);
-    statusText.setString("Cliquez sur le bouton pour vous connecter");
     statusText.setCharacterSize(16);
     statusText.setFillColor(sf::Color::Yellow);
     statusText.setPosition(windowSize.x/2 - 150, windowSize.y - 130);
@@ -117,7 +119,7 @@ int main()
                 window.setView(sf::View(visibleArea));
                 menu.updateWindowSize(sf::Vector2u(event.size.width, event.size.height));
                 connectButton = Button(sf::Vector2f(event.size.width/2 - 100, event.size.height - 200), 
-                    sf::Vector2f(200, 50), "Connecter au Serveur", font);
+                    sf::Vector2f(200, 50), "Connect", font);
                 statusText.setPosition(event.size.width/2 - 150, event.size.height - 130);
             }
             if (event.type == sf::Event::MouseButtonPressed) {
