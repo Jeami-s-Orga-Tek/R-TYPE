@@ -12,9 +12,11 @@
 
 #include "Entity.hpp"
 
-class System {
-    public:
-        std::set<Entity> entities {};
+namespace Engine {
+    class System {
+        public:
+            std::set<Entity> entities {};
+    };
 };
 
 #endif /* !SYSTEM_HPP_ */

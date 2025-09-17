@@ -14,10 +14,12 @@
 #define MAX_ENTITIES 2048
 #define MAX_COMPONENTS 64
 
-using Entity = std::uint32_t;
+namespace Engine {
+    using Entity = std::uint32_t;
 
-using ComponentType = std::uint16_t;
+    using ComponentType = std::uint16_t;
 
-using Signature = std::bitset<MAX_COMPONENTS>;
+    using Signature = std::bitset<MAX_COMPONENTS>;
+};
 
 #endif /* !ENTITY_HPP_ */

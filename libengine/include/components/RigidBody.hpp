@@ -10,9 +10,13 @@
 
 #include "Utils.hpp"
 
-typedef struct ComponentRigidBody_s {
-    Vec2 velocity;
-    Vec2 acceleration;
-} ComponentRigidBody;
+namespace Engine {
+    namespace Components {
+        typedef struct ComponentRigidBody_s {
+            Utils::Vec2 velocity;
+            Utils::Vec2 acceleration;
+        } ComponentRigidBody;
+    };
+};
 
 #endif /* !RIGIDBODY_HPP_ */

@@ -8,10 +8,10 @@
 #include "ComponentArray.hpp"
 
 template <typename T>
-void ComponentArray<T>::insertEntity(Entity entity, T component)
+void Engine::ComponentArray<T>::insertEntity(Engine::Entity entity, T component)
 {
     if (entity_to_index_map.find(entity) != entity_to_index_map.end())
-        throw ComponentArrayError("Entity already in component array !!!!!!");
+        throw Engine::ComponentArrayError("Entity already in component array !!!!!!");
 
     entity_to_index_map[entity] = size;
     index_to_entity_map[size] = entity;
@@ -20,17 +20,17 @@ void ComponentArray<T>::insertEntity(Entity entity, T component)
 }
 
 template <typename T>
-void ComponentArray<T>::removeEntity(Entity entity)
+void Engine::ComponentArray<T>::removeEntity(Engine::Entity entity)
 {
     if (entity_to_index_map.find(entity) == entity_to_index_map.end())
-        throw ComponentArrayError("Trying to delete entity not in component array !!!!!!");
+        throw Engine::ComponentArrayError("Trying to delete entity not in component array !!!!!!");
 
     std::size_t removed_entity_index = entity_to_index_map[entity];
     std::size_t index_of_last_elem = size - 1;
 
     components[removed_entity_index] = components[index_of_last_elem];
 
-    Entity entity_of_last_elem = index_to_entity_map[index_of_last_elem];
+    Engine::Entity entity_of_last_elem = index_to_entity_map[index_of_last_elem];
     entity_to_index_map[entity_of_last_elem] = removed_entity_index;
     index_to_entity_map[removed_entity_index] = entity_of_last_elem;
 
@@ -40,7 +40,7 @@ void ComponentArray<T>::removeEntity(Entity entity)
 }
 
 template <typename T>
-T &ComponentArray<T>::getComponent(Entity entity)
+T &Engine::ComponentArray<T>::getComponent(Engine::Entity entity)
 {
     if (entity_to_index_map.find(entity) == entity_to_index_map.end())
         throw ComponentArrayError("Trying to get component not in component array !!!!!!");
@@ -49,7 +49,7 @@ T &ComponentArray<T>::getComponent(Entity entity)
 }
 
 template <typename T>
-void ComponentArray<T>::entityDestroyed(Entity entity)
+void Engine::ComponentArray<T>::entityDestroyed(Engine::Entity entity)
 {
     if (entity_to_index_map.find(entity) != entity_to_index_map.end()) {
         removeEntity(entity);

@@ -10,9 +10,13 @@
 
 #include "Utils.hpp"
 
-typedef struct ComponentTransform_s {
-    Vec2 pos;
-    float rot;
-} ComponentTransform;
+namespace Engine {
+    namespace Components {
+        typedef struct ComponentTransform_s {
+            Utils::Vec2 pos;
+            float rot;
+        } ComponentTransform;
+    };
+};
 
 #endif /* !TRANSFORM_HPP_ */

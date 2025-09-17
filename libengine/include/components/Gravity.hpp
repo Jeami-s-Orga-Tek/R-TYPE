@@ -10,8 +10,12 @@
 
 #include "Utils.hpp"
 
-typedef struct ComponentGravity_s {
-    Vec2 force;
-} ComponentGravity;
+namespace Engine {
+    namespace Components {
+        typedef struct ComponentGravity_s {
+            Utils::Vec2 force;
+        } ComponentGravity;
+    };
+};
 
 #endif /* !GRAVITY_HPP_ */
