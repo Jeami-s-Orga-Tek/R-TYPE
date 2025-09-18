@@ -57,7 +57,7 @@ jobs:
 
       - name: Install Chocolatey dependencies
         run: |
-          choco install -y cmake --version 3.10
+          choco install -y cmake --version=3.10 --allow-downgrade --force
           choco install -y ninja python
         shell: bash
 
