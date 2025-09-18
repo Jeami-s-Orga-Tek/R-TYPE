@@ -15,9 +15,23 @@
 
 int main()
 {
+#ifdef _WIN32
+    HMODULE handle = LoadLibraryA("libengine.dll");
+    if (!handle) {
+        std::cerr << "Failed to load libengine.dll" << std::endl;
+        return 1;
+    } else {
+        std::cout << "Loaded libengine.dll successfully" << std::endl;
+    }
+#else
     void *handle = dlopen("libengine.so", RTLD_LAZY);
     if (!handle) {
         std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+        return 1;
+    } else {
+        std::cout << "Loaded libengine.so successfully" << std::endl;
     }
-    return (0);
+#endif
+
+    return 0;
 }
