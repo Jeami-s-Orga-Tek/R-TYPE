@@ -14,6 +14,7 @@
 #include <thread>
 #include "Button.hpp"
 #include "Menu.hpp"
+#include "ParamButton.hpp"
 
 using boost::asio::ip::udp;
 
@@ -90,14 +91,16 @@ int main()
         }
     }
     sf::Vector2u windowSize = window.getSize();
-    Button connectButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), 
+    Button connectButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200),
                         sf::Vector2f(200, 50), "Connect", font);
- 
+    ParamButton paramButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200),
+                         sf::Vector2f(200, 50), "Parameters", font);
+
     sf::Text statusText;
     statusText.setFont(font);
     statusText.setCharacterSize(16);
     statusText.setFillColor(sf::Color::Yellow);
-    statusText.setPosition(windowSize.x/2 - 150, windowSize.y - 130);
+    statusText.setPosition(windowSize.x/2 + 200, windowSize.y - 540);
     
     bool isConnected = false;
     
@@ -118,9 +121,11 @@ int main()
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                 window.setView(sf::View(visibleArea));
                 menu.updateWindowSize(sf::Vector2u(event.size.width, event.size.height));
-                connectButton = Button(sf::Vector2f(event.size.width/2 - 100, event.size.height - 200), 
+                connectButton = Button(sf::Vector2f(event.size.width/2 - 100, event.size.height - 250),
                     sf::Vector2f(200, 50), "Connect", font);
-                statusText.setPosition(event.size.width/2 - 150, event.size.height - 130);
+                paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 150),
+                      sf::Vector2f(200, 50), "Parameters", font);
+                statusText.setPosition(event.size.width/2 + 200, event.size.height - 540);
             }
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
@@ -130,11 +135,11 @@ int main()
                         statusText.setString("Connexion en cours...");
                         statusText.setFillColor(sf::Color::Yellow);
                         if (connectToServer("127.0.0.1", 8080)) {
-                            statusText.setString("Connecté au serveur!");
+                            statusText.setString("Connected to the server !");
                             statusText.setFillColor(sf::Color::Green);
                             isConnected = true;
                         } else {
-                            statusText.setString("Échec de la connexion");
+                            statusText.setString("Connection failed");
                             statusText.setFillColor(sf::Color::Red);
                             isConnected = false;
                         }
@@ -144,6 +149,7 @@ int main()
             if (event.type == sf::Event::MouseMoved) {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 connectButton.setHovered(connectButton.isClicked(mousePos));
+                paramButton.setHovered(paramButton.isClicked(mousePos));
             }
             menu.handleEvent(event, window);
         }
@@ -151,6 +157,7 @@ int main()
         window.clear(sf::Color::Black);
         menu.draw(window);
         connectButton.draw(window);
+        paramButton.draw(window);
         window.draw(statusText);
         if (isConnected) {
             sf::CircleShape indicator(10);
