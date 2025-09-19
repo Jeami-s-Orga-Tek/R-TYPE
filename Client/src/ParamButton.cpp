@@ -20,11 +20,7 @@ ParamButton::ParamButton(sf::Vector2f position, sf::Vector2f size, const std::st
     label.setCharacterSize(24);
     label.setFillColor(sf::Color::White);
     label.setStyle(sf::Text::Bold);
-    sf::FloatRect textBounds = label.getLocalBounds();
-    label.setPosition(
-            position.x + (size.x - textBounds.width) / 2 - textBounds.left,
-            position.y + (size.y - textBounds.height) / 2 - textBounds.top
-    );
+    centerLabel();
 }
 
 void ParamButton::draw(sf::RenderWindow& window)
@@ -45,4 +41,33 @@ void ParamButton::setHovered(bool hovered)
     } else {
         shape.setFillColor(sf::Color(100, 100, 100));
     }
+}
+
+void ParamButton::centerLabel()
+{
+    sf::FloatRect textBounds = label.getLocalBounds();
+    sf::Vector2f pos = shape.getPosition();
+    sf::Vector2f size = shape.getSize();
+    label.setPosition(
+        pos.x + (size.x - textBounds.width) / 2.f - textBounds.left,
+        pos.y + (size.y - textBounds.height) / 2.f - textBounds.top
+    );
+}
+
+void ParamButton::setPosition(const sf::Vector2f& position)
+{
+    shape.setPosition(position);
+    centerLabel();
+}
+
+void ParamButton::setSize(const sf::Vector2f& size)
+{
+    shape.setSize(size);
+    centerLabel();
+}
+
+void ParamButton::setCharacterSize(unsigned int px)
+{
+    label.setCharacterSize(px);
+    centerLabel();
 }

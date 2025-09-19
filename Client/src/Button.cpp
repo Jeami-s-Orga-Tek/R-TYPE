@@ -9,22 +9,19 @@
 
 Button::Button(sf::Vector2f position, sf::Vector2f size, const std::string& text, sf::Font& font)
 {
+    _size = size;
     shape.setPosition(position);
     shape.setSize(size);
     shape.setFillColor(sf::Color(100, 100, 100));
     shape.setOutlineThickness(2);
     shape.setOutlineColor(sf::Color::White);
-    
+
     label.setFont(font);
     label.setString(text);
     label.setCharacterSize(24);
     label.setFillColor(sf::Color::White);
     label.setStyle(sf::Text::Bold);
-    sf::FloatRect textBounds = label.getLocalBounds();
-    label.setPosition(
-        position.x + (size.x - textBounds.width) / 2 - textBounds.left,
-        position.y + (size.y - textBounds.height) / 2 - textBounds.top
-    );
+    centerLabel();
 }
 
 void Button::draw(sf::RenderWindow& window)
@@ -45,4 +42,34 @@ void Button::setHovered(bool hovered)
     } else {
         shape.setFillColor(sf::Color(100, 100, 100));
     }
+}
+
+void Button::centerLabel()
+{
+    sf::FloatRect textBounds = label.getLocalBounds();
+    sf::Vector2f pos = shape.getPosition();
+    sf::Vector2f size = shape.getSize();
+    label.setPosition(
+        pos.x + (size.x - textBounds.width) / 2.f - textBounds.left,
+        pos.y + (size.y - textBounds.height) / 2.f - textBounds.top
+    );
+}
+
+void Button::setPosition(const sf::Vector2f& position)
+{
+    shape.setPosition(position);
+    centerLabel();
+}
+
+void Button::setSize(const sf::Vector2f& size)
+{
+    _size = size;
+    shape.setSize(size);
+    centerLabel();
+}
+
+void Button::setCharacterSize(unsigned int px)
+{
+    label.setCharacterSize(px);
+    centerLabel();
 }

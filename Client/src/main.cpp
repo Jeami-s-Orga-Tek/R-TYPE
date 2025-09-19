@@ -91,16 +91,42 @@ int main()
         }
     }
     sf::Vector2u windowSize = window.getSize();
-    Button connectButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200),
-                        sf::Vector2f(200, 50), "Connect", font);
-    ParamButton paramButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200),
-                         sf::Vector2f(200, 50), "Parameters", font);
+    Button connectButton(sf::Vector2f(0.f, 0.f), sf::Vector2f(200, 50), "Connect", font);
+    ParamButton paramButton(sf::Vector2f(0.f, 0.f), sf::Vector2f(200, 50), "Parameters", font);
 
     sf::Text statusText;
     statusText.setFont(font);
     statusText.setCharacterSize(16);
     statusText.setFillColor(sf::Color::Yellow);
-    statusText.setPosition(windowSize.x/2 + 200, windowSize.y - 540);
+    statusText.setPosition(static_cast<float>(windowSize.x) * 0.7f, static_cast<float>(windowSize.y) * 0.08f);
+    bool isFullscreen = false;
+
+    auto applyLayout = [&](const sf::Vector2u& size) {
+        const float w = static_cast<float>(size.x);
+        const float h = static_cast<float>(size.y);
+
+        menu.updateWindowSize(size);
+
+        const float btnW = std::min(w * 0.28f, 320.f);
+        const float btnH = std::min(h * 0.08f, 70.f);
+        const float cx = w / 2.f - btnW / 2.f;
+        const float yStart = h * 0.62f; // lower half
+        const float margin = std::max(h * 0.02f, 12.f);
+
+        connectButton.setSize({btnW, btnH});
+        connectButton.setPosition({cx, yStart});
+        paramButton.setSize({btnW, btnH});
+        paramButton.setPosition({cx, yStart + btnH + margin});
+
+        float scale = std::clamp(h / 600.f, 0.75f, 1.6f);
+        connectButton.setCharacterSize(static_cast<unsigned int>(24 * scale));
+        paramButton.setCharacterSize(static_cast<unsigned int>(24 * scale));
+
+        statusText.setCharacterSize(static_cast<unsigned int>(16 * scale));
+        statusText.setPosition(w - std::min(w * 0.3f, 380.f), std::max(10.f, h * 0.06f));
+    };
+
+    applyLayout(windowSize);
     
     bool isConnected = false;
     
@@ -117,15 +143,22 @@ int main()
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
                 window.close();
             }
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::F11 ||
+                    (event.key.code == sf::Keyboard::Enter && (event.key.alt || event.key.system))) {
+                    isFullscreen = !isFullscreen;
+                    sf::VideoMode mode = isFullscreen ? sf::VideoMode::getDesktopMode() : sf::VideoMode(800, 600);
+                    window.create(mode, "R-Type Client", isFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
+                    window.setFramerateLimit(60);
+                    sf::Vector2u sz = window.getSize();
+                    window.setView(sf::View(sf::FloatRect(0, 0, static_cast<float>(sz.x), static_cast<float>(sz.y))));
+                    applyLayout(sz);
+                }
+            }
             if (event.type == sf::Event::Resized) {
-                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                sf::FloatRect visibleArea(0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height));
                 window.setView(sf::View(visibleArea));
-                menu.updateWindowSize(sf::Vector2u(event.size.width, event.size.height));
-                connectButton = Button(sf::Vector2f(event.size.width/2 - 100, event.size.height - 250),
-                    sf::Vector2f(200, 50), "Connect", font);
-                paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 150),
-                      sf::Vector2f(200, 50), "Parameters", font);
-                statusText.setPosition(event.size.width/2 + 200, event.size.height - 540);
+                applyLayout({event.size.width, event.size.height});
             }
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
