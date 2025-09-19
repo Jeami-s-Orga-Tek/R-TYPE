@@ -78,6 +78,7 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "R-Type Client");
     window.setFramerateLimit(60);
+    int currentFps = 60;
 
     Menu menu(window.getSize());
     if (!menu.loadResources()) {
@@ -117,16 +118,15 @@ int main()
     ParamButton fps30Button(sf::Vector2f(windowSize.x/2 - 120, windowSize.y - 400), sf::Vector2f(80, 40), "FPS 30", font);
     ParamButton fps60Button(sf::Vector2f(windowSize.x/2 + 40, windowSize.y - 400), sf::Vector2f(80, 40), "FPS 60", font);
 
-    sf::RectangleShape volumeBar(sf::Vector2f(200, 10));
-    volumeBar.setPosition(windowSize.x/2 - 100, windowSize.y - 250);
-    volumeBar.setFillColor(sf::Color(150, 150, 150));
+    paramButton.setupVolumeBar(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), 200.f);
 
-    sf::CircleShape volumeSlider(10);
-    volumeSlider.setFillColor(sf::Color::White);
-    float volumeValue = 0.5f;
-    volumeSlider.setPosition(volumeBar.getPosition().x + volumeValue * volumeBar.getSize().x - 10, volumeBar.getPosition().y - 5);
+    sf::Text fpsDisplay;
+    fpsDisplay.setFont(font);
+    fpsDisplay.setCharacterSize(18);
+    fpsDisplay.setFillColor(sf::Color::White);
+    fpsDisplay.setString("FPS: " + std::to_string(currentFps));
+    fpsDisplay.setPosition(10, 10);
 
-    int currentFps = 60;
     bool isDraggingVolume = false;
 
     while (window.isOpen()) {
@@ -150,8 +150,7 @@ int main()
 
                 fps30Button = ParamButton(sf::Vector2f(event.size.width/2 - 120, event.size.height - 400), sf::Vector2f(80, 40), "FPS 30", font);
                 fps60Button = ParamButton(sf::Vector2f(event.size.width/2 + 40, event.size.height - 400), sf::Vector2f(80, 40), "FPS 60", font);
-                volumeBar.setPosition(event.size.width/2 - 100, event.size.height - 250);
-                volumeSlider.setPosition(volumeBar.getPosition().x + volumeValue * volumeBar.getSize().x - 10, volumeBar.getPosition().y - 5);
+                paramButton.setupVolumeBar(sf::Vector2f(event.size.width/2 - 100, event.size.height - 250), 200.f);
             }
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
@@ -188,12 +187,9 @@ int main()
                             currentFps = 60;
                             window.setFramerateLimit(60);
                         }
-                        sf::FloatRect sliderRect(volumeBar.getPosition().x, volumeBar.getPosition().y - 10, volumeBar.getSize().x, 30);
-                        if (sliderRect.contains(static_cast<sf::Vector2f>(mousePos))) {
+                        if (paramButton.isVolumeBarClicked(mousePos)) {
                             isDraggingVolume = true;
-                            float relX = mousePos.x - volumeBar.getPosition().x;
-                            volumeValue = std::max(0.f, std::min(1.f, relX / volumeBar.getSize().x));
-                            volumeSlider.setPosition(volumeBar.getPosition().x + volumeValue * volumeBar.getSize().x - 10, volumeBar.getPosition().y - 5);
+                            paramButton.setVolumeFromMouse(mousePos.x);
                         }
                     }
                 }
@@ -212,9 +208,7 @@ int main()
                     fps30Button.setHovered(fps30Button.isClicked(mousePos));
                     fps60Button.setHovered(fps60Button.isClicked(mousePos));
                     if (isDraggingVolume) {
-                        float relX = mousePos.x - volumeBar.getPosition().x;
-                        volumeValue = std::max(0.f, std::min(1.f, relX / volumeBar.getSize().x));
-                        volumeSlider.setPosition(volumeBar.getPosition().x + volumeValue * volumeBar.getSize().x - 10, volumeBar.getPosition().y - 5);
+                        paramButton.setVolumeFromMouse(mousePos.x);
                     }
                 }
             } else  {
@@ -227,6 +221,8 @@ int main()
         }
         menu.update();
         window.clear(sf::Color::Black);
+        fpsDisplay.setString("FPS: " + std::to_string(currentFps));
+
         if (currentState == State::MENU) {
             menu.draw(window);
             connectButton.draw(window);
@@ -237,27 +233,12 @@ int main()
             parameters.draw(window);
             fps30Button.draw(window);
             fps60Button.draw(window);
-            window.draw(volumeBar);
-            window.draw(volumeSlider);
-            sf::Text volumeText;
-            volumeText.setFont(font);
-            volumeText.setCharacterSize(16);
-            volumeText.setFillColor(sf::Color::White);
-            volumeText.setString("Volume: " + std::to_string(static_cast<int>(volumeValue * 100)) + "%");
-            volumeText.setPosition(volumeBar.getPosition().x, volumeBar.getPosition().y - 30);
-            window.draw(volumeText);
-
-            sf::Text fpsText;
-            fpsText.setFont(font);
-            fpsText.setCharacterSize(16);
-            fpsText.setFillColor(sf::Color::White);
-            fpsText.setString("FPS: " + std::to_string(currentFps));
-            fpsText.setPosition(fps60Button.getPosition().x + 90, fps60Button.getPosition().y);
-            window.draw(fpsText);
+            paramButton.drawVolumeBar(window);
         } else if (currentState == State::QUIT) {
             window.close();
         }
         window.draw(statusText);
+        window.draw(fpsDisplay);
         if (isConnected) {
             sf::CircleShape indicator(10);
             indicator.setFillColor(sf::Color::Green);

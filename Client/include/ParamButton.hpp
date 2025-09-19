@@ -21,9 +21,21 @@ public:
     void setHovered(bool hovered);
     sf::Vector2f getPosition() const { return shape.getPosition(); }
 
+    void setupVolumeBar(sf::Vector2f position, float width);
+    void drawVolumeBar(sf::RenderWindow& window);
+    bool isVolumeBarClicked(sf::Vector2i mousePos) const;
+    void setVolumeFromMouse(int mouseX);
+    float getVolume() const { return volumeValue; }
+    void setVolume(float value);
+
 private:
     sf::RectangleShape shape;
     sf::Text label;
+    sf::RectangleShape volumeBar;
+    sf::CircleShape volumeSlider;
+    float volumeValue = 0.5f;
+    float volumeBarWidth = 200.f;
+    bool volumeBarInitialized = false;
 };
 
 #endif /* !PARAMBUTTON_HPP_ */
