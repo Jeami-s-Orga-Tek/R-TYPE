@@ -11,6 +11,13 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+enum class State {
+    MENU,
+    SETTINGS,
+    GAME,
+    QUIT
+};
+
 class Menu {
     public:
         Menu(sf::Vector2u windowSize);

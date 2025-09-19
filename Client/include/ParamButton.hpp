@@ -19,6 +19,7 @@ public:
     void draw(sf::RenderWindow& window);
     bool isClicked(sf::Vector2i mousePos);
     void setHovered(bool hovered);
+    sf::Vector2f getPosition() const { return shape.getPosition(); }
 
 private:
     sf::RectangleShape shape;

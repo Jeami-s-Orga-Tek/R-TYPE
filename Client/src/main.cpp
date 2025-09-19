@@ -14,6 +14,7 @@
 #include <thread>
 #include "Button.hpp"
 #include "Menu.hpp"
+#include "Parameters.hpp"
 #include "ParamButton.hpp"
 
 using boost::asio::ip::udp;
@@ -108,14 +109,34 @@ int main()
     if (!handle) {
         std::cerr << "Warning: Failed to load libengine.so: " << dlerror() << std::endl;
     }
+
+    State currentState = State::MENU;
+
+    Parameters parameters(window.getSize());
+
+    ParamButton fps30Button(sf::Vector2f(windowSize.x/2 - 120, windowSize.y - 400), sf::Vector2f(80, 40), "FPS 30", font);
+    ParamButton fps60Button(sf::Vector2f(windowSize.x/2 + 40, windowSize.y - 400), sf::Vector2f(80, 40), "FPS 60", font);
+
+    sf::RectangleShape volumeBar(sf::Vector2f(200, 10));
+    volumeBar.setPosition(windowSize.x/2 - 100, windowSize.y - 250);
+    volumeBar.setFillColor(sf::Color(150, 150, 150));
+
+    sf::CircleShape volumeSlider(10);
+    volumeSlider.setFillColor(sf::Color::White);
+    float volumeValue = 0.5f;
+    volumeSlider.setPosition(volumeBar.getPosition().x + volumeValue * volumeBar.getSize().x - 10, volumeBar.getPosition().y - 5);
+
+    int currentFps = 60;
+    bool isDraggingVolume = false;
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                window.close();
+                currentState = State::QUIT;
             }
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-                window.close();
+                currentState = State::QUIT;
             }
             if (event.type == sf::Event::Resized) {
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
@@ -123,41 +144,119 @@ int main()
                 menu.updateWindowSize(sf::Vector2u(event.size.width, event.size.height));
                 connectButton = Button(sf::Vector2f(event.size.width/2 - 100, event.size.height - 250),
                     sf::Vector2f(200, 50), "Connect", font);
-                paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 150),
+                paramButton = ParamButton(sf::Vector2f(event.size.width/2 - 100, event.size.height - 150),
                       sf::Vector2f(200, 50), "Parameters", font);
                 statusText.setPosition(event.size.width/2 + 200, event.size.height - 540);
+
+                fps30Button = ParamButton(sf::Vector2f(event.size.width/2 - 120, event.size.height - 400), sf::Vector2f(80, 40), "FPS 30", font);
+                fps60Button = ParamButton(sf::Vector2f(event.size.width/2 + 40, event.size.height - 400), sf::Vector2f(80, 40), "FPS 60", font);
+                volumeBar.setPosition(event.size.width/2 - 100, event.size.height - 250);
+                volumeSlider.setPosition(volumeBar.getPosition().x + volumeValue * volumeBar.getSize().x - 10, volumeBar.getPosition().y - 5);
             }
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (connectButton.isClicked(mousePos)) {
-                        std::cout << "Bouton de connexion cliqué!" << std::endl;
-                        statusText.setString("Connexion en cours...");
-                        statusText.setFillColor(sf::Color::Yellow);
-                        if (connectToServer("127.0.0.1", 8080)) {
-                            statusText.setString("Connected to the server !");
-                            statusText.setFillColor(sf::Color::Green);
-                            isConnected = true;
-                        } else {
-                            statusText.setString("Connection failed");
-                            statusText.setFillColor(sf::Color::Red);
-                            isConnected = false;
+                    if (currentState == State::MENU) {
+                        if (paramButton.isClicked(mousePos)) {
+                            currentState = State::SETTINGS;
+                            statusText.setCharacterSize(60);
+                            statusText.setPosition(260 ,100);
+                            statusText.setString("Parameters");
+                            statusText.setFillColor(sf::Color::White);
+                        }
+                        if (connectButton.isClicked(mousePos)) {
+                            std::cout << "Bouton de connexion cliqué!" << std::endl;
+                            statusText.setString("Connexion en cours...");
+                            statusText.setFillColor(sf::Color::Yellow);
+                            if (connectToServer("127.0.0.1", 8080)) {
+                                statusText.setString("Connected to the server !");
+                                statusText.setFillColor(sf::Color::Green);
+                                isConnected = true;
+                            } else {
+                                statusText.setString("Connection failed");
+                                statusText.setFillColor(sf::Color::Red);
+                                isConnected = false;
+                            }
+                        }
+                    }
+                    else if (currentState == State::SETTINGS) {
+                        if (fps30Button.isClicked(mousePos)) {
+                            currentFps = 30;
+                            window.setFramerateLimit(30);
+                        }
+                        if (fps60Button.isClicked(mousePos)) {
+                            currentFps = 60;
+                            window.setFramerateLimit(60);
+                        }
+                        sf::FloatRect sliderRect(volumeBar.getPosition().x, volumeBar.getPosition().y - 10, volumeBar.getSize().x, 30);
+                        if (sliderRect.contains(static_cast<sf::Vector2f>(mousePos))) {
+                            isDraggingVolume = true;
+                            float relX = mousePos.x - volumeBar.getPosition().x;
+                            volumeValue = std::max(0.f, std::min(1.f, relX / volumeBar.getSize().x));
+                            volumeSlider.setPosition(volumeBar.getPosition().x + volumeValue * volumeBar.getSize().x - 10, volumeBar.getPosition().y - 5);
                         }
                     }
                 }
             }
+            if (event.type == sf::Event::MouseButtonReleased) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    isDraggingVolume = false;
+                }
+            }
             if (event.type == sf::Event::MouseMoved) {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                connectButton.setHovered(connectButton.isClicked(mousePos));
-                paramButton.setHovered(paramButton.isClicked(mousePos));
+                if (currentState == State::MENU) {
+                    connectButton.setHovered(connectButton.isClicked(mousePos));
+                    paramButton.setHovered(paramButton.isClicked(mousePos));
+                } else if (currentState == State::SETTINGS) {
+                    fps30Button.setHovered(fps30Button.isClicked(mousePos));
+                    fps60Button.setHovered(fps60Button.isClicked(mousePos));
+                    if (isDraggingVolume) {
+                        float relX = mousePos.x - volumeBar.getPosition().x;
+                        volumeValue = std::max(0.f, std::min(1.f, relX / volumeBar.getSize().x));
+                        volumeSlider.setPosition(volumeBar.getPosition().x + volumeValue * volumeBar.getSize().x - 10, volumeBar.getPosition().y - 5);
+                    }
+                }
+            } else  {
+                connectButton.setHovered(false);
+                paramButton.setHovered(false);
+                fps30Button.setHovered(false);
+                fps60Button.setHovered(false);
             }
             menu.handleEvent(event, window);
         }
         menu.update();
         window.clear(sf::Color::Black);
-        menu.draw(window);
-        connectButton.draw(window);
-        paramButton.draw(window);
+        if (currentState == State::MENU) {
+            menu.draw(window);
+            connectButton.draw(window);
+            paramButton.draw(window);
+        } else if (currentState == State::GAME) {
+            window.close();
+        } else if (currentState == State::SETTINGS) {
+            parameters.draw(window);
+            fps30Button.draw(window);
+            fps60Button.draw(window);
+            window.draw(volumeBar);
+            window.draw(volumeSlider);
+            sf::Text volumeText;
+            volumeText.setFont(font);
+            volumeText.setCharacterSize(16);
+            volumeText.setFillColor(sf::Color::White);
+            volumeText.setString("Volume: " + std::to_string(static_cast<int>(volumeValue * 100)) + "%");
+            volumeText.setPosition(volumeBar.getPosition().x, volumeBar.getPosition().y - 30);
+            window.draw(volumeText);
+
+            sf::Text fpsText;
+            fpsText.setFont(font);
+            fpsText.setCharacterSize(16);
+            fpsText.setFillColor(sf::Color::White);
+            fpsText.setString("FPS: " + std::to_string(currentFps));
+            fpsText.setPosition(fps60Button.getPosition().x + 90, fps60Button.getPosition().y);
+            window.draw(fpsText);
+        } else if (currentState == State::QUIT) {
+            window.close();
+        }
         window.draw(statusText);
         if (isConnected) {
             sf::CircleShape indicator(10);
