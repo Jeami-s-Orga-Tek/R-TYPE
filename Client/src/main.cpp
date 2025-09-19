@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <boost/asio.hpp>
 #include <boost/system/error_code.hpp>
+#include <algorithm>
 #include <chrono>
 #include <thread>
 #include "Button.hpp"
@@ -193,9 +194,15 @@ int main()
         paramButton.draw(window);
         window.draw(statusText);
         if (isConnected) {
-            sf::CircleShape indicator(10);
+            const float radius = std::clamp(static_cast<float>(statusText.getCharacterSize()) * 0.35f, 4.f, 10.f);
+            sf::CircleShape indicator(radius);
             indicator.setFillColor(sf::Color::Green);
-            indicator.setPosition(750, 20);
+
+            sf::FloatRect textBounds = statusText.getGlobalBounds();
+            const float padding = std::max(4.f, radius * 0.4f);
+            float x = textBounds.left - (radius * 2.f) - padding;
+            float y = textBounds.top + (textBounds.height - (radius * 2.f)) / 2.f;
+            indicator.setPosition(x, y);
             window.draw(indicator);
         }
         window.display();
