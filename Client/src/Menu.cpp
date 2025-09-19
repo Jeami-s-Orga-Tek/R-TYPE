@@ -41,7 +41,6 @@ void Menu::centerLogo()
 
     sf::FloatRect b = logoSprite.getLocalBounds();
     float scaledW = b.width * scale;
-    float scaledH = b.height * scale;
 
     float posX = (static_cast<float>(windowSize.x) - scaledW) / 2.0f;
     float posY = std::max(10.f, static_cast<float>(windowSize.y) * 0.12f);
