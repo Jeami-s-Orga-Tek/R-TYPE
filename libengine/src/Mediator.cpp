@@ -74,8 +74,8 @@ void Engine::Mediator::destroyEntity(Entity entity)
 //     systemManager->setSignature<T>(signature);
 // }
 
-extern "C" Engine::Mediator *createMediator() {
-    return (new Engine::Mediator);
+extern "C" std::shared_ptr<Engine::Mediator> createMediator() {
+    return (std::make_shared<Engine::Mediator>());
 }
 
 extern "C" void deleteMediator(Engine::Mediator *mediator) {

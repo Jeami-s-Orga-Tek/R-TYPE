@@ -14,6 +14,9 @@ file(GLOB SOURCES src/*.cpp)
 
 include(../cmake/CPM.cmake)
 
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+# set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
+
 CPMAddPackage("gh:sfml/sfml#2.6.2")
 CPMAddPackage(
   NAME Boost

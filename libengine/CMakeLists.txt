@@ -11,4 +11,4 @@ file(GLOB_RECURSE SOURCES src/*.cpp)
 add_library(engine SHARED ${SOURCES})
 
 # TEMP REMOVE LATER
-target_link_libraries(engine PRIVATE sfml-graphics sfml-window sfml-system)
+# target_link_libraries(engine PRIVATE sfml-graphics sfml-window sfml-system)

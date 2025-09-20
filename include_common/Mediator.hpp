@@ -8,6 +8,8 @@
 #ifndef MEDIATOR_HPP_
 #define MEDIATOR_HPP_
 
+#include <memory>
+
 #include "EntityManager.hpp"
 #include "ComponentManager.hpp"
 #include "SystemManager.hpp"
@@ -82,7 +84,7 @@ std::shared_ptr<T> Engine::Mediator::setSystemSignature(Signature signature)
     systemManager->setSignature<T>(signature);
 }
 
-extern "C" Engine::Mediator *createMediator();
+extern "C" std::shared_ptr<Engine::Mediator> createMediator();
 
 extern "C" void deleteMediator(Engine::Mediator *mediator);
 

@@ -8,6 +8,8 @@
 #ifndef UTILS_HPP_
 #define UTILS_HPP_
 
+#include <cstdint>
+
 namespace Engine {
     namespace Utils {
         // typedef struct Vec2_s {
@@ -70,6 +72,8 @@ namespace Engine {
                 std::uint8_t g = 0;
                 std::uint8_t b = 0;
         };
+
+        
     };
 };
 
