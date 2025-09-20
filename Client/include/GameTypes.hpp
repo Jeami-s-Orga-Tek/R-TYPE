@@ -32,6 +32,11 @@ class GameManager {
         ParamButton fps30Button;
         ParamButton fps60Button;
         Button backButton;
+        Button resolutionButton;
+        Button displayModeButton;
+        Button graphicsQualityButton;
+        Button applyResolutionButton;
+        
         sf::Text statusText;
         sf::Text fpsDisplay;
         sf::Font font;
@@ -54,6 +59,10 @@ class GameManager {
         void render(sf::RenderWindow& window);
         bool shouldClose() const;
         void updatePositions(sf::Vector2u windowSize);
+        void cycleResolution();
+        void cycleDisplayMode(sf::RenderWindow& window);
+        void cycleGraphicsQuality();
+        void applyCurrentResolution(sf::RenderWindow& window);
 
         State getCurrentState() const { return currentState; }
         int getCurrentFps() const { return currentFps; }

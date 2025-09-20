@@ -32,6 +32,10 @@ struct Particle {
     float rotationSpeed;
     float alpha;
     float scintillation;
+
+    Particle() : position(0.0f, 0.0f), velocity(0.0f, 0.0f), color(sf::Color::White),
+                 size(1.0f), life(1.0f), maxLife(1.0f), type(ParticleType::STAR),
+                 rotation(0.0f), rotationSpeed(0.0f), alpha(255.0f), scintillation(0.0f) {}
     
     Particle(sf::Vector2f pos, sf::Vector2f vel, sf::Color col, float sz, float lf, ParticleType t)
         : position(pos), velocity(vel), color(col), size(sz), life(lf), maxLife(lf), type(t),
@@ -59,6 +63,7 @@ class ParticleSystem {
         void update(float deltaTime);
         void render(sf::RenderWindow& window);
         void updateWindowSize(sf::Vector2u newSize);
+        void setMaxParticles(int maxPart);
         
     private:
         void spawnParticle(ParticleType type);

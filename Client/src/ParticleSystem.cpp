@@ -285,3 +285,12 @@ float ParticleSystem::getRandomLife(ParticleType type)
             return 5.0f;
     }
 }
+
+void ParticleSystem::setMaxParticles(int maxPart)
+{
+    maxParticles = maxPart;
+
+    if (particles.size() > static_cast<size_t>(maxParticles)) {
+        particles.resize(maxParticles);
+    }
+}

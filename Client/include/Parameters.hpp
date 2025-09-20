@@ -10,6 +10,25 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <vector>
+
+enum class ResolutionMode {
+    RES_800x600,
+    RES_1280x720,
+    RES_1920x1080
+};
+
+enum class DisplayMode {
+    WINDOWED,
+    FULLSCREEN
+};
+
+enum class GraphicsQuality {
+    LOW,
+    MEDIUM,
+    HIGH,
+    ULTRA
+};
 
 class Parameters {
 public:
@@ -21,13 +40,39 @@ public:
     void handleEvent(const sf::Event& event, sf::RenderWindow& window);
     void update();
     void updateWindowSize(sf::Vector2u newSize);
+    
+    ResolutionMode getCurrentResolution() const { return currentResolution; }
+    DisplayMode getCurrentDisplayMode() const { return currentDisplayMode; }
+    GraphicsQuality getCurrentGraphicsQuality() const { return currentGraphicsQuality; }
+    
+    void setResolution(ResolutionMode resolution);
+    void setDisplayMode(DisplayMode mode);
+    void setGraphicsQuality(GraphicsQuality quality);
+    sf::Vector2u getResolutionSize(ResolutionMode resolution) const;
 
 private:
     sf::Text ParamsText;
+    sf::Text VideoSectionTitle;
+    sf::Text ResolutionLabel;
+    sf::Text ResolutionValue;
+    sf::Text DisplayModeLabel;
+    sf::Text DisplayModeValue;
+    sf::Text GraphicsQualityLabel;
+    sf::Text GraphicsQualityValue;
+    
     sf::Font FontParamsText;
     sf::Vector2u windowSize;
 
+    ResolutionMode currentResolution;
+    DisplayMode currentDisplayMode;
+    GraphicsQuality currentGraphicsQuality;
+    
     void centerText();
+    void setupVideoSettings();
+    void updateVideoSettingsPositions();
+    std::string getResolutionString(ResolutionMode resolution) const;
+    std::string getDisplayModeString(DisplayMode mode) const;
+    std::string getGraphicsQualityString(GraphicsQuality quality) const;
 };
 
 #endif /* !PARAMETERS_HPP__ */
