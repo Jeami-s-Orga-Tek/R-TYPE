@@ -94,3 +94,39 @@ void ParamButton::setVolume(float value)
     volumeValue = std::max(0.f, std::min(1.f, value));
     volumeSlider.setPosition(volumeBar.getPosition().x + volumeValue * volumeBarWidth - 10, volumeBar.getPosition().y - 5);
 }
+
+void ParamButton::updatePosition(sf::Vector2f newPosition)
+{
+    shape.setPosition(newPosition);
+    
+    sf::FloatRect textBounds = label.getLocalBounds();
+    sf::Vector2f size = shape.getSize();
+    label.setPosition(
+        newPosition.x + (size.x - textBounds.width) / 2 - textBounds.left,
+        newPosition.y + (size.y - textBounds.height) / 2 - textBounds.top
+    );
+}
+
+void ParamButton::updateSize(sf::Vector2f newSize)
+{
+    shape.setSize(newSize);
+    
+    sf::FloatRect textBounds = label.getLocalBounds();
+    sf::Vector2f position = shape.getPosition();
+    label.setPosition(
+        position.x + (newSize.x - textBounds.width) / 2 - textBounds.left,
+        position.y + (newSize.y - textBounds.height) / 2 - textBounds.top
+    );
+}
+
+void ParamButton::updatePositionAndSize(sf::Vector2f newPosition, sf::Vector2f newSize)
+{
+    shape.setPosition(newPosition);
+    shape.setSize(newSize);
+    
+    sf::FloatRect textBounds = label.getLocalBounds();
+    label.setPosition(
+        newPosition.x + (newSize.x - textBounds.width) / 2 - textBounds.left,
+        newPosition.y + (newSize.y - textBounds.height) / 2 - textBounds.top
+    );
+}

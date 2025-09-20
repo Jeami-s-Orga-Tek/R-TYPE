@@ -104,6 +104,17 @@ int main()
     statusText.setFillColor(sf::Color::Yellow);
     statusText.setPosition(windowSize.x/2 + 200, windowSize.y - 540);
     
+    auto updateStatusTextPosition = [&](sf::Vector2u winSize, bool isParametersMode = false) {
+        if (isParametersMode) {
+            statusText.setCharacterSize(60);
+            statusText.setPosition(winSize.x/2 - 150, winSize.y/2 - 200);
+            statusText.setFillColor(sf::Color::White);
+        } else {
+            statusText.setCharacterSize(16);
+            statusText.setPosition(winSize.x/2 + 200, winSize.y - 540);
+        }
+    };
+    
     bool isConnected = false;
     
     void *handle = dlopen("libengine.so", RTLD_LAZY);
@@ -117,6 +128,7 @@ int main()
 
     ParamButton fps30Button(sf::Vector2f(windowSize.x/2 - 120, windowSize.y - 400), sf::Vector2f(80, 40), "FPS 30", font);
     ParamButton fps60Button(sf::Vector2f(windowSize.x/2 + 40, windowSize.y - 400), sf::Vector2f(80, 40), "FPS 60", font);
+    Button backButton(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40), "Back", font);
 
     paramButton.setupVolumeBar(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), 200.f);
 
@@ -136,21 +148,50 @@ int main()
                 currentState = State::QUIT;
             }
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-                currentState = State::QUIT;
+                if (currentState == State::SETTINGS) {
+                    currentState = State::MENU;
+                    updateStatusTextPosition(window.getSize(), false);
+                    statusText.setString("");
+                    statusText.setFillColor(sf::Color::Yellow);
+                } else {
+                    currentState = State::QUIT;
+                }
             }
             if (event.type == sf::Event::Resized) {
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                 window.setView(sf::View(visibleArea));
                 menu.updateWindowSize(sf::Vector2u(event.size.width, event.size.height));
-                connectButton = Button(sf::Vector2f(event.size.width/2 - 100, event.size.height - 250),
-                    sf::Vector2f(200, 50), "Connect", font);
-                paramButton = ParamButton(sf::Vector2f(event.size.width/2 - 100, event.size.height - 150),
-                      sf::Vector2f(200, 50), "Parameters", font);
-                statusText.setPosition(event.size.width/2 + 200, event.size.height - 540);
-
-                fps30Button = ParamButton(sf::Vector2f(event.size.width/2 - 120, event.size.height - 400), sf::Vector2f(80, 40), "FPS 30", font);
-                fps60Button = ParamButton(sf::Vector2f(event.size.width/2 + 40, event.size.height - 400), sf::Vector2f(80, 40), "FPS 60", font);
-                paramButton.setupVolumeBar(sf::Vector2f(event.size.width/2 - 100, event.size.height - 250), 200.f);
+                connectButton.updatePositionAndSize(
+                    sf::Vector2f(event.size.width/2 - 100, event.size.height - 250),
+                    sf::Vector2f(200, 50)
+                );
+                paramButton.updatePositionAndSize(
+                    sf::Vector2f(event.size.width/2 - 100, event.size.height - 150),
+                    sf::Vector2f(200, 50)
+                );
+                
+                fps30Button.updatePositionAndSize(
+                    sf::Vector2f(event.size.width/2 - 120, event.size.height - 400),
+                    sf::Vector2f(80, 40)
+                );
+                fps60Button.updatePositionAndSize(
+                    sf::Vector2f(event.size.width/2 + 40, event.size.height - 400),
+                    sf::Vector2f(80, 40)
+                );
+                
+                backButton.updatePositionAndSize(
+                    sf::Vector2f(50, event.size.height - 100),
+                    sf::Vector2f(100, 40)
+                );
+                paramButton.setupVolumeBar(
+                    sf::Vector2f(event.size.width/2 - 100, event.size.height - 250),
+                    200.f
+                );
+                if (currentState == State::SETTINGS) {
+                    updateStatusTextPosition(sf::Vector2u(event.size.width, event.size.height), true);
+                } else {
+                    updateStatusTextPosition(sf::Vector2u(event.size.width, event.size.height), false);
+                }
             }
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
@@ -158,10 +199,8 @@ int main()
                     if (currentState == State::MENU) {
                         if (paramButton.isClicked(mousePos)) {
                             currentState = State::SETTINGS;
-                            statusText.setCharacterSize(60);
-                            statusText.setPosition(260 ,100);
+                            updateStatusTextPosition(window.getSize(), true);
                             statusText.setString("Parameters");
-                            statusText.setFillColor(sf::Color::White);
                         }
                         if (connectButton.isClicked(mousePos)) {
                             std::cout << "Bouton de connexion cliqué!" << std::endl;
@@ -179,6 +218,12 @@ int main()
                         }
                     }
                     else if (currentState == State::SETTINGS) {
+                        if (backButton.isClicked(mousePos)) {
+                            currentState = State::MENU;
+                            updateStatusTextPosition(window.getSize(), false);
+                            statusText.setString("");
+                            statusText.setFillColor(sf::Color::Yellow);
+                        }
                         if (fps30Button.isClicked(mousePos)) {
                             currentFps = 30;
                             window.setFramerateLimit(30);
@@ -205,6 +250,7 @@ int main()
                     connectButton.setHovered(connectButton.isClicked(mousePos));
                     paramButton.setHovered(paramButton.isClicked(mousePos));
                 } else if (currentState == State::SETTINGS) {
+                    backButton.setHovered(backButton.isClicked(mousePos));
                     fps30Button.setHovered(fps30Button.isClicked(mousePos));
                     fps60Button.setHovered(fps60Button.isClicked(mousePos));
                     if (isDraggingVolume) {
@@ -216,6 +262,7 @@ int main()
                 paramButton.setHovered(false);
                 fps30Button.setHovered(false);
                 fps60Button.setHovered(false);
+                backButton.setHovered(false);
             }
             menu.handleEvent(event, window);
         }
@@ -231,6 +278,7 @@ int main()
             window.close();
         } else if (currentState == State::SETTINGS) {
             parameters.draw(window);
+            backButton.draw(window);
             fps30Button.draw(window);
             fps60Button.draw(window);
             paramButton.drawVolumeBar(window);
