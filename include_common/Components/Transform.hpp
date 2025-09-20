@@ -12,10 +12,10 @@
 
 namespace Engine {
     namespace Components {
-        typedef struct ComponentTransform_s {
+        typedef struct Transform_s {
             Utils::Vec2 pos;
             float rot;
-        } ComponentTransform;
+        } Transform;
     };
 };
 

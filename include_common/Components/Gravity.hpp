@@ -12,9 +12,9 @@
 
 namespace Engine {
     namespace Components {
-        typedef struct ComponentGravity_s {
+        typedef struct Gravity_s {
             Utils::Vec2 force;
-        } ComponentGravity;
+        } Gravity;
     };
 };
 
