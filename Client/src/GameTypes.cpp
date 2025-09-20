@@ -17,7 +17,7 @@
 using boost::asio::ip::udp;
 
 GameManager::GameManager(sf::Vector2u windowSize)
-    : menu(windowSize), parameters(windowSize),
+    : menu(windowSize), parameters(windowSize), lobby(windowSize), errorServer(windowSize),
       particleSystem(windowSize, 300), 
       currentState(State::MENU),
       isConnected(false),
@@ -31,7 +31,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
         }
     }
     
-    connectButton = Button(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50), "Connect", font);
+    connectButton = Button(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50), "Play", font);
     paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50), "Parameters", font);
     fps30Button = ParamButton(sf::Vector2f(50, 400), sf::Vector2f(80, 40), "FPS 30", font);
     fps60Button = ParamButton(sf::Vector2f(150, 400), sf::Vector2f(80, 40), "FPS 60", font);
@@ -120,6 +120,7 @@ void GameManager::update()
     float deltaTime = deltaClock.restart().asSeconds();
     
     menu.update();
+    lobby.update();
     fpsDisplay.setString("FPS: " + std::to_string(currentFps));
     particleSystem.update(deltaTime);
 }
@@ -145,6 +146,12 @@ void GameManager::render(sf::RenderWindow& window)
         graphicsQualityButton.draw(window);
         applyResolutionButton.draw(window);
         paramButton.drawVolumeBar(window);
+    } else if (currentState == State::LOBBY) {
+        lobby.draw(window);
+        paramButton.draw(window);
+    } else if (currentState == State::ERRORSERVER) {
+        errorServer.draw(window);
+        backButton.draw(window);
     } else if (currentState == State::QUIT) {
         window.close();
     }
@@ -203,16 +210,21 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window)
                 statusText.setString("Connected to the server !");
                 statusText.setFillColor(sf::Color::Green);
                 isConnected = true;
+                currentState = State::LOBBY;
             } else {
                 statusText.setString("Connection failed");
                 statusText.setFillColor(sf::Color::Red);
                 isConnected = false;
+                currentState = State::ERRORSERVER;
             }
         }
-    }
-    else if (currentState == State::SETTINGS) {
+    } else if (currentState == State::SETTINGS) {
         if (backButton.isClicked(mousePos)) {
-            currentState = State::MENU;
+            if (isConnected) {
+                currentState = State::LOBBY;
+            } else {
+                currentState = State::MENU;
+            }
             updateStatusTextPosition(false);
             statusText.setString("");
             statusText.setFillColor(sf::Color::Yellow);
@@ -241,6 +253,12 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window)
             isDraggingVolume = true;
             paramButton.setVolumeFromMouse(mousePos.x);
         }
+    } else if (currentState == State::LOBBY) {
+        if (paramButton.isClicked(mousePos)) {
+            currentState = State::SETTINGS;
+            updateStatusTextPosition(true);
+            statusText.setString("");
+        }
     }
 }
 
@@ -258,6 +276,8 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
         if (isDraggingVolume) {
             paramButton.setVolumeFromMouse(mousePos.x);
         }
+    } else if (currentState == State::LOBBY) {
+        paramButton.setHovered(paramButton.isClicked(mousePos));
     }
 }
 

@@ -15,11 +15,15 @@
 #include "Parameters.hpp"
 #include "ParamButton.hpp"
 #include "ParticleSystem.hpp"
+#include "Lobby.hpp"
+#include "ErrorServer.hpp"
 
 enum class State {
     MENU,
     SETTINGS,
     GAME,
+    LOBBY,
+    ERRORSERVER,
     QUIT
 };
 
@@ -27,6 +31,8 @@ class GameManager {
     private:
         Menu menu;
         Parameters parameters;
+        Lobby lobby;
+        ErrorServer errorServer;
         Button connectButton;
         ParamButton paramButton;
         ParamButton fps30Button;
