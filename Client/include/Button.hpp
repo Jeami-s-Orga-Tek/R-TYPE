@@ -13,6 +13,7 @@
 
 class Button {
 public:
+    Button() = default;
     Button(sf::Vector2f position, sf::Vector2f size, const std::string& text, sf::Font& font);
     ~Button() = default;
     

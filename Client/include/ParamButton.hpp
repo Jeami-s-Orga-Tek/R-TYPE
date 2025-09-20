@@ -13,6 +13,7 @@
 
 class ParamButton {
 public:
+    ParamButton() = default;
     ParamButton(sf::Vector2f position, sf::Vector2f size, const std::string& text, sf::Font& font);
     ~ParamButton() = default;
 

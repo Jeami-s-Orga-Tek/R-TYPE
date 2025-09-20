@@ -18,44 +18,48 @@ using boost::asio::ip::udp;
 
 GameManager::GameManager(sf::Vector2u windowSize)
     : menu(windowSize), parameters(windowSize),
-      connectButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50), "Connect", font),
-      paramButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50), "Parameters", font),
-      fps30Button(sf::Vector2f(windowSize.x/2 - 120, windowSize.y - 400), sf::Vector2f(80, 40), "FPS 30", font),
-      fps60Button(sf::Vector2f(windowSize.x/2 + 40, windowSize.y - 400), sf::Vector2f(80, 40), "FPS 60", font),
-      backButton(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40), "Back", font),
+      particleSystem(windowSize, 300), 
       currentState(State::MENU),
       isConnected(false),
       isDraggingVolume(false),
       currentFps(60)
 {
-}
-
-bool GameManager::initializeResources()
-{
     if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
         std::cerr << "Impossible de charger la police Carlito, essai avec Symbola..." << std::endl;
         if (!font.loadFromFile("/usr/share/fonts/gdouros-symbola/Symbola.ttf")) {
             std::cerr << "Erreur: Impossible de charger toutes les polices disponibles!" << std::endl;
-            return false;
         }
     }
     
+    connectButton = Button(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50), "Connect", font);
+    paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50), "Parameters", font);
+    fps30Button = ParamButton(sf::Vector2f(windowSize.x/2 - 120, windowSize.y - 400), sf::Vector2f(80, 40), "FPS 30", font);
+    fps60Button = ParamButton(sf::Vector2f(windowSize.x/2 + 40, windowSize.y - 400), sf::Vector2f(80, 40), "FPS 60", font);
+    backButton = Button(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40), "Back", font);
+    
     if (!menu.loadResources() || !parameters.loadResources()) {
         std::cerr << "Erreur lors du chargement des ressources" << std::endl;
-        return false;
     }
+    
     statusText.setFont(font);
     statusText.setCharacterSize(16);
     statusText.setFillColor(sf::Color::Yellow);
-
-    fpsDisplay.setFont(font);
-    fpsDisplay.setCharacterSize(18);
-    fpsDisplay.setFillColor(sf::Color::White);
-    fpsDisplay.setPosition(10, 10);
-
-    paramButton.setupVolumeBar(sf::Vector2f(400, 350), 200.f);
     
-    return true;
+    fpsDisplay.setFont(font);
+    fpsDisplay.setCharacterSize(14);
+    fpsDisplay.setFillColor(sf::Color::Green);
+    fpsDisplay.setPosition(10, 10);
+    
+    paramButton.setupVolumeBar(sf::Vector2f(400, 350), 200.f);
+}
+
+void GameManager::updatePositions(sf::Vector2u windowSize)
+{
+    connectButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50));
+    paramButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50));
+    fps30Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 120, windowSize.y - 400), sf::Vector2f(80, 40));
+    fps60Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 + 40, windowSize.y - 400), sf::Vector2f(80, 40));
+    backButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40));
 }
 
 void GameManager::handleEvents(sf::RenderWindow& window)
@@ -96,13 +100,17 @@ void GameManager::handleEvents(sf::RenderWindow& window)
 
 void GameManager::update()
 {
+    float deltaTime = deltaClock.restart().asSeconds();
+    
     menu.update();
     fpsDisplay.setString("FPS: " + std::to_string(currentFps));
+    particleSystem.update(deltaTime);
 }
 
 void GameManager::render(sf::RenderWindow& window)
 {
     window.clear(sf::Color::Black);
+    particleSystem.render(window);
 
     if (currentState == State::MENU) {
         menu.draw(window);
@@ -135,7 +143,7 @@ bool GameManager::shouldClose() const
     return currentState == State::QUIT;
 }
 
-void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow& window)
+void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow& /* window */)
 {
     if (event.key.code == sf::Keyboard::Escape) {
         if (currentState == State::SETTINGS) {
@@ -146,6 +154,11 @@ void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow& window)
         } else {
             currentState = State::QUIT;
         }
+    }
+    
+    if (event.key.code == sf::Keyboard::F11) {
+        statusText.setString("F11 pressed - Fullscreen toggle");
+        statusText.setFillColor(sf::Color::Cyan);
     }
 }
 
@@ -244,6 +257,8 @@ void GameManager::handleWindowResize(sf::Event& event)
         sf::Vector2f(newSize.x/2 - 100, newSize.y - 250),
         200.f
     );
+    particleSystem.updateWindowSize(newSize);
+    
     if (currentState == State::SETTINGS) {
         updateStatusTextPosition(true);
     } else {

@@ -25,11 +25,9 @@ int main()
     if (!handle) {
         std::cerr << "Warning: Failed to load libengine.so: " << dlerror() << std::endl;
     }
+    
     GameManager gameManager(window.getSize());
-    if (!gameManager.initializeResources()) {
-        std::cerr << "Erreur lors de l'initialisation des ressources" << std::endl;
-        return -1;
-    }
+    
     while (window.isOpen() && !gameManager.shouldClose()) {
         gameManager.handleEvents(window);
         gameManager.update();

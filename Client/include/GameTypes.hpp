@@ -14,6 +14,7 @@
 #include "Menu.hpp"
 #include "Parameters.hpp"
 #include "ParamButton.hpp"
+#include "ParticleSystem.hpp"
 
 enum class State {
     MENU,
@@ -34,6 +35,9 @@ class GameManager {
         sf::Text statusText;
         sf::Text fpsDisplay;
         sf::Font font;
+    
+        ParticleSystem particleSystem;
+        sf::Clock deltaClock;
         
         State currentState;
         bool isConnected;
@@ -45,11 +49,11 @@ class GameManager {
 
         ~GameManager() = default;
 
-        bool initializeResources();
         void handleEvents(sf::RenderWindow& window);
         void update();
         void render(sf::RenderWindow& window);
         bool shouldClose() const;
+        void updatePositions(sf::Vector2u windowSize);
 
         State getCurrentState() const { return currentState; }
         int getCurrentFps() const { return currentFps; }
