@@ -5,33 +5,29 @@
 ** main
 */
 
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <dlfcn.h>
-#endif
 #include <iostream>
-
+#include <dlfcn.h>
+#include "GameTypes.hpp"
 
 int main()
 {
-#ifdef _WIN32
-    HMODULE handle = LoadLibraryA("libengine.dll");
-    if (!handle) {
-        std::cerr << "Failed to load libengine.dll" << std::endl;
-        return 1;
-    } else {
-        std::cout << "Loaded libengine.dll successfully" << std::endl;
-    }
-#else
+    sf::RenderWindow window(sf::VideoMode(800, 600), "R-Type Client");
+    window.setFramerateLimit(60);
+    
     void *handle = dlopen("libengine.so", RTLD_LAZY);
     if (!handle) {
-        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
-        return 1;
-    } else {
-        std::cout << "Loaded libengine.so successfully" << std::endl;
+        std::cerr << "Warning: Failed to load libengine.so: " << dlerror() << std::endl;
     }
-#endif
-
+    
+    GameManager gameManager(window.getSize());
+    
+    while (window.isOpen() && !gameManager.shouldClose()) {
+        gameManager.handleEvents(window);
+        gameManager.update();
+        gameManager.render(window);
+    }
+    if (handle) {
+        dlclose(handle);
+    }
     return 0;
 }

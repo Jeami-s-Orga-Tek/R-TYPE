@@ -4,7 +4,6 @@ project(r-type_client)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Ofast")
-set(SFML_VERSION 2.6.1)
 
 include_directories(include)
 
@@ -12,7 +11,8 @@ file(GLOB SOURCES src/*.cpp)
 
 include(../cmake/CPM.cmake)
 
-CPMAddPackage("gh:sfml/sfml#3.0.0")
+CPMAddPackage("gh:sfml/sfml#2.6.2")
+
 CPMAddPackage(
   NAME Boost
   VERSION 1.86.0
@@ -25,4 +25,13 @@ CPMAddPackage(
 add_executable(r-type_client ${SOURCES})
 
 link_directories(${CMAKE_BINARY_DIR}/libengine)
-target_link_libraries(r-type_client PRIVATE engine)
+target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+target_link_libraries(r-type_client PRIVATE
+  engine
+  sfml-graphics
+  sfml-window
+  sfml-system
+  ${SFML_LIBRARIES}
+  ${Boost_LIBRARIES}
+  pthread
+)
