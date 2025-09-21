@@ -42,6 +42,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
     resolutionButton = Button(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30), "Changer", font);
     displayModeButton = Button(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30), "Changer", font);
     graphicsQualityButton = Button(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30), "Changer", font);
+    colorBlindModeButton = Button(sf::Vector2f(buttonX, 420), sf::Vector2f(buttonWidth, 30), "Changer", font);
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35), "Appliquer", font);
@@ -74,6 +75,7 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
     resolutionButton.updatePositionAndSize(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30));
     displayModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30));
     graphicsQualityButton.updatePositionAndSize(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30));
+    colorBlindModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 420), sf::Vector2f(buttonWidth, 30));
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35));
@@ -143,6 +145,7 @@ void GameManager::render(sf::RenderWindow& window)
         resolutionButton.draw(window);
         displayModeButton.draw(window);
         graphicsQualityButton.draw(window);
+        colorBlindModeButton.draw(window);
         applyResolutionButton.draw(window);
         paramButton.drawVolumeBar(window);
     } else if (currentState == State::QUIT) {
@@ -233,6 +236,9 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window)
         }
         if (graphicsQualityButton.isClicked(mousePos)) {
             cycleGraphicsQuality();
+        }
+        if (colorBlindModeButton.isClicked(mousePos)) {
+            cycleColorBlindMode();
         }
         if (applyResolutionButton.isClicked(mousePos)) {
             applyCurrentResolution(window);
@@ -465,6 +471,35 @@ void GameManager::cycleGraphicsQuality()
             particleSystem.setMaxParticles(500);
             break;
     }
+}
+
+void GameManager::cycleColorBlindMode()
+{
+    ColorBlindMode currentMode = parameters.getCurrentColorBlindMode();
+    ColorBlindMode nextMode;
+    
+    switch (currentMode) {
+        case ColorBlindMode::NORMAL:
+            nextMode = ColorBlindMode::PROTANOPIA;
+            break;
+        case ColorBlindMode::PROTANOPIA:
+            nextMode = ColorBlindMode::DEUTERANOPIA;
+            break;
+        case ColorBlindMode::DEUTERANOPIA:
+            nextMode = ColorBlindMode::TRITANOPIA;
+            break;
+        case ColorBlindMode::TRITANOPIA:
+            nextMode = ColorBlindMode::MONOCHROME;
+            break;
+        case ColorBlindMode::MONOCHROME:
+            nextMode = ColorBlindMode::NORMAL;
+            break;
+        default:
+            nextMode = ColorBlindMode::NORMAL;
+            break;
+    }
+    
+    parameters.setColorBlindMode(nextMode);
 }
 
 void GameManager::applyCurrentResolution(sf::RenderWindow& window)

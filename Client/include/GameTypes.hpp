@@ -35,6 +35,7 @@ class GameManager {
         Button resolutionButton;
         Button displayModeButton;
         Button graphicsQualityButton;
+        Button colorBlindModeButton;
         Button applyResolutionButton;
         
         sf::Text statusText;
@@ -62,6 +63,7 @@ class GameManager {
         void cycleResolution();
         void cycleDisplayMode(sf::RenderWindow& window);
         void cycleGraphicsQuality();
+        void cycleColorBlindMode();
         void applyCurrentResolution(sf::RenderWindow& window);
 
         State getCurrentState() const { return currentState; }
