@@ -31,20 +31,19 @@ GameManager::GameManager(sf::Vector2u windowSize)
         }
     }
     
-    connectButton = Button(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50), "Play", font);
-    paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50), "Parameters", font);
+    paramButton = ParamButton(sf::Vector2f(windowSize.x/2 -100, windowSize.y - 150), sf::Vector2f(200, 50), "Parameters", font);
     fps30Button = ParamButton(sf::Vector2f(50, 400), sf::Vector2f(80, 40), "FPS 30", font);
     fps60Button = ParamButton(sf::Vector2f(150, 400), sf::Vector2f(80, 40), "FPS 60", font);
     backButton = Button(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40), "Back", font);
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
     float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
     
-    resolutionButton = Button(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30), "Changer", font);
-    displayModeButton = Button(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30), "Changer", font);
-    graphicsQualityButton = Button(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30), "Changer", font);
+    resolutionButton = Button(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30), "Change", font);
+    displayModeButton = Button(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30), "Change", font);
+    graphicsQualityButton = Button(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30), "Change", font);
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
-    applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35), "Appliquer", font);
+    applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35), "Apply", font);
     
     if (!menu.loadResources() || !parameters.loadResources() || !player.loadResources() || !errorServer.loadResources()) {
         std::cerr << "Erreur lors du chargement des ressources" << std::endl;
@@ -58,12 +57,19 @@ GameManager::GameManager(sf::Vector2u windowSize)
     fpsDisplay.setCharacterSize(14);
     fpsDisplay.setFillColor(sf::Color::Green);
     fpsDisplay.setPosition(10, 10);
+
+    insertCoinText.setFont(font);
+    insertCoinText.setString("INSERT COIN");
+    insertCoinText.setCharacterSize(48);
+    insertCoinText.setFillColor(sf::Color::Yellow);
+    sf::FloatRect bounds = insertCoinText.getLocalBounds();
+    insertCoinText.setPosition(windowSize.x/2 - bounds.width/2, windowSize.y/2 - bounds.height/2 + 50);
+
     paramButton.setupVolumeBar(sf::Vector2f(windowSize.x - 220, windowSize.y - 80), 200.f);
 }
 
 void GameManager::updatePositions(sf::Vector2u windowSize)
 {
-    connectButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50));
     paramButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50));
     fps30Button.updatePositionAndSize(sf::Vector2f(50, 400), sf::Vector2f(80, 40));
     fps60Button.updatePositionAndSize(sf::Vector2f(150, 400), sf::Vector2f(80, 40));
@@ -77,6 +83,8 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35));
+    sf::FloatRect bounds = insertCoinText.getLocalBounds();
+    insertCoinText.setPosition(windowSize.x/2 - bounds.width/2, windowSize.y/2 - bounds.height/2 + 50);
 }
 
 void GameManager::handleEvents(sf::RenderWindow& window)
@@ -105,7 +113,6 @@ void GameManager::handleEvents(sf::RenderWindow& window)
         if (event.type == sf::Event::MouseMoved) {
             handleMouseMove(window);
         } else {
-            connectButton.setHovered(false);
             paramButton.setHovered(false);
             fps30Button.setHovered(false);
             fps60Button.setHovered(false);
@@ -121,14 +128,17 @@ void GameManager::handleEvents(sf::RenderWindow& window)
 void GameManager::update()
 {
     float deltaTime = deltaClock.restart().asSeconds();
+    float coinTime = insertCoinClock.getElapsedTime().asSeconds();
 
     if (currentState == State::MENU) {
         menu.update();
+        coinTime = static_cast<int>(128 + 127 * std::sin(coinTime * 2.5f));
+        insertCoinText.setFillColor(sf::Color(238, 130, 238, coinTime));
     } else if (currentState == State::LOBBY) {
         lobby.update();
         player.update();
     } else if (currentState == State::ERRORSERVER) {
-            errorServer.update();
+        errorServer.update();
     }
     fpsDisplay.setString("FPS: " + std::to_string(currentFps));
     particleSystem.update(deltaTime);
@@ -141,8 +151,8 @@ void GameManager::render(sf::RenderWindow& window)
 
     if (currentState == State::MENU) {
         menu.draw(window);
-        connectButton.draw(window);
         paramButton.draw(window);
+        window.draw(insertCoinText); // Draw animated text
     } else if (currentState == State::GAME) {
         window.close();
     } else if (currentState == State::SETTINGS) {
@@ -157,9 +167,11 @@ void GameManager::render(sf::RenderWindow& window)
         paramButton.drawVolumeBar(window);
     } else if (currentState == State::LOBBY) {
         player.draw(window);
+        paramButton.updatePositionAndSize(sf::Vector2f(50, window.getSize().y - 100), sf::Vector2f(125, 30));
         paramButton.draw(window);
     } else if (currentState == State::ERRORSERVER) {
         errorServer.draw(window);
+        paramButton.updatePositionAndSize(sf::Vector2f(50, window.getSize().y - 100), sf::Vector2f(125, 30));
         paramButton.draw(window);
     } else if (currentState == State::QUIT) {
         window.close();
@@ -185,7 +197,7 @@ bool GameManager::shouldClose() const
     return currentState == State::QUIT;
 }
 
-void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow& /* window */)
+void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow&)
 {
     if (event.key.code == sf::Keyboard::Escape) {
         if (currentState == State::SETTINGS) {
@@ -216,21 +228,16 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window)
             updateStatusTextPosition(true);
             statusText.setString("");
         }
-        if (connectButton.isClicked(mousePos)) {
-            std::cout << "Bouton de connexion cliqué!" << std::endl;
-            statusText.setString("Connexion en cours...");
-            statusText.setFillColor(sf::Color::Yellow);
-            if (connectToServer("127.0.0.1", 8080)) {
-                statusText.setString("Connected to the server !");
-                statusText.setFillColor(sf::Color::Green);
-                isConnected = ServerState::CONNECT;
-                currentState = State::LOBBY;
-            } else {
-                statusText.setString("Connection failed");
-                statusText.setFillColor(sf::Color::Red);
-                isConnected = ServerState::DISCONNECT;
-                currentState = State::ERRORSERVER;
-            }
+        if (connectToServer("127.0.0.1", 8080)) {
+            statusText.setString("Connected to the server !");
+            statusText.setFillColor(sf::Color::Green);
+            isConnected = ServerState::CONNECT;
+            currentState = State::LOBBY;
+        } else {
+            statusText.setString("Connection failed");
+            statusText.setFillColor(sf::Color::Red);
+            isConnected = ServerState::DISCONNECT;
+            currentState = State::ERRORSERVER;
         }
     } else if (currentState == State::SETTINGS) {
         if (backButton.isClicked(mousePos)) {
@@ -289,7 +296,7 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     
     if (currentState == State::MENU) {
-        connectButton.setHovered(connectButton.isClicked(mousePos));
+        // connectButton.setHovered(connectButton.isClicked(mousePos)); // Removed
         paramButton.setHovered(paramButton.isClicked(mousePos));
     } else if (currentState == State::SETTINGS) {
         backButton.setHovered(backButton.isClicked(mousePos));
@@ -317,10 +324,6 @@ void GameManager::handleWindowResize(sf::Event& event)
     } else if (currentState == State::ERRORSERVER) {
         errorServer.updateWindowSize(newSize);
     }
-    connectButton.updatePositionAndSize(
-        sf::Vector2f(newSize.x/2 - 100, newSize.y - 250),
-        sf::Vector2f(200, 50)
-    );
     paramButton.updatePositionAndSize(
         sf::Vector2f(newSize.x/2 - 100, newSize.y - 150),
         sf::Vector2f(200, 50)

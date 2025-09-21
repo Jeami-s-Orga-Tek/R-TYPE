@@ -34,6 +34,8 @@ enum class ServerState {
     DEFAULT
 };
 
+//enum class
+
 class GameManager {
     private:
         Menu menu;
@@ -41,7 +43,6 @@ class GameManager {
         Lobby lobby;
         ErrorServer errorServer;
         Player player;
-        Button connectButton;
         ParamButton paramButton;
         ParamButton fps30Button;
         ParamButton fps60Button;
@@ -54,7 +55,10 @@ class GameManager {
         sf::Text statusText;
         sf::Text fpsDisplay;
         sf::Font font;
-    
+
+        sf::Text insertCoinText;
+        sf::Clock insertCoinClock;
+
         ParticleSystem particleSystem;
         sf::Clock deltaClock;
         
