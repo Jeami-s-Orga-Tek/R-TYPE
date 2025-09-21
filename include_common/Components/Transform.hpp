@@ -15,6 +15,7 @@ namespace Engine {
         typedef struct Transform_s {
             Utils::Vec2 pos;
             float rot;
+            float scale;
         } Transform;
     };
 };

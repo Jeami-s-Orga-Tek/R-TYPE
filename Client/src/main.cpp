@@ -15,6 +15,7 @@
 #include "Mediator.hpp"
 #include "Systems/Physics.hpp"
 #include "Systems/Render.hpp"
+#include "Systems/PlayerControl.hpp"
 
 int main()
 {
@@ -50,6 +51,9 @@ int main()
 
     auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
     auto render_system = mediator->registerSystem<Engine::Systems::RenderSystem>();
+    
+    auto player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
+    player_control_system->init(mediator);
 
     render_system->addSprite("player", "assets/sprites/r-typesheet1.gif", {32, 14}, {101, 3}, 10, 1);
 
@@ -59,13 +63,13 @@ int main()
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
 
-    const int entity_number = MAX_ENTITIES;
+    const int entity_number = 4;
 
     for (int i = 0; i < entity_number; i++) {
         Engine::Entity entity = mediator->createEntity();
         mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
         mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
-        mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f});
+        mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
         mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
     }
 
@@ -83,6 +87,8 @@ int main()
     fps_text.setCharacterSize(20);
     fps_text.setFillColor(sf::Color::Green);
     fps_text.setPosition(10, 10);
+
+    std::bitset<5> buttons {};
 
     while (window.isOpen()) {
         sf::Event event;
@@ -104,7 +110,31 @@ int main()
 
         auto startTime = std::chrono::high_resolution_clock::now();
 
-		physics_system->update(mediator, dt);
+        // Move this into its own window manager / game manager class thing later
+        buttons.reset();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+            buttons.set(static_cast<std::size_t>(Engine::InputButtons::LEFT));
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            buttons.set(static_cast<std::size_t>(Engine::InputButtons::RIGHT));
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+            buttons.set(static_cast<std::size_t>(Engine::InputButtons::UP));
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            buttons.set(static_cast<std::size_t>(Engine::InputButtons::DOWN));
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            buttons.set(static_cast<std::size_t>(Engine::InputButtons::SHOOT));
+        }
+
+        // ugly bad :( when network is there don't send 1000000 packets for nothing :(((
+        Engine::Event player_input_event(static_cast<Engine::EventId>(Engine::EventsIds::PLAYER_INPUT));
+        player_input_event.setParam(0, buttons);
+        mediator->sendEvent(player_input_event);
+
+		// physics_system->update(mediator, dt);
+        player_control_system->update(mediator, dt);
         render_system->update(mediator, window, dt);
 
         window.draw(fps_text);

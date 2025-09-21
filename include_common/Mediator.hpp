@@ -13,6 +13,7 @@
 #include "EntityManager.hpp"
 #include "ComponentManager.hpp"
 #include "SystemManager.hpp"
+#include "EventManager.hpp"
 
 namespace Engine {
     class Mediator {
@@ -27,10 +28,14 @@ namespace Engine {
             template <typename T> ComponentType getComponentType();
             template <typename T> std::shared_ptr<T> registerSystem();
             template <typename T> std::shared_ptr<T> setSystemSignature(Signature signature);
+            void addEventListener(EventId eventId, std::function<void(Event &)> const &listener);
+            void sendEvent(EventId eventId);
+            void sendEvent(Event &event);
         private:
             std::unique_ptr<EntityManager> entityManager {};
             std::unique_ptr<ComponentManager> componentManager {};
             std::unique_ptr<SystemManager> systemManager {};
+            std::unique_ptr<EventManager> eventManager {};
     };
 };
 

@@ -59,12 +59,12 @@ namespace Engine {
 
                 void update(std::shared_ptr<Mediator> mediator, sf::RenderWindow &window, float dt) {
                     for (const auto &entity : entities) {
-                        const auto& transform = mediator->getComponent<Components::Transform>(entity);
+                        const auto &transform = mediator->getComponent<Components::Transform>(entity);
                         // sf::RectangleShape rectangle(sf::Vector2f(50.f, 50.f));
                         // rectangle.setPosition(transform.pos.x, transform.pos.y);
                         // window.draw(rectangle);
 
-                        const auto& entity_sprite = mediator->getComponent<Components::Sprite>(entity);
+                        const auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
                         auto sprite_find = sprites.find(entity_sprite.sprite_name);
                         if (sprite_find == sprites.end()) {
                             throw SpriteError("Couldn't find sprite for an entity D:");
@@ -74,6 +74,7 @@ namespace Engine {
                         sprite.sprite.setPosition({transform.pos.x, transform.pos.y});
                         sprite.sprite.setRotation(transform.rot);
                         sprite.sprite.setTextureRect({sprite.pos.x * entity_sprite.frame_nb, sprite.pos.y, sprite.size.x, sprite.size.y});
+                        sprite.sprite.setScale({transform.scale, transform.scale});
 
                         window.draw(sprite.sprite);
                     }

@@ -22,13 +22,13 @@ namespace Engine {
             public:
                 void update(std::shared_ptr<Mediator> mediator, float dt) {
                     for (const auto &entity : entities) {
-                        auto& rigidBody = mediator->getComponent<Components::RigidBody>(entity);
-                        auto& transform = mediator->getComponent<Components::Transform>(entity);
-                        auto const& gravity = mediator->getComponent<Components::Gravity>(entity);
+                        auto &rigidbody = mediator->getComponent<Components::RigidBody>(entity);
+                        auto &transform = mediator->getComponent<Components::Transform>(entity);
+                        auto const &gravity = mediator->getComponent<Components::Gravity>(entity);
 
-                        transform.pos += rigidBody.velocity * dt;
+                        transform.pos += rigidbody.velocity * dt;
 
-                        rigidBody.velocity += gravity.force * dt;
+                        rigidbody.velocity += gravity.force * dt;
                     }
                 };
         };

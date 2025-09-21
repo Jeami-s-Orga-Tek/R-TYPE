@@ -12,6 +12,7 @@ void Engine::Mediator::init()
     entityManager = std::make_unique<Engine::EntityManager>();
     componentManager = std::make_unique<Engine::ComponentManager>();
     systemManager = std::make_unique<Engine::SystemManager>();
+    eventManager = std::make_unique<Engine::EventManager>();
 }
 
 Engine::Entity Engine::Mediator::createEntity()
@@ -73,6 +74,18 @@ void Engine::Mediator::destroyEntity(Entity entity)
 // {
 //     systemManager->setSignature<T>(signature);
 // }
+
+void Engine::Mediator::addEventListener(EventId event_id, std::function<void(Event &)> const &listener) {
+    eventManager->addListener(event_id, listener);
+}
+
+void Engine::Mediator::sendEvent(Event& event) {
+    eventManager->sendEvent(event);
+}
+
+void Engine::Mediator::sendEvent(EventId event_id) {
+    eventManager->sendEvent(event_id);
+}
 
 extern "C" std::shared_ptr<Engine::Mediator> createMediator() {
     return (std::make_shared<Engine::Mediator>());
