@@ -33,8 +33,8 @@ GameManager::GameManager(sf::Vector2u windowSize)
     
     connectButton = Button(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50), "Connect", font);
     paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50), "Parameters", font);
-    fps30Button = ParamButton(sf::Vector2f(50, 400), sf::Vector2f(80, 40), "FPS 30", font);
-    fps60Button = ParamButton(sf::Vector2f(150, 400), sf::Vector2f(80, 40), "FPS 60", font);
+    fps30Button = ParamButton(sf::Vector2f(windowSize.x/2 - 90, windowSize.y - 60), sf::Vector2f(80, 40), "FPS 30", font);
+    fps60Button = ParamButton(sf::Vector2f(windowSize.x/2 + 10, windowSize.y - 60), sf::Vector2f(80, 40), "FPS 60", font);
     backButton = Button(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40), "Back", font);
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
     float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
@@ -66,8 +66,8 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
 {
     connectButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50));
     paramButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50));
-    fps30Button.updatePositionAndSize(sf::Vector2f(50, 400), sf::Vector2f(80, 40));
-    fps60Button.updatePositionAndSize(sf::Vector2f(150, 400), sf::Vector2f(80, 40));
+    fps30Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 90, windowSize.y - 60), sf::Vector2f(80, 40));
+    fps60Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 + 10, windowSize.y - 60), sf::Vector2f(80, 40));
     backButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40));
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
     float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
@@ -281,11 +281,11 @@ void GameManager::handleWindowResize(sf::Event& event)
         sf::Vector2f(200, 50)
     );
     fps30Button.updatePositionAndSize(
-        sf::Vector2f(50, 400),
+        sf::Vector2f(newSize.x/2 - 90, newSize.y - 60),
         sf::Vector2f(80, 40)
     );
     fps60Button.updatePositionAndSize(
-        sf::Vector2f(150, 400),
+        sf::Vector2f(newSize.x/2 + 10, newSize.y - 60),
         sf::Vector2f(80, 40)
     );
     backButton.updatePositionAndSize(
