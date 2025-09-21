@@ -127,9 +127,9 @@ void Parameters::updateVideoSettingsPositions()
     DisplayModeValue.setPosition(rightOffset, 250);
     GraphicsQualityLabel.setPosition(leftMargin, 300);
     GraphicsQualityValue.setPosition(rightOffset, 300);
-    AccessibilityTitle.setPosition(leftMargin, 370);
-    ColorBlindLabel.setPosition(leftMargin, 420);
-    ColorBlindValue.setPosition(rightOffset, 420);
+    ColorBlindLabel.setPosition(leftMargin, 350);
+    ColorBlindValue.setPosition(rightOffset, 350);
+    AccessibilityTitle.setPosition(leftMargin, 420);
 }
 
 void Parameters::setupVideoSettings()
@@ -168,10 +168,6 @@ void Parameters::setupVideoSettings()
     GraphicsQualityValue.setString(getGraphicsQualityString(currentGraphicsQuality));
     GraphicsQualityValue.setCharacterSize(18);
     GraphicsQualityValue.setFillColor(sf::Color::Yellow);
-    AccessibilityTitle.setFont(FontParamsText);
-    AccessibilityTitle.setString("ACCESSIBILITE");
-    AccessibilityTitle.setCharacterSize(24);
-    AccessibilityTitle.setFillColor(sf::Color::Green);
     ColorBlindLabel.setFont(FontParamsText);
     ColorBlindLabel.setString("Mode daltonien:");
     ColorBlindLabel.setCharacterSize(18);
