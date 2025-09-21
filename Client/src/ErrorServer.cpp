@@ -14,7 +14,7 @@ ErrorServer::ErrorServer(sf::Vector2u windowSize) : windowSize(windowSize)
 
 bool ErrorServer::loadResources()
 {
-    if (!logoTexture.loadFromFile("sprite/R_type_name.png")) {
+    if (!logoTexture.loadFromFile("sprite/ErrorServerConnection.png")) {
         std::cerr << "Erreur" << std::endl;
         return false;
     }

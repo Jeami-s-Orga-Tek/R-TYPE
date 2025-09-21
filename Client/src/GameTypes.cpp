@@ -17,10 +17,10 @@
 using boost::asio::ip::udp;
 
 GameManager::GameManager(sf::Vector2u windowSize)
-    : menu(windowSize), parameters(windowSize), lobby(windowSize), errorServer(windowSize),
+    : menu(windowSize), parameters(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
       particleSystem(windowSize, 300), 
       currentState(State::MENU),
-      isConnected(false),
+      isConnected(ServerState::DEFAULT),
       isDraggingVolume(false),
       currentFps(60)
 {
@@ -46,7 +46,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35), "Appliquer", font);
     
-    if (!menu.loadResources() || !parameters.loadResources()) {
+    if (!menu.loadResources() || !parameters.loadResources() || !player.loadResources() || !errorServer.loadResources()) {
         std::cerr << "Erreur lors du chargement des ressources" << std::endl;
     }
     
@@ -112,15 +112,24 @@ void GameManager::handleEvents(sf::RenderWindow& window)
             backButton.setHovered(false);
         }
         menu.handleEvent(event, window);
+        lobby.handleEvent(event, window);
+        player.handleEvent(event, window);
+        errorServer.handleEvent(event, window);
     }
 }
 
 void GameManager::update()
 {
     float deltaTime = deltaClock.restart().asSeconds();
-    
-    menu.update();
-    lobby.update();
+
+    if (currentState == State::MENU) {
+        menu.update();
+    } else if (currentState == State::LOBBY) {
+        lobby.update();
+        player.update();
+    } else if (currentState == State::ERRORSERVER) {
+            errorServer.update();
+    }
     fpsDisplay.setString("FPS: " + std::to_string(currentFps));
     particleSystem.update(deltaTime);
 }
@@ -147,19 +156,24 @@ void GameManager::render(sf::RenderWindow& window)
         applyResolutionButton.draw(window);
         paramButton.drawVolumeBar(window);
     } else if (currentState == State::LOBBY) {
-        lobby.draw(window);
+        player.draw(window);
         paramButton.draw(window);
     } else if (currentState == State::ERRORSERVER) {
         errorServer.draw(window);
-        backButton.draw(window);
+        paramButton.draw(window);
     } else if (currentState == State::QUIT) {
         window.close();
     }
     window.draw(statusText);
     window.draw(fpsDisplay);
-    if (isConnected) {
+    if (isConnected == ServerState::CONNECT) {
         sf::CircleShape indicator(10);
         indicator.setFillColor(sf::Color::Green);
+        indicator.setPosition(750, 20);
+        window.draw(indicator);
+    } else if (isConnected == ServerState::DISCONNECT){
+        sf::CircleShape indicator(10);
+        indicator.setFillColor(sf::Color::Red);
         indicator.setPosition(750, 20);
         window.draw(indicator);
     }
@@ -209,19 +223,21 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window)
             if (connectToServer("127.0.0.1", 8080)) {
                 statusText.setString("Connected to the server !");
                 statusText.setFillColor(sf::Color::Green);
-                isConnected = true;
+                isConnected = ServerState::CONNECT;
                 currentState = State::LOBBY;
             } else {
                 statusText.setString("Connection failed");
                 statusText.setFillColor(sf::Color::Red);
-                isConnected = false;
+                isConnected = ServerState::DISCONNECT;
                 currentState = State::ERRORSERVER;
             }
         }
     } else if (currentState == State::SETTINGS) {
         if (backButton.isClicked(mousePos)) {
-            if (isConnected) {
+            if (isConnected == ServerState::CONNECT) {
                 currentState = State::LOBBY;
+            } else if (isConnected == ServerState::DISCONNECT) {
+                currentState = State::ERRORSERVER;
             } else {
                 currentState = State::MENU;
             }
@@ -259,6 +275,12 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window)
             updateStatusTextPosition(true);
             statusText.setString("");
         }
+    } else if (currentState == State::ERRORSERVER) {
+        if (paramButton.isClicked(mousePos)) {
+            currentState = State::SETTINGS;
+            updateStatusTextPosition(true);
+            statusText.setString("");
+        }
     }
 }
 
@@ -278,14 +300,23 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
         }
     } else if (currentState == State::LOBBY) {
         paramButton.setHovered(paramButton.isClicked(mousePos));
+    } else if (currentState == State::ERRORSERVER) {
+        paramButton.setHovered(paramButton.isClicked(mousePos));
     }
 }
 
 void GameManager::handleWindowResize(sf::Event& event)
 {
     sf::Vector2u newSize(event.size.width, event.size.height);
-    
-    menu.updateWindowSize(newSize);
+
+    if (currentState == State::MENU) {
+        menu.updateWindowSize(newSize);
+    } else if (currentState == State::LOBBY) {
+        lobby.updateWindowSize(newSize);
+        player.updateWindowSize(newSize);
+    } else if (currentState == State::ERRORSERVER) {
+        errorServer.updateWindowSize(newSize);
+    }
     connectButton.updatePositionAndSize(
         sf::Vector2f(newSize.x/2 - 100, newSize.y - 250),
         sf::Vector2f(200, 50)
@@ -387,7 +418,7 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
         }
         std::cout << "Timeout - Aucune réponse du serveur" << std::endl;
         socket.close();
-        return true;
+        return false;
     } catch (const std::exception& e) {
         std::cerr << "Exception lors de la connexion: " << e.what() << std::endl;
         return false;
