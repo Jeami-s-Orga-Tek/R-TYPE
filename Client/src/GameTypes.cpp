@@ -33,8 +33,8 @@ GameManager::GameManager(sf::Vector2u windowSize)
     
     connectButton = Button(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50), "Connect", font);
     paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50), "Parameters", font);
-    fps30Button = ParamButton(sf::Vector2f(50, 400), sf::Vector2f(80, 40), "FPS 30", font);
-    fps60Button = ParamButton(sf::Vector2f(150, 400), sf::Vector2f(80, 40), "FPS 60", font);
+    fps30Button = ParamButton(sf::Vector2f(windowSize.x/2 - 90, windowSize.y - 60), sf::Vector2f(80, 40), "FPS 30", font);
+    fps60Button = ParamButton(sf::Vector2f(windowSize.x/2 + 10, windowSize.y - 60), sf::Vector2f(80, 40), "FPS 60", font);
     backButton = Button(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40), "Back", font);
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
     float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
@@ -42,9 +42,10 @@ GameManager::GameManager(sf::Vector2u windowSize)
     resolutionButton = Button(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30), "Changer", font);
     displayModeButton = Button(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30), "Changer", font);
     graphicsQualityButton = Button(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30), "Changer", font);
+    colorBlindModeButton = Button(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30), "Changer", font);
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
-    applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35), "Appliquer", font);
+    applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35), "Appliquer", font);
     
     if (!menu.loadResources() || !parameters.loadResources()) {
         std::cerr << "Erreur lors du chargement des ressources" << std::endl;
@@ -65,8 +66,8 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
 {
     connectButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50));
     paramButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50));
-    fps30Button.updatePositionAndSize(sf::Vector2f(50, 400), sf::Vector2f(80, 40));
-    fps60Button.updatePositionAndSize(sf::Vector2f(150, 400), sf::Vector2f(80, 40));
+    fps30Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 90, windowSize.y - 60), sf::Vector2f(80, 40));
+    fps60Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 + 10, windowSize.y - 60), sf::Vector2f(80, 40));
     backButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40));
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
     float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
@@ -74,9 +75,10 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
     resolutionButton.updatePositionAndSize(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30));
     displayModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30));
     graphicsQualityButton.updatePositionAndSize(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30));
+    colorBlindModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30));
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
-    applyResolutionButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35));
+    applyResolutionButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35));
 }
 
 void GameManager::handleEvents(sf::RenderWindow& window)
@@ -143,6 +145,7 @@ void GameManager::render(sf::RenderWindow& window)
         resolutionButton.draw(window);
         displayModeButton.draw(window);
         graphicsQualityButton.draw(window);
+        colorBlindModeButton.draw(window);
         applyResolutionButton.draw(window);
         paramButton.drawVolumeBar(window);
     } else if (currentState == State::QUIT) {
@@ -234,6 +237,9 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window)
         if (graphicsQualityButton.isClicked(mousePos)) {
             cycleGraphicsQuality();
         }
+        if (colorBlindModeButton.isClicked(mousePos)) {
+            cycleColorBlindMode();
+        }
         if (applyResolutionButton.isClicked(mousePos)) {
             applyCurrentResolution(window);
         }
@@ -275,11 +281,11 @@ void GameManager::handleWindowResize(sf::Event& event)
         sf::Vector2f(200, 50)
     );
     fps30Button.updatePositionAndSize(
-        sf::Vector2f(50, 400),
+        sf::Vector2f(newSize.x/2 - 90, newSize.y - 60),
         sf::Vector2f(80, 40)
     );
     fps60Button.updatePositionAndSize(
-        sf::Vector2f(150, 400),
+        sf::Vector2f(newSize.x/2 + 10, newSize.y - 60),
         sf::Vector2f(80, 40)
     );
     backButton.updatePositionAndSize(
@@ -297,9 +303,10 @@ void GameManager::handleWindowResize(sf::Event& event)
     resolutionButton.updatePositionAndSize(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30));
     displayModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30));
     graphicsQualityButton.updatePositionAndSize(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30));
+    colorBlindModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30));
     
     float applyButtonWidth = std::min(150.0f, newSize.x * 0.25f);
-    applyResolutionButton.updatePositionAndSize(sf::Vector2f(newSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35));
+    applyResolutionButton.updatePositionAndSize(sf::Vector2f(newSize.x/2 - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35));
     
     if (currentState == State::SETTINGS) {
         updateStatusTextPosition(true);
@@ -465,6 +472,35 @@ void GameManager::cycleGraphicsQuality()
             particleSystem.setMaxParticles(500);
             break;
     }
+}
+
+void GameManager::cycleColorBlindMode()
+{
+    ColorBlindMode currentMode = parameters.getCurrentColorBlindMode();
+    ColorBlindMode nextMode;
+    
+    switch (currentMode) {
+        case ColorBlindMode::NORMAL:
+            nextMode = ColorBlindMode::PROTANOPIA;
+            break;
+        case ColorBlindMode::PROTANOPIA:
+            nextMode = ColorBlindMode::DEUTERANOPIA;
+            break;
+        case ColorBlindMode::DEUTERANOPIA:
+            nextMode = ColorBlindMode::TRITANOPIA;
+            break;
+        case ColorBlindMode::TRITANOPIA:
+            nextMode = ColorBlindMode::MONOCHROME;
+            break;
+        case ColorBlindMode::MONOCHROME:
+            nextMode = ColorBlindMode::NORMAL;
+            break;
+        default:
+            nextMode = ColorBlindMode::NORMAL;
+            break;
+    }
+    
+    parameters.setColorBlindMode(nextMode);
 }
 
 void GameManager::applyCurrentResolution(sf::RenderWindow& window)
