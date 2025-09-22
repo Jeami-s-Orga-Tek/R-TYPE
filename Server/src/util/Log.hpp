@@ -10,8 +10,7 @@
 
 #include <string>
 #include <iostream>
-
-
+#include <cstdio>
 
 namespace RtypeServer {
     enum LogLevel {
@@ -25,10 +24,52 @@ namespace RtypeServer {
     public:
         Log();
         ~Log();
+        
+        template<typename... Args>
+        void infof(const char* format, Args... args) {
+            printf("[INFO] ");
+            printf(format, args...);
+            printf("\n");
+        }
+        
+        template<typename... Args>
+        void warnf(const char* format, Args... args) {
+            printf("[WARN] ");
+            printf(format, args...);
+            printf("\n");
+        }
+        
+        template<typename... Args>
+        void errorf(const char* format, Args... args) {
+            printf("[ERROR] ");
+            printf(format, args...);
+            printf("\n");
+        }
 
     protected:
     private:
-};
+    };
+
+    template<typename... Args>
+    void infof(const char* format, Args... args) {
+        printf("[INFO] ");
+        printf(format, args...);
+        printf("\n");
+    }
+
+    template<typename... Args>
+    void warnf(const char* format, Args... args) {
+        printf("[WARN] ");
+        printf(format, args...);
+        printf("\n");
+    }
+
+    template<typename... Args>
+    void errorf(const char* format, Args... args) {
+        printf("[ERROR] ");
+        printf(format, args...);
+        printf("\n");
+    }
 }
 
 
