@@ -13,6 +13,8 @@
 #include <vector>
 #include <random>
 
+class Parameters;
+
 enum class ParticleType {
     STAR,
     DUST,
@@ -56,6 +58,8 @@ class ParticleSystem {
         std::vector<sf::Color> dustColors;
         std::vector<sf::Color> nebulaColors;
         
+        const Parameters* parameters;
+        
     public:
         ParticleSystem(sf::Vector2u winSize, int maxPart = 500);
         ~ParticleSystem() = default;
@@ -64,6 +68,7 @@ class ParticleSystem {
         void render(sf::RenderWindow& window);
         void updateWindowSize(sf::Vector2u newSize);
         void setMaxParticles(int maxPart);
+        void setParameters(const Parameters* params);
         
     private:
         void spawnParticle(ParticleType type);

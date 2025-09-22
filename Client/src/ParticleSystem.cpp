@@ -8,12 +8,13 @@
 
 
 #include "ParticleSystem.hpp"
+#include "Parameters.hpp"
 #include <cmath>
 #include <algorithm>
 
 ParticleSystem::ParticleSystem(sf::Vector2u winSize, int maxPart)
     : windowSize(winSize), generator(std::random_device{}()), distribution(0.0f, 1.0f),
-      maxParticles(maxPart), spawnRate(2.0f), spawnTimer(0.0f)
+      maxParticles(maxPart), spawnRate(2.0f), spawnTimer(0.0f), parameters(nullptr)
 {
     particles.reserve(maxParticles);
     
@@ -185,8 +186,12 @@ void ParticleSystem::renderParticle(sf::RenderWindow& window, const Particle& pa
             shape.setPointCount(30);
             break;
     }
+    sf::Color finalColor = particle.color;
+    if (parameters) {
+        finalColor = parameters->applyColorBlindFilter(particle.color);
+    }
     
-    shape.setFillColor(particle.color);
+    shape.setFillColor(finalColor);
     shape.setPosition(particle.position.x - particle.size, particle.position.y - particle.size);
     shape.setRotation(particle.rotation);
     
@@ -198,6 +203,10 @@ void ParticleSystem::renderParticle(sf::RenderWindow& window, const Particle& pa
         halo.setPointCount(30);
         sf::Color haloColor = particle.color;
         haloColor.a = static_cast<sf::Uint8>(haloColor.a * 0.2f);
+
+        if (parameters) {
+            haloColor = parameters->applyColorBlindFilter(haloColor);
+        }
         halo.setFillColor(haloColor);
         halo.setPosition(particle.position.x - particle.size * 2.0f, 
                         particle.position.y - particle.size * 2.0f);
@@ -293,4 +302,9 @@ void ParticleSystem::setMaxParticles(int maxPart)
     if (particles.size() > static_cast<size_t>(maxParticles)) {
         particles.resize(maxParticles);
     }
+}
+
+void ParticleSystem::setParameters(const Parameters* params)
+{
+    parameters = params;
 }

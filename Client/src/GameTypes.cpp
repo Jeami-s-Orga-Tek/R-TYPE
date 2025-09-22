@@ -60,6 +60,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
     fpsDisplay.setFillColor(sf::Color::Green);
     fpsDisplay.setPosition(10, 10);
     paramButton.setupVolumeBar(sf::Vector2f(windowSize.x - 220, windowSize.y - 80), 200.f);
+    particleSystem.setParameters(&parameters);
 }
 
 void GameManager::updatePositions(sf::Vector2u windowSize)
