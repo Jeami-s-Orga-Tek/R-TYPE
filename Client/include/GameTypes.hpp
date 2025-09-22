@@ -25,6 +25,7 @@ enum class State {
     MENU,
     LOBBY,
     GAME,
+    LOCKER,
     ERRORSERVER,
     SETTINGS,
     QUIT
@@ -46,9 +47,9 @@ enum class GameMode {
 class GameManager {
     private:
         Launch launch;
-        Menu menu;
+//        Menu menu;
         Parameters parameters;
-        Lobby lobby;
+//        Lobby lobby;
         ErrorServer errorServer;
         Player player;
         ParamButton paramButton;
@@ -60,6 +61,11 @@ class GameManager {
         Button graphicsQualityButton;
         Button colorBlindModeButton;
         Button applyResolutionButton;
+
+        Button lockerButton;
+        Button leftButtonSelection;
+        Button rightButtonSelection;
+        Button applyButtonLocker;
 
         Button soloButton;
         Button duoButton;
@@ -84,7 +90,7 @@ class GameManager {
         ServerState isConnected;
         bool isDraggingVolume;
         bool isChooseMode;
-        bool isChangeStarship;
+        int isChangeStarship;
         int currentFps;
         
     public:

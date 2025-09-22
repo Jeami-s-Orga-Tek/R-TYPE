@@ -26,9 +26,9 @@ public:
     bool loadResources();
     void draw(sf::RenderWindow& window);
     void handleEvent(const sf::Event& event, sf::RenderWindow& window);
-    void update(bool isChangeStarship);
+    void update(int isChangeStarship);
     void updateWindowSize(sf::Vector2u newSize);
-    void updateAnimationStarship(bool isChangeStarship);
+    void updateAnimationStarship(int isChangeStarship);
 //    void updateAnimationPlatform();
 
 private:

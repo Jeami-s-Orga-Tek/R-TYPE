@@ -68,13 +68,13 @@ void Player::handleEvent(const sf::Event& event, sf::RenderWindow& window)
     }
 }
 
-void Player::update(bool isChangeStarship)
+void Player::update(int isChangeStarship)
 {
     updateAnimationStarship(isChangeStarship);
 //    updateAnimationPlatform();
 }
 
-void Player::updateAnimationStarship(bool isChangeStarship)
+void Player::updateAnimationStarship(int isChangeStarship)
 {
     float frameTime = 0.15f;
     static int direction = 1;
@@ -83,10 +83,16 @@ void Player::updateAnimationStarship(bool isChangeStarship)
         return;
 
     starshipCounter++;
-    if (isChangeStarship) {
-        starshipRect.top += 18;
+    if (isChangeStarship == 1) {
+        starshipRect.height -= 18;
         if (starshipCounter >= 5) {
-            starshipRect.top = 0;
+            starshipRect.height = 0;
+            starshipCounter = 0;
+        }
+    } else if (isChangeStarship == 2) {
+        starshipRect.height += 18;
+        if (starshipCounter >= 5) {
+            starshipRect.height = 0;
             starshipCounter = 0;
         }
     } else {
@@ -94,7 +100,11 @@ void Player::updateAnimationStarship(bool isChangeStarship)
         if (starshipCounter >= 5) {
             direction *= -1;
             starshipCounter = 0;
-            starshipRect.left = (direction == 1) ? 0 : starshipRect.left - 33;
+            if (direction == 1) {
+                starshipRect.left = 0;
+            } else {
+                starshipRect.left = starshipRect.left - 33;
+            }
         }
         unsigned int maxLeft = starshipTexture.getSize().x - starshipRect.width;
         if (starshipRect.left < 0) starshipRect.left = 0;
