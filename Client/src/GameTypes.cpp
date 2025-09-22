@@ -17,11 +17,13 @@
 using boost::asio::ip::udp;
 
 GameManager::GameManager(sf::Vector2u windowSize)
-    : menu(windowSize), parameters(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
-      particleSystem(windowSize, 300), 
-      currentState(State::MENU),
+    : launch(windowSize), menu(windowSize), parameters(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
+      gameMode(GameMode::SOLO),
+      particleSystem(windowSize, 300),
+      currentState(State::LAUNCH),
       isConnected(ServerState::DEFAULT),
       isDraggingVolume(false),
+      isChooseMode(false),
       currentFps(60)
 {
     if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
@@ -45,10 +47,17 @@ GameManager::GameManager(sf::Vector2u windowSize)
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35), "Apply", font);
     
-    if (!menu.loadResources() || !parameters.loadResources() || !player.loadResources() || !errorServer.loadResources()) {
+    if (!launch.loadResources() || !parameters.loadResources() || !player.loadResources() || !errorServer.loadResources()) {
         std::cerr << "Erreur lors du chargement des ressources" << std::endl;
     }
-    
+
+    soloButton = Button(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 350), sf::Vector2f(100, 40), "Solo",font);
+    duoButton = Button(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 300), sf::Vector2f(100, 40), "Duo",font);
+    trioButton = Button(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 250), sf::Vector2f(100, 40), "Trio",font);
+    squadButton = Button(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 200), sf::Vector2f(100, 40), "Squad",font);
+    modeButton = Button(sf::Vector2f(windowSize.x/2 - 350, windowSize.y - 150), sf::Vector2f(100, 40), "Mode", font);
+    playButton = Button(sf::Vector2f(windowSize.x/2 + 250, windowSize.y - 100), sf::Vector2f(100, 40), "Play", font);
+
     statusText.setFont(font);
     statusText.setCharacterSize(16);
     statusText.setFillColor(sf::Color::Yellow);
@@ -76,13 +85,23 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
     backButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40));
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
     float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
-    
+
+    if (isChooseMode) {
+        soloButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 350), sf::Vector2f(100, 40));
+        duoButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 300), sf::Vector2f(100, 40));
+        trioButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 250), sf::Vector2f(100, 40));
+        squadButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 200), sf::Vector2f(100, 40));
+    }
+    modeButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 150), sf::Vector2f(100, 40));
+    playButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 + 250, windowSize.y - 100), sf::Vector2f(100, 40));
+
     resolutionButton.updatePositionAndSize(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30));
     displayModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30));
     graphicsQualityButton.updatePositionAndSize(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30));
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35));
+
     sf::FloatRect bounds = insertCoinText.getLocalBounds();
     insertCoinText.setPosition(windowSize.x/2 - bounds.width/2, windowSize.y/2 - bounds.height/2 + 50);
 }
@@ -118,6 +137,7 @@ void GameManager::handleEvents(sf::RenderWindow& window)
             fps60Button.setHovered(false);
             backButton.setHovered(false);
         }
+        launch.handleEvent(event, window);
         menu.handleEvent(event, window);
         lobby.handleEvent(event, window);
         player.handleEvent(event, window);
@@ -130,29 +150,45 @@ void GameManager::update()
     float deltaTime = deltaClock.restart().asSeconds();
     float coinTime = insertCoinClock.getElapsedTime().asSeconds();
 
-    if (currentState == State::MENU) {
-        menu.update();
+    if (currentState == State::LAUNCH) {
         coinTime = static_cast<int>(128 + 127 * std::sin(coinTime * 2.5f));
-        insertCoinText.setFillColor(sf::Color(238, 130, 238, coinTime));
+        insertCoinText.setFillColor(sf::Color(255, 255, 0, coinTime));
+        launch.update();
+    } else if (currentState == State::MENU) {
+        menu.update();
+        player.update();
     } else if (currentState == State::LOBBY) {
         lobby.update();
         player.update();
     } else if (currentState == State::ERRORSERVER) {
         errorServer.update();
     }
-    fpsDisplay.setString("FPS: " + std::to_string(currentFps));
+    if (currentState != State::LAUNCH) {
+        fpsDisplay.setString("FPS: " + std::to_string(currentFps));
+    }
     particleSystem.update(deltaTime);
 }
 
-void GameManager::render(sf::RenderWindow& window)
-{
+void GameManager::render(sf::RenderWindow& window) {
     window.clear(sf::Color::Black);
     particleSystem.render(window);
 
-    if (currentState == State::MENU) {
+    if (currentState == State::LAUNCH) {
+        launch.draw(window);
+        window.draw(insertCoinText);
+    } else if (currentState == State::MENU) {
         menu.draw(window);
+        paramButton.updatePositionAndSize(sf::Vector2f(50, window.getSize().y - 100), sf::Vector2f(125, 40));
         paramButton.draw(window);
-        window.draw(insertCoinText); // Draw animated text
+        if (isChooseMode) {
+            soloButton.draw(window);
+            duoButton.draw(window);
+            trioButton.draw(window);
+            squadButton.draw(window);
+        }
+        modeButton.draw(window);
+        playButton.draw(window);
+        player.draw(window);
     } else if (currentState == State::GAME) {
         window.close();
     } else if (currentState == State::SETTINGS) {
@@ -167,8 +203,6 @@ void GameManager::render(sf::RenderWindow& window)
         paramButton.drawVolumeBar(window);
     } else if (currentState == State::LOBBY) {
         player.draw(window);
-        paramButton.updatePositionAndSize(sf::Vector2f(50, window.getSize().y - 100), sf::Vector2f(125, 30));
-        paramButton.draw(window);
     } else if (currentState == State::ERRORSERVER) {
         errorServer.draw(window);
         paramButton.updatePositionAndSize(sf::Vector2f(50, window.getSize().y - 100), sf::Vector2f(125, 30));
@@ -177,7 +211,8 @@ void GameManager::render(sf::RenderWindow& window)
         window.close();
     }
     window.draw(statusText);
-    window.draw(fpsDisplay);
+    if (currentState != State::LAUNCH)
+        window.draw(fpsDisplay);
     if (isConnected == ServerState::CONNECT) {
         sf::CircleShape indicator(10);
         indicator.setFillColor(sf::Color::Green);
@@ -216,37 +251,40 @@ void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow&)
     }
 }
 
-void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window)
-{
+void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
     if (event.mouseButton.button != sf::Mouse::Left) return;
-    
+
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-    
-    if (currentState == State::MENU) {
-        if (paramButton.isClicked(mousePos)) {
-            currentState = State::SETTINGS;
-            updateStatusTextPosition(true);
-            statusText.setString("");
-        }
+    if (currentState == State::LAUNCH) {
         if (connectToServer("127.0.0.1", 8080)) {
             statusText.setString("Connected to the server !");
             statusText.setFillColor(sf::Color::Green);
             isConnected = ServerState::CONNECT;
-            currentState = State::LOBBY;
+            currentState = State::MENU;
         } else {
             statusText.setString("Connection failed");
             statusText.setFillColor(sf::Color::Red);
             isConnected = ServerState::DISCONNECT;
             currentState = State::ERRORSERVER;
         }
+    } else if (currentState == State::MENU) {
+        std::cout << isChooseMode << std::endl;
+        if (modeButton.isClicked(mousePos)) {
+            isChooseMode = true;
+        } else {
+            isChooseMode = false;
+        }
+        if (paramButton.isClicked(mousePos)) {
+            currentState = State::SETTINGS;
+            updateStatusTextPosition(true);
+            statusText.setString("");
+        }
     } else if (currentState == State::SETTINGS) {
         if (backButton.isClicked(mousePos)) {
             if (isConnected == ServerState::CONNECT) {
-                currentState = State::LOBBY;
+                currentState = State::MENU;
             } else if (isConnected == ServerState::DISCONNECT) {
                 currentState = State::ERRORSERVER;
-            } else {
-                currentState = State::MENU;
             }
             updateStatusTextPosition(false);
             statusText.setString("");
@@ -277,11 +315,6 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window)
             paramButton.setVolumeFromMouse(mousePos.x);
         }
     } else if (currentState == State::LOBBY) {
-        if (paramButton.isClicked(mousePos)) {
-            currentState = State::SETTINGS;
-            updateStatusTextPosition(true);
-            statusText.setString("");
-        }
     } else if (currentState == State::ERRORSERVER) {
         if (paramButton.isClicked(mousePos)) {
             currentState = State::SETTINGS;
@@ -296,8 +329,15 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     
     if (currentState == State::MENU) {
-        // connectButton.setHovered(connectButton.isClicked(mousePos)); // Removed
         paramButton.setHovered(paramButton.isClicked(mousePos));
+        if (isChooseMode) {
+            soloButton.setHovered(soloButton.isClicked(mousePos));
+            duoButton.setHovered(duoButton.isClicked(mousePos));
+            trioButton.setHovered(trioButton.isClicked(mousePos));
+            squadButton.setHovered(squadButton.isClicked(mousePos));
+        }
+        modeButton.setHovered(modeButton.isClicked(mousePos));
+        playButton.setHovered(playButton.isClicked(mousePos));
     } else if (currentState == State::SETTINGS) {
         backButton.setHovered(backButton.isClicked(mousePos));
         fps30Button.setHovered(fps30Button.isClicked(mousePos));
@@ -316,8 +356,11 @@ void GameManager::handleWindowResize(sf::Event& event)
 {
     sf::Vector2u newSize(event.size.width, event.size.height);
 
-    if (currentState == State::MENU) {
+    if (currentState == State::LAUNCH) {
+        launch.updateWindowSize(newSize);
+    } else if (currentState == State::MENU) {
         menu.updateWindowSize(newSize);
+        player.updateWindowSize(newSize);
     } else if (currentState == State::LOBBY) {
         lobby.updateWindowSize(newSize);
         player.updateWindowSize(newSize);
