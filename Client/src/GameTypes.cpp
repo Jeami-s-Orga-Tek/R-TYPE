@@ -25,9 +25,9 @@ GameManager::GameManager(sf::Vector2u windowSize)
       currentFps(60)
 {
     if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
-        std::cerr << "Impossible de charger la police Carlito, essai avec Symbola..." << std::endl;
+        std::cerr << "Unable to load Carlito font, trying Symbola..." << std::endl;
         if (!font.loadFromFile("/usr/share/fonts/gdouros-symbola/Symbola.ttf")) {
-            std::cerr << "Erreur: Impossible de charger toutes les polices disponibles!" << std::endl;
+            std::cerr << "Error: Unable to load any available fonts!" << std::endl;
         }
     }
     
@@ -39,16 +39,16 @@ GameManager::GameManager(sf::Vector2u windowSize)
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
     float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
     
-    resolutionButton = Button(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30), "Changer", font);
-    displayModeButton = Button(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30), "Changer", font);
-    graphicsQualityButton = Button(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30), "Changer", font);
-    colorBlindModeButton = Button(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30), "Changer", font);
+    resolutionButton = Button(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30), "Change", font);
+    displayModeButton = Button(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30), "Change", font);
+    graphicsQualityButton = Button(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30), "Change", font);
+    colorBlindModeButton = Button(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30), "Change", font);
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
-    applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35), "Appliquer", font);
+    applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35), "Apply", font);
     
     if (!menu.loadResources() || !parameters.loadResources()) {
-        std::cerr << "Erreur lors du chargement des ressources" << std::endl;
+        std::cerr << "Error loading resources" << std::endl;
     }
     
     statusText.setFont(font);
@@ -199,8 +199,8 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window)
             statusText.setString("");
         }
         if (connectButton.isClicked(mousePos)) {
-            std::cout << "Bouton de connexion cliqué!" << std::endl;
-            statusText.setString("Connexion en cours...");
+            std::cout << "Connection button clicked!" << std::endl;
+            statusText.setString("Connecting...");
             statusText.setFillColor(sf::Color::Yellow);
             if (connectToServer("127.0.0.1", 8080)) {
                 statusText.setString("Connected to the server !");
@@ -338,12 +338,12 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
         
         socket.open(udp::v4());
         std::string message = "CONNECT";
-        std::cout << "Envoi du message de connexion au serveur " << serverIP << ":" << port << std::endl;
+        std::cout << "Sending connection message to server " << serverIP << ":" << port << std::endl;
         boost::system::error_code send_error;
         size_t bytes_sent = socket.send_to(boost::asio::buffer(message), server_endpoint, 0, send_error);
         
         if (send_error) {
-            std::cerr << "Erreur lors de l'envoi: " << send_error.message() << std::endl;
+            std::cerr << "Error sending: " << send_error.message() << std::endl;
             return false;
         }
         std::cout << "Message envoyé (" << bytes_sent << " bytes)" << std::endl;
@@ -363,20 +363,20 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
             );
             if (!receive_error && bytes_received > 0) {
                 std::string response(buffer, bytes_received);
-                std::cout << "Réponse du serveur: " << response << std::endl;
+                std::cout << "Server response: " << response << std::endl;
                 socket.close();
                 return true;
             } else if (receive_error != boost::asio::error::would_block) {
-                std::cerr << "Erreur lors de la réception: " << receive_error.message() << std::endl;
+                std::cerr << "Error receiving: " << receive_error.message() << std::endl;
                 break;
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
-        std::cout << "Timeout - Aucune réponse du serveur" << std::endl;
+        std::cout << "Timeout - No response from server" << std::endl;
         socket.close();
         return true;
     } catch (const std::exception& e) {
-        std::cerr << "Exception lors de la connexion: " << e.what() << std::endl;
+        std::cerr << "Connection exception: " << e.what() << std::endl;
         return false;
     }
 }

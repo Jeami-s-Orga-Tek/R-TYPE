@@ -150,7 +150,7 @@ void Parameters::setupVideoSettings()
     ResolutionValue.setFillColor(sf::Color::Yellow);
     
     DisplayModeLabel.setFont(FontParamsText);
-    DisplayModeLabel.setString("Mode d'affichage:");
+    DisplayModeLabel.setString("Display Mode:");
     DisplayModeLabel.setCharacterSize(18);
     DisplayModeLabel.setFillColor(sf::Color::White);
     
@@ -160,7 +160,7 @@ void Parameters::setupVideoSettings()
     DisplayModeValue.setFillColor(sf::Color::Yellow);
     
     GraphicsQualityLabel.setFont(FontParamsText);
-    GraphicsQualityLabel.setString("Qualite graphique:");
+    GraphicsQualityLabel.setString("Graphics Quality:");
     GraphicsQualityLabel.setCharacterSize(18);
     GraphicsQualityLabel.setFillColor(sf::Color::White);
     
@@ -169,7 +169,7 @@ void Parameters::setupVideoSettings()
     GraphicsQualityValue.setCharacterSize(18);
     GraphicsQualityValue.setFillColor(sf::Color::Yellow);
     ColorBlindLabel.setFont(FontParamsText);
-    ColorBlindLabel.setString("Mode daltonien:");
+    ColorBlindLabel.setString("Color Blind Mode:");
     ColorBlindLabel.setCharacterSize(18);
     ColorBlindLabel.setFillColor(sf::Color::White);
     ColorBlindValue.setFont(FontParamsText);
@@ -193,20 +193,20 @@ std::string Parameters::getResolutionString(ResolutionMode resolution) const
 std::string Parameters::getDisplayModeString(DisplayMode mode) const
 {
     switch (mode) {
-        case DisplayMode::WINDOWED: return "Fenetre";
-        case DisplayMode::FULLSCREEN: return "Plein ecran";
-        default: return "Fenetre";
+        case DisplayMode::WINDOWED: return "Windowed";
+        case DisplayMode::FULLSCREEN: return "Fullscreen";
+        default: return "Windowed";
     }
 }
 
 std::string Parameters::getGraphicsQualityString(GraphicsQuality quality) const
 {
     switch (quality) {
-        case GraphicsQuality::LOW: return "Faible";
-        case GraphicsQuality::MEDIUM: return "Moyen";
-        case GraphicsQuality::HIGH: return "Eleve";
+        case GraphicsQuality::LOW: return "Low";
+        case GraphicsQuality::MEDIUM: return "Medium";
+        case GraphicsQuality::HIGH: return "High";
         case GraphicsQuality::ULTRA: return "Ultra";
-        default: return "Moyen";
+        default: return "Medium";
     }
 }
 
