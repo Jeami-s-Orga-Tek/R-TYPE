@@ -34,3 +34,4 @@ Thumbs.db
 
 *.tmp
 *.bak
+test_server.py

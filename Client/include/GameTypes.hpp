@@ -58,6 +58,7 @@ class GameManager {
         Button resolutionButton;
         Button displayModeButton;
         Button graphicsQualityButton;
+        Button colorBlindModeButton;
         Button applyResolutionButton;
 
         Button soloButton;
@@ -98,7 +99,9 @@ class GameManager {
         void cycleResolution();
         void cycleDisplayMode(sf::RenderWindow& window);
         void cycleGraphicsQuality();
+        void cycleColorBlindMode();
         void applyCurrentResolution(sf::RenderWindow& window);
+        void gameDemo(sf::RenderWindow &window);
 
         State getCurrentState() const { return currentState; }
         int getCurrentFps() const { return currentFps; }

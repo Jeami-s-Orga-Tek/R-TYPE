@@ -30,6 +30,14 @@ enum class GraphicsQuality {
     ULTRA
 };
 
+enum class ColorBlindMode {
+    NORMAL,
+    PROTANOPIA,
+    DEUTERANOPIA,
+    TRITANOPIA,
+    MONOCHROME
+};
+
 class Parameters {
 public:
     Parameters(sf::Vector2u windowSize);
@@ -44,11 +52,15 @@ public:
     ResolutionMode getCurrentResolution() const { return currentResolution; }
     DisplayMode getCurrentDisplayMode() const { return currentDisplayMode; }
     GraphicsQuality getCurrentGraphicsQuality() const { return currentGraphicsQuality; }
+    ColorBlindMode getCurrentColorBlindMode() const { return currentColorBlindMode; }
     
     void setResolution(ResolutionMode resolution);
     void setDisplayMode(DisplayMode mode);
     void setGraphicsQuality(GraphicsQuality quality);
+    void setColorBlindMode(ColorBlindMode mode);
     sf::Vector2u getResolutionSize(ResolutionMode resolution) const;
+    
+    sf::Color applyColorBlindFilter(const sf::Color& originalColor) const;
 
 private:
     sf::Text ParamsText;
@@ -59,6 +71,9 @@ private:
     sf::Text DisplayModeValue;
     sf::Text GraphicsQualityLabel;
     sf::Text GraphicsQualityValue;
+    sf::Text AccessibilityTitle;
+    sf::Text ColorBlindLabel;
+    sf::Text ColorBlindValue;
     
     sf::Font FontParamsText;
     sf::Vector2u windowSize;
@@ -66,6 +81,7 @@ private:
     ResolutionMode currentResolution;
     DisplayMode currentDisplayMode;
     GraphicsQuality currentGraphicsQuality;
+    ColorBlindMode currentColorBlindMode;
     
     void centerText();
     void setupVideoSettings();
@@ -73,6 +89,7 @@ private:
     std::string getResolutionString(ResolutionMode resolution) const;
     std::string getDisplayModeString(DisplayMode mode) const;
     std::string getGraphicsQualityString(GraphicsQuality quality) const;
+    std::string getColorBlindModeString(ColorBlindMode mode) const;
 };
 
 #endif /* !PARAMETERS_HPP__ */
