@@ -20,7 +20,7 @@ bool Player::loadResources()
     }
     starshipSprite.setTexture(starshipTexture);
     platformSprite.setTexture(platformTexture);
-    starshipRect = sf::IntRect(0, 0, 248, 127); //vaisseau2.png 496x254
+    starshipRect = sf::IntRect(0, 0, 248, 127);
     platformRect = sf::IntRect(0, 0, 313, 194);
 
     starshipSprite.setTextureRect(starshipRect);
