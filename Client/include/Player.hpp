@@ -36,7 +36,7 @@ private:
 
     sf::Clock platformClock;
     int platformCounter = 0;
-    sf::IntRect platformRect = sf::IntRect(0, 0, 510, 315); // frame size for big image
+    sf::IntRect platformRect = sf::IntRect(0, 0, 510, 315);
 
     void centerImage();
 };

@@ -18,13 +18,15 @@
 #include "Lobby.hpp"
 #include "ErrorServer.hpp"
 #include "Player.hpp"
+#include "Launch.hpp"
 
 enum class State {
+    LAUNCH,
     MENU,
-    SETTINGS,
-    GAME,
     LOBBY,
+    GAME,
     ERRORSERVER,
+    SETTINGS,
     QUIT
 };
 
@@ -34,14 +36,21 @@ enum class ServerState {
     DEFAULT
 };
 
+enum class GameMode {
+    SOLO,
+    DUO,
+    TRIO,
+    SQUAD
+};
+
 class GameManager {
     private:
+        Launch launch;
         Menu menu;
         Parameters parameters;
         Lobby lobby;
         ErrorServer errorServer;
         Player player;
-        Button connectButton;
         ParamButton paramButton;
         ParamButton fps30Button;
         ParamButton fps60Button;
@@ -51,17 +60,30 @@ class GameManager {
         Button graphicsQualityButton;
         Button colorBlindModeButton;
         Button applyResolutionButton;
-        
+
+        Button soloButton;
+        Button duoButton;
+        Button trioButton;
+        Button squadButton;
+        Button modeButton;
+        Button playButton;
+
+        GameMode gameMode;
+
         sf::Text statusText;
         sf::Text fpsDisplay;
         sf::Font font;
-    
+
+        sf::Text insertCoinText;
+        sf::Clock insertCoinClock;
+
         ParticleSystem particleSystem;
         sf::Clock deltaClock;
         
         State currentState;
         ServerState isConnected;
         bool isDraggingVolume;
+        bool isChooseMode;
         int currentFps;
         
     public:
