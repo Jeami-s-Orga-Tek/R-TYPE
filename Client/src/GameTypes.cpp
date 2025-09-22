@@ -28,6 +28,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
       isConnected(ServerState::DEFAULT),
       isDraggingVolume(false),
       isChooseMode(false),
+      isChangeStarship(false),
       currentFps(60)
 {
     if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
@@ -165,10 +166,10 @@ void GameManager::update()
         launch.update();
     } else if (currentState == State::MENU) {
         menu.update();
-        player.update();
+        player.update(isChangeStarship);
     } else if (currentState == State::LOBBY) {
         lobby.update();
-        player.update();
+        player.update(isChangeStarship);
     } else if (currentState == State::ERRORSERVER) {
         errorServer.update();
     }
@@ -279,7 +280,6 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             currentState = State::ERRORSERVER;
         }
     } else if (currentState == State::MENU) {
-        std::cout << isChooseMode << std::endl;
         if (modeButton.isClicked(mousePos)) {
             isChooseMode = true;
         } else {
@@ -381,6 +381,12 @@ void GameManager::handleWindowResize(sf::Event& event)
     } else if (currentState == State::ERRORSERVER) {
         errorServer.updateWindowSize(newSize);
     }
+    soloButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 - 350, newSize.y - 350), sf::Vector2f(100, 40));
+    duoButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 - 350, newSize.y - 300), sf::Vector2f(100, 40));
+    trioButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 - 350, newSize.y - 250), sf::Vector2f(100, 40));
+    squadButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 - 350, newSize.y - 200), sf::Vector2f(100, 40));
+    modeButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 - 350, newSize.y - 150), sf::Vector2f(100, 40));
+    playButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 + 250, newSize.y - 100), sf::Vector2f(100, 40));
     paramButton.updatePositionAndSize(
         sf::Vector2f(newSize.x/2 - 100, newSize.y - 150),
         sf::Vector2f(200, 50)

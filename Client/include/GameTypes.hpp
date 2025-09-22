@@ -84,6 +84,7 @@ class GameManager {
         ServerState isConnected;
         bool isDraggingVolume;
         bool isChooseMode;
+        bool isChangeStarship;
         int currentFps;
         
     public:
