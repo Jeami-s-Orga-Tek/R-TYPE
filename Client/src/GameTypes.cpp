@@ -88,27 +88,27 @@ GameManager::GameManager(sf::Vector2u windowSize)
 
 void GameManager::updatePositions(sf::Vector2u windowSize)
 {
-    paramButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50));
+    paramButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(125, 40));
     fps30Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 90, windowSize.y - 60), sf::Vector2f(80, 40));
     fps60Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 + 10, windowSize.y - 60), sf::Vector2f(80, 40));
     backButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40));
+
+    float leftColX = 50;
+    float baseY = windowSize.y - 350;
+    float spacing = 50;
+    soloButton.updatePositionAndSize(sf::Vector2f(leftColX, baseY), sf::Vector2f(100, 40));
+    duoButton.updatePositionAndSize(sf::Vector2f(leftColX, baseY + spacing), sf::Vector2f(100, 40));
+    trioButton.updatePositionAndSize(sf::Vector2f(leftColX, baseY + 2 * spacing), sf::Vector2f(100, 40));
+    squadButton.updatePositionAndSize(sf::Vector2f(leftColX, baseY + 3 * spacing), sf::Vector2f(100, 40));
+    modeButton.updatePositionAndSize(sf::Vector2f(leftColX, baseY + 4 * spacing), sf::Vector2f(100, 40));
+    playButton.updatePositionAndSize(sf::Vector2f(windowSize.x - 150, windowSize.y - 100), sf::Vector2f(100, 40));
+
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
     float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
-
-    if (isChooseMode) {
-        soloButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 350), sf::Vector2f(100, 40));
-        duoButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 300), sf::Vector2f(100, 40));
-        trioButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 250), sf::Vector2f(100, 40));
-        squadButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 200), sf::Vector2f(100, 40));
-    }
-    modeButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 150), sf::Vector2f(100, 40));
-    playButton.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 + 250, windowSize.y - 100), sf::Vector2f(100, 40));
-
     resolutionButton.updatePositionAndSize(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30));
     displayModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30));
     graphicsQualityButton.updatePositionAndSize(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30));
     colorBlindModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30));
-    
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350), sf::Vector2f(applyButtonWidth, 35));
 
@@ -381,28 +381,7 @@ void GameManager::handleWindowResize(sf::Event& event)
     } else if (currentState == State::ERRORSERVER) {
         errorServer.updateWindowSize(newSize);
     }
-    soloButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 - 350, newSize.y - 350), sf::Vector2f(100, 40));
-    duoButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 - 350, newSize.y - 300), sf::Vector2f(100, 40));
-    trioButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 - 350, newSize.y - 250), sf::Vector2f(100, 40));
-    squadButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 - 350, newSize.y - 200), sf::Vector2f(100, 40));
-    modeButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 - 350, newSize.y - 150), sf::Vector2f(100, 40));
-    playButton.updatePositionAndSize(sf::Vector2f(newSize.x / 2 + 250, newSize.y - 100), sf::Vector2f(100, 40));
-    paramButton.updatePositionAndSize(
-        sf::Vector2f(newSize.x/2 - 100, newSize.y - 150),
-        sf::Vector2f(200, 50)
-    );
-    fps30Button.updatePositionAndSize(
-        sf::Vector2f(newSize.x/2 - 90, newSize.y - 60),
-        sf::Vector2f(80, 40)
-    );
-    fps60Button.updatePositionAndSize(
-        sf::Vector2f(newSize.x/2 + 10, newSize.y - 60),
-        sf::Vector2f(80, 40)
-    );
-    backButton.updatePositionAndSize(
-        sf::Vector2f(50, newSize.y - 100),
-        sf::Vector2f(100, 40)
-    );
+    updatePositions(newSize);
     paramButton.setupVolumeBar(
         sf::Vector2f(newSize.x - 220, newSize.y - 80),
         200.f
@@ -695,7 +674,6 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
     }
 
-    // Change for actual FPS later
     const float FIXED_DT = 1.0f / 60.0f;
     float accumulator = 0.0f;
     auto previousTime = std::chrono::high_resolution_clock::now();
