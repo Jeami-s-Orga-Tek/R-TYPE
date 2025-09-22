@@ -4,6 +4,9 @@ project(r-type_client)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Ofast")
+set(SFML_VERSION 2.6.2)
+
+include_directories(../include_common)
 
 include_directories(include)
 
@@ -11,8 +14,10 @@ file(GLOB SOURCES src/*.cpp)
 
 include(../cmake/CPM.cmake)
 
-CPMAddPackage("gh:sfml/sfml#2.6.2")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+# set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
 
+CPMAddPackage("gh:sfml/sfml#2.6.2")
 CPMAddPackage(
   NAME Boost
   VERSION 1.86.0

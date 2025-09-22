@@ -79,6 +79,7 @@ class GameManager {
         void cycleGraphicsQuality();
         void cycleColorBlindMode();
         void applyCurrentResolution(sf::RenderWindow& window);
+        void gameDemo(sf::RenderWindow &window);
 
         State getCurrentState() const { return currentState; }
         int getCurrentFps() const { return currentFps; }
