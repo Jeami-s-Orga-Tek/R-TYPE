@@ -388,59 +388,65 @@ void GameManager::updateStatusTextPosition(bool isParametersMode)
 
 bool GameManager::connectToServer(const std::string& serverIP, unsigned short port)
 {
-    //TEMP
-    return (true);
+    if (!mediator)
+        createMediator();
+    initMediatorNetwork(serverIP, port);
 
-    try {
-        boost::asio::io_context io_context;
-        udp::socket socket(io_context);
-        udp::resolver resolver(io_context);   
-        udp::resolver::results_type endpoints = resolver.resolve(udp::v4(), serverIP, std::to_string(port));
-        udp::endpoint server_endpoint = *endpoints.begin();
+    // TEMP
+    mediator->networkManager->send_hello("BASSIROU", 12345);
+    mediator->networkManager->receivePacket();
+
+    return (true);
+    // try {
+    //     boost::asio::io_context io_context;
+    //     udp::socket socket(io_context);
+    //     udp::resolver resolver(io_context);   
+    //     udp::resolver::results_type endpoints = resolver.resolve(udp::v4(), serverIP, std::to_string(port));
+    //     udp::endpoint server_endpoint = *endpoints.begin();
         
-        socket.open(udp::v4());
-        std::string message = "CONNECT";
-        std::cout << "Sending connection message to server " << serverIP << ":" << port << std::endl;
-        boost::system::error_code send_error;
-        size_t bytes_sent = socket.send_to(boost::asio::buffer(message), server_endpoint, 0, send_error);
+    //     socket.open(udp::v4());
+    //     std::string message = "CONNECT";
+    //     std::cout << "Sending connection message to server " << serverIP << ":" << port << std::endl;
+    //     boost::system::error_code send_error;
+    //     size_t bytes_sent = socket.send_to(boost::asio::buffer(message), server_endpoint, 0, send_error);
         
-        if (send_error) {
-            std::cerr << "Error sending: " << send_error.message() << std::endl;
-            return false;
-        }
-        std::cout << "Message envoyé (" << bytes_sent << " bytes)" << std::endl;
-        socket.non_blocking(true);
-        char buffer[1024];
-        udp::endpoint sender_endpoint;
-        auto start_time = std::chrono::steady_clock::now();
-        const auto timeout = std::chrono::seconds(5);
+    //     if (send_error) {
+    //         std::cerr << "Error sending: " << send_error.message() << std::endl;
+    //         return false;
+    //     }
+    //     std::cout << "Message envoyé (" << bytes_sent << " bytes)" << std::endl;
+    //     socket.non_blocking(true);
+    //     char buffer[1024];
+    //     udp::endpoint sender_endpoint;
+    //     auto start_time = std::chrono::steady_clock::now();
+    //     const auto timeout = std::chrono::seconds(5);
         
-        while (std::chrono::steady_clock::now() - start_time < timeout) {
-            boost::system::error_code receive_error;
-            size_t bytes_received = socket.receive_from(
-                boost::asio::buffer(buffer), 
-                sender_endpoint, 
-                0, 
-                receive_error
-            );
-            if (!receive_error && bytes_received > 0) {
-                std::string response(buffer, bytes_received);
-                std::cout << "Server response: " << response << std::endl;
-                socket.close();
-                return true;
-            } else if (receive_error != boost::asio::error::would_block) {
-                std::cerr << "Error receiving: " << receive_error.message() << std::endl;
-                break;
-            }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-        std::cout << "Timeout - No response from server" << std::endl;
-        socket.close();
-        return false;
-    } catch (const std::exception& e) {
-        std::cerr << "Connection exception: " << e.what() << std::endl;
-        return false;
-    }
+    //     while (std::chrono::steady_clock::now() - start_time < timeout) {
+    //         boost::system::error_code receive_error;
+    //         size_t bytes_received = socket.receive_from(
+    //             boost::asio::buffer(buffer), 
+    //             sender_endpoint, 
+    //             0, 
+    //             receive_error
+    //         );
+    //         if (!receive_error && bytes_received > 0) {
+    //             std::string response(buffer, bytes_received);
+    //             std::cout << "Server response: " << response << std::endl;
+    //             socket.close();
+    //             return true;
+    //         } else if (receive_error != boost::asio::error::would_block) {
+    //             std::cerr << "Error receiving: " << receive_error.message() << std::endl;
+    //             break;
+    //         }
+    //         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    //     }
+    //     std::cout << "Timeout - No response from server" << std::endl;
+    //     socket.close();
+    //     return false;
+    // } catch (const std::exception& e) {
+    //     std::cerr << "Connection exception: " << e.what() << std::endl;
+    //     return false;
+    // }
 }
 
 void GameManager::cycleResolution()
@@ -583,6 +589,41 @@ void GameManager::applyCurrentResolution(sf::RenderWindow& window)
     resizeEvent.size.width = window.getSize().x;
     resizeEvent.size.height = window.getSize().y;
     handleWindowResize(resizeEvent);
+}
+
+void GameManager::createMediator()
+{
+    void *handle = dlopen("libengine.so", RTLD_LAZY);
+    if (!handle) {
+        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+        return;
+    }
+
+    std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+    const char *error = dlerror();
+    if (error) {
+        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+        dlclose(handle);
+        return;
+    }
+
+    this->mediator = createMediatorFunc();
+}
+
+void GameManager::initMediator()
+{
+    if (!mediator)
+        return;
+
+    mediator->init();
+}
+
+void GameManager::initMediatorNetwork(const std::string &address, uint16_t port)
+{
+    if (!mediator)
+        return;
+
+    mediator->initNetworkManager(Engine::NetworkManager::Role::CLIENT, address, port);
 }
 
 void GameManager::gameDemo(sf::RenderWindow &window)

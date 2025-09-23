@@ -10,6 +10,7 @@
 #define GAMETYPES_HPP_
 
 #include <SFML/Graphics.hpp>
+
 #include "Button.hpp"
 #include "Menu.hpp"
 #include "Parameters.hpp"
@@ -18,6 +19,7 @@
 #include "Lobby.hpp"
 #include "ErrorServer.hpp"
 #include "Player.hpp"
+#include "Mediator.hpp"
 
 enum class State {
     MENU,
@@ -63,6 +65,8 @@ class GameManager {
         ServerState isConnected;
         bool isDraggingVolume;
         int currentFps;
+
+        std::shared_ptr<Engine::Mediator> mediator;
         
     public:
         GameManager(sf::Vector2u windowSize);
@@ -79,6 +83,10 @@ class GameManager {
         void cycleGraphicsQuality();
         void cycleColorBlindMode();
         void applyCurrentResolution(sf::RenderWindow& window);
+
+        void createMediator();
+        void initMediator();
+        void initMediatorNetwork(const std::string &address, uint16_t port);
         void gameDemo(sf::RenderWindow &window);
 
         State getCurrentState() const { return currentState; }

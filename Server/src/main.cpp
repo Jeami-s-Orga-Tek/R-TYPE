@@ -5,52 +5,42 @@
 ** main
 */
 
+
 #include <iostream>
-#include <boost/asio.hpp>
 #include <csignal>
+#include <dlfcn.h>
 #include <memory>
-#include "net/UdpServer.hpp"
-#include "util/Log.hpp"
+#include <thread>
+#include <chrono>
 
-static std::unique_ptr<boost::asio::io_context> g_io;
-static std::unique_ptr<RtypeServer::UdpServer> g_server;
-
-void signalHandler(int signum) {
-    RtypeServer::infof("Signal %d received, shutting down server...", signum);
-    if (g_io) {
-        g_io->stop();
-    }
-}
+#include "Mediator.hpp"
 
 int main(int argc, char* argv[])
 {
-    try {
-        uint16_t port = 8080;
-        if (argc >= 2) {
-            try {
-                port = static_cast<uint16_t>(std::stoi(argv[1]));
-            } catch (const std::exception& e) {
-                std::cerr << "Invalid port number: " << argv[1] << std::endl;
-                return 1;
-            }
-        }
-
-        RtypeServer::infof("Starting R-Type Server on port %u", port);
-        std::signal(SIGINT, signalHandler);
-        std::signal(SIGTERM, signalHandler);
-        g_io = std::make_unique<boost::asio::io_context>();
-        g_server = std::make_unique<RtypeServer::UdpServer>(*g_io, port);
-
-        RtypeServer::infof("Server initialized successfully");
-        RtypeServer::infof("Press Ctrl+C to stop the server");
-        g_io->run();
-        RtypeServer::infof("Server stopped gracefully");
-    } catch (const std::exception& e) {
-        std::cerr << "Server error: " << e.what() << std::endl;
-        return 1;
-    } catch (...) {
-        std::cerr << "Unknown error occurred" << std::endl;
-        return 1;
+    void *handle = dlopen("libengine.so", RTLD_LAZY);
+    if (!handle) {
+        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+        return (84);
     }
-    return 0;
+
+    std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+    const char *error = dlerror();
+    if (error) {
+        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+        dlclose(handle);
+        return (84);
+    }
+
+    std::shared_ptr<Engine::Mediator> mediator = createMediatorFunc();
+    mediator->init();
+
+    mediator->initNetworkManager(Engine::NetworkManager::Role::SERVER, "127.0.0.1", 8080);
+
+    std::cout << "NetworkManager server started. Press Ctrl+C to exit." << std::endl;
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    dlclose(handle);
+    return (0);
 }
