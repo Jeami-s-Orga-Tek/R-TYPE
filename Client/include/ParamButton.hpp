@@ -25,6 +25,7 @@ public:
     void updatePosition(sf::Vector2f newPosition);
     void updateSize(sf::Vector2f newSize);
     void updatePositionAndSize(sf::Vector2f newPosition, sf::Vector2f newSize);
+    void setCharacterSize(int size) { label.setCharacterSize(size); }
 
     void setupVolumeBar(sf::Vector2f position, float width);
     void drawVolumeBar(sf::RenderWindow& window);

@@ -47,9 +47,7 @@ enum class GameMode {
 class GameManager {
     private:
         Launch launch;
-//        Menu menu;
         Parameters parameters;
-//        Lobby lobby;
         ErrorServer errorServer;
         Player player;
         ParamButton paramButton;

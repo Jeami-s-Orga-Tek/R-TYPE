@@ -17,7 +17,7 @@ ParamButton::ParamButton(sf::Vector2f position, sf::Vector2f size, const std::st
 
     label.setFont(font);
     label.setString(text);
-    label.setCharacterSize(24);
+    label.setCharacterSize(10);
     label.setFillColor(sf::Color::White);
     label.setStyle(sf::Text::Bold);
     sf::FloatRect textBounds = label.getLocalBounds();
@@ -66,7 +66,7 @@ void ParamButton::drawVolumeBar(sf::RenderWindow& window)
     window.draw(volumeSlider);
     sf::Text volumeText;
     volumeText.setFont(*label.getFont());
-    volumeText.setCharacterSize(16);
+    volumeText.setCharacterSize(10);
     volumeText.setFillColor(sf::Color::White);
     volumeText.setString("Volume: " + std::to_string(static_cast<int>(volumeValue * 100)) + "%");
     volumeText.setPosition(volumeBar.getPosition().x, volumeBar.getPosition().y - 30);

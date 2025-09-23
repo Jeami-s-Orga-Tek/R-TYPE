@@ -79,7 +79,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
     statusText.setFillColor(sf::Color::Yellow);
     
     fpsDisplay.setFont(font);
-    fpsDisplay.setCharacterSize(12);
+    fpsDisplay.setCharacterSize(10);
     fpsDisplay.setFillColor(sf::Color::Green);
     fpsDisplay.setPosition(10, 10);
 
@@ -92,6 +92,30 @@ GameManager::GameManager(sf::Vector2u windowSize)
 
     paramButton.setupVolumeBar(sf::Vector2f(windowSize.x - 220, windowSize.y - 80), 200.f);
     particleSystem.setParameters(&parameters);
+    backButton.setCharacterSize(10);
+    fps30Button.setCharacterSize(10);
+    fps60Button.setCharacterSize(10);
+    paramButton.setCharacterSize(10);
+    resolutionButton.setCharacterSize(10);
+    displayModeButton.setCharacterSize(10);
+    graphicsQualityButton.setCharacterSize(10);
+    colorBlindModeButton.setCharacterSize(10);
+
+    applyResolutionButton.setCharacterSize(10);
+
+    soloButton.setCharacterSize(10);
+    duoButton.setCharacterSize(10);
+    trioButton.setCharacterSize(10);
+    squadButton.setCharacterSize(10);
+
+    modeButton.setCharacterSize(10);
+    playButton.setCharacterSize(10);
+
+    lockerButton.setCharacterSize(10);
+
+    leftButtonSelection.setCharacterSize(10);
+    rightButtonSelection.setCharacterSize(10);
+    applyButtonLocker.setCharacterSize(10);
 }
 
 void GameManager::updatePositions(sf::Vector2u windowSize)
@@ -232,7 +256,7 @@ void GameManager::render(sf::RenderWindow& window) {
         paramButton.drawVolumeBar(window);
     } else if (currentState == State::LOBBY) {
         player.draw(window);
-        window.draw(numberPlayerToWait); // Draw at top middle
+        window.draw(numberPlayerToWait);
     } else if (currentState == State::LOCKER) {
         player.draw(window);
         leftButtonSelection.draw(window);
