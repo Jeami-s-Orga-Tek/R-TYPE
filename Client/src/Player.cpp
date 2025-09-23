@@ -14,19 +14,19 @@ Player::Player(sf::Vector2u windowSize) : windowSize(windowSize)
 
 bool Player::loadResources()
 {
-    if (!starshipTexture.loadFromFile("sprite/vaisseau3.png") || !platformTexture.loadFromFile("sprite/plateforme1.png")) {
+    if (!starshipTexture.loadFromFile("assets/sprites/vaisseaux.gif")) { //|| !platformTexture.loadFromFile("sprite/plateforme1.png")
         std::cerr << "Erreur" << std::endl;
         return false;
     }
     starshipSprite.setTexture(starshipTexture);
-    platformSprite.setTexture(platformTexture);
-    starshipRect = sf::IntRect(0, 0, 248, 127); //vaisseau2.png 496x254
-    platformRect = sf::IntRect(0, 0, 313, 194);
+//    platformSprite.setTexture(platformTexture);
+    starshipRect = sf::IntRect(0, 0, 33, 18);
+//    platformRect = sf::IntRect(0, 0, 313, 194);
 
     starshipSprite.setTextureRect(starshipRect);
-    starshipSprite.setScale(0.6f, 0.6f);
-    platformSprite.setTextureRect(platformRect);
-    platformSprite.setScale(0.4f, 0.4f);
+    starshipSprite.setScale(2.0f, 2.0f);
+//    platformSprite.setTextureRect(platformRect);
+//    platformSprite.setScale(0.4f, 0.4f);
     centerImage();
 
     return true;
@@ -35,22 +35,22 @@ bool Player::loadResources()
 void Player::centerImage()
 {
     sf::FloatRect starshipBounds = starshipSprite.getGlobalBounds();
-    sf::FloatRect platformBounds = platformSprite.getGlobalBounds();
+//    sf::FloatRect platformBounds = platformSprite.getGlobalBounds();
 
     float centerXS = (windowSize.x - starshipBounds.width) / 2.0f;
     float centerYS = (windowSize.y - starshipBounds.height) / 2.0f;
 
-    float centerXP = (windowSize.x - platformBounds.width) / 2.0f ;
-    float centerYP = (windowSize.y - platformBounds.height) / 1.7f;
+//    float centerXP = (windowSize.x - platformBounds.width) / 2.0f ;
+//    float centerYP = (windowSize.y - platformBounds.height) / 1.7f;
 
     starshipSprite.setPosition(centerXS, centerYS);
-    platformSprite.setPosition(centerXP, centerYP);
+//    platformSprite.setPosition(centerXP, centerYP);
 }
 
 void Player::draw(sf::RenderWindow& window)
 {
     window.draw(starshipSprite);
-    window.draw(platformSprite);
+//    window.draw(platformSprite);
 }
 
 void Player::handleEvent(const sf::Event& event, sf::RenderWindow& window)
@@ -71,52 +71,56 @@ void Player::handleEvent(const sf::Event& event, sf::RenderWindow& window)
 void Player::update()
 {
     updateAnimationStarship();
-    updateAnimationPlatform();
+//    updateAnimationPlatform();
 }
 
 void Player::updateAnimationStarship()
 {
     float frameTime = 0.15f;
+    static int direction = 1;
 
-    if (starshipClock.getElapsedTime().asSeconds() >= frameTime) {
-        starshipCounter++;
-        starshipRect.top += 127;
-        if (starshipCounter % 4 == 0) {
-            starshipRect.left = 248;
-            starshipRect.top -= 4 * 127;
-        }
-        if (starshipCounter >= 8) {
+    if (starshipClock.getElapsedTime().asSeconds() < frameTime)
+        return;
+
+    starshipCounter++;
+    starshipRect.left += 33 * direction;
+    if (starshipCounter >= 5) {
+        direction *= -1;
+        starshipCounter = 0;
+        if (direction == 1) {
             starshipRect.left = 0;
-            starshipRect.top = 0;
-            starshipCounter = 0;
+        } else {
+            starshipRect.left = starshipRect.left - 33;
         }
-        starshipSprite.setTextureRect(starshipRect);
-
-        starshipClock.restart();
     }
+    unsigned int maxLeft = starshipTexture.getSize().x - starshipRect.width;
+    if (starshipRect.left < 0) starshipRect.left = 0;
+    if ((unsigned int)starshipRect.left > maxLeft) starshipRect.left = maxLeft;
+    starshipSprite.setTextureRect(starshipRect);
+    starshipClock.restart();
 }
 
-void Player::updateAnimationPlatform()
-{
-    float frameTime = 0.31f;
-
-    if (platformClock.getElapsedTime().asSeconds() >= frameTime) {
-        platformCounter++;
-        platformRect.top += 194;
-        if (platformCounter % 2 == 0) {
-            platformRect.left = 313;
-            platformRect.top -= 2 * 194;
-        }
-        if (platformCounter >= 4) {
-            platformRect.left = 0;
-            platformRect.top = 0;
-            platformCounter = 0;
-        }
-        platformSprite.setTextureRect(platformRect);
-
-        platformClock.restart();
-    }
-}
+//void Player::updateAnimationPlatform()
+//{
+//    float frameTime = 0.31f;
+//
+//    if (platformClock.getElapsedTime().asSeconds() >= frameTime) {
+//        platformCounter++;
+//        platformRect.top += 194;
+//        if (platformCounter % 2 == 0) {
+//            platformRect.left = 313;
+//            platformRect.top -= 2 * 194;
+//        }
+//        if (platformCounter >= 4) {
+//            platformRect.left = 0;
+//            platformRect.top = 0;
+//            platformCounter = 0;
+//        }
+//        platformSprite.setTextureRect(platformRect);
+//
+//        platformClock.restart();
+//    }
+//}
 
 void Player::updateWindowSize(sf::Vector2u newSize)
 {

@@ -26,6 +26,7 @@ enum class State {
     MENU,
     LOBBY,
     GAME,
+    LOCKER,
     ERRORSERVER,
     SETTINGS,
     CONTROLS,
@@ -48,10 +49,10 @@ enum class GameMode {
 class GameManager {
     private:
         Launch launch;
-        Menu menu;
         Parameters parameters;
         ControlsConfig controlsConfig;
         Lobby lobby;
+
         ErrorServer errorServer;
         Player player;
         ParamButton paramButton;
@@ -65,12 +66,20 @@ class GameManager {
         Button applyResolutionButton;
         Button controlsButton;
 
+        Button lockerButton;
+        Button leftButtonSelection;
+        Button rightButtonSelection;
+        Button applyButtonLocker;
+
         Button soloButton;
         Button duoButton;
         Button trioButton;
         Button squadButton;
         Button modeButton;
         Button playButton;
+
+        sf::Text numberPlayerToWait;
+        int waitingPlayersCounter = 1;
 
         GameMode gameMode;
 
@@ -107,6 +116,9 @@ class GameManager {
         void cycleColorBlindMode();
         void applyCurrentResolution(sf::RenderWindow& window);
         void gameDemo(sf::RenderWindow &window);
+        void addWaitingPlayer() { waitingPlayersCounter++; }
+        void removeWaitingPlayer() { if (waitingPlayersCounter > 0) waitingPlayersCounter--; }
+        int getWaitingPlayersCount() const { return waitingPlayersCounter; }
 
         State getCurrentState() const { return currentState; }
         int getCurrentFps() const { return currentFps; }
