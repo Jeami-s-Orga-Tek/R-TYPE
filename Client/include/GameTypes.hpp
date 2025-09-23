@@ -19,6 +19,7 @@
 #include "ErrorServer.hpp"
 #include "Player.hpp"
 #include "Launch.hpp"
+#include "ControlsConfig.hpp"
 
 enum class State {
     LAUNCH,
@@ -28,6 +29,7 @@ enum class State {
     LOCKER,
     ERRORSERVER,
     SETTINGS,
+    CONTROLS,
     QUIT
 };
 
@@ -47,9 +49,10 @@ enum class GameMode {
 class GameManager {
     private:
         Launch launch;
-//        Menu menu;
         Parameters parameters;
-//        Lobby lobby;
+        ControlsConfig controlsConfig;
+        Lobby lobby;
+
         ErrorServer errorServer;
         Player player;
         ParamButton paramButton;
@@ -61,6 +64,7 @@ class GameManager {
         Button graphicsQualityButton;
         Button colorBlindModeButton;
         Button applyResolutionButton;
+        Button controlsButton;
 
         Button lockerButton;
         Button leftButtonSelection;
@@ -93,6 +97,7 @@ class GameManager {
         ServerState isConnected;
         bool isDraggingVolume;
         bool isChooseMode;
+        bool isConfiguringControls;
         int currentFps;
         
     public:
