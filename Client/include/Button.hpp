@@ -20,10 +20,12 @@ public:
     void draw(sf::RenderWindow& window);
     bool isClicked(sf::Vector2i mousePos);
     void setHovered(bool hovered);
-    
+
     void updatePosition(sf::Vector2f newPosition);
     void updateSize(sf::Vector2f newSize);
     void updatePositionAndSize(sf::Vector2f newPosition, sf::Vector2f newSize);
+
+    void setCharacterSize(int size) { label.setCharacterSize(size); }
 
 private:
     sf::RectangleShape shape;

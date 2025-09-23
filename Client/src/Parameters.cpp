@@ -19,14 +19,14 @@ Parameters::Parameters(sf::Vector2u windowSize) : windowSize(windowSize),
 
 bool Parameters::loadResources()
 {
-    if (!FontParamsText.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
+    if (!FontParamsText.loadFromFile("assets/r-type.otf")) {
         std::cerr << "Erreur" << std::endl;
         return false;
     }
     
     ParamsText.setFont(FontParamsText);
     ParamsText.setString("PARAMETRES");
-    ParamsText.setCharacterSize(36);
+    ParamsText.setCharacterSize(10);
     ParamsText.setFillColor(sf::Color::White);
     
     setupVideoSettings();
@@ -136,45 +136,47 @@ void Parameters::setupVideoSettings()
 {
     VideoSectionTitle.setFont(FontParamsText);
     VideoSectionTitle.setString("VIDEO");
-    VideoSectionTitle.setCharacterSize(24);
+    VideoSectionTitle.setCharacterSize(10);
     VideoSectionTitle.setFillColor(sf::Color::Cyan);
     
     ResolutionLabel.setFont(FontParamsText);
     ResolutionLabel.setString("Resolution:");
-    ResolutionLabel.setCharacterSize(18);
+    ResolutionLabel.setCharacterSize(10);
     ResolutionLabel.setFillColor(sf::Color::White);
     
     ResolutionValue.setFont(FontParamsText);
     ResolutionValue.setString(getResolutionString(currentResolution));
-    ResolutionValue.setCharacterSize(18);
+    ResolutionValue.setCharacterSize(10);
     ResolutionValue.setFillColor(sf::Color::Yellow);
     
     DisplayModeLabel.setFont(FontParamsText);
     DisplayModeLabel.setString("Display Mode:");
-    DisplayModeLabel.setCharacterSize(18);
+    DisplayModeLabel.setCharacterSize(10);
     DisplayModeLabel.setFillColor(sf::Color::White);
     
     DisplayModeValue.setFont(FontParamsText);
     DisplayModeValue.setString(getDisplayModeString(currentDisplayMode));
-    DisplayModeValue.setCharacterSize(18);
+    DisplayModeValue.setCharacterSize(10);
     DisplayModeValue.setFillColor(sf::Color::Yellow);
     
     GraphicsQualityLabel.setFont(FontParamsText);
     GraphicsQualityLabel.setString("Graphics Quality:");
-    GraphicsQualityLabel.setCharacterSize(18);
+    GraphicsQualityLabel.setCharacterSize(10);
     GraphicsQualityLabel.setFillColor(sf::Color::White);
     
     GraphicsQualityValue.setFont(FontParamsText);
     GraphicsQualityValue.setString(getGraphicsQualityString(currentGraphicsQuality));
-    GraphicsQualityValue.setCharacterSize(18);
+    GraphicsQualityValue.setCharacterSize(10);
     GraphicsQualityValue.setFillColor(sf::Color::Yellow);
+
     ColorBlindLabel.setFont(FontParamsText);
     ColorBlindLabel.setString("Color Blind Mode:");
-    ColorBlindLabel.setCharacterSize(18);
+    ColorBlindLabel.setCharacterSize(10);
     ColorBlindLabel.setFillColor(sf::Color::White);
+
     ColorBlindValue.setFont(FontParamsText);
     ColorBlindValue.setString(getColorBlindModeString(currentColorBlindMode));
-    ColorBlindValue.setCharacterSize(18);
+    ColorBlindValue.setCharacterSize(10);
     ColorBlindValue.setFillColor(sf::Color::Yellow);
     
     updateVideoSettingsPositions();

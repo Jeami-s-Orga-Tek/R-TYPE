@@ -53,7 +53,7 @@ public:
     DisplayMode getCurrentDisplayMode() const { return currentDisplayMode; }
     GraphicsQuality getCurrentGraphicsQuality() const { return currentGraphicsQuality; }
     ColorBlindMode getCurrentColorBlindMode() const { return currentColorBlindMode; }
-    
+
     void setResolution(ResolutionMode resolution);
     void setDisplayMode(DisplayMode mode);
     void setGraphicsQuality(GraphicsQuality quality);
