@@ -21,14 +21,16 @@
 using boost::asio::ip::udp;
 
 GameManager::GameManager(sf::Vector2u windowSize)
-    : launch(windowSize), parameters(windowSize), errorServer(windowSize), player(windowSize),
-      waitingPlayersCounter(1),
+    : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize), waitingPlayersCounter(1),
+
+
       gameMode(GameMode::SOLO),
       particleSystem(windowSize, 300),
       currentState(State::LAUNCH),
       isConnected(ServerState::DEFAULT),
       isDraggingVolume(false),
       isChooseMode(false),
+      isConfiguringControls(false),
       currentFps(60)
 {
     if (!font.loadFromFile("assets/r-type.otf")) {
@@ -48,11 +50,12 @@ GameManager::GameManager(sf::Vector2u windowSize)
     displayModeButton = Button(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30), "Change", font);
     graphicsQualityButton = Button(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30), "Change", font);
     colorBlindModeButton = Button(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30), "Change", font);
+    controlsButton = Button(sf::Vector2f(buttonX, 400), sf::Vector2f(buttonWidth, 30), "Controls", font);
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35), "Apply", font);
     
-    if (!launch.loadResources() || !parameters.loadResources() || !player.loadResources() || !errorServer.loadResources()) {
+    if (!launch.loadResources() || !parameters.loadResources() || !controlsConfig.loadResources() || !player.loadResources() || !errorServer.loadResources()) {
         std::cerr << "Erreur lors du chargement des ressources" << std::endl;
     }
 
@@ -191,6 +194,10 @@ void GameManager::handleEvents(sf::RenderWindow& window)
             backButton.setHovered(false);
         }
         launch.handleEvent(event, window);
+        if (currentState == State::CONTROLS) {
+            controlsConfig.handleEvent(event, window);
+        }
+        lobby.handleEvent(event, window);
         player.handleEvent(event, window);
         errorServer.handleEvent(event, window);
     }
@@ -252,8 +259,12 @@ void GameManager::render(sf::RenderWindow& window) {
         displayModeButton.draw(window);
         graphicsQualityButton.draw(window);
         colorBlindModeButton.draw(window);
+        controlsButton.draw(window);
         applyResolutionButton.draw(window);
         paramButton.drawVolumeBar(window);
+    } else if (currentState == State::CONTROLS) {
+        controlsConfig.draw(window);
+        backButton.draw(window);
     } else if (currentState == State::LOBBY) {
         player.draw(window);
         window.draw(numberPlayerToWait);
@@ -393,6 +404,9 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
         if (colorBlindModeButton.isClicked(mousePos)) {
             cycleColorBlindMode();
         }
+        if (controlsButton.isClicked(mousePos)) {
+            currentState = State::CONTROLS;
+        }
         if (applyResolutionButton.isClicked(mousePos)) {
             applyCurrentResolution(window);
         }
@@ -400,30 +414,9 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             isDraggingVolume = true;
             paramButton.setVolumeFromMouse(mousePos.x);
         }
-    } else if (currentState == State::LOCKER) {
-        if (leftButtonSelection.isClicked(mousePos)) {
-            int newTop = player.starshipRect.top - 17;
-            if (newTop < 0)
-                newTop = 0;
-            player.starshipRect.top = newTop;
-            player.starshipSprite.setTextureRect(player.starshipRect);
-        } else if (rightButtonSelection.isClicked(mousePos)) {
-            int maxTop = 17 * 5;
-            int newTop = player.starshipRect.top + 17;
-            if (newTop > maxTop)
-                newTop = maxTop;
-            player.starshipRect.top = newTop;
-            player.starshipSprite.setTextureRect(player.starshipRect);
-        }
-        if (paramButton.isClicked(mousePos)) {
+    } else if (currentState == State::CONTROLS) {
+        if (backButton.isClicked(mousePos)) {
             currentState = State::SETTINGS;
-            updateStatusTextPosition(true);
-            statusText.setString("");
-        }
-        if (applyButtonLocker.isClicked(mousePos)) {
-            currentState = State::MENU;
-            updateStatusTextPosition(true);
-            statusText.setString("");
         }
     } else if (currentState == State::LOBBY) {
     } else if (currentState == State::ERRORSERVER) {
@@ -457,11 +450,8 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
         if (isDraggingVolume) {
             paramButton.setVolumeFromMouse(mousePos.x);
         }
-    } else if (currentState == State::LOCKER) {
-        leftButtonSelection.setHovered(leftButtonSelection.isClicked(mousePos));
-        rightButtonSelection.setHovered(rightButtonSelection.isClicked(mousePos));
-        applyButtonLocker.setHovered(applyButtonLocker.isClicked(mousePos));
-        paramButton.setHovered(paramButton.isClicked(mousePos));
+    } else if (currentState == State::CONTROLS) {
+        backButton.setHovered(backButton.isClicked(mousePos));
     } else if (currentState == State::LOBBY) {
         paramButton.setHovered(paramButton.isClicked(mousePos));
     } else if (currentState == State::ERRORSERVER) {
