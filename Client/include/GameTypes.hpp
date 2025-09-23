@@ -75,7 +75,7 @@ class GameManager {
         Button playButton;
 
         sf::Text numberPlayerToWait;
-        int waitingPlayersCounter = 0;
+        int waitingPlayersCounter = 1;
 
         GameMode gameMode;
 
