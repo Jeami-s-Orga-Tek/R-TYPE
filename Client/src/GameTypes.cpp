@@ -22,6 +22,7 @@ using boost::asio::ip::udp;
 
 GameManager::GameManager(sf::Vector2u windowSize)
     : launch(windowSize), parameters(windowSize), errorServer(windowSize), player(windowSize),
+      waitingPlayersCounter(1),
       gameMode(GameMode::SOLO),
       particleSystem(windowSize, 300),
       currentState(State::LAUNCH),
@@ -30,11 +31,8 @@ GameManager::GameManager(sf::Vector2u windowSize)
       isChooseMode(false),
       currentFps(60)
 {
-    if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
+    if (!font.loadFromFile("assets/r-type.otf")) {
         std::cerr << "Unable to load Carlito font, trying Symbola..." << std::endl;
-        if (!font.loadFromFile("/usr/share/fonts/gdouros-symbola/Symbola.ttf")) {
-            std::cerr << "Error: Unable to load any available fonts!" << std::endl;
-        }
     }
     
 
@@ -77,17 +75,17 @@ GameManager::GameManager(sf::Vector2u windowSize)
     applyButtonLocker = Button(sf::Vector2f(windowSize.x/2 - 50, windowSize.y - 200), sf::Vector2f(100, 40), "Apply", font);
 
     statusText.setFont(font);
-    statusText.setCharacterSize(16);
+    statusText.setCharacterSize(10);
     statusText.setFillColor(sf::Color::Yellow);
     
     fpsDisplay.setFont(font);
-    fpsDisplay.setCharacterSize(14);
+    fpsDisplay.setCharacterSize(12);
     fpsDisplay.setFillColor(sf::Color::Green);
     fpsDisplay.setPosition(10, 10);
 
     insertCoinText.setFont(font);
     insertCoinText.setString("INSERT COIN");
-    insertCoinText.setCharacterSize(48);
+    insertCoinText.setCharacterSize(38);
     insertCoinText.setFillColor(sf::Color::Yellow);
     sf::FloatRect bounds = insertCoinText.getLocalBounds();
     insertCoinText.setPosition(windowSize.x/2 - bounds.width/2, windowSize.y/2 - bounds.height/2 + 50);

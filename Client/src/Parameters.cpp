@@ -20,7 +20,7 @@ Parameters::Parameters(sf::Vector2u windowSize) : windowSize(windowSize),
 
 bool Parameters::loadResources()
 {
-    if (!FontParamsText.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
+    if (!FontParamsText.loadFromFile("assets/r-type.otf")) {
         std::cerr << "Erreur" << std::endl;
         return false;
     }
