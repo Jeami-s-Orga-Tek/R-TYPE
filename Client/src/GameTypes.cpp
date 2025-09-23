@@ -51,6 +51,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
     graphicsQualityButton = Button(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30), "Change", font);
     colorBlindModeButton = Button(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30), "Change", font);
     controlsButton = Button(sf::Vector2f(buttonX, 400), sf::Vector2f(buttonWidth, 30), "Controls", font);
+    controlsButton.setCharacterSize(12);
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35), "Apply", font);
