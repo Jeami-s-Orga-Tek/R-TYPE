@@ -21,7 +21,7 @@
 using boost::asio::ip::udp;
 
 GameManager::GameManager(sf::Vector2u windowSize)
-    : launch(windowSize), menu(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
+    : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
 
       gameMode(GameMode::SOLO),
       particleSystem(windowSize, 300),
@@ -172,7 +172,6 @@ void GameManager::handleEvents(sf::RenderWindow& window)
             backButton.setHovered(false);
         }
         launch.handleEvent(event, window);
-        menu.handleEvent(event, window);
         if (currentState == State::CONTROLS) {
             controlsConfig.handleEvent(event, window);
         }
@@ -246,7 +245,7 @@ void GameManager::render(sf::RenderWindow& window) {
         backButton.draw(window);
     } else if (currentState == State::LOBBY) {
         player.draw(window);
-        window.draw(numberPlayerToWait); // Draw at top middle
+        window.draw(numberPlayerToWait);
     } else if (currentState == State::LOCKER) {
         player.draw(window);
         leftButtonSelection.draw(window);
