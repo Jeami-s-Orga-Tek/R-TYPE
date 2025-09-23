@@ -153,8 +153,9 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
     displayModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30));
     graphicsQualityButton.updatePositionAndSize(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30));
     colorBlindModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30));
+    controlsButton.updatePositionAndSize(sf::Vector2f(buttonX, 400), sf::Vector2f(buttonWidth, 30));
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
-    applyResolutionButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350),
+    applyResolutionButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450),
                                                 sf::Vector2f(applyButtonWidth, 35));
 
     sf::FloatRect numberPlayerToWaitBounds = numberPlayerToWait.getLocalBounds();
