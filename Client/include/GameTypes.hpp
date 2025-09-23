@@ -74,6 +74,9 @@ class GameManager {
         Button modeButton;
         Button playButton;
 
+        sf::Text numberPlayerToWait;
+        int waitingPlayersCounter = 0;
+
         GameMode gameMode;
 
         sf::Text statusText;
@@ -90,7 +93,6 @@ class GameManager {
         ServerState isConnected;
         bool isDraggingVolume;
         bool isChooseMode;
-        int isChangeStarship;
         int currentFps;
         
     public:
@@ -109,6 +111,9 @@ class GameManager {
         void cycleColorBlindMode();
         void applyCurrentResolution(sf::RenderWindow& window);
         void gameDemo(sf::RenderWindow &window);
+        void addWaitingPlayer() { waitingPlayersCounter++; }
+        void removeWaitingPlayer() { if (waitingPlayersCounter > 0) waitingPlayersCounter--; }
+        int getWaitingPlayersCount() const { return waitingPlayersCounter; }
 
         State getCurrentState() const { return currentState; }
         int getCurrentFps() const { return currentFps; }

@@ -11,14 +11,6 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-enum Starship {
-    CYLIAN,
-    PINK,
-    GREEN,
-    RED,
-    BLEU
-};
-
 class Player {
 public:
     Player(sf::Vector2u windowSize);
@@ -26,27 +18,20 @@ public:
     bool loadResources();
     void draw(sf::RenderWindow& window);
     void handleEvent(const sf::Event& event, sf::RenderWindow& window);
-    void update(int isChangeStarship);
+    void update();
     void updateWindowSize(sf::Vector2u newSize);
-    void updateAnimationStarship(int isChangeStarship);
-//    void updateAnimationPlatform();
+    void updateAnimationStarship();
+
+    sf::IntRect starshipRect;
+    sf::Sprite starshipSprite;
 
 private:
     sf::Texture starshipTexture;
-//    sf::Texture platformTexture;
-    sf::Sprite starshipSprite;
-//    sf::Sprite platformSprite;
     sf::Vector2u windowSize;
-
-    Starship starship;
 
     sf::Clock starshipClock;
     int starshipCounter = 0;
-    sf::IntRect starshipRect = sf::IntRect(0, 0, 248, 127);
 
-//    sf::Clock platformClock;
-//    int platformCounter = 0;
-//    sf::IntRect platformRect = sf::IntRect(0, 0, 510, 315);
 
     void centerImage();
 };

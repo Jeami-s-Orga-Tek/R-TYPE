@@ -28,7 +28,6 @@ GameManager::GameManager(sf::Vector2u windowSize)
       isConnected(ServerState::DEFAULT),
       isDraggingVolume(false),
       isChooseMode(false),
-      isChangeStarship(0),
       currentFps(60)
 {
     if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
@@ -65,6 +64,12 @@ GameManager::GameManager(sf::Vector2u windowSize)
     squadButton = Button(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 200), sf::Vector2f(100, 40), "Squad",font);
     modeButton = Button(sf::Vector2f(windowSize.x/2 - 350, windowSize.y - 150), sf::Vector2f(100, 40), "Mode", font);
     playButton = Button(sf::Vector2f(windowSize.x/2 + 250, windowSize.y - 100), sf::Vector2f(100, 40), "Play", font);
+
+    numberPlayerToWait.setFont(font);
+    numberPlayerToWait.setCharacterSize(28);
+    numberPlayerToWait.setFillColor(sf::Color::Yellow);
+    sf::FloatRect numberPlayerToWaitBounds = numberPlayerToWait.getLocalBounds();
+    numberPlayerToWait.setPosition(windowSize.x / 2 - numberPlayerToWaitBounds.width / 2, 20);
 
     lockerButton = Button(sf::Vector2f(windowSize.x/2 + 250, windowSize.y - 100), sf::Vector2f(100, 40), "Locker", font);
     leftButtonSelection = Button(sf::Vector2f(windowSize.x/2 - 50, windowSize.y + 50), sf::Vector2f(100, 40), "<", font);
@@ -126,8 +131,10 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
     applyResolutionButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 350),
                                                 sf::Vector2f(applyButtonWidth, 35));
 
-    sf::FloatRect bounds = insertCoinText.getLocalBounds();
-    insertCoinText.setPosition(windowSize.x/2 - bounds.width/2, windowSize.y/2 - bounds.height/2 + 50);
+    sf::FloatRect numberPlayerToWaitBounds = numberPlayerToWait.getLocalBounds();
+    numberPlayerToWait.setPosition(windowSize.x / 2 - numberPlayerToWaitBounds.width / 2, 20);
+    sf::FloatRect insertCoinTextBounds = insertCoinText.getLocalBounds();
+    insertCoinText.setPosition(windowSize.x/2 - insertCoinTextBounds.width/2, windowSize.y/2 - insertCoinTextBounds.height/2 + 50);
 }
 
 void GameManager::handleEvents(sf::RenderWindow& window)
@@ -177,14 +184,11 @@ void GameManager::update()
         insertCoinText.setFillColor(sf::Color(255, 255, 0, coinTime));
         launch.update();
     } else if (currentState == State::MENU) {
-        player.update(isChangeStarship);
+        player.update();
     } else if (currentState == State::LOCKER) {
-        if (isChangeStarship != 0) {
-            player.update(isChangeStarship);
-            isChangeStarship = 0;
-        }
+        player.update();
     } else if (currentState == State::LOBBY) {
-        player.update(isChangeStarship);
+        player.update();
     } else if (currentState == State::ERRORSERVER) {
         errorServer.update();
     }
@@ -230,8 +234,7 @@ void GameManager::render(sf::RenderWindow& window) {
         paramButton.drawVolumeBar(window);
     } else if (currentState == State::LOBBY) {
         player.draw(window);
-        paramButton.updatePositionAndSize(sf::Vector2f(50, window.getSize().y - 100), sf::Vector2f(125, 30));
-        paramButton.draw(window);
+        window.draw(numberPlayerToWait); // Draw at top middle
     } else if (currentState == State::LOCKER) {
         player.draw(window);
         leftButtonSelection.draw(window);
@@ -304,6 +307,19 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             currentState = State::ERRORSERVER;
         }
     } else if (currentState == State::MENU) {
+        if (soloButton.isClicked(mousePos)) {
+            gameMode = GameMode::SOLO;
+            numberPlayerToWait.setString("Waiting players: " + std::to_string(getWaitingPlayersCount()) + "/1");
+        } else if (duoButton.isClicked(mousePos)) {
+            gameMode = GameMode::DUO;
+            numberPlayerToWait.setString("Waiting players: " + std::to_string(getWaitingPlayersCount()) + "/2");
+        } else if (trioButton.isClicked(mousePos)) {
+            gameMode = GameMode::TRIO;
+            numberPlayerToWait.setString("Waiting players: " + std::to_string(getWaitingPlayersCount()) + "/3");
+        } else if (squadButton.isClicked(mousePos)) {
+            gameMode = GameMode::SQUAD;
+            numberPlayerToWait.setString("Waiting players: " + std::to_string(getWaitingPlayersCount()) + "/4");
+        }
         if (modeButton.isClicked(mousePos)) {
             isChooseMode = true;
         } else {
@@ -316,6 +332,11 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
         }
         if (paramButton.isClicked(mousePos)) {
             currentState = State::SETTINGS;
+            updateStatusTextPosition(true);
+            statusText.setString("");
+        }
+        if (playButton.isClicked(mousePos)) {
+            currentState = State::LOBBY;
             updateStatusTextPosition(true);
             statusText.setString("");
         }
@@ -359,14 +380,18 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
         }
     } else if (currentState == State::LOCKER) {
         if (leftButtonSelection.isClicked(mousePos)) {
-            std::cout << "left" << std::endl;
-            isChangeStarship = 1;
+            int newTop = player.starshipRect.top - 17;
+            if (newTop < 0)
+                newTop = 0;
+            player.starshipRect.top = newTop;
+            player.starshipSprite.setTextureRect(player.starshipRect);
         } else if (rightButtonSelection.isClicked(mousePos)) {
-            std::cout << "right" << std::endl;
-            isChangeStarship = 2;
-        } else {
-            std::cout << "none" << std::endl;
-            isChangeStarship = 0;
+            int maxTop = 17 * 5;
+            int newTop = player.starshipRect.top + 17;
+            if (newTop > maxTop)
+                newTop = maxTop;
+            player.starshipRect.top = newTop;
+            player.starshipSprite.setTextureRect(player.starshipRect);
         }
         if (paramButton.isClicked(mousePos)) {
             currentState = State::SETTINGS;

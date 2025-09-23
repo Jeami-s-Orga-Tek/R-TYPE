@@ -68,13 +68,13 @@ void Player::handleEvent(const sf::Event& event, sf::RenderWindow& window)
     }
 }
 
-void Player::update(int isChangeStarship)
+void Player::update()
 {
-    updateAnimationStarship(isChangeStarship);
+    updateAnimationStarship();
 //    updateAnimationPlatform();
 }
 
-void Player::updateAnimationStarship(int isChangeStarship)
+void Player::updateAnimationStarship()
 {
     float frameTime = 0.15f;
     static int direction = 1;
@@ -83,33 +83,19 @@ void Player::updateAnimationStarship(int isChangeStarship)
         return;
 
     starshipCounter++;
-    if (isChangeStarship == 1) {
-        starshipRect.height -= 18;
-        if (starshipCounter >= 5) {
-            starshipRect.height = 0;
-            starshipCounter = 0;
+    starshipRect.left += 33 * direction;
+    if (starshipCounter >= 5) {
+        direction *= -1;
+        starshipCounter = 0;
+        if (direction == 1) {
+            starshipRect.left = 0;
+        } else {
+            starshipRect.left = starshipRect.left - 33;
         }
-    } else if (isChangeStarship == 2) {
-        starshipRect.height += 18;
-        if (starshipCounter >= 5) {
-            starshipRect.height = 0;
-            starshipCounter = 0;
-        }
-    } else {
-        starshipRect.left += 33 * direction;
-        if (starshipCounter >= 5) {
-            direction *= -1;
-            starshipCounter = 0;
-            if (direction == 1) {
-                starshipRect.left = 0;
-            } else {
-                starshipRect.left = starshipRect.left - 33;
-            }
-        }
-        unsigned int maxLeft = starshipTexture.getSize().x - starshipRect.width;
-        if (starshipRect.left < 0) starshipRect.left = 0;
-        if ((unsigned int)starshipRect.left > maxLeft) starshipRect.left = maxLeft;
     }
+    unsigned int maxLeft = starshipTexture.getSize().x - starshipRect.width;
+    if (starshipRect.left < 0) starshipRect.left = 0;
+    if ((unsigned int)starshipRect.left > maxLeft) starshipRect.left = maxLeft;
     starshipSprite.setTextureRect(starshipRect);
     starshipClock.restart();
 }
