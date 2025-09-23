@@ -15,7 +15,6 @@ Parameters::Parameters(sf::Vector2u windowSize) : windowSize(windowSize),
     currentGraphicsQuality(GraphicsQuality::MEDIUM),
     currentColorBlindMode(ColorBlindMode::NORMAL)
 {
-
 }
 
 bool Parameters::loadResources()
@@ -71,6 +70,7 @@ void Parameters::draw(sf::RenderWindow& window)
     tempAccessibilityTitle.setFillColor(applyColorBlindFilter(AccessibilityTitle.getFillColor()));
     tempColorBlindLabel.setFillColor(applyColorBlindFilter(ColorBlindLabel.getFillColor()));
     tempColorBlindValue.setFillColor(applyColorBlindFilter(ColorBlindValue.getFillColor()));
+    
     window.draw(tempParamsText);
     window.draw(tempVideoSectionTitle);
     window.draw(tempResolutionLabel);

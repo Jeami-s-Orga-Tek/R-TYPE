@@ -21,13 +21,14 @@
 using boost::asio::ip::udp;
 
 GameManager::GameManager(sf::Vector2u windowSize)
-    : launch(windowSize), menu(windowSize), parameters(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
+    : launch(windowSize), menu(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
       gameMode(GameMode::SOLO),
       particleSystem(windowSize, 300),
       currentState(State::LAUNCH),
       isConnected(ServerState::DEFAULT),
       isDraggingVolume(false),
       isChooseMode(false),
+      isConfiguringControls(false),
       currentFps(60)
 {
     if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
@@ -50,11 +51,12 @@ GameManager::GameManager(sf::Vector2u windowSize)
     displayModeButton = Button(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30), "Change", font);
     graphicsQualityButton = Button(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30), "Change", font);
     colorBlindModeButton = Button(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30), "Change", font);
+    controlsButton = Button(sf::Vector2f(buttonX, 400), sf::Vector2f(buttonWidth, 30), "Controls", font);
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35), "Apply", font);
     
-    if (!launch.loadResources() || !parameters.loadResources() || !player.loadResources() || !errorServer.loadResources()) {
+    if (!launch.loadResources() || !parameters.loadResources() || !controlsConfig.loadResources() || !player.loadResources() || !errorServer.loadResources()) {
         std::cerr << "Erreur lors du chargement des ressources" << std::endl;
     }
 
@@ -148,6 +150,9 @@ void GameManager::handleEvents(sf::RenderWindow& window)
         }
         launch.handleEvent(event, window);
         menu.handleEvent(event, window);
+        if (currentState == State::CONTROLS) {
+            controlsConfig.handleEvent(event, window);
+        }
         lobby.handleEvent(event, window);
         player.handleEvent(event, window);
         errorServer.handleEvent(event, window);
@@ -210,8 +215,12 @@ void GameManager::render(sf::RenderWindow& window) {
         displayModeButton.draw(window);
         graphicsQualityButton.draw(window);
         colorBlindModeButton.draw(window);
+        controlsButton.draw(window);
         applyResolutionButton.draw(window);
         paramButton.drawVolumeBar(window);
+    } else if (currentState == State::CONTROLS) {
+        controlsConfig.draw(window);
+        backButton.draw(window);
     } else if (currentState == State::LOBBY) {
         player.draw(window);
     } else if (currentState == State::ERRORSERVER) {
@@ -321,12 +330,19 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
         if (colorBlindModeButton.isClicked(mousePos)) {
             cycleColorBlindMode();
         }
+        if (controlsButton.isClicked(mousePos)) {
+            currentState = State::CONTROLS;
+        }
         if (applyResolutionButton.isClicked(mousePos)) {
             applyCurrentResolution(window);
         }
         if (paramButton.isVolumeBarClicked(mousePos)) {
             isDraggingVolume = true;
             paramButton.setVolumeFromMouse(mousePos.x);
+        }
+    } else if (currentState == State::CONTROLS) {
+        if (backButton.isClicked(mousePos)) {
+            currentState = State::SETTINGS;
         }
     } else if (currentState == State::LOBBY) {
     } else if (currentState == State::ERRORSERVER) {
@@ -359,6 +375,8 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
         if (isDraggingVolume) {
             paramButton.setVolumeFromMouse(mousePos.x);
         }
+    } else if (currentState == State::CONTROLS) {
+        backButton.setHovered(backButton.isClicked(mousePos));
     } else if (currentState == State::LOBBY) {
         paramButton.setHovered(paramButton.isClicked(mousePos));
     } else if (currentState == State::ERRORSERVER) {
