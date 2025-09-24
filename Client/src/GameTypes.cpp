@@ -21,7 +21,8 @@
 using boost::asio::ip::udp;
 
 GameManager::GameManager(sf::Vector2u windowSize)
-    : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize), waitingPlayersCounter(1),
+    : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
+      waitingPlayersCounter(1),
       gameMode(GameMode::SOLO),
       particleSystem(windowSize, 300),
       currentState(State::LAUNCH),
@@ -217,6 +218,10 @@ void GameManager::update()
     } else if (currentState == State::LOCKER) {
         player.update();
     } else if (currentState == State::LOBBY) {
+        if ((waitingPlayersCounter == 1 && gameMode == GameMode::SOLO) || (waitingPlayersCounter == 2 && gameMode == GameMode::DUO) ||
+            (waitingPlayersCounter == 3 && gameMode == GameMode::TRIO) || (waitingPlayersCounter == 4 && gameMode == GameMode::SQUAD)) {
+            currentState = State::GAME;
+        }
         player.update();
     } else if (currentState == State::ERRORSERVER) {
         errorServer.update();
@@ -327,6 +332,7 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
     if (event.mouseButton.button != sf::Mouse::Left) return;
 
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+
     if (currentState == State::LAUNCH) {
         if (connectToServer("127.0.0.1", 8080)) {
             statusText.setString("Connected to the server !");
