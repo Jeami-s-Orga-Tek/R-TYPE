@@ -68,7 +68,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
     playButton = Button(sf::Vector2f(windowSize.x/2 + 250, windowSize.y - 100), sf::Vector2f(100, 40), "Play", font);
 
     numberPlayerToWait.setFont(font);
-    numberPlayerToWait.setCharacterSize(28);
+    numberPlayerToWait.setCharacterSize(10);
     numberPlayerToWait.setFillColor(sf::Color::Yellow);
     sf::FloatRect numberPlayerToWaitBounds = numberPlayerToWait.getLocalBounds();
     numberPlayerToWait.setPosition(windowSize.x / 2 - numberPlayerToWaitBounds.width / 2, 20);
