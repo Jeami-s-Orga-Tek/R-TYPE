@@ -418,6 +418,27 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
         if (backButton.isClicked(mousePos)) {
             currentState = State::SETTINGS;
         }
+    } else if (currentState == State::LOCKER) {
+        if (applyButtonLocker.isClicked(mousePos)) {
+            currentState = State::MENU;
+            updateStatusTextPosition(true);
+            statusText.setString("");
+        }
+        if (leftButtonSelection.isClicked(mousePos)) {
+            int newTop = player.starshipRect.top - 17;
+            if (newTop < 0)
+                newTop = 0;
+            player.starshipRect.top = newTop;
+            player.starshipSprite.setTextureRect(player.starshipRect);
+        }
+        if (rightButtonSelection.isClicked(mousePos)) {
+            int maxTop = 17 * 5;
+            int newTop = player.starshipRect.top + 17;
+            if (newTop > maxTop)
+                newTop = maxTop;
+            player.starshipRect.top = newTop;
+            player.starshipSprite.setTextureRect(player.starshipRect);
+        }
     } else if (currentState == State::LOBBY) {
     } else if (currentState == State::ERRORSERVER) {
         if (paramButton.isClicked(mousePos)) {
@@ -450,6 +471,11 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
         if (isDraggingVolume) {
             paramButton.setVolumeFromMouse(mousePos.x);
         }
+    } else if (currentState == State::LOCKER) {
+        paramButton.setHovered(paramButton.isClicked(mousePos));
+        applyButtonLocker.setHovered(applyButtonLocker.isClicked(mousePos));
+        leftButtonSelection.setHovered(leftButtonSelection.isClicked(mousePos));
+        rightButtonSelection.setHovered(rightButtonSelection.isClicked(mousePos));
     } else if (currentState == State::CONTROLS) {
         backButton.setHovered(backButton.isClicked(mousePos));
     } else if (currentState == State::LOBBY) {
