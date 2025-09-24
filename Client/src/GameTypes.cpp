@@ -22,8 +22,6 @@ using boost::asio::ip::udp;
 
 GameManager::GameManager(sf::Vector2u windowSize)
     : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize), waitingPlayersCounter(1),
-
-
       gameMode(GameMode::SOLO),
       particleSystem(windowSize, 300),
       currentState(State::LAUNCH),
@@ -529,7 +527,7 @@ void GameManager::updateStatusTextPosition(bool isParametersMode)
         statusText.setPosition(260, 100);
         statusText.setFillColor(sf::Color::White);
     } else {
-        statusText.setCharacterSize(16);
+        statusText.setCharacterSize(10);
         statusText.setPosition(600, 60);
     }
 }
