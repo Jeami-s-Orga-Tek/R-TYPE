@@ -436,7 +436,7 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             player.starshipSprite.setTextureRect(player.starshipRect);
         }
         if (rightButtonSelection.isClicked(mousePos)) {
-            int maxTop = 17 * 5;
+            int maxTop = 17 * 4;
             int newTop = player.starshipRect.top + 17;
             if (newTop > maxTop)
                 newTop = maxTop;
