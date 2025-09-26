@@ -360,7 +360,10 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             numberPlayerToWait.setString("Waiting players: " + std::to_string(getWaitingPlayersCount()) + "/4");
         }
         if (modeButton.isClicked(mousePos)) {
-            isChooseMode = true;
+            if (isChooseMode)
+                isChooseMode = false;
+            else
+                isChooseMode = true;
         } else {
             isChooseMode = false;
         }
