@@ -17,6 +17,7 @@ public:
     ~Leaderboard() = default;
     bool loadResources();
     void draw(sf::RenderWindow& window);
+    void drawRoundedRectangle(sf::RenderWindow& window);
     void handleEvent(const sf::Event& event, sf::RenderWindow& window);
     void update();
     void updateWindowSize(sf::Vector2u newSize);
