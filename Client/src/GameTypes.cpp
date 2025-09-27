@@ -28,6 +28,30 @@ GameManager::GameManager(sf::Vector2u windowSize)
       isDraggingVolume(false),
       currentFps(60)
 {
+    void *handle = dlopen("libengine.so", RTLD_LAZY);
+    if (!handle) {
+        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+        throw std::runtime_error("");
+    }
+
+    createMediatorFunc = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+    char *error = dlerror();
+    if (error) {
+        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+        dlclose(handle);
+        throw std::runtime_error("");
+    }
+
+    createNetworkManagerFunc = (std::shared_ptr<Engine::NetworkManager> (*)(Engine::NetworkManager::Role, const std::string &, uint16_t))(dlsym(handle, "createNetworkManager"));
+    error = dlerror();
+    if (error) {
+        std::cerr << "Cannot load symbol 'createNetworkManager': " << error << std::endl;
+        dlclose(handle);
+        throw std::runtime_error("");
+    }
+
+    dlclose(handle);
+
     if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
         std::cerr << "Unable to load Carlito font, trying Symbola..." << std::endl;
         if (!font.loadFromFile("/usr/share/fonts/gdouros-symbola/Symbola.ttf")) {
@@ -388,13 +412,10 @@ void GameManager::updateStatusTextPosition(bool isParametersMode)
 
 bool GameManager::connectToServer(const std::string& serverIP, unsigned short port)
 {
-    if (!mediator)
-        createMediator();
-    initMediatorNetwork(serverIP, port);
+    networkManager = createNetworkManagerFunc(Engine::NetworkManager::Role::CLIENT, serverIP, port);
 
     // TEMP
-    mediator->networkManager->send_hello("BASSIROU", 12345);
-    mediator->networkManager->receivePacket();
+    networkManager->send_hello("BASSIROU", 12345);
 
     return (true);
     // try {
@@ -591,58 +612,68 @@ void GameManager::applyCurrentResolution(sf::RenderWindow& window)
     handleWindowResize(resizeEvent);
 }
 
-void GameManager::createMediator()
-{
-    void *handle = dlopen("libengine.so", RTLD_LAZY);
-    if (!handle) {
-        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
-        return;
-    }
+// void GameManager::createMediator()
+// {
+//     void *handle = dlopen("libengine.so", RTLD_LAZY);
+//     if (!handle) {
+//         std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+//         return;
+//     }
 
-    std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
-    const char *error = dlerror();
-    if (error) {
-        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
-        dlclose(handle);
-        return;
-    }
+//     std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+//     const char *error = dlerror();
+//     if (error) {
+//         std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+//         dlclose(handle);
+//         throw std::runtime_error("");
+//     }
 
-    this->mediator = createMediatorFunc();
-}
+//     this->createNetworkManagerFunc = (std::shared_ptr<Engine::NetworkManager> (*)(Engine::NetworkManager::Role, const std::string &, uint16_t))(dlsym(handle, "createNetworkManager"));
+//     error = dlerror();
+//     if (error) {
+//         std::cerr << "Cannot load symbol 'createNetworkManager': " << error << std::endl;
+//         dlclose(handle);
+//         throw std::runtime_error("");
+//     }
 
-void GameManager::initMediator()
-{
-    if (!mediator)
-        return;
+//     this->mediator = createMediatorFunc();
 
-    mediator->init();
-}
+//     dlclose(handle);
+// }
 
-void GameManager::initMediatorNetwork(const std::string &address, uint16_t port)
-{
-    if (!mediator)
-        return;
+// void GameManager::initMediator()
+// {
+//     if (!mediator)
+//         return;
 
-    mediator->initNetworkManager(Engine::NetworkManager::Role::CLIENT, address, port);
-}
+//     mediator->init();
+// }
+
+// void GameManager::initMediatorNetwork(const std::string &address, uint16_t port)
+// {
+//     if (!mediator)
+//         return;
+
+//     mediator->initNetworkManager(Engine::NetworkManager::Role::CLIENT, address, port);
+// }
 
 void GameManager::gameDemo(sf::RenderWindow &window)
 {
     // window.setFramerateLimit(0);
 
-    void *handle = dlopen("libengine.so", RTLD_LAZY);
-    if (!handle) {
-        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
-        return;
-    }
+    // void *handle = dlopen("libengine.so", RTLD_LAZY);
+    // if (!handle) {
+    //     std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+    //     return;
+    // }
 
-    std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
-    const char *error = dlerror();
-    if (error) {
-        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
-        dlclose(handle);
-        return;
-    }
+    // std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+    // const char *error = dlerror();
+    // if (error) {
+    //     std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+    //     dlclose(handle);
+    //     return;
+    // }
 
     // void (*deleteMediatorFunc)(Engine::Mediator*) = (void (*)(Engine::Mediator*))(dlsym(handle, "deleteMediator"));
     // error = dlerror();
@@ -652,7 +683,10 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     //     return (84);
     // }
 
-    std::shared_ptr<Engine::Mediator> mediator = createMediatorFunc();
+    // std::shared_ptr<Engine::Mediator> mediator = createMediatorFunc();
+
+    networkManager->mediator = createMediatorFunc();
+    std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
     mediator->init();
 
     mediator->registerComponent<Engine::Components::Gravity>();
@@ -674,7 +708,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
 
-    const int entity_number = 4;
+    int entity_number = 4;
 
     for (int i = 0; i < entity_number; i++) {
         Engine::Entity entity = mediator->createEntity();
@@ -745,11 +779,12 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         Engine::Event player_input_event(static_cast<Engine::EventId>(Engine::EventsIds::PLAYER_INPUT));
         player_input_event.setParam(0, buttons);
         mediator->sendEvent(player_input_event);
+        networkManager->sendInput(networkManager->player_id, networkManager->room_id, buttons);
 
         while (accumulator >= FIXED_DT) {
             // physics_system->update(mediator, FIXED_DT);
             player_control_system->update(mediator, FIXED_DT);
-            render_system->update(mediator, window, FIXED_DT);
+            render_system->update(mediator, window);
             accumulator -= FIXED_DT;
         }
 
@@ -758,5 +793,5 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     }
 
     // deleteMediatorFunc(mediator);
-    dlclose(handle);
+    // dlclose(handle);
 }

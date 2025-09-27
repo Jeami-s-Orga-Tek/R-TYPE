@@ -10,6 +10,7 @@
 #define GAMETYPES_HPP_
 
 #include <SFML/Graphics.hpp>
+#include <cstdint>
 
 #include "Button.hpp"
 #include "Menu.hpp"
@@ -20,6 +21,7 @@
 #include "ErrorServer.hpp"
 #include "Player.hpp"
 #include "Mediator.hpp"
+#include "NetworkManager.hpp"
 
 enum class State {
     MENU,
@@ -66,8 +68,10 @@ class GameManager {
         bool isDraggingVolume;
         int currentFps;
 
-        std::shared_ptr<Engine::Mediator> mediator;
-        
+        std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
+        std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
+        std::shared_ptr<Engine::NetworkManager> networkManager;
+
     public:
         GameManager(sf::Vector2u windowSize);
 

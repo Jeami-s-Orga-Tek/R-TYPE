@@ -15,10 +15,10 @@ void Engine::Mediator::init()
     eventManager = std::make_unique<Engine::EventManager>();
 }
 
-void Engine::Mediator::initNetworkManager(NetworkManager::Role role, const std::string &address, uint16_t port)
-{
-    networkManager = std::make_unique<Engine::NetworkManager>(role, address, port);
-}
+// void Engine::Mediator::initNetworkManager(NetworkManager::Role role, const std::string &address, uint16_t port)
+// {
+//     networkManager = std::make_unique<Engine::NetworkManager>(role, address, port);
+// }
 
 Engine::Entity Engine::Mediator::createEntity()
 {

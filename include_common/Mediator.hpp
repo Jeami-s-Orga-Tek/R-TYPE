@@ -14,13 +14,11 @@
 #include "ComponentManager.hpp"
 #include "SystemManager.hpp"
 #include "EventManager.hpp"
-#include "NetworkManager.hpp"
 
 namespace Engine {
     class Mediator {
         public:
             void init();
-            void initNetworkManager(NetworkManager::Role role, const std::string &address, uint16_t port);
             Entity createEntity();
             void destroyEntity(Entity entity);
             template <typename T> void registerComponent();
@@ -33,8 +31,6 @@ namespace Engine {
             void addEventListener(EventId eventId, std::function<void(Event &)> const &listener);
             void sendEvent(EventId eventId);
             void sendEvent(Event &event);
-
-            std::unique_ptr<NetworkManager> networkManager {};
         private:
             std::unique_ptr<EntityManager> entityManager {};
             std::unique_ptr<ComponentManager> componentManager {};
