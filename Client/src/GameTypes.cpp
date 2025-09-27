@@ -24,6 +24,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
     : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
       waitingPlayersCounter(1),
       gameMode(GameMode::SOLO),
+      trophy(windowSize),
       particleSystem(windowSize, 300),
       currentState(State::LAUNCH),
       isConnected(ServerState::DEFAULT),
@@ -38,7 +39,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
     
     playButton = Button(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50), "Play", font);
 
-    paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(200, 50), "Parameters", font);
+    paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(125, 40), "Parameters", font);
     fps30Button = ParamButton(sf::Vector2f(windowSize.x/2 - 90, windowSize.y - 60), sf::Vector2f(80, 40), "FPS 30", font);
     fps60Button = ParamButton(sf::Vector2f(windowSize.x/2 + 10, windowSize.y - 60), sf::Vector2f(80, 40), "FPS 60", font);
     backButton = Button(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40), "Back", font);
@@ -54,7 +55,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35), "Apply", font);
     
-    if (!launch.loadResources() || !parameters.loadResources() || !controlsConfig.loadResources() || !player.loadResources() || !errorServer.loadResources()) {
+    if (!launch.loadResources() || !parameters.loadResources() || !controlsConfig.loadResources() || !player.loadResources() || !errorServer.loadResources() || !trophy.loadResources()) {
         std::cerr << "Erreur lors du chargement des ressources" << std::endl;
     }
 
@@ -75,6 +76,10 @@ GameManager::GameManager(sf::Vector2u windowSize)
     leftButtonSelection = Button(sf::Vector2f(windowSize.x/2 - 50, windowSize.y + 50), sf::Vector2f(100, 40), "<", font);
     rightButtonSelection = Button(sf::Vector2f(windowSize.x/2 - 50, windowSize.y + 50), sf::Vector2f(100, 40), ">", font);
     applyButtonLocker = Button(sf::Vector2f(windowSize.x/2 - 50, windowSize.y - 200), sf::Vector2f(100, 40), "Apply", font);
+
+    leaderboard = Button(sf::Vector2f(windowSize.x/2 - 350, windowSize.y - 100), sf::Vector2f(200, 50), "Leaderboard", font);
+    trophy.leaderboardRectangle.setSize(sf::Vector2f(windowSize.x/2, windowSize.y/2 + 150));
+    trophy.leaderboardRectangle.setPosition(sf::Vector2f(windowSize.x/2 - 200,windowSize.y/2 - 200));
 
     statusText.setFont(font);
     statusText.setCharacterSize(10);
@@ -113,6 +118,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
     modeButton.setCharacterSize(10);
     playButton.setCharacterSize(10);
 
+    leaderboard.setCharacterSize(10);
     lockerButton.setCharacterSize(10);
 
     leftButtonSelection.setCharacterSize(10);
@@ -144,6 +150,9 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
                                                sf::Vector2f(100, 40));
     applyButtonLocker.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 50, windowSize.y - 100),
                                             sf::Vector2f(100, 40));
+    leaderboard.updatePositionAndSize(sf::Vector2f(50,  100),
+                                            sf::Vector2f(125, 40));
+    trophy.leaderboardRectangle.setPosition(sf::Vector2f(windowSize.x/2 - 200,windowSize.y/2 - 200));
 
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
     float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
@@ -240,6 +249,7 @@ void GameManager::render(sf::RenderWindow& window) {
     } else if (currentState == State::MENU) {
         paramButton.updatePositionAndSize(sf::Vector2f(50, window.getSize().y - 100), sf::Vector2f(125, 40));
         paramButton.draw(window);
+        leaderboard.draw(window);
         if (isChooseMode) {
             soloButton.draw(window);
             duoButton.draw(window);
@@ -250,6 +260,8 @@ void GameManager::render(sf::RenderWindow& window) {
         playButton.draw(window);
         lockerButton.draw(window);
         player.draw(window);
+    } else if (currentState == State::LEADERBOARD) {
+        trophy.draw(window);
     } else if (currentState == State::GAME) {
         // window.close();
         gameDemo(window);
@@ -365,6 +377,11 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
         } else {
             isChooseMode = false;
         }
+        if (leaderboard.isClicked(mousePos)) {
+            currentState = State::LEADERBOARD;
+            updateStatusTextPosition(true);
+            statusText.setString("");
+        }
         if (lockerButton.isClicked(mousePos)) {
             currentState = State::LOCKER;
             updateStatusTextPosition(true);
@@ -468,6 +485,7 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
             trioButton.setHovered(trioButton.isClicked(mousePos));
             squadButton.setHovered(squadButton.isClicked(mousePos));
         }
+        leaderboard.setHovered(leaderboard.isClicked(mousePos));
         lockerButton.setHovered(lockerButton.isClicked(mousePos));
         modeButton.setHovered(modeButton.isClicked(mousePos));
         playButton.setHovered(playButton.isClicked(mousePos));

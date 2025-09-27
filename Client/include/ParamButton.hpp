@@ -39,6 +39,7 @@ private:
     sf::Text label;
     sf::RectangleShape volumeBar;
     sf::CircleShape volumeSlider;
+
     float volumeValue = 0.5f;
     float volumeBarWidth = 200.f;
     bool volumeBarInitialized = false;

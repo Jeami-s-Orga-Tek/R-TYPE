@@ -20,6 +20,7 @@
 #include "Player.hpp"
 #include "Launch.hpp"
 #include "ControlsConfig.hpp"
+#include "Leaderboard.hpp"
 
 enum class State {
     LAUNCH,
@@ -27,6 +28,7 @@ enum class State {
     LOBBY,
     GAME,
     LOCKER,
+    LEADERBOARD,
     ERRORSERVER,
     SETTINGS,
     CONTROLS,
@@ -82,6 +84,10 @@ class GameManager {
         int waitingPlayersCounter;
 
         GameMode gameMode;
+
+        Leaderboard trophy;
+
+        Button leaderboard;
 
         sf::Text statusText;
         sf::Text fpsDisplay;
