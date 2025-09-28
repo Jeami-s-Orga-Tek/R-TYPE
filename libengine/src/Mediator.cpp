@@ -92,6 +92,16 @@ void Engine::Mediator::sendEvent(EventId event_id) {
     eventManager->sendEvent(event_id);
 }
 
+size_t Engine::Mediator::getEntityCount()
+{
+    return (entityManager->getEntityCount());
+}
+
+Engine::Signature Engine::Mediator::getSignature(Entity entity)
+{
+    return (entityManager->getSignature(entity));
+}
+
 extern "C" std::shared_ptr<Engine::Mediator> createMediator() {
     return (std::make_shared<Engine::Mediator>());
 }

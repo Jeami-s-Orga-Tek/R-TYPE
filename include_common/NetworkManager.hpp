@@ -16,10 +16,13 @@
 
 #include "Entity.hpp"
 #include "Mediator.hpp"
+#include "ComponentRegistry.hpp"
 
 namespace Engine {
     class NetworkManager {
     public:
+        void createPlayer();
+
         enum class Role {
             CLIENT,
             SERVER
@@ -129,6 +132,8 @@ namespace Engine {
         boost::asio::ip::udp::endpoint remote_endpoint;
         std::array<uint8_t, 1024> recv_buffer;
         std::thread io_thread;
+
+        ComponentRegistry componentRegistry;
     };
 };
 

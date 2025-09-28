@@ -71,7 +71,7 @@ int main()
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
 
-    int entity_number = 4;
+    int entity_number = 0;
 
     for (int i = 0; i < entity_number; i++) {
         Engine::Entity entity = mediator->createEntity();

@@ -414,6 +414,12 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
 {
     networkManager = createNetworkManagerFunc(Engine::NetworkManager::Role::CLIENT, serverIP, port);
 
+    physics_system = networkManager->mediator->registerSystem<Engine::Systems::PhysicsSystem>();
+    render_system = networkManager->mediator->registerSystem<Engine::Systems::RenderSystem>();
+    
+    player_control_system = networkManager->mediator->registerSystem<Engine::Systems::PlayerControl>();
+    player_control_system->init(networkManager->mediator);
+
     // TEMP
     networkManager->send_hello("BASSIROU", 12345);
 
@@ -685,38 +691,33 @@ void GameManager::gameDemo(sf::RenderWindow &window)
 
     // std::shared_ptr<Engine::Mediator> mediator = createMediatorFunc();
 
-    networkManager->mediator = createMediatorFunc();
+    // networkManager->mediator = createMediatorFunc();
     std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
-    mediator->init();
+    // mediator->init();
 
-    mediator->registerComponent<Engine::Components::Gravity>();
-    mediator->registerComponent<Engine::Components::RigidBody>();
-    mediator->registerComponent<Engine::Components::Transform>();
-    mediator->registerComponent<Engine::Components::Sprite>();
-
-    auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
-    auto render_system = mediator->registerSystem<Engine::Systems::RenderSystem>();
+    // auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
+    // auto render_system = mediator->registerSystem<Engine::Systems::RenderSystem>();
     
-    auto player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
-    player_control_system->init(mediator);
+    // auto player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
+    // player_control_system->init(mediator);
 
     render_system->addSprite("player", "assets/sprites/r-typesheet1.gif", {32, 14}, {101, 3}, 10, 1);
 
-    Engine::Signature signature;
-    signature.set(mediator->getComponentType<Engine::Components::Gravity>());
-    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
-    signature.set(mediator->getComponentType<Engine::Components::Transform>());
-    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    // Engine::Signature signature;
+    // signature.set(mediator->getComponentType<Engine::Components::Gravity>());
+    // signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
+    // signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    // signature.set(mediator->getComponentType<Engine::Components::Sprite>());
 
-    int entity_number = 4;
+    int entity_number = 0;
 
-    for (int i = 0; i < entity_number; i++) {
-        Engine::Entity entity = mediator->createEntity();
-        mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
-        mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
-        mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
-        mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
-    }
+    // for (int i = 0; i < entity_number; i++) {
+    //     Engine::Entity entity = mediator->createEntity();
+    //     mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
+    //     mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
+    //     mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
+    //     mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
+    // }
 
     // Change for actual FPS later
     const float FIXED_DT = 1.0f / 60.0f;
@@ -753,7 +754,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             fps = frame_count / fps_timer;
             frame_count = 0;
             fps_timer = 0.0f;
-            fps_text.setString(std::to_string(entity_number) + " entites pour FPS " + std::to_string((int)(fps)));
+            fps_text.setString(std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)));
         }
 
         window.clear(sf::Color::Black);

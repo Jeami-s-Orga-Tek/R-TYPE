@@ -23,6 +23,10 @@
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
 
+#include "Systems/Physics.hpp"
+#include "Systems/Render.hpp"
+#include "Systems/PlayerControl.hpp"
+
 enum class State {
     MENU,
     SETTINGS,
@@ -67,6 +71,10 @@ class GameManager {
         ServerState isConnected;
         bool isDraggingVolume;
         int currentFps;
+
+        std::shared_ptr<Engine::Systems::PhysicsSystem> physics_system {};
+        std::shared_ptr<Engine::Systems::RenderSystem> render_system {};
+        std::shared_ptr<Engine::Systems::PlayerControl> player_control_system {};
 
         std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
         std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();

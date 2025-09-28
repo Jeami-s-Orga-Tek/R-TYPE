@@ -12,10 +12,52 @@
 #include <cstring>
 
 #include "NetworkManager.hpp"
+#include "Systems/Physics.hpp"
+#include "Systems/PlayerControl.hpp"
+#include "Components/Sprite.hpp"
 
 Engine::NetworkManager::NetworkManager(Role role, const std::string &address, uint16_t port)
     : role(role), address(address), port(port), io_context(), socket(io_context)
 {
+    mediator = std::make_shared<Engine::Mediator>();
+    mediator->init();
+
+    mediator->registerComponent<Engine::Components::Gravity>();
+    mediator->registerComponent<Engine::Components::RigidBody>();
+    mediator->registerComponent<Engine::Components::Transform>();
+    mediator->registerComponent<Engine::Components::Sprite>();
+
+    componentRegistry.registerType(
+        typeid(Engine::Components::Gravity).name(),
+        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
+            const auto *comp = reinterpret_cast<const Engine::Components::Gravity *>(data);
+            mediator.addComponent(entity, *comp);
+        }
+    );
+    componentRegistry.registerType(
+        typeid(Engine::Components::RigidBody).name(),
+        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
+            const auto *comp = reinterpret_cast<const Engine::Components::RigidBody *>(data);
+            mediator.addComponent(entity, *comp);
+        }
+    );
+    componentRegistry.registerType(
+        typeid(Engine::Components::Transform).name(),
+        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
+            const auto *comp = reinterpret_cast<const Engine::Components::Transform *>(data);
+            std::cout << comp->pos.x << " " << comp->pos.y << std::endl;
+            mediator.addComponent(entity, *comp);
+        }
+    );
+    componentRegistry.registerType(
+        typeid(Engine::Components::Sprite).name(),
+        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
+            const auto *comp = reinterpret_cast<const Engine::Components::Sprite *>(data);
+            std::cout << comp->sprite_name << std::endl;
+            mediator.addComponent(entity, *comp);
+        }
+    );
+    
     if (role == Role::SERVER) {
         socket.open(boost::asio::ip::udp::v4());
         socket.bind(boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(address), port));
@@ -80,9 +122,11 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
         return;
     if (role == Role::SERVER) {
         switch (header.type) {
-            case MSG_HELLO:
+            case MSG_HELLO: {
                 send_welcome();
+                createPlayer();
                 break;
+            }
             case MSG_PING:
                 send_pong(header.seq);
                 break;
@@ -101,13 +145,13 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
                 receiveWelcome();
                 break;
             case MSG_ENTITY:
-                
+                receiveEntity();
                 break;
             case MSG_ENTITY_DESTROYED:
-                
+
                 break;
             case MSG_COMPONENT:
-                
+                receiveComponent();
                 break;
             default:
                 break;
@@ -210,19 +254,22 @@ void Engine::NetworkManager::sendEntity(const Entity &entity, const Signature &s
 template <typename T>
 void Engine::NetworkManager::sendComponent(const Entity &entity, const T &component)
 {
-    std::array<uint8_t, sizeof(PacketHeader) + sizeof(ComponentBody)> buf {};
+    const std::string type_name = typeid(T).name();
+    size_t total_size = sizeof(PacketHeader) + sizeof(ComponentBody) + type_name.size() + sizeof(component);
+    std::vector<uint8_t> buf(total_size);
+
     const PacketHeader &ph = createPacketHeader(MSG_COMPONENT);
     std::memcpy(buf.data(), &ph, sizeof(ph));
 
-    const std::string type_name = typeid(T).name();
-
     ComponentBody cb = {
         .entity_id = entity,
-        .name_len = static_cast<uint32_t>(type_name.length()),
-        .conponent_len = static_cast<uint32_t>(sizeof(component)),
+        .name_len = static_cast<uint8_t>(type_name.length()),
+        .component_len = static_cast<uint32_t>(sizeof(component)),
     };
     std::memcpy(buf.data() + sizeof(ph), &cb, sizeof(cb));
-    socket.send_to(boost::asio::buffer(buf), remote_endpoint);
+    std::memcpy(buf.data() + sizeof(ph) + sizeof(cb), type_name.data(), cb.name_len);
+    std::memcpy(buf.data() + sizeof(ph) + sizeof(cb) + cb.name_len, &component, sizeof(component));
+    socket.send_to(boost::asio::buffer(buf.data(), buf.size()), remote_endpoint);
 }
 
 // template <std::size_t S>
@@ -270,12 +317,37 @@ void Engine::NetworkManager::receiveInputs()
 
 void Engine::NetworkManager::receiveEntity()
 {
+    EntityBody entity_body;
+    std::memcpy(&entity_body, recv_buffer.data() + sizeof(PacketHeader), sizeof(entity_body));
 
+    Entity entity_id = entity_body.entity_id;
+    Signature signature(entity_body.signature);
+
+    std::cout << "ENTITY RECEIVED:" << std::endl;
+    std::cout << "Entity ID: " << entity_id << std::endl;
+    std::cout << "Signature: " << signature << std::endl;
+
+    mediator->createEntity();
 }
 
 void Engine::NetworkManager::receiveComponent()
 {
+    ComponentBody component_body;
+    std::memcpy(&component_body, recv_buffer.data() + sizeof(PacketHeader), sizeof(component_body));
 
+    Entity entity_id = component_body.entity_id;
+    uint8_t name_len = component_body.name_len;
+    uint32_t component_len = component_body.component_len;
+
+    std::string type_name(reinterpret_cast<char *>(recv_buffer.data() + sizeof(PacketHeader) + sizeof(ComponentBody)), name_len);
+    const void *component_data = recv_buffer.data() + sizeof(PacketHeader) + sizeof(ComponentBody) + name_len;
+
+    std::cout << "COMPONENT RECEIVED:" << std::endl;
+    std::cout << "Entity ID: " << entity_id << std::endl;
+    std::cout << "Type Name: " << type_name << std::endl;
+    std::cout << "Component Data Length: " << component_len << std::endl;
+
+    componentRegistry.addComponentByType(type_name, entity_id, component_data, component_len, *mediator);
 }
 
 Engine::NetworkManager::~NetworkManager()
@@ -283,6 +355,32 @@ Engine::NetworkManager::~NetworkManager()
     io_context.stop();
     if (io_thread.joinable())
         io_thread.join();
+}
+
+void Engine::NetworkManager::createPlayer()
+{
+    Engine::Signature signature;
+    signature.set(mediator->getComponentType<Engine::Components::Gravity>());
+    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
+    signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+
+    Engine::Entity entity = mediator->createEntity();
+
+    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(0.0f, 15.0f)};
+    mediator->addComponent(entity, player_gravity);
+    const Engine::Components::RigidBody player_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
+    mediator->addComponent(entity, player_rigidbody);
+    const Engine::Components::Transform player_transform = {.pos = Engine::Utils::Vec2(static_cast<float>(rand() % 500), static_cast<float>(rand() % 500)), .rot = 0.0f, .scale = 2.0f};
+    mediator->addComponent(entity, player_transform);
+    const Engine::Components::Sprite player_sprite = {.sprite_name = "player", .frame_nb = 1};
+    mediator->addComponent(entity, player_sprite);
+
+    sendEntity(entity, signature);
+    sendComponent<Engine::Components::Gravity>(entity, player_gravity);
+    sendComponent<Engine::Components::RigidBody>(entity, player_rigidbody);
+    sendComponent<Engine::Components::Transform>(entity, player_transform);
+    sendComponent<Engine::Components::Sprite>(entity, player_sprite);
 }
 
 extern "C" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address = "127.0.0.1", uint16_t port = 8080) {

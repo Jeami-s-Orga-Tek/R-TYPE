@@ -5,6 +5,8 @@
 ** EntityManager
 */
 
+#include <stdexcept>
+
 #include "EntityManager.hpp"
 
 Engine::EntityManager::EntityManager()
@@ -29,7 +31,7 @@ Engine::Entity Engine::EntityManager::createEntity()
 void Engine::EntityManager::destroyEntity(Engine::Entity entity)
 {
     if (entity > entity_count)
-        throw Engine::EntityManagerError("Trying to delete non-existent entity !!!!");
+        throw std::runtime_error("Trying to delete non-existent entity !!!!");
 
     signatures[entity].reset();
     available_entities.push(entity);
@@ -39,7 +41,7 @@ void Engine::EntityManager::destroyEntity(Engine::Entity entity)
 void Engine::EntityManager::setSignature(Entity entity, Signature signature)
 {
     if (entity > entity_count)
-        throw Engine::EntityManagerError("Trying to set sign to non-existent entity !!!!");
+        throw std::runtime_error("Trying to set sign to non-existent entity !!!!");
 
     signatures[entity] = signature;
 }
@@ -47,9 +49,14 @@ void Engine::EntityManager::setSignature(Entity entity, Signature signature)
 Engine::Signature Engine::EntityManager::getSignature(Entity entity)
 {
     if (entity > entity_count)
-        throw Engine::EntityManagerError("Trying to get sign to non-existent entity !!!!");
+        throw std::runtime_error("Trying to get sign to non-existent entity !!!!");
 
     return (signatures[entity]);
+}
+
+size_t Engine::EntityManager::getEntityCount()
+{
+    return (entity_count);
 }
 
 Engine::EntityManager::~EntityManager()
