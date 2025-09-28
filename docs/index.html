@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>R·TYPE — Online Shoot’em Up + Engine</title>
+  <meta name="description" content="Modern C++17 multiplayer R-Type-like with a custom ECS engine, an authoritative UDP server (Boost.Asio) and an SFML client." />
+  <style>
+    :root {
+      --bg: #0a0f1a;
+      --bg2: radial-gradient(1200px 800px at 20% -10%, #1a2458 0%, transparent 60%),
+             radial-gradient(800px 600px at 95% 10%, #3b134f 0%, transparent 55%),
+             #0a0f1a;
+      --panel: rgba(14,20,33,.9);
+      --border: #1d2740;
+      --text: #e9ecf3;
+      --muted: #a5b1c7;
+      --brand: #7dd3fc;
+      --accent: #c084fc;
+      --accent2: #60a5fa;
+      --ok: #34d399;
+      --warn: #fcd34d;
+      --radius: 18px;
+      --shadow: 0 16px 40px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg2);color:var(--text);font:16px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    /* Top nav */
+    nav.top{position:sticky;top:0;backdrop-filter:blur(8px);background:rgba(7,10,20,.55);border-bottom:1px solid #121a31;z-index:50}
+    .top-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 16px}
+    .top-inner .spacer{flex:1}
+    .top-inner a{padding:8px 10px;font-weight:500;color:#d6def0}
+    .top-inner a:hover{color:white}
+    /* Hero */
+    header.hero{position:relative;min-height:78vh;display:grid;place-items:center;overflow:hidden}
+    .hero-canvas{position:absolute;inset:0;z-index:-1;background:#000}
+    .hero-inner{max-width:1100px;padding:110px 20px 56px;text-align:center}
+    h1.title{margin:0 0 12px;font-size:clamp(38px,6.8vw,76px);letter-spacing:.06em;font-weight:900;
+      background:linear-gradient(90deg,#8be9ff,#b98aff,#25ddff);
+      -webkit-background-clip:text;background-clip:text;color:transparent}
+    p.lead{margin:0 auto 20px;color:var(--muted);max-width:880px}
+    .badges{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0 4px}
+    .badge{border:1px solid var(--border);background:rgba(16,24,42,.8);border-radius:999px;padding:6px 10px;font-size:12px;color:#cbd5e1}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+    .btn{background:linear-gradient(180deg,#1c2541,#10182b);border:1px solid #223054;color:#fff;padding:12px 18px;border-radius:999px;box-shadow:var(--shadow);font-weight:600}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 24px 60px rgba(0,0,0,.55)}
+    .btn.alt{background:linear-gradient(180deg,#2a1341,#140a22);border-color:#3a2053}
+    /* Sections */
+    main{padding:20px}
+    section{max-width:1200px;margin:0 auto;padding:clamp(24px,3vw,46px) 0}
+    h2{font-size:30px;margin:0 0 16px}
+    .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+    .muted{color:var(--muted)}
+    /* KPI row */
+    .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:18px}
+    .kpi{background:rgba(18,26,46,.7);border:1px solid #17203a;border-radius:14px;padding:14px;text-align:center}
+    .kpi h3{margin:0;font-size:28px}
+    .kpi p{margin:4px 0 0;color:#cbd5e1;font-size:13px}
+    /* Gallery carousel */
+    .carousel{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,32%);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
+    .shot{scroll-snap-align:start;position:relative;border-radius:14px;overflow:hidden;border:1px solid #253456;background:#000}
+    .shot img{display:block;width:100%;height:220px;object-fit:cover;filter:saturate(1.1) contrast(1.05)}
+    .shot .cap{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.65));padding:8px 10px;font-size:12px;color:#d7ddff}
+    /* Code blocks */
+    code,pre{background:#0f1628;border:1px solid #1c2745;border-radius:12px}
+    pre{padding:14px;overflow:auto}
+    /* Two-columns in architecture */
+    .cols{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+    .mermaid{background:#0f1628;border:1px solid #1c2745;border-radius:12px;padding:16px}
+    /* Timeline */
+    .timeline{display:grid;gap:12px}
+    .step{border-left:3px solid #3b82f6;padding:8px 12px;background:#0f1628;border-radius:8px;border-top:1px solid #1c2745}
+    /* Footer */
+    footer{border-top:1px solid #111a2f;color:var(--muted);text-align:center;padding:48px 0 80px}
+  </style>
+  <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({ startOnLoad: true, theme: "dark" });</script>
+</head>
+<body>
+  <nav class="top">
+    <div class="top-inner">
+      <a href="#top"><strong>R·TYPE</strong></a>
+      <a href="#features">Features</a>
+      <a href="#gameplay">Gameplay</a>
+      <a href="#build">Build</a>
+      <a href="#arch">Architecture</a>
+      <a href="#gallery">Gallery</a>
+      <span class="spacer"></span>
+      <a class="badge" href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <header id="top" class="hero">
+    <canvas class="hero-canvas" id="starfield"></canvas>
+    <div class="hero-inner">
+      <h1 class="title">R·TYPE — Online Shoot’em Up + Engine</h1>
+      <p class="lead">A multiplayer R-Type‑like written in modern C++17. It ships a custom <b>ECS</b> engine, an authoritative <b>UDP</b> server powered by <b>Boost.Asio</b>, and a graphical <b>SFML</b> client.</p>
+      <div class="badges">
+        <span class="badge">C++17</span>
+        <span class="badge">CMake</span>
+        <span class="badge">CPM.cmake</span>
+        <span class="badge">SFML 2.6.x</span>
+        <span class="badge">Boost 1.86</span>
+        <span class="badge">Linux · Windows (WIP)</span>
+      </div>
+      <div class="cta">
+        <a class="btn" href="#build">Build & Run</a>
+        <a class="btn alt" href="#gallery">See Screens</a>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><h3>5 018</h3><p>Lines of C/C++</p></div>
+        <div class="kpi"><h3>22</h3><p>.cpp files</p></div>
+        <div class="kpi"><h3>32</h3><p>headers</p></div>
+        <div class="kpi"><h3>60 FPS</h3><p>Menu & gameplay</p></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="features">
+      <h2>What’s inside</h2>
+      <div class="grid">
+        <article class="card"><h3>Graphical Client (SFML)</h3><p>Clean UI flow <em>Launch → Menu → Lobby → Parameters → Play</em>. Smooth starfield, particles, embedded fonts & sounds. Remappable controls and 30/60 FPS caps.</p></article>
+        <article class="card"><h3>Authoritative UDP Server</h3><p>Asynchronous networking with Boost.Asio: binary handshake, ping/heartbeat, welcome & lobby messages. Server remains stable even if a client hiccups.</p></article>
+        <article class="card"><h3>Custom Game Engine</h3><p>Entity‑Component‑System core with a Mediator to decouple subsystems (render, physics, input, net). Reusable managers for Entities, Components, and Systems.</p></article>
+        <article class="card"><h3>Co‑op Ready</h3><p>Designed for up to 4 players (Solo/Duo/Trio/Squad). Distinct player identity and missile systems on both sides.</p></article>
+        <article class="card"><h3>Settings & Accessibility</h3><p>Resolution & display mode, graphics quality, color‑blind profiles, audio volume, controls page to tweak inputs.</p></article>
+        <article class="card"><h3>DX‑free Build</h3><p>Self‑contained builds via CMake + CPM.cmake. Dependencies are fetched on first configure and binaries land at the repo root.</p></article>
+      </div>
+    </section>
+
+    <section id="gameplay">
+      <h2>Gameplay snapshot</h2>
+      <div class="cols">
+        <div class="card">
+          <h3>Core loop</h3>
+          <ul>
+            <li>Fly forward, dodge bullets and hazards.</li>
+            <li>Fire missiles (player & enemy); collision & damage.</li>
+            <li>Pickup power‑ups (WIP), clear waves, beat the boss (WIP).</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Default controls</h3>
+          <ul>
+            <li><b>Move:</b> Arrow keys</li>
+            <li><b>Fire / Special:</b> configurable in <em>Parameters → Controls</em></li>
+            <li><b>FPS cap:</b> toggle 30/60 in <em>Parameters</em></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="build">
+      <h2>Build & Run</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Requirements</h3>
+          <ul>
+            <li>Linux (tested) or Windows (MSVC, WIP)</li>
+            <li>CMake ≥ 3.10, a C++17 compiler</li>
+            <li>Internet access for first-time dependency fetch (CPM.cmake)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Linux quick start</h3>
+          <pre><code>cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j
+./r-type_server &amp;
+./r-type_client</code></pre>
+          <p class="muted">Binaries are produced at the repository root.</p>
+        </div>
+        <div class="card">
+          <h3>Windows (MSVC, WIP)</h3>
+          <pre><code>cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
+r-type_server.exe  &amp;
+r-type_client.exe</code></pre>
+        </div>
+        <div class="card">
+          <h3>Project layout</h3>
+          <pre><code>R-TYPE-main/
+  CI.md
+  CMakeLists.txt
+  README.md
+.github/
+  workflows/
+.idea/
+Client/
+  CMakeLists.txt
+  include/
+    Button.hpp
+    ControlsConfig.hpp
+    ErrorServer.hpp
+    GameTypes.hpp
+    Launch.hpp
+    Lobby.hpp
+    Locker.hpp
+    Menu.hpp
+    ParamButton.hpp
+    Parameters.hpp
+    ParticleSystem.hpp
+    Player.hpp
+  src/
+    Button.cpp
+    ControlsConfig.cpp
+    ErrorServer.cpp
+    GameTypes.cpp
+    Launch.cpp
+    Lobby.cpp
+    Locker.cpp
+    Menu.cpp
+    ParamButton.cpp
+    Parameters.cpp
+    ParticleSystem.cpp
+    Player.cpp
+    main.cpp
+Server/
+  CMakeLists.txt
+  src/
+    main.cpp
+    net/
+      Protocol.cpp
+      Protocol.hpp
+      UdpServer.cpp
+      UdpServer.hpp
+    util/
+      Log.cpp
+      Log.hpp
+assets/
+  sprites/
+ci/
+cmake/
+  CPM.cmake
+include_common/
+  ComponentArray.hpp
+  ComponentManager.hpp
+  Entity.hpp
+  EntityManager.hpp
+  Event.hpp
+  EventManager.hpp
+  Mediator.hpp
+  System.hpp
+  SystemManager.hpp
+  Utils.hpp
+  Components/
+    Gravity.hpp
+    RigidBody.hpp
+    Sprite.hpp
+    Transform.hpp
+  Systems/
+    Physics.hpp
+    PlayerControl.hpp
+    Render.hpp
+libengine/
+  CMakeLists.txt
+  src/
+    ComponentArray.cpp
+    ComponentManager.cpp
+    EntityManager.cpp
+    Mediator.cpp
+    SystemManager.cpp
+sound/
+sprite/</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="arch">
+      <h2>Architecture</h2>
+      <div class="cols">
+        <div class="card">
+          <div class="mermaid">
+flowchart LR
+  subgraph Client[Client (SFML)]
+    Input[Input] -->|events| ECS_Cl[ECS]
+    Render[Render] --> ECS_Cl
+    NetC[UDP Client] --> ECS_Cl
+  end
+
+  subgraph Engine[ECS Engine]
+    Entities &amp; Components &amp; Systems
+    Mediator -. decouples .- Entities
+  end
+
+  subgraph Server[Server (Boost.Asio UDP)]
+    NetS[UDP Server] --> GameLoop
+    GameLoop -->|snapshots| NetS
+    Auth[Authoritative Rules]
+  end
+
+  Client &lt;-- UDP binary protocol --&gt; Server
+  ECS_Cl .- uses .- Engine
+          </div>
+        </div>
+        <div class="card">
+          <h3>Networking protocol</h3>
+          <div class="mermaid">
+sequenceDiagram
+  participant C as Client
+  participant S as Server
+  C->>S: HELLO (connect)
+  S-->>C: WELCOME (playerId)
+  loop Heartbeat
+    C->>S: PING(seq)
+    S-->>C: PONG(seq)
+    S-->>C: SNAPSHOT(state)
+  end
+          </div>
+          <p class="muted">Server is authoritative; heartbeats keep connections healthy and drive world snapshots.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <h2>Gallery</h2>
+      <div class="carousel">
+        <figure class="shot"><img src="assets/screen1.png" alt="Launch screen — Insert Coin"><figcaption class="cap">Launch — “INSERT COIN”</figcaption></figure>
+        <figure class="shot"><img src="assets/screen2.png" alt="Main menu with starfield"><figcaption class="cap">Main Menu + Starfield</figcaption></figure>
+        <figure class="shot"><img src="assets/screen3.png" alt="Parameters screen"><figcaption class="cap">Parameters (video, color‑blind, FPS cap)</figcaption></figure>
+        <figure class="shot"><img src="assets/screen4.png" alt="Lobby modes"><figcaption class="cap">Lobby modes (Solo/Duo/Trio/Squad)</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="roadmap">
+      <h2>Roadmap</h2>
+      <div class="timeline">
+        <div class="step"><b>Boss & patterns</b> — scripted behaviors, weak points, phases.</div>
+        <div class="step"><b>Power‑ups</b> — charge shot, options, shields.</div>
+        <div class="step"><b>More levels</b> — parallax backgrounds, hazards, checkpoints.</div>
+        <div class="step"><b>Soundtrack & SFX</b> — music loop per stage, victory cues.</div>
+        <div class="step"><b>Windows packaging</b> — installer or portable build.</div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Credits & Contact</h2>
+      <div class="card">
+        <p>Built by a small student team as part of the Advanced C++ (Epitech) module. Questions, feedback or collaborations? Open an issue on the repository or reach out on LinkedIn.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2025 R·TYPE student project — All trademarks are property of their respective owners.</footer>
+
+  <script>
+  // Tiny starfield
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let w, h, stars=[];
+  function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = Math.max(520, window.innerHeight*0.78); }
+  window.addEventListener('resize', resize); resize();
+  function init(n=220){ stars = Array.from({length:n}, () => ({ x: Math.random()*w, y: Math.random()*h, z: Math.random()*1.5+0.2 })); }
+  init();
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(const s of stars){
+      s.x -= (0.25 + s.z*0.75);
+      if(s.x < 0){ s.x = w; s.y = Math.random()*h; }
+      const r = 0.6 + s.z*1.6;
+      ctx.globalAlpha = 0.6 + s.z*0.4;
+      ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+  </script>
+</body>
+</html>
