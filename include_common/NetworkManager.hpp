@@ -121,6 +121,8 @@ namespace Engine {
 
         uint32_t player_id;
         uint16_t room_id;
+
+        int getConnectedPlayers();
     private:
         void handle_receive(std::size_t bytes_recvd);
 
@@ -132,6 +134,9 @@ namespace Engine {
         boost::asio::ip::udp::endpoint remote_endpoint;
         std::array<uint8_t, 1024> recv_buffer;
         std::thread io_thread;
+
+        std::vector<boost::asio::ip::udp::endpoint> client_endpoints;
+        boost::asio::ip::udp::endpoint temp_sender_endpoint;
 
         ComponentRegistry componentRegistry;
     };

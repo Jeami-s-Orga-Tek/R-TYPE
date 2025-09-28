@@ -87,6 +87,8 @@ int main()
     float accumulator = 0.0f;
     auto previousTime = std::chrono::high_resolution_clock::now();
 
+    bool have_players_spawned = false;
+
     while (true) {
         auto currentTime = std::chrono::high_resolution_clock::now();
         float frameTime = std::chrono::duration<float>(currentTime - previousTime).count();
@@ -95,6 +97,12 @@ int main()
 
         while (accumulator >= FIXED_DT) {
             // physics_system->update(mediator, FIXED_DT);
+            if (networkManager->getConnectedPlayers() >= 2 && !have_players_spawned) {
+                for (int i = 0; i < networkManager->getConnectedPlayers(); i++)
+                    networkManager->createPlayer();
+                have_players_spawned = true;
+            }
+
             player_control_system->update(mediator, FIXED_DT);
             accumulator -= FIXED_DT;
         }        

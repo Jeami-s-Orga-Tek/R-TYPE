@@ -123,8 +123,14 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
     if (role == Role::SERVER) {
         switch (header.type) {
             case MSG_HELLO: {
+                auto it = std::find_if(client_endpoints.begin(), client_endpoints.end(),
+                    [this](const boost::asio::ip::udp::endpoint &ep) {
+                        return ep == remote_endpoint;
+                    });
+                if (it == client_endpoints.end()) {
+                    client_endpoints.push_back(remote_endpoint);
+                }
                 send_welcome();
-                createPlayer();
                 break;
             }
             case MSG_PING:
@@ -248,7 +254,14 @@ void Engine::NetworkManager::sendEntity(const Entity &entity, const Signature &s
         .signature = signature.to_ullong(),
     };
     std::memcpy(buf.data() + sizeof(ph), &eb, sizeof(eb));
-    socket.send_to(boost::asio::buffer(buf), remote_endpoint);
+
+    if (role == Role::SERVER) {
+        for (const auto &endpoint : client_endpoints) {
+            socket.send_to(boost::asio::buffer(buf), endpoint);
+        }
+    } else {
+        socket.send_to(boost::asio::buffer(buf), remote_endpoint);
+    }
 }
 
 template <typename T>
@@ -269,7 +282,14 @@ void Engine::NetworkManager::sendComponent(const Entity &entity, const T &compon
     std::memcpy(buf.data() + sizeof(ph), &cb, sizeof(cb));
     std::memcpy(buf.data() + sizeof(ph) + sizeof(cb), type_name.data(), cb.name_len);
     std::memcpy(buf.data() + sizeof(ph) + sizeof(cb) + cb.name_len, &component, sizeof(component));
-    socket.send_to(boost::asio::buffer(buf.data(), buf.size()), remote_endpoint);
+
+    if (role == Role::SERVER) {
+        for (const auto &endpoint : client_endpoints) {
+            socket.send_to(boost::asio::buffer(buf.data(), buf.size()), endpoint);
+        }
+    } else {
+        socket.send_to(boost::asio::buffer(buf.data(), buf.size()), remote_endpoint);
+    }
 }
 
 // template <std::size_t S>
@@ -381,6 +401,11 @@ void Engine::NetworkManager::createPlayer()
     sendComponent<Engine::Components::RigidBody>(entity, player_rigidbody);
     sendComponent<Engine::Components::Transform>(entity, player_transform);
     sendComponent<Engine::Components::Sprite>(entity, player_sprite);
+}
+
+int Engine::NetworkManager::getConnectedPlayers()
+{
+    return (client_endpoints.size());
 }
 
 extern "C" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address = "127.0.0.1", uint16_t port = 8080) {
