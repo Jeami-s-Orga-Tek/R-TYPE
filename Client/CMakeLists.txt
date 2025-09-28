@@ -10,7 +10,7 @@ include_directories(../include_common)
 
 include_directories(include)
 
-file(GLOB SOURCES src/*.cpp)
+file(GLOB SOURCES src/*.cpp src/net/*.cpp)
 
 include(../cmake/CPM.cmake)
 
