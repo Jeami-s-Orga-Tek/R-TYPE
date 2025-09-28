@@ -37,13 +37,15 @@ namespace RtypeServer {
         INPUT = 10,
         SNAPSHOT = 11,
         EVENT = 12,
+
         CREATE_ROOM = 20,
         JOIN_ROOM = 21,
         LEAVE_ROOM = 22,
         LIST_ROOMS = 23,
         MESSAGE = 24,
+
         ROOM_CREATED = 30,
-        ROOM_JOINED = 31,
+        ROOM_JOINED  = 31,
         ROOM_LEFT = 32,
         ROOM_LIST = 33,
         ROOM_MESSAGE = 34,
@@ -61,7 +63,6 @@ namespace RtypeServer {
         uint16_t roomId = 0;
         uint32_t baselineTick = 0;
     };
-
     struct CreateRoomBody {
         std::string roomName;
         uint8_t maxPlayers = 4;
@@ -74,42 +75,35 @@ namespace RtypeServer {
     struct MessageBody {
         std::string message;
     };
-
     struct RoomCreatedBody {
         uint32_t roomId = 0;
         std::string roomName;
         uint8_t success = 1;
     };
-
     struct RoomJoinedBody {
         uint32_t roomId = 0;
         std::string roomName;
         uint8_t success = 1;
         uint8_t playerCount = 0;
     };
-
     struct RoomLeftBody {
         uint32_t roomId = 0;
         uint8_t success = 1;
     };
-
     struct RoomInfoEntry {
         uint32_t roomId = 0;
         std::string roomName;
         uint8_t currentPlayers = 0;
         uint8_t maxPlayers = 0;
     };
-
     struct RoomListBody {
         std::vector<RoomInfoEntry> rooms;
     };
-
     struct RoomMessageBody {
         uint32_t senderId = 0;
         std::string senderName;
         std::string message;
     };
-
     struct RoomErrorBody {
         uint8_t errorCode = 0;
         std::string errorMessage;
@@ -134,7 +128,7 @@ namespace RtypeServer {
             HelloBody readHelloBody(const uint8_t* data, std::size_t size, std::size_t& off);
             void writeWelcomeBody(std::vector<uint8_t>& out, const WelcomeBody& b);
             WelcomeBody readWelcomeBody(const uint8_t* data, std::size_t size, std::size_t& off);
-
+    
             void writeCreateRoomBody(std::vector<uint8_t>& out, const CreateRoomBody& b);
             CreateRoomBody readCreateRoomBody(const uint8_t* data, std::size_t size, std::size_t& off);
             void writeJoinRoomBody(std::vector<uint8_t>& out, const JoinRoomBody& b);
