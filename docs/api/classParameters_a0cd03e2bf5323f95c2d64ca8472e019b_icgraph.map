@@ -1,0 +1,14 @@
+<map id="Parameters::getCurrentDisplayMode" name="Parameters::getCurrentDisplayMode">
+<area shape="rect" id="Node000001" title=" " alt="" coords="853,43,1086,69"/>
+<area shape="rect" id="Node000002" href="$classGameManager.html#a948792a1ef6f0a0c8c21fae779c4b525" title=" " alt="" coords="600,5,788,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="837,45,788,39,789,34,838,39"/>
+<area shape="rect" id="Node000006" href="$classGameManager.html#a58db496b49ed75ce83edb44b9581ae64" title=" " alt="" coords="583,72,805,99"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="837,73,805,76,805,71,837,67"/>
+<area shape="rect" id="Node000003" href="$classGameManager.html#aeed1dd73db1c39b2e39d30d9d37c1f6c" title=" " alt="" coords="344,35,535,77"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="584,42,536,48,536,42,584,37"/>
+<area shape="rect" id="Node000004" href="$classGameManager.html#a6cea7fca5fecdd4f8a32912d4bfc233f" title=" " alt="" coords="103,43,296,69"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="328,59,297,59,297,53,328,53"/>
+<area shape="rect" id="Node000005" href="$Client_2src_2main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,43,55,69"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="87,59,55,59,55,53,87,53"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="567,73,535,70,536,64,568,68"/>
+</map>

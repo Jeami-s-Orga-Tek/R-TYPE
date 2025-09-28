@@ -1,0 +1,7 @@
+<map id="NetworkClient::listRooms" name="NetworkClient::listRooms">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,35,177,61"/>
+<area shape="rect" id="Node000002" href="$classNetworkClient.html#ad307cf1f5e6ff844ef8c1e106df510f5" title=" " alt="" coords="225,5,406,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,34,209,30,209,35,177,39"/>
+<area shape="rect" id="Node000003" href="$classRtypeServer_1_1Protocol.html#ad918184440d6fcb33f231a7173a67399" title=" " alt="" coords="240,56,390,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,57,225,63,224,68,176,62"/>
+</map>

@@ -1,0 +1,12 @@
+<map id="RtypeServer::Protocol::readRoomCreatedBody" name="RtypeServer::Protocol::readRoomCreatedBody">
+<area shape="rect" id="Node000001" title=" " alt="" coords="952,5,1117,48"/>
+<area shape="rect" id="Node000002" href="$classNetworkClient.html#a3db47d9224d5319ffca153c4a4784329" title=" " alt="" coords="692,13,904,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="936,29,904,29,904,24,936,24"/>
+<area shape="rect" id="Node000003" href="$classNetworkClient.html#ae2e39148013eaea326c8ae242ab341bc" title=" " alt="" coords="446,13,644,40"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="677,29,645,29,645,24,677,24"/>
+<area shape="rect" id="Node000004" href="$classNetworkClient.html#a9202769a61813d85199c6249ac416705" title=" " alt="" coords="212,13,398,40"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="430,38,398,38,398,33,430,33"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="413,15,445,15,445,20,413,20"/>
+<area shape="rect" id="Node000005" href="$classNetworkClient.html#afc8d05d54e88bce60554d9f31e9b0838" title=" " alt="" coords="5,13,164,40"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="196,29,164,29,164,24,196,24"/>
+</map>

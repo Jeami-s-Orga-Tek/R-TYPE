@@ -1,0 +1,7 @@
+<map id="RtypeServer::UdpServer" name="RtypeServer::UdpServer">
+<area shape="rect" id="Node000001" title=" " alt="" coords="90,437,246,891"/>
+<area shape="rect" id="Node000002" href="$classRtypeServer_1_1Protocol.html" title=" " alt="" coords="5,48,147,331"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,330,123,420,118,421,101,331"/>
+<area shape="rect" id="Node000003" href="$classRtypeServer_1_1RoomManager.html" title=" " alt="" coords="171,5,349,373"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,374,218,421,213,420,222,373"/>
+</map>

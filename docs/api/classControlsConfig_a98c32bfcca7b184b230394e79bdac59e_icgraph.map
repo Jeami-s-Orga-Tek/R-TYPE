@@ -1,0 +1,20 @@
+<map id="ControlsConfig::getKeyName" name="ControlsConfig::getKeyName">
+<area shape="rect" id="Node000001" title=" " alt="" coords="849,72,1041,99"/>
+<area shape="rect" id="Node000002" href="$classControlsConfig.html#ad218bc10857ddae59029265b257a4eb9" title=" " alt="" coords="612,5,790,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="871,70,790,51,791,45,872,65"/>
+<area shape="rect" id="Node000006" href="$classControlsConfig.html#aa2fe4477b60057141a0cf43e1a064805" title=" " alt="" coords="601,72,801,99"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="833,88,801,88,801,83,833,83"/>
+<area shape="rect" id="Node000007" href="$classControlsConfig.html#a19d45c2752ac1653237de9314510ebc2" title=" " alt="" coords="606,123,796,165"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="872,105,793,125,792,119,871,100"/>
+<area shape="rect" id="Node000003" href="$classControlsConfig.html#a1744d263bd924fcefd9c35afb9344f5b" title=" " alt="" coords="358,43,546,69"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="597,42,547,48,546,42,596,36"/>
+<area shape="rect" id="Node000004" href="$classGameManager.html#a6cea7fca5fecdd4f8a32912d4bfc233f" title=" " alt="" coords="106,43,299,69"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="342,59,300,59,300,53,342,53"/>
+<area shape="rect" id="Node000005" href="$Client_2src_2main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,43,55,69"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="90,59,55,59,55,53,90,53"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="586,74,546,70,547,64,586,69"/>
+<area shape="rect" id="Node000008" href="$classControlsConfig.html#a971fd58e74e4b77a02dd7d2b4c9a796e" title=" " alt="" coords="350,131,553,157"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="590,147,554,147,554,141,590,141"/>
+<area shape="rect" id="Node000009" href="$classGameManager.html#a72e1318dfab6fad06bd4126d12f6a537" title=" " alt="" coords="103,131,302,157"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="335,147,302,147,302,141,335,141"/>
+</map>
