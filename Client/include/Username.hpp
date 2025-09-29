@@ -18,7 +18,6 @@ public:
     Username(sf::Vector2f position, sf::Vector2f size, const std::string& text, sf::Font& font);
     ~Username() = default;
 
-    bool loadFile();
     void draw(sf::RenderWindow& window);
     bool isClicked(sf::Vector2i mousePos);
     void setHovered(bool hovered);

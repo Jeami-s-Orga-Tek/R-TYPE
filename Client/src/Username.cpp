@@ -29,22 +29,6 @@ Username::Username(sf::Vector2f position, sf::Vector2f size, const std::string& 
     );
 }
 
-bool Username::loadFile()
-{
-    std::ifstream verifyUsernameFile("Client/Username.txt");
-
-    if (verifyUsernameFile.fail()) {
-        std::ofstream UsernameFile("Client/Username.txt", std::ios::out);
-        if (UsernameFile.fail()) {
-            std::cerr << "Erreur creation de fichier" << std::endl;
-            return false;
-        }
-        UsernameFile.close();
-    }
-
-    return true;
-}
-
 void Username::draw(sf::RenderWindow& window)
 {
     window.draw(shape);

@@ -40,9 +40,6 @@ GameManager::GameManager(sf::Vector2u windowSize)
     if (!font.loadFromFile("assets/r-type.otf")) {
         std::cerr << "Unable to load Carlito font, trying Symbola..." << std::endl;
     }
-    if (!username.loadFile()) {
-        std::cerr << "Files not load for username" << std::endl;
-    }
 
     username = Username(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 150), sf::Vector2f(200, 50), UsernameGame, font);
 
@@ -204,22 +201,12 @@ void GameManager::handleEvents(sf::RenderWindow& window)
                 }
             }
             else if (event.text.unicode == '\r' || event.text.unicode == '\n') {
-                std::ofstream file("Username.txt");
-                if (file.is_open()) {
-                    file << UsernameGame;
-                    file.close();
-                }
                 username = Username(username.getSize(), username.getSize(), UsernameGame, font);
                 isEditingUsername = false;
             }
             else if (event.text.unicode < 128 && std::isprint(event.text.unicode)) {
                 UsernameGame.insert(cursorPos, 1, static_cast<char>(event.text.unicode));
                 cursorPos++;
-            }
-            std::ofstream file("Username.txt");
-            if (file.is_open()) {
-                file << UsernameGame;
-                file.close();
             }
         }
         if (event.type == sf::Event::KeyPressed && isEditingUsername) {
@@ -232,11 +219,6 @@ void GameManager::handleEvents(sf::RenderWindow& window)
             if (event.key.code == sf::Keyboard::Delete) {
                 if (!UsernameGame.empty() && cursorPos < UsernameGame.size()) {
                     UsernameGame.erase(cursorPos, 1);
-                }
-                std::ofstream file("Username.txt");
-                if (file.is_open()) {
-                    file << UsernameGame;
-                    file.close();
                 }
             }
         }
