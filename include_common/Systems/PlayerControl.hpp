@@ -36,11 +36,12 @@ namespace Engine {
                         auto it = player_id_to_buttons.find(player_id);
                         if (it == player_id_to_buttons.end())
                             continue;
+
                         const auto &buttons = it->second;
 
                         auto &transform = mediator->getComponent<Components::Transform>(entity);
 
-                        const float accel_rate = 5000.0f;
+                        const float accel_rate = 200.0f;
 
                         if (buttons.test(static_cast<std::size_t>(InputButtons::LEFT))) {
                             transform.pos.x -= accel_rate * dt;

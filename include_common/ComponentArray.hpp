@@ -10,6 +10,7 @@
 
 #include <exception>
 #include <unordered_map>
+#include <stdexcept>
 
 #include "Entity.hpp"
 
@@ -51,8 +52,11 @@ namespace Engine {
 template <typename T>
 void Engine::ComponentArray<T>::insertEntity(Engine::Entity entity, T component)
 {
-    if (entity_to_index_map.find(entity) != entity_to_index_map.end())
-        throw Engine::ComponentArrayError("Entity already in component array !!!!!!");
+    if (entity_to_index_map.find(entity) != entity_to_index_map.end()) {
+        // throw std::runtime_error("Entity already in component array !!!!!!");
+        components[entity_to_index_map[entity]] = component;
+        return;
+    }
 
     entity_to_index_map[entity] = size;
     index_to_entity_map[size] = entity;
@@ -64,7 +68,7 @@ template <typename T>
 void Engine::ComponentArray<T>::removeEntity(Engine::Entity entity)
 {
     if (entity_to_index_map.find(entity) == entity_to_index_map.end())
-        throw Engine::ComponentArrayError("Trying to delete entity not in component array !!!!!!");
+        throw std::runtime_error("Trying to delete entity not in component array !!!!!!");
 
     std::size_t removed_entity_index = entity_to_index_map[entity];
     std::size_t index_of_last_elem = size - 1;
@@ -84,7 +88,7 @@ template <typename T>
 T &Engine::ComponentArray<T>::getComponent(Engine::Entity entity)
 {
     if (entity_to_index_map.find(entity) == entity_to_index_map.end())
-        throw ComponentArrayError("Trying to get component not in component array !!!!!!");
+        throw std::runtime_error("Trying to get component not in component array !!!!!!");
 
     return (components[entity_to_index_map[entity]]);
 }

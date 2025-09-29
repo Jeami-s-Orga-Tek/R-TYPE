@@ -107,6 +107,12 @@ int main()
             }
 
             player_control_system->update(mediator, FIXED_DT);
+
+            for (int i = 0; i < networkManager->mediator->getEntityCount(); i++) {
+                const auto &comp = networkManager->mediator->getComponent<Engine::Components::Transform>(i);
+                networkManager->sendComponent(i, comp);
+            }
+            
             accumulator -= FIXED_DT;
         }        
     }

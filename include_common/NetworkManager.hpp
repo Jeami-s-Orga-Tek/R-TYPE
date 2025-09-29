@@ -150,7 +150,7 @@ void Engine::NetworkManager::sendInput(const uint32_t player_id, const uint16_t 
     std::memcpy(buf.data(), &ph, sizeof(ph));
 
     InputBody ib = {
-        .player_id = player_id,
+        .player_id = htonl(player_id),
         .room_id = room_id,
         .input_data = inputs.to_ullong(),
     };

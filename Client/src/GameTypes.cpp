@@ -761,19 +761,19 @@ void GameManager::gameDemo(sf::RenderWindow &window)
 
         // Move this into its own window manager / game manager class thing later
         buttons.reset();
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::LEFT));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::RIGHT));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::UP));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::DOWN));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        if (window.hasFocus() && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::SHOOT));
         }
 

@@ -46,7 +46,7 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
         typeid(Engine::Components::Transform).name(),
         [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
             const auto *comp = reinterpret_cast<const Engine::Components::Transform *>(data);
-            std::cout << comp->pos.x << " " << comp->pos.y << std::endl;
+            // std::cout << comp->pos.x << " " << comp->pos.y << std::endl;
             mediator.addComponent(entity, *comp);
         }
     );
@@ -54,13 +54,13 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
         typeid(Engine::Components::Sprite).name(),
         [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
             const auto *comp = reinterpret_cast<const Engine::Components::Sprite *>(data);
-            std::cout << comp->sprite_name << std::endl;
+            // std::cout << comp->sprite_name << std::endl;
             mediator.addComponent(entity, *comp);
         }
     );
     componentRegistry.registerType(
         typeid(Engine::Components::PlayerInfo).name(),
-        [this](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
+        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
             const auto *comp = reinterpret_cast<const Engine::Components::PlayerInfo *>(data);
             mediator.addComponent(entity, *comp);
             // if (player_id == MAX_ENTITIES)
@@ -128,7 +128,7 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
     header.ack = ntohl(header.ack);
     header.ack_bits = ntohl(header.ack_bits);
 
-    std::cout << "RECEIVE " << (int)header.type << std::endl;
+    // std::cout << "RECEIVE " << (int)header.type << std::endl;
     if (header.magic != MAGIC || header.version != PROTO_VERSION)
         return;
     if (role == Role::SERVER) {
@@ -384,10 +384,10 @@ void Engine::NetworkManager::receiveComponent()
     std::string type_name(reinterpret_cast<char *>(recv_buffer.data() + sizeof(PacketHeader) + sizeof(ComponentBody)), name_len);
     const void *component_data = recv_buffer.data() + sizeof(PacketHeader) + sizeof(ComponentBody) + name_len;
 
-    std::cout << "COMPONENT RECEIVED:" << std::endl;
-    std::cout << "Entity ID: " << entity_id << std::endl;
-    std::cout << "Type Name: " << type_name << std::endl;
-    std::cout << "Component Data Length: " << component_len << std::endl;
+    // std::cout << "COMPONENT RECEIVED:" << std::endl;
+    // std::cout << "Entity ID: " << entity_id << std::endl;
+    // std::cout << "Type Name: " << type_name << std::endl;
+    // std::cout << "Component Data Length: " << component_len << std::endl;
 
     componentRegistry.addComponentByType(type_name, entity_id, component_data, component_len, *mediator);
 }
