@@ -314,9 +314,8 @@ void GameManager::render(sf::RenderWindow& window) {
             showCursor = !showCursor;
             cursorClock.restart();
         }
-        if (isEditingUsername && showCursor) {
+        if (isEditingUsername && showCursor)
             displayName.insert(cursorPos, "|");
-        }
         sf::Text tempText(displayName, font, 10);
         sf::FloatRect textBounds = tempText.getLocalBounds();
         float padding = 20.f;
@@ -330,19 +329,15 @@ void GameManager::render(sf::RenderWindow& window) {
         );
         username = Username(usernamePos, usernameSize, displayName, font);
         username.setCharacterSize(10);
-
         sf::Text& label = username.getLabel();
         sf::FloatRect labelTextBounds = label.getLocalBounds();
         label.setOrigin(labelTextBounds.left + labelTextBounds.width / 2.f, labelTextBounds.top + labelTextBounds.height / 2.f);
-        label.setPosition(
-            usernamePos.x + usernameSize.x / 2.f,
-            usernamePos.y + usernameSize.y / 2.f
-        );
-
+        label.setPosition(usernamePos.x + usernameSize.x / 2.f,usernamePos.y + usernameSize.y / 2.f);
         username.draw(window);
         player.draw(window);
     } else if (currentState == State::LEADERBOARD) {
         trophy.draw(window);
+        backButton.draw(window);
     } else if (currentState == State::GAME) {
         // window.close();
         gameDemo(window);
@@ -416,15 +411,17 @@ void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow&)
     }
 
     if (event.type == sf::Event::KeyPressed && isEditingUsername) {
-        if (event.key.code == sf::Keyboard::Left && cursorPos > 0) {
-            cursorPos--;
-        }
-        if (event.key.code == sf::Keyboard::Right && cursorPos < UsernameGame.size()) {
-            cursorPos++;
-        }
-        if (event.key.code == sf::Keyboard::Delete) {
-            if (!UsernameGame.empty() && cursorPos < UsernameGame.size()) {
-                UsernameGame.erase(cursorPos, 1);
+        if (currentState == State::MENU) {
+            if (event.key.code == sf::Keyboard::Left && cursorPos > 0) {
+                cursorPos--;
+            }
+            if (event.key.code == sf::Keyboard::Right && cursorPos < UsernameGame.size()) {
+                cursorPos++;
+            }
+            if (event.key.code == sf::Keyboard::Delete) {
+                if (!UsernameGame.empty() && cursorPos < UsernameGame.size()) {
+                    UsernameGame.erase(cursorPos, 1);
+                }
             }
         }
     }
@@ -581,6 +578,10 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             player.starshipSprite.setTextureRect(player.starshipRect);
         }
     } else if (currentState == State::LOBBY) {
+    } else if (currentState == State::LEADERBOARD) {
+        if (backButton.isClicked(mousePos)) {
+            currentState = State::MENU;
+        }
     } else if (currentState == State::ROOM_LIST) {
         float yStart = 150;
         int roomIndex = (mousePos.y - yStart) / 30;
@@ -614,6 +615,8 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
         lockerButton.setHovered(lockerButton.isClicked(mousePos));
         modeButton.setHovered(modeButton.isClicked(mousePos));
         playButton.setHovered(playButton.isClicked(mousePos));
+    } else if (currentState == State::LEADERBOARD) {
+        backButton.setHovered(backButton.isClicked(mousePos));
     } else if (currentState == State::SETTINGS) {
         backButton.setHovered(backButton.isClicked(mousePos));
         fps30Button.setHovered(fps30Button.isClicked(mousePos));
