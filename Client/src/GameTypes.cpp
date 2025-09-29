@@ -343,6 +343,15 @@ void GameManager::render(sf::RenderWindow& window) {
         );
         username = Username(usernamePos, usernameSize, displayName, font);
         username.setCharacterSize(10);
+
+        sf::Text& label = username.getLabel();
+        sf::FloatRect labelTextBounds = label.getLocalBounds();
+        label.setOrigin(labelTextBounds.left + labelTextBounds.width / 2.f, labelTextBounds.top + labelTextBounds.height / 2.f);
+        label.setPosition(
+            usernamePos.x + usernameSize.x / 2.f,
+            usernamePos.y + usernameSize.y / 2.f
+        );
+
         username.draw(window);
         player.draw(window);
     } else if (currentState == State::LEADERBOARD) {

@@ -29,6 +29,7 @@ public:
 
     void setCharacterSize(int size) { label.setCharacterSize(size); }
     sf::Vector2f getSize() const { return shape.getSize(); }
+    sf::Text& getLabel() { return label; }
 
 private:
     sf::RectangleShape shape;
