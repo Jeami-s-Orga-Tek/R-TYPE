@@ -26,6 +26,7 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     mediator->registerComponent<Engine::Components::RigidBody>();
     mediator->registerComponent<Engine::Components::Transform>();
     mediator->registerComponent<Engine::Components::Sprite>();
+    mediator->registerComponent<Engine::Components::PlayerInfo>();
 
     componentRegistry.registerType(
         typeid(Engine::Components::Gravity).name(),
@@ -55,6 +56,16 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
             const auto *comp = reinterpret_cast<const Engine::Components::Sprite *>(data);
             std::cout << comp->sprite_name << std::endl;
             mediator.addComponent(entity, *comp);
+        }
+    );
+    componentRegistry.registerType(
+        typeid(Engine::Components::PlayerInfo).name(),
+        [this](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
+            const auto *comp = reinterpret_cast<const Engine::Components::PlayerInfo *>(data);
+            mediator.addComponent(entity, *comp);
+            // if (player_id == MAX_ENTITIES)
+            //     player_id = comp->player_id;
+            // std::cout << "player id pls :( " << player_id << std::endl;
         }
     );
     
@@ -140,7 +151,7 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
                 send_ping(header.seq);
                 break;
             case MSG_INPUT:
-
+                receiveInputs();
                 break;
             default:
                 break;
@@ -218,7 +229,14 @@ void Engine::NetworkManager::send_welcome()
     std::cout << "NAME : " << std::string(name_buffer.begin(), name_buffer.end()) << std::endl;
 
     // TEMP. FILL ONCE THE LOBBY SYSTEM IS THERE
-    WelcomeBody body{123, 1, 0};
+    uint32_t player_id = client_endpoints.size();
+    if (player_id > 0)
+        player_id--;
+    WelcomeBody body {
+        .player_id = player_id, 
+        .room_id = 1,
+        .baseline_tick = 0
+    };
 
     body.player_id = htonl(body.player_id);
     body.room_id = htons(body.room_id);
@@ -321,18 +339,22 @@ void Engine::NetworkManager::receiveWelcome()
     std::cout << "Player ID: " << welcome_body.player_id << std::endl;
     std::cout << "Room ID: " << welcome_body.room_id << std::endl;
     std::cout << "Baseline Tick: " << welcome_body.baseline_tick << std::endl;
+
+    player_id = welcome_body.player_id;
+    room_id = welcome_body.room_id;
 }
 
 void Engine::NetworkManager::receiveInputs()
 {
-    std::array<uint8_t, sizeof(PacketHeader) + sizeof(WelcomeBody)> buf {};
-    const PacketHeader &ph = createPacketHeader(MSG_WELCOME);
-    std::memcpy(buf.data(), &ph, sizeof(ph));
+    InputBody input_body;
+    std::memcpy(&input_body, recv_buffer.data() + sizeof(PacketHeader), sizeof(input_body));
+    uint32_t player_id = ntohl(input_body.player_id);
+    std::bitset<5> input_bits(input_body.input_data);
 
-    HelloBody hello_body;
-    std::memcpy(&hello_body, recv_buffer.data() + sizeof(PacketHeader), sizeof(hello_body));
-    std::vector<uint8_t> name_buffer(hello_body.name_len);
-    std::memcpy(name_buffer.data(), recv_buffer.data() + sizeof(PacketHeader) + sizeof(HelloBody), hello_body.name_len);
+    Engine::Event input_event(static_cast<EventId>(Engine::EventsIds::PLAYER_INPUT));
+    input_event.setParam(0, player_id);
+    input_event.setParam(1, input_bits);
+    mediator->sendEvent(input_event);
 }
 
 void Engine::NetworkManager::receiveEntity()
@@ -384,6 +406,7 @@ void Engine::NetworkManager::createPlayer()
     signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    signature.set(mediator->getComponentType<Engine::Components::PlayerInfo>());
 
     Engine::Entity entity = mediator->createEntity();
 
@@ -395,12 +418,15 @@ void Engine::NetworkManager::createPlayer()
     mediator->addComponent(entity, player_transform);
     const Engine::Components::Sprite player_sprite = {.sprite_name = "player", .frame_nb = 1};
     mediator->addComponent(entity, player_sprite);
+    const Engine::Components::PlayerInfo player_info = {.player_id = entity};
+    mediator->addComponent(entity, player_info);
 
     sendEntity(entity, signature);
     sendComponent<Engine::Components::Gravity>(entity, player_gravity);
     sendComponent<Engine::Components::RigidBody>(entity, player_rigidbody);
     sendComponent<Engine::Components::Transform>(entity, player_transform);
     sendComponent<Engine::Components::Sprite>(entity, player_sprite);
+    sendComponent<Engine::Components::PlayerInfo>(entity, player_info);
 }
 
 int Engine::NetworkManager::getConnectedPlayers()

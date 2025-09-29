@@ -778,7 +778,8 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         }
 
         Engine::Event player_input_event(static_cast<Engine::EventId>(Engine::EventsIds::PLAYER_INPUT));
-        player_input_event.setParam(0, buttons);
+        player_input_event.setParam(0, networkManager->player_id);
+        player_input_event.setParam(1, buttons);
         mediator->sendEvent(player_input_event);
         networkManager->sendInput(networkManager->player_id, networkManager->room_id, buttons);
 

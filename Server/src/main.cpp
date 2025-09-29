@@ -58,6 +58,7 @@ int main()
     mediator->registerComponent<Engine::Components::RigidBody>();
     mediator->registerComponent<Engine::Components::Transform>();
     mediator->registerComponent<Engine::Components::Sprite>();
+    mediator->registerComponent<Engine::Components::PlayerInfo>();
 
     auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
     // auto render_system = mediator->registerSystem<Engine::Systems::RenderSystem>();
@@ -70,15 +71,17 @@ int main()
     signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    signature.set(mediator->getComponentType<Engine::Components::PlayerInfo>());
 
     int entity_number = 0;
 
-    for (int i = 0; i < entity_number; i++) {
+    for (uint i = 0; i < entity_number; i++) {
         Engine::Entity entity = mediator->createEntity();
         mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
         mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
         mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
         mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
+        mediator->addComponent(entity, Engine::Components::PlayerInfo{.player_id = i});
     }
 
     std::cout << "NetworkManager server started. Press Ctrl+C to exit." << std::endl;
