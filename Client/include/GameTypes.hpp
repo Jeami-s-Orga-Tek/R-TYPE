@@ -20,6 +20,8 @@
 #include "Player.hpp"
 #include "Launch.hpp"
 #include "ControlsConfig.hpp"
+#include "Leaderboard.hpp"
+#include "Username.hpp"
 #include "net/NetworkClient.hpp"
 #include "net/Protocol.hpp"
 
@@ -31,6 +33,7 @@ enum class State {
     IN_ROOM,
     GAME,
     LOCKER,
+    LEADERBOARD,
     ERRORSERVER,
     SETTINGS,
     CONTROLS,
@@ -56,12 +59,13 @@ class GameManager {
         Parameters parameters;
         ControlsConfig controlsConfig;
         Lobby lobby;
-
         ErrorServer errorServer;
         Player player;
         ParamButton paramButton;
         ParamButton fps30Button;
         ParamButton fps60Button;
+
+        Username username;
         Button backButton;
         Button resolutionButton;
         Button displayModeButton;
@@ -87,6 +91,10 @@ class GameManager {
 
         GameMode gameMode;
 
+        Leaderboard trophy;
+
+        Button leaderboard;
+
         sf::Text statusText;
         sf::Text fpsDisplay;
         sf::Font font;
@@ -108,11 +116,17 @@ class GameManager {
 
         State currentState;
         ServerState isConnected;
+
+        std::string UsernameGame;
+
         bool isDraggingVolume;
         bool isChooseMode;
         bool isConfiguringControls;
         int currentFps;
-        
+
+        bool isEditingUsername;
+        size_t cursorPos;
+
     public:
         GameManager(sf::Vector2u windowSize);
 

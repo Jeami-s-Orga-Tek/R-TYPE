@@ -21,6 +21,8 @@ public:
     void update();
     void updateWindowSize(sf::Vector2u newSize);
     void updateAnimationStarship();
+    sf::Vector2f getPosition() const { return starshipSprite.getPosition(); }
+    sf::Vector2f getSize() const { return starshipSprite.getGlobalBounds().getSize(); }
 
     sf::IntRect starshipRect;
     sf::Sprite starshipSprite;
