@@ -21,6 +21,7 @@
 #include "Launch.hpp"
 #include "ControlsConfig.hpp"
 #include "Leaderboard.hpp"
+#include "Username.hpp"
 
 enum class State {
     LAUNCH,
@@ -54,12 +55,13 @@ class GameManager {
         Parameters parameters;
         ControlsConfig controlsConfig;
         Lobby lobby;
-
         ErrorServer errorServer;
         Player player;
         ParamButton paramButton;
         ParamButton fps30Button;
         ParamButton fps60Button;
+
+        Username username;
         Button backButton;
         Button resolutionButton;
         Button displayModeButton;
@@ -101,11 +103,17 @@ class GameManager {
         
         State currentState;
         ServerState isConnected;
+
+        std::string UsernameGame;
+
         bool isDraggingVolume;
         bool isChooseMode;
         bool isConfiguringControls;
         int currentFps;
-        
+
+        bool isEditingUsername;
+        size_t cursorPos;
+
     public:
         GameManager(sf::Vector2u windowSize);
 

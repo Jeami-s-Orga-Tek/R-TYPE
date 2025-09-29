@@ -14,10 +14,21 @@ Leaderboard::Leaderboard(sf::Vector2u windowSize) : windowSize(windowSize)
 
 bool Leaderboard::loadResources()
 {
+    std::ifstream verifyLeaderboardFile("Client/UserLeaderboard.md");
+
     if (!trophyTexture.loadFromFile("assets/sprites/trophy.png")) {
         std::cerr << "Erreur" << std::endl;
         return false;
     }
+    if (verifyLeaderboardFile.fail()) {
+        std::ofstream leaderboardFile("Client/UserLeaderboard.md", std::ios::out);
+        if (leaderboardFile.fail()) {
+            std::cerr << "Erreur creation de fichier" << std::endl;
+            return false;
+        }
+        leaderboardFile.close();
+    }
+
     trophySprite.setTexture(trophyTexture);
     trophyRect = sf::IntRect(0, 0, 141, 143);
 

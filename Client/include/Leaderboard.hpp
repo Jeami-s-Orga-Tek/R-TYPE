@@ -10,6 +10,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <fstream>
 
 class Leaderboard {
 public:

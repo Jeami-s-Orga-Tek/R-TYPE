@@ -11,6 +11,7 @@
 #include <chrono>
 #include <thread>
 #include <dlfcn.h>
+#include <fstream>
 
 #include "GameTypes.hpp"
 #include "Mediator.hpp"
@@ -28,15 +29,23 @@ GameManager::GameManager(sf::Vector2u windowSize)
       particleSystem(windowSize, 300),
       currentState(State::LAUNCH),
       isConnected(ServerState::DEFAULT),
+      UsernameGame(""),
       isDraggingVolume(false),
       isChooseMode(false),
       isConfiguringControls(false),
-      currentFps(60)
+      currentFps(60),
+      isEditingUsername(false),
+      cursorPos(0)
 {
     if (!font.loadFromFile("assets/r-type.otf")) {
         std::cerr << "Unable to load Carlito font, trying Symbola..." << std::endl;
     }
-    
+    if (!username.loadFile()) {
+        std::cerr << "Files not load for username" << std::endl;
+    }
+
+    username = Username(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 150), sf::Vector2f(200, 50), UsernameGame, font);
+
     playButton = Button(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50), "Play", font);
 
     paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(125, 40), "Parameters", font);
@@ -99,6 +108,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
 
     paramButton.setupVolumeBar(sf::Vector2f(windowSize.x - 220, windowSize.y - 80), 200.f);
     particleSystem.setParameters(&parameters);
+    username.setCharacterSize(10);
     backButton.setCharacterSize(10);
     fps30Button.setCharacterSize(10);
     fps60Button.setCharacterSize(10);
@@ -129,6 +139,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
 void GameManager::updatePositions(sf::Vector2u windowSize)
 {
     paramButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(125, 40));
+    username.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(125, 40));
     fps30Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 90, windowSize.y - 60), sf::Vector2f(80, 40));
     fps60Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 + 10, windowSize.y - 60), sf::Vector2f(80, 40));
     backButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40));
@@ -179,6 +190,55 @@ void GameManager::handleEvents(sf::RenderWindow& window)
         }
         if (event.type == sf::Event::KeyPressed) {
             handleKeyPress(event, window);
+        }
+        if (event.type == sf::Event::TextEntered && isEditingUsername) {
+            if (event.text.unicode == '\b') {
+                if (!UsernameGame.empty() && cursorPos > 0) {
+                    UsernameGame.erase(cursorPos - 1, 1);
+                    cursorPos--;
+                }
+            }
+            else if (event.text.unicode == 127) {
+                if (!UsernameGame.empty() && cursorPos < UsernameGame.size()) {
+                    UsernameGame.erase(cursorPos, 1);
+                }
+            }
+            else if (event.text.unicode == '\r' || event.text.unicode == '\n') {
+                std::ofstream file("Username.txt");
+                if (file.is_open()) {
+                    file << UsernameGame;
+                    file.close();
+                }
+                username = Username(username.getSize(), username.getSize(), UsernameGame, font);
+                isEditingUsername = false;
+            }
+            else if (event.text.unicode < 128 && std::isprint(event.text.unicode)) {
+                UsernameGame.insert(cursorPos, 1, static_cast<char>(event.text.unicode));
+                cursorPos++;
+            }
+            std::ofstream file("Username.txt");
+            if (file.is_open()) {
+                file << UsernameGame;
+                file.close();
+            }
+        }
+        if (event.type == sf::Event::KeyPressed && isEditingUsername) {
+            if (event.key.code == sf::Keyboard::Left && cursorPos > 0) {
+                cursorPos--;
+            }
+            if (event.key.code == sf::Keyboard::Right && cursorPos < UsernameGame.size()) {
+                cursorPos++;
+            }
+            if (event.key.code == sf::Keyboard::Delete) {
+                if (!UsernameGame.empty() && cursorPos < UsernameGame.size()) {
+                    UsernameGame.erase(cursorPos, 1);
+                }
+                std::ofstream file("Username.txt");
+                if (file.is_open()) {
+                    file << UsernameGame;
+                    file.close();
+                }
+            }
         }
         if (event.type == sf::Event::Resized) {
             sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
@@ -259,6 +319,31 @@ void GameManager::render(sf::RenderWindow& window) {
         modeButton.draw(window);
         playButton.draw(window);
         lockerButton.draw(window);
+        sf::Vector2f playerPos = player.getPosition();
+        std::string displayName = UsernameGame;
+        static bool showCursor = true;
+        static sf::Clock cursorClock;
+        if (cursorClock.getElapsedTime().asSeconds() > 0.5f) {
+            showCursor = !showCursor;
+            cursorClock.restart();
+        }
+        if (isEditingUsername && showCursor) {
+            displayName.insert(cursorPos, "|");
+        }
+        sf::Text tempText(displayName, font, 10);
+        sf::FloatRect textBounds = tempText.getLocalBounds();
+        float padding = 20.f;
+        sf::Vector2f usernameSize(
+            std::max(60.f, textBounds.width + padding),
+            std::max(30.f, textBounds.height + padding)
+        );
+        sf::Vector2f usernamePos(
+            playerPos.x + (player.getSize().x - usernameSize.x) / 2,
+            playerPos.y - usernameSize.y - 10
+        );
+        username = Username(usernamePos, usernameSize, displayName, font);
+        username.setCharacterSize(10);
+        username.draw(window);
         player.draw(window);
     } else if (currentState == State::LEADERBOARD) {
         trophy.draw(window);
@@ -331,10 +416,19 @@ void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow&)
             currentState = State::QUIT;
         }
     }
-    
-    if (event.key.code == sf::Keyboard::F11) {
-        statusText.setString("F11 pressed - Fullscreen toggle");
-        statusText.setFillColor(sf::Color::Cyan);
+
+    if (event.type == sf::Event::KeyPressed && isEditingUsername) {
+        if (event.key.code == sf::Keyboard::Left && cursorPos > 0) {
+            cursorPos--;
+        }
+        if (event.key.code == sf::Keyboard::Right && cursorPos < UsernameGame.size()) {
+            cursorPos++;
+        }
+        if (event.key.code == sf::Keyboard::Delete) {
+            if (!UsernameGame.empty() && cursorPos < UsernameGame.size()) {
+                UsernameGame.erase(cursorPos, 1);
+            }
+        }
     }
 }
 
@@ -356,6 +450,10 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             currentState = State::ERRORSERVER;
         }
     } else if (currentState == State::MENU) {
+        if (username.isClicked(mousePos)) {
+            isEditingUsername = true;
+            cursorPos = UsernameGame.size();
+        }
         if (soloButton.isClicked(mousePos)) {
             gameMode = GameMode::SOLO;
             numberPlayerToWait.setString("Waiting players: " + std::to_string(getWaitingPlayersCount()) + "/1");
