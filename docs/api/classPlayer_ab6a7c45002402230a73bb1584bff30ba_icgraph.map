@@ -1,0 +1,9 @@
+<map id="Player::updateAnimationStarship" name="Player::updateAnimationStarship">
+<area shape="rect" id="Node000001" title=" " alt="" coords="457,5,669,32"/>
+<area shape="rect" id="Node000002" href="$classPlayer.html#a82c3476f3e65a4e2ac6bcd040771bdd4" title=" " alt="" coords="304,5,409,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="442,21,410,21,410,16,442,16"/>
+<area shape="rect" id="Node000003" href="$classGameManager.html#a7ecc3a14cd9e92f50729b37d1364953f" title=" " alt="" coords="103,5,256,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="288,21,257,21,257,16,288,16"/>
+<area shape="rect" id="Node000004" href="$Client_2src_2main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,5,55,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,21,55,21,55,16,87,16"/>
+</map>

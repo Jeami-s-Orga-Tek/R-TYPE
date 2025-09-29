@@ -1,0 +1,12 @@
+<map id="ParamButton::isClicked" name="ParamButton::isClicked">
+<area shape="rect" id="Node000001" title=" " alt="" coords="615,43,775,69"/>
+<area shape="rect" id="Node000002" href="$classGameManager.html#aeed1dd73db1c39b2e39d30d9d37c1f6c" title=" " alt="" coords="360,5,551,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="600,47,552,41,552,36,600,42"/>
+<area shape="rect" id="Node000005" href="$classGameManager.html#a5b552a66a8a65fe45e825cf49a736ab8" title=" " alt="" coords="344,72,567,99"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="600,70,568,74,568,69,599,65"/>
+<area shape="rect" id="Node000003" href="$classGameManager.html#a6cea7fca5fecdd4f8a32912d4bfc233f" title=" " alt="" coords="103,43,296,69"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="345,42,297,48,296,42,344,37"/>
+<area shape="rect" id="Node000004" href="$Client_2src_2main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,43,55,69"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,59,55,59,55,53,87,53"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="328,73,296,70,297,64,329,68"/>
+</map>

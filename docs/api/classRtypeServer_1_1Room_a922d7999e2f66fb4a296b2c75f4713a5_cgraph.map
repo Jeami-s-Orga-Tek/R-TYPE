@@ -1,0 +1,9 @@
+<map id="RtypeServer::Room::join" name="RtypeServer::Room::join">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,64,171,91"/>
+<area shape="rect" id="Node000002" href="$namespaceRtypeServer.html#a0945154a39091e84a43cedc8136b0abe" title=" " alt="" coords="228,5,355,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,61,227,34,229,39,138,66"/>
+<area shape="rect" id="Node000003" href="$classRtypeServer_1_1Room.html#a1a353dec4f660f9ae6a7d439e66b7b07" title=" " alt="" coords="219,56,364,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,75,203,75,203,80,171,80"/>
+<area shape="rect" id="Node000004" href="$namespaceRtypeServer.html#a29d016de4637084d2ec30b53700af223" title=" " alt="" coords="224,123,358,149"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="138,89,229,115,227,120,136,94"/>
+</map>

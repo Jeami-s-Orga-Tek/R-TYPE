@@ -1,0 +1,14 @@
+<map id="Parameters::applyColorBlindFilter" name="Parameters::applyColorBlindFilter">
+<area shape="rect" id="Node000001" title=" " alt="" coords="750,23,937,65"/>
+<area shape="rect" id="Node000002" href="$classParameters.html#a3861a3375a9e31e5ce06d0e71a0bf1ab" title=" " alt="" coords="316,5,440,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="734,41,441,25,441,19,735,35"/>
+<area shape="rect" id="Node000005" href="$classParticleSystem.html#abdef4bdd9875aef1b3224cfd3919111c" title=" " alt="" coords="503,56,702,83"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="735,58,703,62,702,56,734,53"/>
+<area shape="rect" id="Node000003" href="$classGameManager.html#a932e6df46aa4d397f8f5d61f3c137bbd" title=" " alt="" coords="103,31,253,57"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="301,31,254,37,253,32,300,26"/>
+<area shape="rect" id="Node000004" href="$Client_2src_2main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,31,55,57"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,47,55,47,55,41,87,41"/>
+<area shape="rect" id="Node000006" href="$classParticleSystem.html#abe33b51ab04720074de064406a3f20df" title=" " alt="" coords="301,56,455,83"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="488,72,456,72,456,67,488,67"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="285,60,253,56,254,51,286,55"/>
+</map>

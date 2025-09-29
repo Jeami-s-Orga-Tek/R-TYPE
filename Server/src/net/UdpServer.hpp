@@ -13,20 +13,16 @@
 #include <unordered_map>
 #include <string>
 #include <chrono>
+#include <memory>
 #include "Protocol.hpp"
+#include "ClientSession.hpp"
+#include "RoomManager.hpp"
 
 
 namespace RtypeServer {
     class UdpServer {
 
         using clock = std::chrono::steady_clock;
-
-        struct ClientSession {
-            uint32_t playerId = 0;
-            boost::asio::ip::udp::endpoint endpoint;
-            clock::time_point lastSeen{};
-            clock::time_point lastPing{};
-        };
 
         public:
             UdpServer(boost::asio::io_context& io, uint16_t port);
@@ -41,13 +37,25 @@ namespace RtypeServer {
             void send_ping(const boost::asio::ip::udp::endpoint& to);
             void start_heartbeat();
             static std::string endpointKey(const boost::asio::ip::udp::endpoint& ep);
+            
+            void send_room_created(const boost::asio::ip::udp::endpoint& to, uint32_t roomId, const std::string& roomName, bool success);
+            void send_room_joined(const boost::asio::ip::udp::endpoint& to, uint32_t roomId, const std::string& roomName, bool success, uint8_t playerCount);
+            void send_room_left(const boost::asio::ip::udp::endpoint& to, uint32_t roomId, bool success);
+            void send_room_list(const boost::asio::ip::udp::endpoint& to, const std::vector<RoomInfo>& rooms);
+            void send_room_error(const boost::asio::ip::udp::endpoint& to, uint8_t errorCode, const std::string& message);
+            void handle_create_room(std::shared_ptr<ClientSession> client, const CreateRoomBody& body);
+            void handle_join_room(std::shared_ptr<ClientSession> client, const JoinRoomBody& body);
+            void handle_leave_room(std::shared_ptr<ClientSession> client);
+            void handle_list_rooms(std::shared_ptr<ClientSession> client);
+            void handle_message(std::shared_ptr<ClientSession> client, const MessageBody& body);
             boost::asio::ip::udp::socket  m_socket;
             boost::asio::ip::udp::endpoint m_remote;
             std::array<uint8_t, 1500> m_rxBuf;
             boost::asio::steady_timer m_timer;
             uint32_t m_nextPlayerId = 1;
-            std::unordered_map<std::string, ClientSession> m_sessions;
+            std::unordered_map<std::string, std::shared_ptr<ClientSession>> m_sessions;
             Protocol m_protocol;
+            RoomManager m_roomManager;
     };
 }
 

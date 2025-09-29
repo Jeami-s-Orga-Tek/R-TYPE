@@ -25,7 +25,16 @@ public:
     void updateSize(sf::Vector2f newSize);
     void updatePositionAndSize(sf::Vector2f newPosition, sf::Vector2f newSize);
 
-    void setCharacterSize(int size) { label.setCharacterSize(size); }
+    void setCharacterSize(int size) { 
+        label.setCharacterSize(size); 
+        sf::FloatRect textBounds = label.getLocalBounds();
+        sf::Vector2f position = shape.getPosition();
+        sf::Vector2f size_shape = shape.getSize();
+        label.setPosition(
+            position.x + (size_shape.x - textBounds.width) / 2 - textBounds.left,
+            position.y + (size_shape.y - textBounds.height) / 2 - textBounds.top
+        );
+    }
 
 private:
     sf::RectangleShape shape;

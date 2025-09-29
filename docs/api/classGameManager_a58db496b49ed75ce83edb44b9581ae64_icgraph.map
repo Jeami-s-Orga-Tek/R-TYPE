@@ -1,0 +1,9 @@
+<map id="GameManager::cycleDisplayMode" name="GameManager::cycleDisplayMode">
+<area shape="rect" id="Node000001" title=" " alt="" coords="583,13,805,40"/>
+<area shape="rect" id="Node000002" href="$classGameManager.html#aeed1dd73db1c39b2e39d30d9d37c1f6c" title=" " alt="" coords="344,5,535,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="568,29,536,29,536,24,568,24"/>
+<area shape="rect" id="Node000003" href="$classGameManager.html#a6cea7fca5fecdd4f8a32912d4bfc233f" title=" " alt="" coords="103,13,296,40"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="328,29,297,29,297,24,328,24"/>
+<area shape="rect" id="Node000004" href="$Client_2src_2main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,13,55,40"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,29,55,29,55,24,87,24"/>
+</map>
