@@ -1,0 +1,19 @@
+<map id="Parameters::getColorBlindModeString" name="Parameters::getColorBlindModeString">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1134,33,1308,76"/>
+<area shape="rect" id="Node000002" href="$classParameters.html#aef99182406aa08d547716d348fab78de" title=" " alt="" coords="878,15,1084,41"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1118,46,1085,42,1085,37,1119,41"/>
+<area shape="rect" id="Node000007" href="$classParameters.html#a97f0af15da3b0a1a8b3702fc5b56556e" title=" " alt="" coords="877,67,1086,93"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1119,68,1087,72,1086,66,1118,63"/>
+<area shape="rect" id="Node000003" href="$classGameManager.html#ac2ac55880dc9315aa67b2f142647efbb" title=" " alt="" coords="591,15,829,41"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="863,31,829,31,829,25,863,25"/>
+<area shape="rect" id="Node000004" href="$classGameManager.html#aeed1dd73db1c39b2e39d30d9d37c1f6c" title=" " alt="" coords="348,5,539,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="576,30,540,30,540,24,576,25"/>
+<area shape="rect" id="Node000005" href="$classGameManager.html#a6cea7fca5fecdd4f8a32912d4bfc233f" title=" " alt="" coords="103,13,296,40"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="332,29,296,29,296,24,332,24"/>
+<area shape="rect" id="Node000006" href="$Client_2src_2main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,13,55,40"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="87,29,55,29,55,24,87,24"/>
+<area shape="rect" id="Node000008" href="$classParameters.html#a8e74ddb8f408ad9e725e3784f8a873e7" title=" " alt="" coords="618,68,802,95"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="861,83,802,84,802,78,861,78"/>
+<area shape="rect" id="Node000009" href="$classGameManager.html#a72e1318dfab6fad06bd4126d12f6a537" title=" " alt="" coords="344,72,543,99"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="603,86,544,87,544,81,603,80"/>
+</map>

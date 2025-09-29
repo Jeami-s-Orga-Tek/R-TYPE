@@ -1,0 +1,9 @@
+<map id="GameManager::cycleColorBlindMode" name="GameManager::cycleColorBlindMode">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,43,243,69"/>
+<area shape="rect" id="Node000002" href="$classParameters.html#ade0e5f42198d5f294949bd87c6eec0fa" title=" " alt="" coords="300,5,488,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="243,40,284,36,284,41,244,46"/>
+<area shape="rect" id="Node000003" href="$classParameters.html#aef99182406aa08d547716d348fab78de" title=" " alt="" coords="291,72,497,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="244,66,276,70,275,75,243,72"/>
+<area shape="rect" id="Node000004" href="$classParameters.html#a30943fe99e7fa2007923912bdd56f59f" title=" " alt="" coords="545,64,719,107"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="498,83,529,83,529,88,498,88"/>
+</map>

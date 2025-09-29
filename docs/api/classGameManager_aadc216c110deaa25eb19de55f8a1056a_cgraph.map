@@ -1,0 +1,9 @@
+<map id="GameManager::cycleResolution" name="GameManager::cycleResolution">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,213,57"/>
+<area shape="rect" id="Node000002" href="$classParameters.html#a679561c2f5dfe92294135e7bcf71f531" title=" " alt="" coords="261,5,480,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,31,245,28,245,33,214,37"/>
+<area shape="rect" id="Node000003" href="$classParameters.html#aa44f94f237faff1315187b2a31af3c11" title=" " alt="" coords="282,56,458,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="214,51,267,57,266,62,213,57"/>
+<area shape="rect" id="Node000004" href="$classParameters.html#ab06f51d4f6cecc5d4ca32f6a770fca12" title=" " alt="" coords="528,48,704,91"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="459,67,512,67,512,72,459,72"/>
+</map>

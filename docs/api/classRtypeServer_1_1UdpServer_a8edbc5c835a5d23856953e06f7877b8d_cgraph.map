@@ -1,0 +1,43 @@
+<map id="RtypeServer::UdpServer::handle_create_room" name="RtypeServer::UdpServer::handle_create_room">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,187,170,230"/>
+<area shape="rect" id="Node000002" href="$classRtypeServer_1_1RoomManager.html#ad598fe8c2755ee1d450b9e7b045eb034" title=" " alt="" coords="430,34,617,76"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,184,445,79,447,84,152,189"/>
+<area shape="rect" id="Node000003" href="$namespaceRtypeServer.html#a0945154a39091e84a43cedc8136b0abe" title=" " alt="" coords="686,100,813,127"/>
+<area shape="poly" id="edge19_Node000001_Node000003" title=" " alt="" coords="114,184,168,144,243,96,333,50,381,32,429,19,482,8,524,3,566,6,618,19,649,32,679,50,726,87,722,92,676,54,647,37,616,24,566,11,525,8,483,14,431,24,382,37,335,55,246,100,171,149,117,189"/>
+<area shape="rect" id="Node000005" href="$classRtypeServer_1_1UdpServer.html#ad6474bca80e8ede6d6bbf8ff3524c05e" title=" " alt="" coords="218,218,382,260"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="170,218,203,222,202,228,170,223"/>
+<area shape="rect" id="Node000008" href="$classRtypeServer_1_1RoomManager.html#a1bb23690b4594531c502c5b9be329598" title=" " alt="" coords="430,418,617,460"/>
+<area shape="poly" id="edge20_Node000001_Node000008" title=" " alt="" coords="124,228,256,310,342,358,431,403,444,409,442,414,429,408,339,363,253,314,121,233"/>
+<area shape="rect" id="Node000009" href="$classRtypeServer_1_1UdpServer.html#ab6e480e2b78f9cbc75fb5ba9bbdc71f5" title=" " alt="" coords="442,151,606,194"/>
+<area shape="poly" id="edge26_Node000001_Node000009" title=" " alt="" coords="170,199,426,178,426,183,170,204"/>
+<area shape="rect" id="Node000014" href="$classRtypeServer_1_1UdpServer.html#a1f4561ac6e917c681be96e80c6f72d31" title=" " alt="" coords="442,484,606,527"/>
+<area shape="poly" id="edge21_Node000001_Node000014" title=" " alt="" coords="102,229,147,304,180,347,219,385,269,418,322,444,377,465,428,481,426,487,375,470,320,449,266,422,216,389,176,351,142,307,97,231"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="609,74,682,93,680,99,607,79"/>
+<area shape="rect" id="Node000004" href="$namespaceRtypeServer.html#a29d016de4637084d2ec30b53700af223" title=" " alt="" coords="682,226,817,252"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="554,75,619,137,633,156,642,173,651,188,667,204,688,217,685,221,664,208,647,191,637,175,629,159,615,141,550,79"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="319,215,366,174,396,153,429,137,490,118,554,109,616,105,670,105,670,110,616,110,555,114,492,124,431,141,399,157,369,178,323,219"/>
+<area shape="rect" id="Node000006" href="$classRtypeServer_1_1RoomManager.html#aabb4ebfaae6223fba609f7320749d280" title=" " alt="" coords="430,284,617,327"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="374,258,436,277,434,282,373,263"/>
+<area shape="rect" id="Node000007" href="$classRtypeServer_1_1RoomManager.html#a61622cbcc554dfdc5c26a4a24ccdb0ff" title=" " alt="" coords="430,218,617,260"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="382,236,414,236,414,242,382,242"/>
+<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="319,259,382,343,432,404,438,408,435,412,428,408,377,347,315,262"/>
+<area shape="poly" id="edge9_Node000005_Node000009" title=" " alt="" coords="373,215,434,196,436,201,374,220"/>
+<area shape="rect" id="Node000012" href="$classRtypeServer_1_1UdpServer.html#ae3593b22a1ed07c63ebf786f7667007c" title=" " alt="" coords="442,351,606,394"/>
+<area shape="poly" id="edge14_Node000005_Node000012" title=" " alt="" coords="326,259,373,298,431,337,442,342,439,347,429,341,370,302,323,263"/>
+<area shape="poly" id="edge10_Node000009_Node000003" title=" " alt="" coords="606,148,680,129,681,134,607,154"/>
+<area shape="poly" id="edge11_Node000009_Node000004" title=" " alt="" coords="599,192,688,218,686,223,597,197"/>
+<area shape="rect" id="Node000010" href="$classRtypeServer_1_1Protocol.html#ad918184440d6fcb33f231a7173a67399" title=" " alt="" coords="674,318,825,360"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="599,192,619,204,635,218,645,232,667,263,712,305,709,309,663,266,641,235,631,221,616,208,596,196"/>
+<area shape="rect" id="Node000011" href="$classRtypeServer_1_1Protocol.html#a5b46d0759af7c3a4f3925420298c171a" title=" " alt="" coords="674,151,825,194"/>
+<area shape="poly" id="edge13_Node000009_Node000011" title=" " alt="" coords="606,170,659,170,659,175,606,175"/>
+<area shape="poly" id="edge15_Node000012_Node000003" title=" " alt="" coords="602,348,615,337,632,312,639,288,640,263,638,239,636,214,637,188,645,163,663,137,670,131,674,135,667,141,650,165,643,189,641,214,643,238,645,263,644,289,637,315,619,341,606,352"/>
+<area shape="poly" id="edge16_Node000012_Node000004" title=" " alt="" coords="592,348,616,337,663,304,718,260,721,264,666,308,619,341,594,353"/>
+<area shape="poly" id="edge17_Node000012_Node000010" title=" " alt="" coords="606,358,658,350,659,355,607,363"/>
+<area shape="rect" id="Node000013" href="$classRtypeServer_1_1Protocol.html#a60211e1b53451ea55a75054580b325aa" title=" " alt="" coords="669,384,830,427"/>
+<area shape="poly" id="edge18_Node000012_Node000013" title=" " alt="" coords="607,382,654,389,653,394,606,387"/>
+<area shape="poly" id="edge22_Node000014_Node000003" title=" " alt="" coords="603,482,615,471,630,449,640,429,648,387,646,346,638,305,630,264,627,223,637,180,648,159,663,137,671,130,675,134,667,141,652,162,642,182,633,223,635,263,643,304,651,345,654,387,645,430,635,452,619,474,607,486"/>
+<area shape="poly" id="edge23_Node000014_Node000004" title=" " alt="" coords="602,482,615,470,630,450,638,431,642,392,645,350,651,328,663,304,685,279,710,259,713,263,688,283,668,307,656,330,650,351,648,392,644,432,635,453,619,474,605,486"/>
+<area shape="poly" id="edge24_Node000014_Node000010" title=" " alt="" coords="600,482,615,470,633,446,639,422,645,396,663,371,667,368,670,372,667,374,650,399,644,423,638,449,619,474,603,486"/>
+<area shape="rect" id="Node000015" href="$classRtypeServer_1_1Protocol.html#a972db5856809fcdf0b8d00c96eeeae32" title=" " alt="" coords="665,484,834,527"/>
+<area shape="poly" id="edge25_Node000014_Node000015" title=" " alt="" coords="606,503,650,503,650,508,606,508"/>
+</map>

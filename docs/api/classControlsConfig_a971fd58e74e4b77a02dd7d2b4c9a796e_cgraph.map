@@ -1,0 +1,9 @@
+<map id="ControlsConfig::loadResources" name="ControlsConfig::loadResources">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,35,209,61"/>
+<area shape="rect" id="Node000002" href="$classControlsConfig.html#a19d45c2752ac1653237de9314510ebc2" title=" " alt="" coords="257,27,447,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,45,241,45,241,51,209,51"/>
+<area shape="rect" id="Node000003" href="$classControlsConfig.html#a98c32bfcca7b184b230394e79bdac59e" title=" " alt="" coords="498,5,690,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="447,34,482,30,482,35,448,39"/>
+<area shape="rect" id="Node000004" href="$classControlsConfig.html#a5d7aa2d264ab4f3dfeb428e81e6c2f82" title=" " alt="" coords="495,56,692,99"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="448,57,480,61,479,66,447,62"/>
+</map>

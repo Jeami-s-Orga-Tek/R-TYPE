@@ -1,0 +1,59 @@
+<map id="RtypeServer::Protocol::writeHeader" name="RtypeServer::Protocol::writeHeader">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1193,404,1343,446"/>
+<area shape="rect" id="Node000002" href="$classNetworkClient.html#afc8d05d54e88bce60554d9f31e9b0838" title=" " alt="" coords="5,42,164,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1264,388,1259,316,1242,225,1227,178,1206,133,1178,92,1143,58,1100,30,1061,14,1023,9,985,10,902,23,854,30,799,33,544,33,338,39,164,51,164,46,338,34,544,28,799,28,853,25,901,18,984,5,1023,3,1062,9,1103,25,1147,53,1182,89,1210,130,1232,176,1247,223,1265,315,1270,388"/>
+<area shape="rect" id="Node000003" href="$classNetworkClient.html#a529267d800eca8535bc84c1affcf2718" title=" " alt="" coords="957,118,1140,145"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1257,389,1243,339,1221,279,1188,218,1167,190,1143,166,1113,148,1116,143,1147,161,1171,187,1192,215,1225,277,1248,337,1262,388"/>
+<area shape="rect" id="Node000004" href="$classRtypeServer_1_1UdpServer.html#ada88a91b0b6bead16ff8321837e8bd94" title=" " alt="" coords="716,213,880,256"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1250,391,1233,358,1209,321,1179,287,1144,261,1112,246,1079,235,1010,223,942,220,881,224,880,219,941,215,1010,217,1080,230,1114,241,1146,256,1183,283,1213,318,1237,355,1254,388"/>
+<area shape="rect" id="Node000005" href="$classNetworkClient.html#a3f2015048aa45b490f1ee8b47dc3b28f" title=" " alt="" coords="965,470,1132,497"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1179,452,1146,461,1103,472,1101,467,1144,456,1177,447"/>
+<area shape="rect" id="Node000006" href="$classNetworkClient.html#ad3d2accfc25509feb50638e5cec6dc76" title=" " alt="" coords="959,521,1138,548"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1230,458,1191,486,1146,511,1115,523,1113,518,1144,506,1188,482,1227,454"/>
+<area shape="rect" id="Node000007" href="$classNetworkClient.html#a4c76dee697263665a9903aeb7149b81b" title=" " alt="" coords="963,68,1134,94"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1261,389,1251,327,1230,251,1215,212,1196,174,1172,139,1143,108,1126,97,1129,93,1147,104,1176,136,1200,171,1220,210,1235,250,1256,326,1266,388"/>
+<area shape="rect" id="Node000011" href="$classRtypeServer_1_1UdpServer.html#ad5b8e37aeff4739ff56c64834ff489d4" title=" " alt="" coords="966,572,1130,614"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="1246,461,1203,512,1176,539,1146,562,1126,573,1123,569,1144,557,1173,535,1199,509,1242,457"/>
+<area shape="rect" id="Node000014" href="$classRtypeServer_1_1UdpServer.html#a7e9c2db44d31376da828df0be9c81d0a" title=" " alt="" coords="966,638,1130,681"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="1257,461,1240,500,1216,545,1185,589,1147,628,1129,640,1126,635,1143,624,1181,586,1211,542,1235,498,1252,459"/>
+<area shape="rect" id="Node000015" href="$classRtypeServer_1_1UdpServer.html#a1f4561ac6e917c681be96e80c6f72d31" title=" " alt="" coords="716,146,880,189"/>
+<area shape="poly" id="edge17_Node000001_Node000015" title=" " alt="" coords="1254,390,1238,349,1215,303,1184,258,1143,222,1113,204,1080,190,1011,172,942,165,881,164,881,158,943,159,1012,167,1082,185,1115,199,1147,217,1188,255,1219,300,1243,347,1259,388"/>
+<area shape="rect" id="Node000017" href="$classRtypeServer_1_1UdpServer.html#ab6e480e2b78f9cbc75fb5ba9bbdc71f5" title=" " alt="" coords="966,270,1130,313"/>
+<area shape="poly" id="edge19_Node000001_Node000017" title=" " alt="" coords="1233,395,1192,360,1144,327,1120,316,1122,311,1146,323,1195,356,1236,391"/>
+<area shape="rect" id="Node000020" href="$classRtypeServer_1_1UdpServer.html#ae3593b22a1ed07c63ebf786f7667007c" title=" " alt="" coords="966,337,1130,380"/>
+<area shape="poly" id="edge25_Node000001_Node000020" title=" " alt="" coords="1181,401,1121,383,1122,378,1182,396"/>
+<area shape="rect" id="Node000021" href="$classRtypeServer_1_1UdpServer.html#a7583cf1fea483149a02b3f2b5fdd8cad" title=" " alt="" coords="966,404,1130,446"/>
+<area shape="poly" id="edge27_Node000001_Node000021" title=" " alt="" coords="1178,428,1131,428,1131,422,1178,422"/>
+<area shape="rect" id="Node000022" href="$classRtypeServer_1_1UdpServer.html#ad76118bb574c0aebbd3f2fb0fb978ae2" title=" " alt="" coords="966,705,1130,748"/>
+<area shape="poly" id="edge29_Node000001_Node000022" title=" " alt="" coords="1262,462,1249,514,1226,576,1193,640,1171,669,1147,695,1131,707,1128,702,1143,691,1167,665,1188,637,1221,574,1244,512,1257,461"/>
+<area shape="rect" id="Node000024" href="$classRtypeServer_1_1UdpServer.html#a55310c56cfdff32be53565892e398547" title=" " alt="" coords="966,772,1130,814"/>
+<area shape="poly" id="edge31_Node000001_Node000024" title=" " alt="" coords="1266,462,1256,526,1236,606,1220,648,1200,689,1176,727,1147,761,1132,773,1129,769,1143,758,1172,724,1196,686,1215,646,1230,604,1251,525,1261,461"/>
+<area shape="rect" id="Node000025" href="$classNetworkClient.html#a7216687fbd6c8f6085d8a78c00204602" title=" " alt="" coords="952,838,1145,865"/>
+<area shape="poly" id="edge32_Node000001_Node000025" title=" " alt="" coords="1270,462,1264,538,1247,637,1231,689,1210,739,1182,787,1147,828,1131,840,1128,835,1143,824,1178,784,1205,737,1226,687,1241,636,1259,538,1264,462"/>
+<area shape="rect" id="Node000008" href="$classNetworkClient.html#a3db47d9224d5319ffca153c4a4784329" title=" " alt="" coords="692,68,904,94"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="947,84,904,84,904,78,947,78"/>
+<area shape="rect" id="Node000009" href="$classNetworkClient.html#ae2e39148013eaea326c8ae242ab341bc" title=" " alt="" coords="446,68,644,94"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="677,84,645,84,645,78,677,78"/>
+<area shape="rect" id="Node000010" href="$classNetworkClient.html#a9202769a61813d85199c6249ac416705" title=" " alt="" coords="212,68,398,94"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="430,93,398,92,398,87,430,87"/>
+<area shape="poly" id="edge10_Node000010_Node000002" title=" " alt="" coords="196,71,164,67,165,62,196,66"/>
+<area shape="poly" id="edge11_Node000010_Node000009" title=" " alt="" coords="413,69,445,69,445,75,413,75"/>
+<area shape="rect" id="Node000012" href="$classRtypeServer_1_1UdpServer.html#a5a4df9d03e0632f28af7c03394112ee1" title=" " alt="" coords="716,572,880,614"/>
+<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="951,596,881,596,881,590,951,590"/>
+<area shape="poly" id="edge14_Node000012_Node000012" title=" " alt="" coords="839,558,823,552,798,550,774,552,760,557,754,563,756,570,751,572,749,561,757,552,773,547,798,545,825,547,841,553"/>
+<area shape="rect" id="Node000013" href="$classRtypeServer_1_1UdpServer.html#a0ea43ddc4dab4340cd0ff10b6e51249c" title=" " alt="" coords="463,572,627,614"/>
+<area shape="poly" id="edge15_Node000012_Node000013" title=" " alt="" coords="700,596,628,596,628,590,700,590"/>
+<area shape="rect" id="Node000016" href="$classRtypeServer_1_1UdpServer.html#a8edbc5c835a5d23856953e06f7877b8d" title=" " alt="" coords="463,272,627,314"/>
+<area shape="poly" id="edge18_Node000015_Node000016" title=" " alt="" coords="708,197,694,203,630,238,577,273,574,269,628,234,691,198,706,192"/>
+<area shape="poly" id="edge24_Node000017_Node000004" title=" " alt="" coords="950,272,880,256,881,250,951,267"/>
+<area shape="poly" id="edge20_Node000017_Node000016" title=" " alt="" coords="951,294,628,295,628,290,951,289"/>
+<area shape="rect" id="Node000018" href="$classRtypeServer_1_1UdpServer.html#ad6474bca80e8ede6d6bbf8ff3524c05e" title=" " alt="" coords="716,330,880,373"/>
+<area shape="poly" id="edge21_Node000017_Node000018" title=" " alt="" coords="952,317,881,334,880,329,951,312"/>
+<area shape="rect" id="Node000019" href="$classRtypeServer_1_1UdpServer.html#aabf9ebd666d71e6c525ec9553ab2191e" title=" " alt="" coords="716,400,880,442"/>
+<area shape="poly" id="edge23_Node000017_Node000019" title=" " alt="" coords="960,323,953,327,938,341,930,356,921,372,905,387,880,401,877,397,902,383,917,368,925,354,934,338,950,323,957,318"/>
+<area shape="poly" id="edge22_Node000018_Node000016" title=" " alt="" coords="700,332,627,315,628,309,701,326"/>
+<area shape="poly" id="edge26_Node000020_Node000018" title=" " alt="" coords="951,358,881,356,881,351,951,353"/>
+<area shape="poly" id="edge28_Node000021_Node000019" title=" " alt="" coords="951,426,881,425,881,420,951,421"/>
+<area shape="rect" id="Node000023" href="$classRtypeServer_1_1UdpServer.html#aea11fdab349503f7ef180f35895ad575" title=" " alt="" coords="716,705,880,748"/>
+<area shape="poly" id="edge30_Node000022_Node000023" title=" " alt="" coords="951,729,881,729,881,724,951,724"/>
+</map>
