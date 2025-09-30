@@ -27,9 +27,6 @@ GameManager::GameManager(sf::Vector2u windowSize)
       gameMode(GameMode::SOLO),
       trophy(windowSize),
       particleSystem(windowSize, 300),
-      networkClient(nullptr),
-      playerName("Player"),
-      inRoom(false),
       currentState(State::LAUNCH),
       isConnected(ServerState::DEFAULT),
       UsernameGame(""),
@@ -382,8 +379,6 @@ void GameManager::render(sf::RenderWindow& window) {
     } else if (currentState == State::LOBBY) {
         player.draw(window);
         window.draw(numberPlayerToWait);
-    } else if (currentState == State::ROOM_LIST) {
-    } else if (currentState == State::IN_ROOM) {
     } else if (currentState == State::LOCKER) {
         player.draw(window);
         leftButtonSelection.draw(window);
@@ -454,12 +449,16 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
     if (currentState == State::LAUNCH) {
-        sf::FloatRect coinBounds = insertCoinText.getGlobalBounds();
-        if (coinBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+        if (connectToServer("127.0.0.1", 8080)) {
+            statusText.setString("Connected to the server !");
+            statusText.setFillColor(sf::Color::Green);
+            isConnected = ServerState::CONNECT;
             currentState = State::MENU;
-            updateStatusTextPosition(false);
-            statusText.setString("");
-            statusText.setFillColor(sf::Color::Yellow);
+        } else {
+            statusText.setString("Connection failed");
+            statusText.setFillColor(sf::Color::Red);
+            isConnected = ServerState::DISCONNECT;
+            currentState = State::ERRORSERVER;
         }
     } else if (currentState == State::MENU) {
         if (username.isClicked(mousePos)) {
@@ -503,35 +502,10 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             statusText.setString("");
         }
         if (playButton.isClicked(mousePos)) {
-            std::string roomName;
-            uint8_t maxPlayers = 1;
-            if (gameMode == GameMode::DUO) {
-                roomName = "DuoRoom";
-                maxPlayers = 2;
-            } else if (gameMode == GameMode::TRIO) {
-                roomName = "TrioRoom";
-                maxPlayers = 3;
-            } else if (gameMode == GameMode::SQUAD) {
-                roomName = "SquadRoom";
-                maxPlayers = 4;
-            }
-            if (maxPlayers > 1) {
-                if (!networkClient) {
-                    initializeNetworking("Player");
-                    connectToServerWithRooms("127.0.0.1", 8080);
-                }
-                this->waitingRoomAction = true;
-                this->waitingRoomName = roomName;
-                this->waitingRoomMaxPlayers = maxPlayers;
-                refreshRoomList();
-            }
             currentState = State::LOBBY;
             updateStatusTextPosition(true);
             statusText.setString("");
         }
-    bool waitingRoomAction = false;
-    std::string waitingRoomName;
-    uint8_t waitingRoomMaxPlayers = 1;
     } else if (currentState == State::SETTINGS) {
         if (backButton.isClicked(mousePos)) {
             if (isConnected == ServerState::CONNECT) {
@@ -599,14 +573,6 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             player.starshipSprite.setTextureRect(player.starshipRect);
         }
     } else if (currentState == State::LOBBY) {
-    } else if (currentState == State::ROOM_LIST) {
-        float yStart = 150;
-        int roomIndex = (mousePos.y - yStart) / 30;
-        if (roomIndex >= 0 && roomIndex < (int)availableRooms.size()) {
-            const auto& room = availableRooms[roomIndex];
-            joinRoom(room.roomName);
-        }
-    } else if (currentState == State::IN_ROOM) {
     } else if (currentState == State::ERRORSERVER) {
         if (paramButton.isClicked(mousePos)) {
             currentState = State::SETTINGS;
@@ -704,6 +670,7 @@ void GameManager::updateStatusTextPosition(bool isParametersMode)
 
 bool GameManager::connectToServer(const std::string& serverIP, unsigned short port)
 {
+    //TEMP
     return (true);
 
     try {
@@ -902,6 +869,8 @@ void GameManager::applyCurrentResolution(sf::RenderWindow& window)
 
 void GameManager::gameDemo(sf::RenderWindow &window)
 {
+    // window.setFramerateLimit(0);
+
     void *handle = dlopen("libengine.so", RTLD_LAZY);
     if (!handle) {
         std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
@@ -915,6 +884,15 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         dlclose(handle);
         return;
     }
+
+    // void (*deleteMediatorFunc)(Engine::Mediator*) = (void (*)(Engine::Mediator*))(dlsym(handle, "deleteMediator"));
+    // error = dlerror();
+    // if (error) {
+    //     std::cerr << "Cannot load symbol 'deleteMediator': " << error << std::endl;
+    //     dlclose(handle);
+    //     return (84);
+    // }
+
     std::shared_ptr<Engine::Mediator> mediator = createMediatorFunc();
     mediator->init();
 
@@ -1018,185 +996,3 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     }
     dlclose(handle);
 }
-
-void GameManager::initializeNetworking(const std::string& playerName)
-{
-    this->playerName = playerName;
-    networkClient = std::make_unique<NetworkClient>();
-
-    networkClient->setConnectedCallback([this](uint32_t playerId) {
-        onConnected(playerId);
-    });
-    
-    networkClient->setRoomCreatedCallback([this](const RoomCreatedBody& body) {
-        onRoomCreated(body);
-    });
-    
-    networkClient->setRoomJoinedCallback([this](const RoomJoinedBody& body) {
-        onRoomJoined(body);
-    });
-    
-    networkClient->setRoomLeftCallback([this](const RoomLeftBody& body) {
-        onRoomLeft(body);
-    });
-    
-    networkClient->setRoomListCallback([this](const RoomListBody& body) {
-        onRoomList(body);
-    });
-    
-    networkClient->setRoomMessageCallback([this](const RoomMessageBody& body) {
-        onRoomMessage(body);
-    });
-    
-    networkClient->setRoomErrorCallback([this](const RoomErrorBody& body) {
-        onRoomError(body);
-    });
-}
-
-void GameManager::connectToServerWithRooms(const std::string& serverIP, unsigned short port)
-{
-    if (!networkClient) {
-        initializeNetworking(playerName);
-    }
-    
-    if (networkClient->connect(serverIP, port, playerName)) {
-        isConnected = ServerState::CONNECT;
-        statusText.setString("Connecting to server...");
-    } else {
-        isConnected = ServerState::DISCONNECT;
-        statusText.setString("Failed to connect to server");
-        currentState = State::ERRORSERVER;
-    }
-}
-
-void GameManager::createRoom(const std::string& roomName, uint8_t maxPlayers)
-{
-    if (networkClient && networkClient->isConnected()) {
-        networkClient->createRoom(roomName, maxPlayers);
-    }
-}
-
-void GameManager::joinRoom(const std::string& roomName)
-{
-    if (networkClient && networkClient->isConnected()) {
-        networkClient->joinRoom(roomName);
-    }
-}
-
-void GameManager::leaveRoom()
-{
-    if (networkClient && networkClient->isConnected()) {
-        networkClient->leaveRoom();
-    }
-}
-
-void GameManager::refreshRoomList()
-{
-    if (networkClient && networkClient->isConnected()) {
-        networkClient->listRooms();
-    }
-}
-
-void GameManager::sendRoomMessage(const std::string& message)
-{
-    if (networkClient && networkClient->isConnected()) {
-        networkClient->sendMessage(message);
-    }
-}
-
-void GameManager::onConnected(uint32_t playerId)
-{
-    std::cout << "Connected to server! Player ID: " << playerId << std::endl;
-    isConnected = ServerState::CONNECT;
-    statusText.setString("");
-    refreshRoomList();
-}
-
-void GameManager::onRoomCreated(const RtypeServer::RoomCreatedBody& body)
-{
-    if (body.success) {
-        std::cout << "Room '" << body.roomName << "' created successfully!" << std::endl;
-        statusText.setString("");
-        currentRoomName = body.roomName;
-        inRoom = true;
-    } else {
-        std::cout << "Failed to create room '" << body.roomName << "'" << std::endl;
-        statusText.setString("Failed to create room");
-    }
-}
-
-void GameManager::onRoomJoined(const RtypeServer::RoomJoinedBody& body)
-{
-    if (body.success) {
-        std::cout << "Joined room '" << body.roomName << "' with " << (int)body.playerCount << " players" << std::endl;
-        statusText.setString("");
-        currentRoomName = body.roomName;
-        inRoom = true;
-        
-    int maxPlayers = getMaxPlayersForMode(gameMode);
-    numberPlayerToWait.setString("Waiting players: " + std::to_string(body.playerCount) + "/" + std::to_string(maxPlayers));
-        
-        refreshRoomList();
-    } else {
-        std::cout << "Failed to join room '" << body.roomName << "'" << std::endl;
-        statusText.setString("Failed to join room");
-    }
-}
-
-void GameManager::onRoomLeft(const RtypeServer::RoomLeftBody& body)
-{
-    if (body.success) {
-        std::cout << "Left room successfully" << std::endl;
-        statusText.setString("");
-        currentRoomName.clear();
-        inRoom = false;
-        
-        numberPlayerToWait.setString("Waiting players: 0/");
-        refreshRoomList();
-    } else {
-        std::cout << "Failed to leave room" << std::endl;
-        statusText.setString("Failed to leave room");
-    }
-}
-
-void GameManager::onRoomList(const RtypeServer::RoomListBody& body)
-{
-    availableRooms = body.rooms;
-    
-    if (currentState == State::LOBBY && !currentRoomName.empty()) {
-        for (const auto& r : availableRooms) {
-            if (r.roomName == currentRoomName) {
-                int maxPlayers = getMaxPlayersForMode(gameMode);
-                numberPlayerToWait.setString("Waiting players: " + std::to_string(r.currentPlayers) + "/" + std::to_string(maxPlayers));
-                break;
-            }
-        }
-    }
-    if (this->waitingRoomAction) {
-        bool found = false;
-        for (const auto& r : availableRooms) {
-            if (r.roomName == this->waitingRoomName) {
-                found = true;
-                break;
-            }
-        }
-        if (found) {
-            joinRoom(this->waitingRoomName);
-        } else {
-            createRoom(this->waitingRoomName, this->waitingRoomMaxPlayers);
-        }
-        this->waitingRoomAction = false;
-    }
-}
-
-void GameManager::onRoomMessage(const RtypeServer::RoomMessageBody& body)
-{
-    std::cout << "[Room] " << body.senderName << ": " << body.message << std::endl;
-}
-
-void GameManager::onRoomError(const RtypeServer::RoomErrorBody& body)
-{
-    std::cout << "Room error: " << body.errorMessage << std::endl;
-    statusText.setString("Error: " + body.errorMessage);
-}
-
