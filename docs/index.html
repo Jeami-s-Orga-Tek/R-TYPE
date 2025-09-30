@@ -76,8 +76,25 @@
     /* Footer */
     footer{border-top:1px solid #111a2f;color:var(--muted);text-align:center;padding:48px 0 80px}
   </style>
-  <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>mermaid.initialize({ startOnLoad: true, theme: "dark" });</script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      mermaid.initialize({ 
+        startOnLoad: true, 
+        theme: "dark",
+        themeVariables: {
+          darkMode: true,
+          background: '#0f1628',
+          primaryColor: '#7dd3fc',
+          primaryTextColor: '#e9ecf3',
+          primaryBorderColor: '#1c2745',
+          lineColor: '#3b82f6',
+          secondaryColor: '#1c2745',
+          tertiaryColor: '#0a0f1a'
+        }
+      });
+    });
+  </script>
 </head>
 <body>
   <nav class="top">
@@ -277,39 +294,44 @@ sprite/</code></pre>
         <div class="card">
           <div class="mermaid">
 flowchart LR
-  subgraph Client[Client (SFML)]
-    Input[Input] -->|events| ECS_Cl[ECS]
-    Render[Render] --> ECS_Cl
-    NetC[UDP Client] --> ECS_Cl
+  subgraph Client["Client (SFML)"]
+    Input["Input"] -->|events| ECS_Cl["ECS"]
+    Render["Render"] --> ECS_Cl
+    NetC["UDP Client"] --> ECS_Cl
   end
 
-  subgraph Engine[ECS Engine]
-    Entities &amp; Components &amp; Systems
-    Mediator -. decouples .- Entities
+  subgraph Engine["ECS Engine"]
+    Entities["Entities"]
+    Components["Components"]
+    Systems["Systems"]
+    Mediator["Mediator"]
+    Mediator -.-> Entities
+    Mediator -.-> Components
+    Mediator -.-> Systems
   end
 
-  subgraph Server[Server (Boost.Asio UDP)]
-    NetS[UDP Server] --> GameLoop
+  subgraph Server["Server (Boost.Asio UDP)"]
+    NetS["UDP Server"] --> GameLoop["GameLoop"]
     GameLoop -->|snapshots| NetS
-    Auth[Authoritative Rules]
+    Auth["Authoritative Rules"]
   end
 
-  Client &lt;-- UDP binary protocol --&gt; Server
-  ECS_Cl .- uses .- Engine
+  Client <--> Server
+  ECS_Cl -.-> Engine
           </div>
         </div>
         <div class="card">
           <h3>Networking protocol</h3>
           <div class="mermaid">
 sequenceDiagram
-  participant C as Client
-  participant S as Server
-  C->>S: HELLO (connect)
-  S-->>C: WELCOME (playerId)
-  loop Heartbeat
-    C->>S: PING(seq)
-    S-->>C: PONG(seq)
-    S-->>C: SNAPSHOT(state)
+  participant C as "Client"
+  participant S as "Server"
+  C->>S: "HELLO (connect)"
+  S-->>C: "WELCOME (playerId)"
+  loop "Heartbeat"
+    C->>S: "PING(seq)"
+    S-->>C: "PONG(seq)"
+    S-->>C: "SNAPSHOT(state)"
   end
           </div>
           <p class="muted">Server is authoritative; heartbeats keep connections healthy and drive world snapshots.</p>
