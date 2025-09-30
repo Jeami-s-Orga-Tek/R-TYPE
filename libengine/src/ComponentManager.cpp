@@ -62,3 +62,11 @@
 // {
 //     return (getComponentArray<T>()->getComponent(entity));
 // }
+
+void Engine::ComponentManager::entityDestroyed(Entity entity)
+{
+    for (const auto &pair : component_arrays) {
+        const auto &component = pair.second;
+        component->entityDestroyed(entity);
+    }
+}

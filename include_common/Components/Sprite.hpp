@@ -17,7 +17,7 @@
 namespace Engine {
     namespace Components {
         typedef struct Sprite_s {
-            std::string sprite_name;
+            char sprite_name[255];
             std::uint32_t frame_nb;
         } Sprite;
     };

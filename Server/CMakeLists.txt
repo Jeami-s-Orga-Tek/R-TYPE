@@ -22,4 +22,4 @@ CPMAddPackage(
 
 add_executable(r-type_server ${SOURCES})
 
-target_link_libraries(r-type_server PRIVATE Boost::system)
+target_link_libraries(r-type_server PRIVATE engine Boost::system)

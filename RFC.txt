@@ -1,0 +1,55 @@
+PacketHeader : 
+	-	MAGIC : uint_16 = 0xCAFE
+	-	PROTO_VERSION : uint_8 = 1
+	-	TYPE : uint_8
+	-	SEQ : uint_32
+	-	ACK : uint_32
+	-	ACK_SEQ : uint_32
+	16 Bytes
+
+MSG_TYPES :
+	-	MSG_HELLO = 1,
+        -	MSG_WELCOME = 2,
+        -	MSG_PING = 3,
+        -	MSG_PONG = 4,
+	-	MSG_INPUT = 5,
+	-	MSG_ENTITY = 6,
+	-	MSG_ENTITY_DESTROY = 7,
+	-	MSG_COMPONENT = 8,
+
+HelloBody (connection data from player) :
+	-	NONCE : uint_32
+	-	PROTO_VERSION : uint_8 = 1
+	-	NAME_LEN : uint_8 (max name len : 255)
+	-	NAME_BYTE : NAME_LEN bytes (max 255)
+	6 Bytes + NAME_LEN bytes (max 266)
+
+WelcomeBody (player data from server) :
+	-	PLAYER_ID : uint_32
+	-	ROOM_ID : uint_16
+	-	BASELINE_TICK : uint_32
+	10 Bytes
+
+InputBody (player input data from client) : 
+	-	PLAYER_ID : uint_32
+	-	ROOM_ID : uint_16
+	-	INPUT_DATA : uint_64
+	14 Bytes
+
+EntityBody :
+	-	ENTITY_ID : uint_32
+	-	SIGNATURE : uint_64
+	12 Bytes
+
+EntityDestroyBody :
+	-	ENTITY_ID : uint_32
+	4 Bytes
+
+ComponentBody :
+	-	ENTITY_ID : uint_32
+	-	NAME_LEN : uint_8
+	-	COMPONENT_LEN : uint_32
+	-	NAME : NAME_LEN bytes (max 255)
+	-	COMPONENT_DATA : COMPONENT_LEN bytes (max 4294967295)
+	9 Bytes + NAME_LEN bytes + COMPONENT_LEN bytes (max 4294967559)
+

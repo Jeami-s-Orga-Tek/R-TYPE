@@ -9,6 +9,7 @@
 #define MEDIATOR_HPP_
 
 #include <memory>
+#include <vector>
 
 #include "EntityManager.hpp"
 #include "ComponentManager.hpp"
@@ -21,6 +22,8 @@ namespace Engine {
             void init();
             Entity createEntity();
             void destroyEntity(Entity entity);
+            size_t getEntityCount();
+            Signature getSignature(Entity entity);
             template <typename T> void registerComponent();
             template <typename T> void addComponent(Entity entity, T component);
             template <typename T> void removeComponent(Entity entity);
@@ -31,6 +34,7 @@ namespace Engine {
             void addEventListener(EventId eventId, std::function<void(Event &)> const &listener);
             void sendEvent(EventId eventId);
             void sendEvent(Event &event);
+
         private:
             std::unique_ptr<EntityManager> entityManager {};
             std::unique_ptr<ComponentManager> componentManager {};

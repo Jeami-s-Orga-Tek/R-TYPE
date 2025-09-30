@@ -15,6 +15,11 @@ void Engine::Mediator::init()
     eventManager = std::make_unique<Engine::EventManager>();
 }
 
+// void Engine::Mediator::initNetworkManager(NetworkManager::Role role, const std::string &address, uint16_t port)
+// {
+//     networkManager = std::make_unique<Engine::NetworkManager>(role, address, port);
+// }
+
 Engine::Entity Engine::Mediator::createEntity()
 {
     return (entityManager->createEntity());
@@ -85,6 +90,16 @@ void Engine::Mediator::sendEvent(Event& event) {
 
 void Engine::Mediator::sendEvent(EventId event_id) {
     eventManager->sendEvent(event_id);
+}
+
+size_t Engine::Mediator::getEntityCount()
+{
+    return (entityManager->getEntityCount());
+}
+
+Engine::Signature Engine::Mediator::getSignature(Entity entity)
+{
+    return (entityManager->getSignature(entity));
 }
 
 extern "C" std::shared_ptr<Engine::Mediator> createMediator() {

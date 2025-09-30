@@ -49,7 +49,12 @@ namespace Engine {
                         throw SpriteError("Couldn't load sprite texture from img file D:");
                     }
                     sprite.sprite.setTexture(sprite.texture);
-                    sprite.sprite.setTextureRect({pos.x * frame_nb, pos.y, size.x, size.y});
+                    sprite.sprite.setTextureRect({
+                        static_cast<int>(pos.x * frame_nb),
+                        static_cast<int>(pos.y),
+                        static_cast<int>(size.x),
+                        static_cast<int>(size.y)
+                    });
                     sprite.frames = frames;
                     sprite.size = size;
                     sprite.pos = pos;
@@ -57,7 +62,7 @@ namespace Engine {
                     sprites.insert({sprite_name, sprite});
                 }
 
-                void update(std::shared_ptr<Mediator> mediator, sf::RenderWindow &window, float dt) {
+                void update(std::shared_ptr<Mediator> mediator, sf::RenderWindow &window) {
                     for (const auto &entity : entities) {
                         const auto &transform = mediator->getComponent<Components::Transform>(entity);
                         // sf::RectangleShape rectangle(sf::Vector2f(50.f, 50.f));
@@ -73,7 +78,12 @@ namespace Engine {
                         sprite.sprite.setTexture(sprite.texture);
                         sprite.sprite.setPosition({transform.pos.x, transform.pos.y});
                         sprite.sprite.setRotation(transform.rot);
-                        sprite.sprite.setTextureRect({sprite.pos.x * entity_sprite.frame_nb, sprite.pos.y, sprite.size.x, sprite.size.y});
+                        sprite.sprite.setTextureRect({
+                            static_cast<int>(sprite.pos.x * entity_sprite.frame_nb),
+                            static_cast<int>(sprite.pos.y),
+                            static_cast<int>(sprite.size.x),
+                            static_cast<int>(sprite.size.y)
+                        });
                         sprite.sprite.setScale({transform.scale, transform.scale});
 
                         window.draw(sprite.sprite);

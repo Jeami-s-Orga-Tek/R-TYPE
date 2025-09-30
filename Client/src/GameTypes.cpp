@@ -37,7 +37,31 @@ GameManager::GameManager(sf::Vector2u windowSize)
       isEditingUsername(false),
       cursorPos(0)
 {
-    if (!font.loadFromFile("assets/r-type.otf")) {
+    void *handle = dlopen("libengine.so", RTLD_LAZY);
+    if (!handle) {
+        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+        throw std::runtime_error("");
+    }
+
+    createMediatorFunc = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+    char *error = dlerror();
+    if (error) {
+        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+        dlclose(handle);
+        throw std::runtime_error("");
+    }
+
+    createNetworkManagerFunc = (std::shared_ptr<Engine::NetworkManager> (*)(Engine::NetworkManager::Role, const std::string &, uint16_t))(dlsym(handle, "createNetworkManager"));
+    error = dlerror();
+    if (error) {
+        std::cerr << "Cannot load symbol 'createNetworkManager': " << error << std::endl;
+        dlclose(handle);
+        throw std::runtime_error("");
+    }
+
+    dlclose(handle);
+
+    if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
         std::cerr << "Unable to load Carlito font, trying Symbola..." << std::endl;
     }
     if (!username.loadFile()) {
@@ -670,59 +694,68 @@ void GameManager::updateStatusTextPosition(bool isParametersMode)
 
 bool GameManager::connectToServer(const std::string& serverIP, unsigned short port)
 {
-    //TEMP
-    return (true);
+    networkManager = createNetworkManagerFunc(Engine::NetworkManager::Role::CLIENT, serverIP, port);
 
-    try {
-        boost::asio::io_context io_context;
-        udp::socket socket(io_context);
-        udp::resolver resolver(io_context);   
-        udp::resolver::results_type endpoints = resolver.resolve(udp::v4(), serverIP, std::to_string(port));
-        udp::endpoint server_endpoint = *endpoints.begin();
+    physics_system = networkManager->mediator->registerSystem<Engine::Systems::PhysicsSystem>();
+    render_system = networkManager->mediator->registerSystem<Engine::Systems::RenderSystem>();
+    
+    player_control_system = networkManager->mediator->registerSystem<Engine::Systems::PlayerControl>();
+    player_control_system->init(networkManager->mediator);
+
+    // TEMP
+    networkManager->send_hello("BASSIROU", 12345);
+
+    return (true);
+    // try {
+    //     boost::asio::io_context io_context;
+    //     udp::socket socket(io_context);
+    //     udp::resolver resolver(io_context);   
+    //     udp::resolver::results_type endpoints = resolver.resolve(udp::v4(), serverIP, std::to_string(port));
+    //     udp::endpoint server_endpoint = *endpoints.begin();
         
-        socket.open(udp::v4());
-        std::string message = "CONNECT";
-        std::cout << "Sending connection message to server " << serverIP << ":" << port << std::endl;
-        boost::system::error_code send_error;
-        size_t bytes_sent = socket.send_to(boost::asio::buffer(message), server_endpoint, 0, send_error);
+    //     socket.open(udp::v4());
+    //     std::string message = "CONNECT";
+    //     std::cout << "Sending connection message to server " << serverIP << ":" << port << std::endl;
+    //     boost::system::error_code send_error;
+    //     size_t bytes_sent = socket.send_to(boost::asio::buffer(message), server_endpoint, 0, send_error);
         
-        if (send_error) {
-            std::cerr << "Error sending: " << send_error.message() << std::endl;
-            return false;
-        }
-        std::cout << "Message envoyé (" << bytes_sent << " bytes)" << std::endl;
-        socket.non_blocking(true);
-        char buffer[1024];
-        udp::endpoint sender_endpoint;
-        auto start_time = std::chrono::steady_clock::now();
-        const auto timeout = std::chrono::seconds(5);
+    //     if (send_error) {
+    //         std::cerr << "Error sending: " << send_error.message() << std::endl;
+    //         return false;
+    //     }
+    //     std::cout << "Message envoyé (" << bytes_sent << " bytes)" << std::endl;
+    //     socket.non_blocking(true);
+    //     char buffer[1024];
+    //     udp::endpoint sender_endpoint;
+    //     auto start_time = std::chrono::steady_clock::now();
+    //     const auto timeout = std::chrono::seconds(5);
         
-        while (std::chrono::steady_clock::now() - start_time < timeout) {
-            boost::system::error_code receive_error;
-            size_t bytes_received = socket.receive_from(
-                boost::asio::buffer(buffer), 
-                sender_endpoint, 
-                0, 
-                receive_error
-            );
-            if (!receive_error && bytes_received > 0) {
-                std::string response(buffer, bytes_received);
-                std::cout << "Server response: " << response << std::endl;
-                socket.close();
-                return true;
-            } else if (receive_error != boost::asio::error::would_block) {
-                std::cerr << "Error receiving: " << receive_error.message() << std::endl;
-                break;
-            }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-        std::cout << "Timeout - No response from server" << std::endl;
-        socket.close();
-        return false;
-    } catch (const std::exception& e) {
-        std::cerr << "Connection exception: " << e.what() << std::endl;
-        return false;
-    }
+    //     while (std::chrono::steady_clock::now() - start_time < timeout) {
+    //         boost::system::error_code receive_error;
+    //         size_t bytes_received = socket.receive_from(
+    //             boost::asio::buffer(buffer), 
+    //             sender_endpoint, 
+    //             0, 
+    //             receive_error
+    //         );
+    //         if (!receive_error && bytes_received > 0) {
+    //             std::string response(buffer, bytes_received);
+    //             std::cout << "Server response: " << response << std::endl;
+    //             socket.close();
+    //             return true;
+    //         } else if (receive_error != boost::asio::error::would_block) {
+    //             std::cerr << "Error receiving: " << receive_error.message() << std::endl;
+    //             break;
+    //         }
+    //         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    //     }
+    //     std::cout << "Timeout - No response from server" << std::endl;
+    //     socket.close();
+    //     return false;
+    // } catch (const std::exception& e) {
+    //     std::cerr << "Connection exception: " << e.what() << std::endl;
+    //     return false;
+    // }
 }
 
 void GameManager::cycleResolution()
@@ -867,23 +900,68 @@ void GameManager::applyCurrentResolution(sf::RenderWindow& window)
     handleWindowResize(resizeEvent);
 }
 
+// void GameManager::createMediator()
+// {
+//     void *handle = dlopen("libengine.so", RTLD_LAZY);
+//     if (!handle) {
+//         std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+//         return;
+//     }
+
+//     std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+//     const char *error = dlerror();
+//     if (error) {
+//         std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+//         dlclose(handle);
+//         throw std::runtime_error("");
+//     }
+
+//     this->createNetworkManagerFunc = (std::shared_ptr<Engine::NetworkManager> (*)(Engine::NetworkManager::Role, const std::string &, uint16_t))(dlsym(handle, "createNetworkManager"));
+//     error = dlerror();
+//     if (error) {
+//         std::cerr << "Cannot load symbol 'createNetworkManager': " << error << std::endl;
+//         dlclose(handle);
+//         throw std::runtime_error("");
+//     }
+
+//     this->mediator = createMediatorFunc();
+
+//     dlclose(handle);
+// }
+
+// void GameManager::initMediator()
+// {
+//     if (!mediator)
+//         return;
+
+//     mediator->init();
+// }
+
+// void GameManager::initMediatorNetwork(const std::string &address, uint16_t port)
+// {
+//     if (!mediator)
+//         return;
+
+//     mediator->initNetworkManager(Engine::NetworkManager::Role::CLIENT, address, port);
+// }
+
 void GameManager::gameDemo(sf::RenderWindow &window)
 {
     // window.setFramerateLimit(0);
 
-    void *handle = dlopen("libengine.so", RTLD_LAZY);
-    if (!handle) {
-        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
-        return;
-    }
+    // void *handle = dlopen("libengine.so", RTLD_LAZY);
+    // if (!handle) {
+    //     std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+    //     return;
+    // }
 
-    std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
-    const char *error = dlerror();
-    if (error) {
-        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
-        dlclose(handle);
-        return;
-    }
+    // std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+    // const char *error = dlerror();
+    // if (error) {
+    //     std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+    //     dlclose(handle);
+    //     return;
+    // }
 
     // void (*deleteMediatorFunc)(Engine::Mediator*) = (void (*)(Engine::Mediator*))(dlsym(handle, "deleteMediator"));
     // error = dlerror();
@@ -893,37 +971,35 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     //     return (84);
     // }
 
-    std::shared_ptr<Engine::Mediator> mediator = createMediatorFunc();
-    mediator->init();
+    // std::shared_ptr<Engine::Mediator> mediator = createMediatorFunc();
 
-    mediator->registerComponent<Engine::Components::Gravity>();
-    mediator->registerComponent<Engine::Components::RigidBody>();
-    mediator->registerComponent<Engine::Components::Transform>();
-    mediator->registerComponent<Engine::Components::Sprite>();
+    // networkManager->mediator = createMediatorFunc();
+    std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
+    // mediator->init();
 
-    auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
-    auto render_system = mediator->registerSystem<Engine::Systems::RenderSystem>();
+    // auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
+    // auto render_system = mediator->registerSystem<Engine::Systems::RenderSystem>();
     
-    auto player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
-    player_control_system->init(mediator);
+    // auto player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
+    // player_control_system->init(mediator);
 
     render_system->addSprite("player", "assets/sprites/r-typesheet1.gif", {32, 14}, {101, 3}, 10, 1);
 
-    Engine::Signature signature;
-    signature.set(mediator->getComponentType<Engine::Components::Gravity>());
-    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
-    signature.set(mediator->getComponentType<Engine::Components::Transform>());
-    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    // Engine::Signature signature;
+    // signature.set(mediator->getComponentType<Engine::Components::Gravity>());
+    // signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
+    // signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    // signature.set(mediator->getComponentType<Engine::Components::Sprite>());
 
-    const int entity_number = 4;
+    int entity_number = 0;
 
-    for (int i = 0; i < entity_number; i++) {
-        Engine::Entity entity = mediator->createEntity();
-        mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
-        mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
-        mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
-        mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
-    }
+    // for (int i = 0; i < entity_number; i++) {
+    //     Engine::Entity entity = mediator->createEntity();
+    //     mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
+    //     mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
+    //     mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
+    //     mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
+    // }
 
     const float FIXED_DT = 1.0f / 60.0f;
     float accumulator = 0.0f;
@@ -959,40 +1035,44 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             fps = frame_count / fps_timer;
             frame_count = 0;
             fps_timer = 0.0f;
-            fps_text.setString(std::to_string(entity_number) + " entites pour FPS " + std::to_string((int)(fps)));
+            fps_text.setString(std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)));
         }
 
         window.clear(sf::Color::Black);
 
         buttons.reset();
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::LEFT));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::RIGHT));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::UP));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::DOWN));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        if (window.hasFocus() && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::SHOOT));
         }
 
         Engine::Event player_input_event(static_cast<Engine::EventId>(Engine::EventsIds::PLAYER_INPUT));
-        player_input_event.setParam(0, buttons);
+        player_input_event.setParam(0, networkManager->player_id);
+        player_input_event.setParam(1, buttons);
         mediator->sendEvent(player_input_event);
+        networkManager->sendInput(networkManager->player_id, networkManager->room_id, buttons);
 
         while (accumulator >= FIXED_DT) {
             player_control_system->update(mediator, FIXED_DT);
-            render_system->update(mediator, window, FIXED_DT);
+            render_system->update(mediator, window);
             accumulator -= FIXED_DT;
         }
 
         window.draw(fps_text);
         window.display();
     }
-    dlclose(handle);
+
+    // deleteMediatorFunc(mediator);
+    // dlclose(handle);
 }

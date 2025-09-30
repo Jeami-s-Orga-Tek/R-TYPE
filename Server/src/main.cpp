@@ -5,52 +5,118 @@
 ** main
 */
 
+
 #include <iostream>
-#include <boost/asio.hpp>
 #include <csignal>
+#include <dlfcn.h>
 #include <memory>
-#include "net/UdpServer.hpp"
-#include "util/Log.hpp"
+#include <thread>
+#include <chrono>
 
-static std::unique_ptr<boost::asio::io_context> g_io;
-static std::unique_ptr<RtypeServer::UdpServer> g_server;
+#include "Mediator.hpp"
+#include "NetworkManager.hpp"
+#include "Systems/Physics.hpp"
+#include "Systems/PlayerControl.hpp"
+#include "Components/Sprite.hpp"
 
-void signalHandler(int signum) {
-    RtypeServer::infof("Signal %d received, shutting down server...", signum);
-    if (g_io) {
-        g_io->stop();
-    }
-}
-
-int main(int argc, char* argv[])
+// int main(int argc, char* argv[])
+int main()
 {
-    try {
-        uint16_t port = 8080;
-        if (argc >= 2) {
-            try {
-                port = static_cast<uint16_t>(std::stoi(argv[1]));
-            } catch (const std::exception& e) {
-                std::cerr << "Invalid port number: " << argv[1] << std::endl;
-                return 1;
-            }
-        }
-
-        RtypeServer::infof("Starting R-Type Server on port %u", port);
-        std::signal(SIGINT, signalHandler);
-        std::signal(SIGTERM, signalHandler);
-        g_io = std::make_unique<boost::asio::io_context>();
-        g_server = std::make_unique<RtypeServer::UdpServer>(*g_io, port);
-
-        RtypeServer::infof("Server initialized successfully");
-        RtypeServer::infof("Press Ctrl+C to stop the server");
-        g_io->run();
-        RtypeServer::infof("Server stopped gracefully");
-    } catch (const std::exception& e) {
-        std::cerr << "Server error: " << e.what() << std::endl;
-        return 1;
-    } catch (...) {
-        std::cerr << "Unknown error occurred" << std::endl;
-        return 1;
+    void *handle = dlopen("libengine.so", RTLD_LAZY);
+    if (!handle) {
+        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+        return (84);
     }
-    return 0;
+
+    std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+    char *error = dlerror();
+    if (error) {
+        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+        dlclose(handle);
+        return (84);
+    }
+
+    // std::shared_ptr<Engine::Mediator> mediator = createMediatorFunc();
+    // mediator->init();
+
+    // mediator->initNetworkManager(Engine::NetworkManager::Role::SERVER, "127.0.0.1", 8080);
+
+    std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t) = (std::shared_ptr<Engine::NetworkManager> (*)(Engine::NetworkManager::Role, const std::string &, uint16_t))(dlsym(handle, "createNetworkManager"));
+    error = dlerror();
+    if (error) {
+        std::cerr << "Cannot load symbol 'createNetworkManager': " << error << std::endl;
+        dlclose(handle);
+        return (84);
+    }
+
+    std::shared_ptr<Engine::NetworkManager> networkManager = createNetworkManagerFunc(Engine::NetworkManager::Role::SERVER, "127.0.0.1", 8080);
+    networkManager->mediator = createMediatorFunc();
+    std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
+    mediator->init();
+
+    mediator->registerComponent<Engine::Components::Gravity>();
+    mediator->registerComponent<Engine::Components::RigidBody>();
+    mediator->registerComponent<Engine::Components::Transform>();
+    mediator->registerComponent<Engine::Components::Sprite>();
+    mediator->registerComponent<Engine::Components::PlayerInfo>();
+
+    auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
+    // auto render_system = mediator->registerSystem<Engine::Systems::RenderSystem>();
+    
+    auto player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
+    player_control_system->init(mediator);
+
+    Engine::Signature signature;
+    signature.set(mediator->getComponentType<Engine::Components::Gravity>());
+    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
+    signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    signature.set(mediator->getComponentType<Engine::Components::PlayerInfo>());
+
+    int entity_number = 0;
+
+    for (uint i = 0; i < entity_number; i++) {
+        Engine::Entity entity = mediator->createEntity();
+        mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
+        mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
+        mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
+        mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
+        mediator->addComponent(entity, Engine::Components::PlayerInfo{.player_id = i});
+    }
+
+    std::cout << "NetworkManager server started. Press Ctrl+C to exit." << std::endl;
+
+    const float FIXED_DT = 1.0f / 60.0f;
+    float accumulator = 0.0f;
+    auto previousTime = std::chrono::high_resolution_clock::now();
+
+    bool have_players_spawned = false;
+
+    while (true) {
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        float frameTime = std::chrono::duration<float>(currentTime - previousTime).count();
+        previousTime = currentTime;
+        accumulator += frameTime;
+
+        while (accumulator >= FIXED_DT) {
+            // physics_system->update(mediator, FIXED_DT);
+            if (networkManager->getConnectedPlayers() >= 2 && !have_players_spawned) {
+                for (int i = 0; i < networkManager->getConnectedPlayers(); i++)
+                    networkManager->createPlayer();
+                have_players_spawned = true;
+            }
+
+            player_control_system->update(mediator, FIXED_DT);
+
+            for (int i = 0; i < networkManager->mediator->getEntityCount(); i++) {
+                const auto &comp = networkManager->mediator->getComponent<Engine::Components::Transform>(i);
+                networkManager->sendComponent(i, comp);
+            }
+            
+            accumulator -= FIXED_DT;
+        }        
+    }
+
+    dlclose(handle);
+    return (0);
 }

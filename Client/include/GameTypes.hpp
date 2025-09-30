@@ -10,6 +10,8 @@
 #define GAMETYPES_HPP_
 
 #include <SFML/Graphics.hpp>
+#include <cstdint>
+
 #include "Button.hpp"
 #include "Menu.hpp"
 #include "Parameters.hpp"
@@ -22,6 +24,12 @@
 #include "ControlsConfig.hpp"
 #include "Leaderboard.hpp"
 #include "Username.hpp"
+#include "Mediator.hpp"
+#include "NetworkManager.hpp"
+
+#include "Systems/Physics.hpp"
+#include "Systems/Render.hpp"
+#include "Systems/PlayerControl.hpp"
 
 enum class State {
     LAUNCH,
@@ -113,6 +121,13 @@ class GameManager {
 
         bool isEditingUsername;
         size_t cursorPos;
+        std::shared_ptr<Engine::Systems::PhysicsSystem> physics_system {};
+        std::shared_ptr<Engine::Systems::RenderSystem> render_system {};
+        std::shared_ptr<Engine::Systems::PlayerControl> player_control_system {};
+
+        std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
+        std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
+        std::shared_ptr<Engine::NetworkManager> networkManager;
 
     public:
         GameManager(sf::Vector2u windowSize);
@@ -129,6 +144,10 @@ class GameManager {
         void cycleGraphicsQuality();
         void cycleColorBlindMode();
         void applyCurrentResolution(sf::RenderWindow& window);
+
+        void createMediator();
+        void initMediator();
+        void initMediatorNetwork(const std::string &address, uint16_t port);
         void gameDemo(sf::RenderWindow &window);
         void addWaitingPlayer() { waitingPlayersCounter++; }
         void removeWaitingPlayer() { if (waitingPlayersCounter > 0) waitingPlayersCounter--; }

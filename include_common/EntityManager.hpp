@@ -35,6 +35,7 @@ namespace Engine {
             void destroyEntity(Entity entity);
             void setSignature(Entity entity, Signature signature);
             Signature getSignature(Entity entity);
+            size_t getEntityCount();
         private:
             std::queue<Entity> available_entities {};
             std::array<Signature, MAX_ENTITIES> signatures {};
