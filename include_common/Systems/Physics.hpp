@@ -24,11 +24,11 @@ namespace Engine {
                     for (const auto &entity : entities) {
                         auto &rigidbody = mediator->getComponent<Components::RigidBody>(entity);
                         auto &transform = mediator->getComponent<Components::Transform>(entity);
-                        auto const &gravity = mediator->getComponent<Components::Gravity>(entity);
+                        // auto const &gravity = mediator->getComponent<Components::Gravity>(entity);
 
                         transform.pos += rigidbody.velocity * dt;
 
-                        rigidbody.velocity += gravity.force * dt;
+                        // rigidbody.velocity += gravity.force * dt;
                     }
                 };
         };

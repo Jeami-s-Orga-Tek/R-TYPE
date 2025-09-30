@@ -697,10 +697,32 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
     networkManager = createNetworkManagerFunc(Engine::NetworkManager::Role::CLIENT, serverIP, port);
 
     physics_system = networkManager->mediator->registerSystem<Engine::Systems::PhysicsSystem>();
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::RigidBody>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::PhysicsSystem>(signature);
+    }
+
     render_system = networkManager->mediator->registerSystem<Engine::Systems::RenderSystem>();
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Sprite>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::RenderSystem>(signature);
+    }
     
     player_control_system = networkManager->mediator->registerSystem<Engine::Systems::PlayerControl>();
     player_control_system->init(networkManager->mediator);
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::PlayerInfo>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::PlayerControl>(signature);
+    }
 
     // TEMP
     networkManager->send_hello("BASSIROU", 12345);
@@ -984,6 +1006,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     // player_control_system->init(mediator);
 
     render_system->addSprite("player", "assets/sprites/r-typesheet1.gif", {32, 14}, {101, 3}, 10, 1);
+    render_system->addSprite("weak_player_projectile", "assets/sprites/r-typesheet1.gif", {16, 4}, {249, 90}, 1, 1);
 
     // Engine::Signature signature;
     // signature.set(mediator->getComponentType<Engine::Components::Gravity>());
@@ -1019,9 +1042,16 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     std::bitset<5> buttons {};
     sf::Event event;
     while (window.isOpen()) {
+        buttons.reset();
+
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Space && window.hasFocus()) {
+                    buttons.set(static_cast<std::size_t>(Engine::InputButtons::SHOOT));
+                }
+            }
         }
 
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -1040,7 +1070,6 @@ void GameManager::gameDemo(sf::RenderWindow &window)
 
         window.clear(sf::Color::Black);
 
-        buttons.reset();
         if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::LEFT));
         }
@@ -1053,9 +1082,6 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::DOWN));
         }
-        if (window.hasFocus() && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            buttons.set(static_cast<std::size_t>(Engine::InputButtons::SHOOT));
-        }
 
         Engine::Event player_input_event(static_cast<Engine::EventId>(Engine::EventsIds::PLAYER_INPUT));
         player_input_event.setParam(0, networkManager->player_id);
@@ -1064,7 +1090,8 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         networkManager->sendInput(networkManager->player_id, networkManager->room_id, buttons);
 
         while (accumulator >= FIXED_DT) {
-            player_control_system->update(mediator, FIXED_DT);
+            player_control_system->update(networkManager, FIXED_DT);
+            physics_system->update(mediator, FIXED_DT);
             render_system->update(mediator, window);
             accumulator -= FIXED_DT;
         }

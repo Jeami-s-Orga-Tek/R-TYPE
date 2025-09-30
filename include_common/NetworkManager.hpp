@@ -22,11 +22,14 @@ namespace Engine {
     class NetworkManager {
     public:
         void createPlayer();
+        void createPlayerProjectile(float x, float y);
 
         enum class Role {
             CLIENT,
             SERVER
         };
+
+        Role getRole();
 
         enum MsgType {
             MSG_HELLO = 1,

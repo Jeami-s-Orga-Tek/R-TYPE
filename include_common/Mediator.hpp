@@ -30,7 +30,7 @@ namespace Engine {
             template <typename T> T &getComponent(Entity entity);
             template <typename T> ComponentType getComponentType();
             template <typename T> std::shared_ptr<T> registerSystem();
-            template <typename T> std::shared_ptr<T> setSystemSignature(Signature signature);
+            template <typename T> void setSystemSignature(Signature signature);
             void addEventListener(EventId eventId, std::function<void(Event &)> const &listener);
             void sendEvent(EventId eventId);
             void sendEvent(Event &event);
@@ -88,7 +88,7 @@ std::shared_ptr<T> Engine::Mediator::registerSystem()
 }
 
 template <typename T>
-std::shared_ptr<T> Engine::Mediator::setSystemSignature(Signature signature)
+void Engine::Mediator::setSystemSignature(Signature signature)
 {
     systemManager->setSignature<T>(signature);
 }

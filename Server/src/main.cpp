@@ -59,12 +59,30 @@ int main()
     mediator->registerComponent<Engine::Components::Transform>();
     mediator->registerComponent<Engine::Components::Sprite>();
     mediator->registerComponent<Engine::Components::PlayerInfo>();
+    mediator->registerComponent<Engine::Components::ShootingCooldown>();
 
     auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::RigidBody>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::PhysicsSystem>(signature);
+    }
+
     // auto render_system = mediator->registerSystem<Engine::Systems::RenderSystem>();
     
     auto player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
     player_control_system->init(mediator);
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::PlayerInfo>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Sprite>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::ShootingCooldown>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::PlayerControl>(signature);
+    }
 
     Engine::Signature signature;
     signature.set(mediator->getComponentType<Engine::Components::Gravity>());
@@ -99,19 +117,19 @@ int main()
         accumulator += frameTime;
 
         while (accumulator >= FIXED_DT) {
-            // physics_system->update(mediator, FIXED_DT);
             if (networkManager->getConnectedPlayers() >= 2 && !have_players_spawned) {
                 for (int i = 0; i < networkManager->getConnectedPlayers(); i++)
                     networkManager->createPlayer();
                 have_players_spawned = true;
             }
 
-            player_control_system->update(mediator, FIXED_DT);
+            player_control_system->update(networkManager, FIXED_DT);
+            physics_system->update(mediator, FIXED_DT);
 
-            for (int i = 0; i < networkManager->mediator->getEntityCount(); i++) {
-                const auto &comp = networkManager->mediator->getComponent<Engine::Components::Transform>(i);
-                networkManager->sendComponent(i, comp);
-            }
+            // for (int i = 0; i < networkManager->mediator->getEntityCount(); i++) {
+            //     const auto &comp = networkManager->mediator->getComponent<Engine::Components::Transform>(i);
+            //     networkManager->sendComponent(i, comp);
+            // }
             
             accumulator -= FIXED_DT;
         }        

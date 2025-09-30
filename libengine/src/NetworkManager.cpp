@@ -27,6 +27,7 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     mediator->registerComponent<Engine::Components::Transform>();
     mediator->registerComponent<Engine::Components::Sprite>();
     mediator->registerComponent<Engine::Components::PlayerInfo>();
+    mediator->registerComponent<Engine::Components::ShootingCooldown>();
 
     componentRegistry.registerType(
         typeid(Engine::Components::Gravity).name(),
@@ -66,6 +67,13 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
             // if (player_id == MAX_ENTITIES)
             //     player_id = comp->player_id;
             // std::cout << "player id pls :( " << player_id << std::endl;
+        }
+    );
+    componentRegistry.registerType(
+        typeid(Engine::Components::ShootingCooldown).name(),
+        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
+            const auto *comp = reinterpret_cast<const Engine::Components::ShootingCooldown *>(data);
+            mediator.addComponent(entity, *comp);
         }
     );
     
@@ -174,6 +182,11 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
                 break;
         }
     }
+}
+
+Engine::NetworkManager::Role Engine::NetworkManager::getRole()
+{
+    return (role);
 }
 
 Engine::NetworkManager::PacketHeader Engine::NetworkManager::createPacketHeader(MsgType type, uint32_t seq, uint32_t ack, uint32_t ack_bits)
@@ -407,6 +420,7 @@ void Engine::NetworkManager::createPlayer()
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
     signature.set(mediator->getComponentType<Engine::Components::PlayerInfo>());
+    signature.set(mediator->getComponentType<Engine::Components::ShootingCooldown>());
 
     Engine::Entity entity = mediator->createEntity();
 
@@ -420,6 +434,8 @@ void Engine::NetworkManager::createPlayer()
     mediator->addComponent(entity, player_sprite);
     const Engine::Components::PlayerInfo player_info = {.player_id = entity};
     mediator->addComponent(entity, player_info);
+    const Engine::Components::ShootingCooldown player_cooldown = {.cooldown_time = 15, .cooldown = 0};
+    mediator->addComponent(entity, player_cooldown);
 
     sendEntity(entity, signature);
     sendComponent<Engine::Components::Gravity>(entity, player_gravity);
@@ -427,6 +443,29 @@ void Engine::NetworkManager::createPlayer()
     sendComponent<Engine::Components::Transform>(entity, player_transform);
     sendComponent<Engine::Components::Sprite>(entity, player_sprite);
     sendComponent<Engine::Components::PlayerInfo>(entity, player_info);
+    sendComponent<Engine::Components::ShootingCooldown>(entity, player_cooldown);
+}
+
+void Engine::NetworkManager::createPlayerProjectile(float x, float y)
+{
+    Engine::Signature signature;
+    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
+    signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+
+    Engine::Entity entity = mediator->createEntity();
+
+    const Engine::Components::RigidBody projectile_rigidbody = {.velocity = Engine::Utils::Vec2(200.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
+    mediator->addComponent(entity, projectile_rigidbody);
+    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Vec2(x, y), .rot = 0.0f, .scale = 2.0f};
+    mediator->addComponent(entity, projectile_transform);
+    const Engine::Components::Sprite projectile_sprite = {.sprite_name = "weak_player_projectile", .frame_nb = 1};
+    mediator->addComponent(entity, projectile_sprite);
+
+    sendEntity(entity, signature);
+    sendComponent<Engine::Components::RigidBody>(entity, projectile_rigidbody);
+    sendComponent<Engine::Components::Transform>(entity, projectile_transform);
+    sendComponent<Engine::Components::Sprite>(entity, projectile_sprite);
 }
 
 int Engine::NetworkManager::getConnectedPlayers()

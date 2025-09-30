@@ -14,11 +14,14 @@
 
 #include "System.hpp"
 #include "Mediator.hpp"
+#include "NetworkManager.hpp"
 #include "Event.hpp"
 
 #include "Components/Transform.hpp"
 #include "Components/RigidBody.hpp"
 #include "Components/PlayerInfo.hpp"
+#include "Components/Sprite.hpp"
+#include "Components/ShootingCooldown.hpp"
 
 namespace Engine {
     namespace Systems {
@@ -28,9 +31,15 @@ namespace Engine {
                     mediator->addEventListener(static_cast<EventId>(EventsIds::PLAYER_INPUT), [this](Event &event) { this->inputListener(event); });
                 }
 
-                void update(std::shared_ptr<Mediator> mediator, float dt) {
+                void update(std::shared_ptr<NetworkManager> networkManager, float dt) {
+                    std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
                     for (const auto &entity : entities) {
                         auto &player_info = mediator->getComponent<Components::PlayerInfo>(entity);
+                        auto &player_cooldown = mediator->getComponent<Components::ShootingCooldown>(entity);
+
+                        if (player_cooldown.cooldown > 0)
+                            player_cooldown.cooldown--;
+
                         uint32_t player_id = player_info.player_id;
 
                         auto it = player_id_to_buttons.find(player_id);
@@ -43,17 +52,34 @@ namespace Engine {
 
                         const float accel_rate = 200.0f;
 
+                        bool has_moved = false;
+
                         if (buttons.test(static_cast<std::size_t>(InputButtons::LEFT))) {
                             transform.pos.x -= accel_rate * dt;
+                            has_moved = true;
                         }
                         if (buttons.test(static_cast<std::size_t>(InputButtons::RIGHT))) {
                             transform.pos.x += accel_rate * dt;
+                            has_moved = true;
                         }
                         if (buttons.test(static_cast<std::size_t>(InputButtons::UP))) {
                             transform.pos.y -= accel_rate * dt;
+                            has_moved = true;
                         }
                         if (buttons.test(static_cast<std::size_t>(InputButtons::DOWN))) {
                             transform.pos.y += accel_rate * dt;
+                            has_moved = true;
+                        }
+                        if (buttons.test(static_cast<std::size_t>(InputButtons::SHOOT))) {
+                            if (player_cooldown.cooldown <= 0) {
+                                if (networkManager->getRole() == NetworkManager::Role::SERVER)
+                                    networkManager->createPlayerProjectile(transform.pos.x, transform.pos.y);
+                                player_cooldown.cooldown = player_cooldown.cooldown_time;
+                            }
+                        }
+
+                        if (has_moved) {
+                            networkManager->sendComponent(entity, transform);
                         }
 
                         // auto &rigidbody = mediator->getComponent<Components::RigidBody>(entity);
