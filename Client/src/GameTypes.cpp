@@ -145,14 +145,11 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
     fps60Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 + 10, windowSize.y - 60), sf::Vector2f(80, 40));
     backButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40));
 
-    float leftColX = 50;
-    float baseY = windowSize.y - 350;
-    float spacing = 50;
-    soloButton.updatePositionAndSize(sf::Vector2f(leftColX, baseY), sf::Vector2f(100, 40));
-    duoButton.updatePositionAndSize(sf::Vector2f(leftColX, baseY + spacing), sf::Vector2f(100, 40));
-    trioButton.updatePositionAndSize(sf::Vector2f(leftColX, baseY + 2 * spacing), sf::Vector2f(100, 40));
-    squadButton.updatePositionAndSize(sf::Vector2f(leftColX, baseY + 3 * spacing), sf::Vector2f(100, 40));
-    modeButton.updatePositionAndSize(sf::Vector2f(leftColX, baseY + 4 * spacing), sf::Vector2f(100, 40));
+    soloButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 350), sf::Vector2f(100, 40));
+    duoButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 350 + 50), sf::Vector2f(100, 40));
+    trioButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 350 + 2 * 50), sf::Vector2f(100, 40));
+    squadButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 350 + 3 * 50), sf::Vector2f(100, 40));
+    modeButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 350 + 4 * 50), sf::Vector2f(100, 40));
     playButton.updatePositionAndSize(sf::Vector2f(windowSize.x - 150, windowSize.y - 100), sf::Vector2f(100, 40));
 
     lockerButton.updatePositionAndSize(sf::Vector2f(50, 50), sf::Vector2f(100, 40));
@@ -166,13 +163,12 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
                                             sf::Vector2f(125, 40));
     trophy.leaderboardRectangle.setPosition(sf::Vector2f(windowSize.x/2 - 200,windowSize.y/2 - 200));
 
-    float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
-    float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
-    resolutionButton.updatePositionAndSize(sf::Vector2f(buttonX, 200), sf::Vector2f(buttonWidth, 30));
-    displayModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 250), sf::Vector2f(buttonWidth, 30));
-    graphicsQualityButton.updatePositionAndSize(sf::Vector2f(buttonX, 300), sf::Vector2f(buttonWidth, 30));
-    colorBlindModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30));
-    controlsButton.updatePositionAndSize(sf::Vector2f(buttonX, 400), sf::Vector2f(buttonWidth, 30));
+    float buttonX = std::min((float)(windowSize.x - std::min(120.0f, windowSize.x * 0.15f) - 20), (float)(windowSize.x * 0.75f));
+    resolutionButton.updatePositionAndSize(sf::Vector2f(buttonX, 200), sf::Vector2f(std::min(120.0f, windowSize.x * 0.15f), 30));
+    displayModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 250), sf::Vector2f(std::min(120.0f, windowSize.x * 0.15f), 30));
+    graphicsQualityButton.updatePositionAndSize(sf::Vector2f(buttonX, 300), sf::Vector2f(std::min(120.0f, windowSize.x * 0.15f), 30));
+    colorBlindModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 350), sf::Vector2f(std::min(120.0f, windowSize.x * 0.15f), 30));
+    controlsButton.updatePositionAndSize(sf::Vector2f(buttonX, 400), sf::Vector2f(std::min(120.0f, windowSize.x * 0.15f), 30));
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
     applyResolutionButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450),
                                                 sf::Vector2f(applyButtonWidth, 35));
@@ -434,12 +430,10 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
 
     if (currentState == State::LAUNCH) {
         sf::FloatRect coinBounds = insertCoinText.getGlobalBounds();
-        if (coinBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-            currentState = State::MENU;
-            updateStatusTextPosition(false);
-            statusText.setString("");
-            statusText.setFillColor(sf::Color::Yellow);
-        }
+        currentState = State::MENU;
+        updateStatusTextPosition(false);
+        statusText.setString("");
+        statusText.setFillColor(sf::Color::Yellow);
     } else if (currentState == State::MENU) {
         if (username.isClicked(mousePos)) {
             isEditingUsername = true;
