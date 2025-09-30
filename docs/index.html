@@ -27,13 +27,11 @@
     html,body{margin:0;padding:0;background:var(--bg2);color:var(--text);font:16px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
     a{color:var(--brand);text-decoration:none}
     a:hover{text-decoration:underline}
-    /* Top nav */
     nav.top{position:sticky;top:0;backdrop-filter:blur(8px);background:rgba(7,10,20,.55);border-bottom:1px solid #121a31;z-index:50}
     .top-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 16px}
     .top-inner .spacer{flex:1}
     .top-inner a{padding:8px 10px;font-weight:500;color:#d6def0}
     .top-inner a:hover{color:white}
-    /* Hero */
     header.hero{position:relative;min-height:78vh;display:grid;place-items:center;overflow:hidden}
     .hero-canvas{position:absolute;inset:0;z-index:-1;background:#000}
     .hero-inner{max-width:1100px;padding:110px 20px 56px;text-align:center}
@@ -47,28 +45,24 @@
     .btn{background:linear-gradient(180deg,#1c2541,#10182b);border:1px solid #223054;color:#fff;padding:12px 18px;border-radius:999px;box-shadow:var(--shadow);font-weight:600}
     .btn:hover{transform:translateY(-2px);box-shadow:0 24px 60px rgba(0,0,0,.55)}
     .btn.alt{background:linear-gradient(180deg,#2a1341,#140a22);border-color:#3a2053}
-    /* Sections */
     main{padding:20px}
     section{max-width:1200px;margin:0 auto;padding:clamp(24px,3vw,46px) 0}
     h2{font-size:30px;margin:0 0 16px}
     .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
     .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
     .muted{color:var(--muted)}
-    /* KPI row */
     .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:18px}
     .kpi{background:rgba(18,26,46,.7);border:1px solid #17203a;border-radius:14px;padding:14px;text-align:center}
     .kpi h3{margin:0;font-size:28px}
     .kpi p{margin:4px 0 0;color:#cbd5e1;font-size:13px}
-    /* Gallery carousel */
     .carousel{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,32%);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
     .shot{scroll-snap-align:start;position:relative;border-radius:14px;overflow:hidden;border:1px solid #253456;background:#000}
     .shot img{display:block;width:100%;height:220px;object-fit:cover;filter:saturate(1.1) contrast(1.05)}
     .shot .cap{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.65));padding:8px 10px;font-size:12px;color:#d7ddff}
-    /* Code blocks */
     code,pre{background:#0f1628;border:1px solid #1c2745;border-radius:12px}
     pre{padding:14px;overflow:auto}
     /* Two-columns in architecture */
-    .cols{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+    .cols{display:grid;gap:18px;grid-template-columns:1fr 1fr}
     .mermaid{background:#0f1628;border:1px solid #1c2745;border-radius:12px;padding:16px}
     /* Timeline */
     .timeline{display:grid;gap:12px}
@@ -76,8 +70,32 @@
     /* Footer */
     footer{border-top:1px solid #111a2f;color:var(--muted);text-align:center;padding:48px 0 80px}
   </style>
-  <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>mermaid.initialize({ startOnLoad: true, theme: "dark" });</script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      mermaid.initialize({ 
+        startOnLoad: true, 
+        theme: "dark",
+        themeVariables: {
+          darkMode: true,
+          background: '#0f1628',
+          primaryColor: '#7dd3fc',
+          primaryTextColor: '#ffffff',
+          primaryBorderColor: '#1c2745',
+          lineColor: '#7dd3fc',
+          secondaryColor: '#1c2745',
+          tertiaryColor: '#0a0f1a',
+          noteTextColor: '#ffffff',
+          noteBkgColor: '#2563eb',
+          noteBorderColor: '#1d4ed8',
+          loopTextColor: '#ffffff',
+          activationBkgColor: '#1e40af',
+          activationBorderColor: '#3b82f6',
+          sequenceNumberColor: '#ffffff'
+        }
+      });
+    });
+  </script>
 </head>
 <body>
   <nav class="top">
@@ -182,9 +200,10 @@ cmake --build build --config Release
 r-type_server.exe  &amp;
 r-type_client.exe</code></pre>
         </div>
-        <div class="card">
-          <h3>Project layout</h3>
-          <pre><code>R-TYPE-main/
+      </div>
+      <div class="card" style="margin-top: 18px;">
+        <h3>Project layout</h3>
+        <pre><code>R-TYPE-main/
   CI.md
   CMakeLists.txt
   README.md
@@ -267,7 +286,6 @@ libengine/
     SystemManager.cpp
 sound/
 sprite/</code></pre>
-        </div>
       </div>
     </section>
 
@@ -277,42 +295,68 @@ sprite/</code></pre>
         <div class="card">
           <div class="mermaid">
 flowchart LR
-  subgraph Client[Client (SFML)]
-    Input[Input] -->|events| ECS_Cl[ECS]
-    Render[Render] --> ECS_Cl
-    NetC[UDP Client] --> ECS_Cl
+  subgraph Client["Client (SFML)"]
+    Input["Input"] -->|events| ECS_Cl["ECS"]
+    Render["Render"] --> ECS_Cl
+    NetC["UDP Client"] --> ECS_Cl
   end
 
-  subgraph Engine[ECS Engine]
-    Entities &amp; Components &amp; Systems
-    Mediator -. decouples .- Entities
+  subgraph Engine["ECS Engine"]
+    Entities["Entities"]
+    Components["Components"]
+    Systems["Systems"]
+    Mediator["Mediator"]
+    Mediator -.-> Entities
+    Mediator -.-> Components
+    Mediator -.-> Systems
   end
 
-  subgraph Server[Server (Boost.Asio UDP)]
-    NetS[UDP Server] --> GameLoop
+  subgraph Server["Server (Boost.Asio UDP)"]
+    NetS["UDP Server"] --> GameLoop["GameLoop"]
     GameLoop -->|snapshots| NetS
-    Auth[Authoritative Rules]
+    Auth["Authoritative Rules"]
   end
 
-  Client &lt;-- UDP binary protocol --&gt; Server
-  ECS_Cl .- uses .- Engine
+  Client <--> Server
+  ECS_Cl -.-> Engine
           </div>
         </div>
         <div class="card">
           <h3>Networking protocol</h3>
           <div class="mermaid">
 sequenceDiagram
-  participant C as Client
-  participant S as Server
-  C->>S: HELLO (connect)
-  S-->>C: WELCOME (playerId)
-  loop Heartbeat
-    C->>S: PING(seq)
-    S-->>C: PONG(seq)
-    S-->>C: SNAPSHOT(state)
+  participant C as "Client"
+  participant S as "Server"
+  
+  rect rgb(16, 68, 151)
+    Note over C,S: Connection Phase
+    C->>+S: UDP_CONNECT
+    S-->>-C: WELCOME + PlayerID
+  end
+  
+  rect rgb(21, 128, 61)
+    Note over C,S: Lobby Phase
+    C->>+S: JOIN_LOBBY (mode)
+    S-->>C: LOBBY_STATE (players)
+    C->>S: READY
+    S-->>-C: GAME_START
+  end
+  
+  rect rgb(194, 65, 12)
+    Note over C,S: Game Loop (60 FPS)
+    C->>+S: INPUT (keys, mouse)
+    Note over S: Process inputs<br/>Update entities
+    S-->>-C: WORLD_STATE (positions)
+    Note over C,S: Repeat every 16ms
+  end
+  
+  rect rgb(107, 33, 168)
+    Note over C,S: Disconnection
+    C->>+S: DISCONNECT
+    S-->>-C: ACK_DISCONNECT
   end
           </div>
-          <p class="muted">Server is authoritative; heartbeats keep connections healthy and drive world snapshots.</p>
+          <p class="muted">UDP-based protocol with authoritative server handling inputs and broadcasting world state to all clients.</p>
         </div>
       </div>
     </section>
@@ -349,7 +393,6 @@ sequenceDiagram
   <footer>© 2025 R·TYPE student project — All trademarks are property of their respective owners.</footer>
 
   <script>
-  // Tiny starfield
   const canvas = document.getElementById('starfield');
   const ctx = canvas.getContext('2d');
   let w, h, stars=[];
