@@ -10,6 +10,8 @@
 #define GAMETYPES_HPP_
 
 #include <SFML/Graphics.hpp>
+#include <cstdint>
+
 #include "Button.hpp"
 #include "Menu.hpp"
 #include "Parameters.hpp"
@@ -22,15 +24,17 @@
 #include "ControlsConfig.hpp"
 #include "Leaderboard.hpp"
 #include "Username.hpp"
-#include "net/NetworkClient.hpp"
-#include "net/Protocol.hpp"
+#include "Mediator.hpp"
+#include "NetworkManager.hpp"
+
+#include "Systems/Physics.hpp"
+#include "Systems/Render.hpp"
+#include "Systems/PlayerControl.hpp"
 
 enum class State {
     LAUNCH,
     MENU,
     LOBBY,
-    ROOM_LIST,
-    IN_ROOM,
     GAME,
     LOCKER,
     LEADERBOARD,
@@ -105,15 +109,6 @@ class GameManager {
         ParticleSystem particleSystem;
         sf::Clock deltaClock;
         
-        std::unique_ptr<NetworkClient> networkClient;
-        std::string playerName;
-        std::vector<RtypeServer::RoomInfoEntry> availableRooms;
-        std::string currentRoomName;
-        bool inRoom;
-        bool waitingRoomAction = false;
-        std::string waitingRoomName;
-        uint8_t waitingRoomMaxPlayers = 1;
-
         State currentState;
         ServerState isConnected;
 
@@ -126,6 +121,13 @@ class GameManager {
 
         bool isEditingUsername;
         size_t cursorPos;
+        std::shared_ptr<Engine::Systems::PhysicsSystem> physics_system {};
+        std::shared_ptr<Engine::Systems::RenderSystem> render_system {};
+        std::shared_ptr<Engine::Systems::PlayerControl> player_control_system {};
+
+        std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
+        std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
+        std::shared_ptr<Engine::NetworkManager> networkManager;
 
     public:
         GameManager(sf::Vector2u windowSize);
@@ -142,6 +144,10 @@ class GameManager {
         void cycleGraphicsQuality();
         void cycleColorBlindMode();
         void applyCurrentResolution(sf::RenderWindow& window);
+
+        void createMediator();
+        void initMediator();
+        void initMediatorNetwork(const std::string &address, uint16_t port);
         void gameDemo(sf::RenderWindow &window);
         void addWaitingPlayer() { waitingPlayersCounter++; }
         void removeWaitingPlayer() { if (waitingPlayersCounter > 0) waitingPlayersCounter--; }
@@ -149,14 +155,6 @@ class GameManager {
 
         State getCurrentState() const { return currentState; }
         int getCurrentFps() const { return currentFps; }
-        
-        void initializeNetworking(const std::string& playerName);
-        void connectToServerWithRooms(const std::string& serverIP, unsigned short port);
-        void createRoom(const std::string& roomName, uint8_t maxPlayers = 4);
-        void joinRoom(const std::string& roomName);
-        void leaveRoom();
-        void refreshRoomList();
-        void sendRoomMessage(const std::string& message);
         
     private:
 
@@ -166,27 +164,6 @@ class GameManager {
         void handleWindowResize(sf::Event& event);
         void updateStatusTextPosition(bool isParametersMode = false);
         bool connectToServer(const std::string& serverIP, unsigned short port);
-        
-        void onConnected(uint32_t playerId);
-        void onRoomCreated(const RtypeServer::RoomCreatedBody& body);
-        void onRoomJoined(const RtypeServer::RoomJoinedBody& body);
-        void onRoomLeft(const RtypeServer::RoomLeftBody& body);
-        void onRoomList(const RtypeServer::RoomListBody& body);
-        void onRoomMessage(const RtypeServer::RoomMessageBody& body);
-        void onRoomError(const RtypeServer::RoomErrorBody& body);
-        
-        void renderRoomList(sf::RenderWindow& window);
-        void renderInRoom(sf::RenderWindow& window);
 };
-
-static int getMaxPlayersForMode(GameMode mode) {
-    switch (mode) {
-        case GameMode::SOLO: return 1;
-        case GameMode::DUO: return 2;
-        case GameMode::TRIO: return 3;
-        case GameMode::SQUAD: return 4;
-        default: return 1;
-    }
-}
 
 #endif /* !GAMETYPES_HPP_ */

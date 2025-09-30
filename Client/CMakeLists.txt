@@ -10,12 +10,12 @@ include_directories(../include_common)
 
 include_directories(include)
 
-file(GLOB SOURCES src/*.cpp src/net/*.cpp)
+file(GLOB SOURCES src/*.cpp)
 
 include(../cmake/CPM.cmake)
 
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
-# set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -fsanitize=address,leak -fno-omit-frame-pointer")
+# set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -g3 -fsanitize=address,leak -fno-omit-frame-pointer")
 
 CPMAddPackage("gh:sfml/sfml#2.6.2")
 CPMAddPackage(

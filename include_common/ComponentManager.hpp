@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include <stdexcept>
 
 #include "Entity.hpp"
 #include "ComponentArray.hpp"
@@ -50,7 +51,7 @@ void Engine::ComponentManager::registerComponent()
     const std::string type_name = typeid(T).name();
     
     if (component_types.find(type_name) != component_types.end())
-        throw Engine::ComponentManagerError("Trying to register component already in component manager !!!!");
+        throw std::runtime_error("Trying to register component already in component manager !!!!");
 
     component_types.insert({type_name, next_component_type});
     component_arrays.insert({type_name, std::make_shared<Engine::ComponentArray<T>>()});
@@ -64,7 +65,7 @@ std::shared_ptr<Engine::ComponentArray<T>> Engine::ComponentManager::getComponen
     const std::string type_name = typeid(T).name();
 
     if (component_types.find(type_name) == component_types.end())
-        throw Engine::ComponentManagerError("Trying to get component array not in component manager !!!!");
+        throw std::runtime_error("Trying to get component array not in component manager !!!!");
 
     return (std::static_pointer_cast<Engine::ComponentArray<T>>(component_arrays[type_name]));
 }
@@ -75,7 +76,7 @@ Engine::ComponentType Engine::ComponentManager::getComponentType()
     const std::string type_name = typeid(T).name();
 
     if (component_types.find(type_name) == component_types.end())
-        throw Engine::ComponentManagerError("Trying to get component not in component manager !!!!");
+        throw std::runtime_error("Trying to get component not in component manager !!!!");
 
     return (component_types[type_name]);
 }

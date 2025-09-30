@@ -27,9 +27,6 @@ GameManager::GameManager(sf::Vector2u windowSize)
       gameMode(GameMode::SOLO),
       trophy(windowSize),
       particleSystem(windowSize, 300),
-      networkClient(nullptr),
-      playerName("Player"),
-      inRoom(false),
       currentState(State::LAUNCH),
       isConnected(ServerState::DEFAULT),
       UsernameGame(""),
@@ -40,7 +37,31 @@ GameManager::GameManager(sf::Vector2u windowSize)
       isEditingUsername(false),
       cursorPos(0)
 {
-    if (!font.loadFromFile("assets/r-type.otf")) {
+    void *handle = dlopen("libengine.so", RTLD_LAZY);
+    if (!handle) {
+        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+        throw std::runtime_error("");
+    }
+
+    createMediatorFunc = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+    char *error = dlerror();
+    if (error) {
+        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+        dlclose(handle);
+        throw std::runtime_error("");
+    }
+
+    createNetworkManagerFunc = (std::shared_ptr<Engine::NetworkManager> (*)(Engine::NetworkManager::Role, const std::string &, uint16_t))(dlsym(handle, "createNetworkManager"));
+    error = dlerror();
+    if (error) {
+        std::cerr << "Cannot load symbol 'createNetworkManager': " << error << std::endl;
+        dlclose(handle);
+        throw std::runtime_error("");
+    }
+
+    dlclose(handle);
+
+    if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
         std::cerr << "Unable to load Carlito font, trying Symbola..." << std::endl;
     }
 
@@ -355,8 +376,6 @@ void GameManager::render(sf::RenderWindow& window) {
     } else if (currentState == State::LOBBY) {
         player.draw(window);
         window.draw(numberPlayerToWait);
-    } else if (currentState == State::ROOM_LIST) {
-    } else if (currentState == State::IN_ROOM) {
     } else if (currentState == State::LOCKER) {
         player.draw(window);
         leftButtonSelection.draw(window);
@@ -433,6 +452,17 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
         updateStatusTextPosition(false);
         statusText.setString("");
         statusText.setFillColor(sf::Color::Yellow);
+        if (connectToServer("127.0.0.1", 8080)) {
+            statusText.setString("Connected to the server !");
+            statusText.setFillColor(sf::Color::Green);
+            isConnected = ServerState::CONNECT;
+            currentState = State::MENU;
+        } else {
+            statusText.setString("Connection failed");
+            statusText.setFillColor(sf::Color::Red);
+            isConnected = ServerState::DISCONNECT;
+            currentState = State::ERRORSERVER;
+        }
     } else if (currentState == State::MENU) {
         if (username.isClicked(mousePos)) {
             isEditingUsername = true;
@@ -475,35 +505,10 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             statusText.setString("");
         }
         if (playButton.isClicked(mousePos)) {
-            std::string roomName;
-            uint8_t maxPlayers = 1;
-            if (gameMode == GameMode::DUO) {
-                roomName = "DuoRoom";
-                maxPlayers = 2;
-            } else if (gameMode == GameMode::TRIO) {
-                roomName = "TrioRoom";
-                maxPlayers = 3;
-            } else if (gameMode == GameMode::SQUAD) {
-                roomName = "SquadRoom";
-                maxPlayers = 4;
-            }
-            if (maxPlayers > 1) {
-                if (!networkClient) {
-                    initializeNetworking("Player");
-                    connectToServerWithRooms("127.0.0.1", 8080);
-                }
-                this->waitingRoomAction = true;
-                this->waitingRoomName = roomName;
-                this->waitingRoomMaxPlayers = maxPlayers;
-                refreshRoomList();
-            }
             currentState = State::LOBBY;
             updateStatusTextPosition(true);
             statusText.setString("");
         }
-    bool waitingRoomAction = false;
-    std::string waitingRoomName;
-    uint8_t waitingRoomMaxPlayers = 1;
     } else if (currentState == State::SETTINGS) {
         if (backButton.isClicked(mousePos)) {
             if (isConnected == ServerState::CONNECT) {
@@ -571,6 +576,7 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             player.starshipSprite.setTextureRect(player.starshipRect);
         }
     } else if (currentState == State::LOBBY) {
+
     } else if (currentState == State::LEADERBOARD) {
         if (backButton.isClicked(mousePos)) {
             currentState = State::MENU;
@@ -682,58 +688,68 @@ void GameManager::updateStatusTextPosition(bool isParametersMode)
 
 bool GameManager::connectToServer(const std::string& serverIP, unsigned short port)
 {
-    return (true);
+    networkManager = createNetworkManagerFunc(Engine::NetworkManager::Role::CLIENT, serverIP, port);
 
-    try {
-        boost::asio::io_context io_context;
-        udp::socket socket(io_context);
-        udp::resolver resolver(io_context);   
-        udp::resolver::results_type endpoints = resolver.resolve(udp::v4(), serverIP, std::to_string(port));
-        udp::endpoint server_endpoint = *endpoints.begin();
+    physics_system = networkManager->mediator->registerSystem<Engine::Systems::PhysicsSystem>();
+    render_system = networkManager->mediator->registerSystem<Engine::Systems::RenderSystem>();
+    
+    player_control_system = networkManager->mediator->registerSystem<Engine::Systems::PlayerControl>();
+    player_control_system->init(networkManager->mediator);
+
+    // TEMP
+    networkManager->send_hello("BASSIROU", 12345);
+
+    return (true);
+    // try {
+    //     boost::asio::io_context io_context;
+    //     udp::socket socket(io_context);
+    //     udp::resolver resolver(io_context);   
+    //     udp::resolver::results_type endpoints = resolver.resolve(udp::v4(), serverIP, std::to_string(port));
+    //     udp::endpoint server_endpoint = *endpoints.begin();
         
-        socket.open(udp::v4());
-        std::string message = "CONNECT";
-        std::cout << "Sending connection message to server " << serverIP << ":" << port << std::endl;
-        boost::system::error_code send_error;
-        size_t bytes_sent = socket.send_to(boost::asio::buffer(message), server_endpoint, 0, send_error);
+    //     socket.open(udp::v4());
+    //     std::string message = "CONNECT";
+    //     std::cout << "Sending connection message to server " << serverIP << ":" << port << std::endl;
+    //     boost::system::error_code send_error;
+    //     size_t bytes_sent = socket.send_to(boost::asio::buffer(message), server_endpoint, 0, send_error);
         
-        if (send_error) {
-            std::cerr << "Error sending: " << send_error.message() << std::endl;
-            return false;
-        }
-        std::cout << "Message envoyé (" << bytes_sent << " bytes)" << std::endl;
-        socket.non_blocking(true);
-        char buffer[1024];
-        udp::endpoint sender_endpoint;
-        auto start_time = std::chrono::steady_clock::now();
-        const auto timeout = std::chrono::seconds(5);
+    //     if (send_error) {
+    //         std::cerr << "Error sending: " << send_error.message() << std::endl;
+    //         return false;
+    //     }
+    //     std::cout << "Message envoyé (" << bytes_sent << " bytes)" << std::endl;
+    //     socket.non_blocking(true);
+    //     char buffer[1024];
+    //     udp::endpoint sender_endpoint;
+    //     auto start_time = std::chrono::steady_clock::now();
+    //     const auto timeout = std::chrono::seconds(5);
         
-        while (std::chrono::steady_clock::now() - start_time < timeout) {
-            boost::system::error_code receive_error;
-            size_t bytes_received = socket.receive_from(
-                boost::asio::buffer(buffer), 
-                sender_endpoint, 
-                0, 
-                receive_error
-            );
-            if (!receive_error && bytes_received > 0) {
-                std::string response(buffer, bytes_received);
-                std::cout << "Server response: " << response << std::endl;
-                socket.close();
-                return true;
-            } else if (receive_error != boost::asio::error::would_block) {
-                std::cerr << "Error receiving: " << receive_error.message() << std::endl;
-                break;
-            }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-        std::cout << "Timeout - No response from server" << std::endl;
-        socket.close();
-        return false;
-    } catch (const std::exception& e) {
-        std::cerr << "Connection exception: " << e.what() << std::endl;
-        return false;
-    }
+    //     while (std::chrono::steady_clock::now() - start_time < timeout) {
+    //         boost::system::error_code receive_error;
+    //         size_t bytes_received = socket.receive_from(
+    //             boost::asio::buffer(buffer), 
+    //             sender_endpoint, 
+    //             0, 
+    //             receive_error
+    //         );
+    //         if (!receive_error && bytes_received > 0) {
+    //             std::string response(buffer, bytes_received);
+    //             std::cout << "Server response: " << response << std::endl;
+    //             socket.close();
+    //             return true;
+    //         } else if (receive_error != boost::asio::error::would_block) {
+    //             std::cerr << "Error receiving: " << receive_error.message() << std::endl;
+    //             break;
+    //         }
+    //         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    //     }
+    //     std::cout << "Timeout - No response from server" << std::endl;
+    //     socket.close();
+    //     return false;
+    // } catch (const std::exception& e) {
+    //     std::cerr << "Connection exception: " << e.what() << std::endl;
+    //     return false;
+    // }
 }
 
 void GameManager::cycleResolution()
@@ -878,52 +894,106 @@ void GameManager::applyCurrentResolution(sf::RenderWindow& window)
     handleWindowResize(resizeEvent);
 }
 
+// void GameManager::createMediator()
+// {
+//     void *handle = dlopen("libengine.so", RTLD_LAZY);
+//     if (!handle) {
+//         std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+//         return;
+//     }
+
+//     std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+//     const char *error = dlerror();
+//     if (error) {
+//         std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+//         dlclose(handle);
+//         throw std::runtime_error("");
+//     }
+
+//     this->createNetworkManagerFunc = (std::shared_ptr<Engine::NetworkManager> (*)(Engine::NetworkManager::Role, const std::string &, uint16_t))(dlsym(handle, "createNetworkManager"));
+//     error = dlerror();
+//     if (error) {
+//         std::cerr << "Cannot load symbol 'createNetworkManager': " << error << std::endl;
+//         dlclose(handle);
+//         throw std::runtime_error("");
+//     }
+
+//     this->mediator = createMediatorFunc();
+
+//     dlclose(handle);
+// }
+
+// void GameManager::initMediator()
+// {
+//     if (!mediator)
+//         return;
+
+//     mediator->init();
+// }
+
+// void GameManager::initMediatorNetwork(const std::string &address, uint16_t port)
+// {
+//     if (!mediator)
+//         return;
+
+//     mediator->initNetworkManager(Engine::NetworkManager::Role::CLIENT, address, port);
+// }
+
 void GameManager::gameDemo(sf::RenderWindow &window)
 {
-    void *handle = dlopen("libengine.so", RTLD_LAZY);
-    if (!handle) {
-        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
-        return;
-    }
+    // window.setFramerateLimit(0);
 
-    std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
-    const char *error = dlerror();
-    if (error) {
-        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
-        dlclose(handle);
-        return;
-    }
-    std::shared_ptr<Engine::Mediator> mediator = createMediatorFunc();
-    mediator->init();
+    // void *handle = dlopen("libengine.so", RTLD_LAZY);
+    // if (!handle) {
+    //     std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+    //     return;
+    // }
 
-    mediator->registerComponent<Engine::Components::Gravity>();
-    mediator->registerComponent<Engine::Components::RigidBody>();
-    mediator->registerComponent<Engine::Components::Transform>();
-    mediator->registerComponent<Engine::Components::Sprite>();
+    // std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
+    // const char *error = dlerror();
+    // if (error) {
+    //     std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
+    //     dlclose(handle);
+    //     return;
+    // }
 
-    auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
-    auto render_system = mediator->registerSystem<Engine::Systems::RenderSystem>();
+    // void (*deleteMediatorFunc)(Engine::Mediator*) = (void (*)(Engine::Mediator*))(dlsym(handle, "deleteMediator"));
+    // error = dlerror();
+    // if (error) {
+    //     std::cerr << "Cannot load symbol 'deleteMediator': " << error << std::endl;
+    //     dlclose(handle);
+    //     return (84);
+    // }
+
+    // std::shared_ptr<Engine::Mediator> mediator = createMediatorFunc();
+
+    // networkManager->mediator = createMediatorFunc();
+    std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
+    // mediator->init();
+
+    // auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
+    // auto render_system = mediator->registerSystem<Engine::Systems::RenderSystem>();
     
-    auto player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
-    player_control_system->init(mediator);
+    // auto player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
+    // player_control_system->init(mediator);
 
     render_system->addSprite("player", "assets/sprites/r-typesheet1.gif", {32, 14}, {101, 3}, 10, 1);
 
-    Engine::Signature signature;
-    signature.set(mediator->getComponentType<Engine::Components::Gravity>());
-    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
-    signature.set(mediator->getComponentType<Engine::Components::Transform>());
-    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    // Engine::Signature signature;
+    // signature.set(mediator->getComponentType<Engine::Components::Gravity>());
+    // signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
+    // signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    // signature.set(mediator->getComponentType<Engine::Components::Sprite>());
 
-    const int entity_number = 4;
+    int entity_number = 0;
 
-    for (int i = 0; i < entity_number; i++) {
-        Engine::Entity entity = mediator->createEntity();
-        mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
-        mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
-        mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
-        mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
-    }
+    // for (int i = 0; i < entity_number; i++) {
+    //     Engine::Entity entity = mediator->createEntity();
+    //     mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
+    //     mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
+    //     mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
+    //     mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
+    // }
 
     const float FIXED_DT = 1.0f / 60.0f;
     float accumulator = 0.0f;
@@ -959,222 +1029,44 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             fps = frame_count / fps_timer;
             frame_count = 0;
             fps_timer = 0.0f;
-            fps_text.setString(std::to_string(entity_number) + " entites pour FPS " + std::to_string((int)(fps)));
+            fps_text.setString(std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)));
         }
 
         window.clear(sf::Color::Black);
 
         buttons.reset();
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::LEFT));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::RIGHT));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::UP));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::DOWN));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        if (window.hasFocus() && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
             buttons.set(static_cast<std::size_t>(Engine::InputButtons::SHOOT));
         }
 
         Engine::Event player_input_event(static_cast<Engine::EventId>(Engine::EventsIds::PLAYER_INPUT));
-        player_input_event.setParam(0, buttons);
+        player_input_event.setParam(0, networkManager->player_id);
+        player_input_event.setParam(1, buttons);
         mediator->sendEvent(player_input_event);
+        networkManager->sendInput(networkManager->player_id, networkManager->room_id, buttons);
 
         while (accumulator >= FIXED_DT) {
             player_control_system->update(mediator, FIXED_DT);
-            render_system->update(mediator, window, FIXED_DT);
+            render_system->update(mediator, window);
             accumulator -= FIXED_DT;
         }
 
         window.draw(fps_text);
         window.display();
     }
-    dlclose(handle);
+
+    // deleteMediatorFunc(mediator);
+    // dlclose(handle);
 }
-
-void GameManager::initializeNetworking(const std::string& playerName)
-{
-    this->playerName = playerName;
-    networkClient = std::make_unique<NetworkClient>();
-
-    networkClient->setConnectedCallback([this](uint32_t playerId) {
-        onConnected(playerId);
-    });
-    
-    networkClient->setRoomCreatedCallback([this](const RoomCreatedBody& body) {
-        onRoomCreated(body);
-    });
-    
-    networkClient->setRoomJoinedCallback([this](const RoomJoinedBody& body) {
-        onRoomJoined(body);
-    });
-    
-    networkClient->setRoomLeftCallback([this](const RoomLeftBody& body) {
-        onRoomLeft(body);
-    });
-    
-    networkClient->setRoomListCallback([this](const RoomListBody& body) {
-        onRoomList(body);
-    });
-    
-    networkClient->setRoomMessageCallback([this](const RoomMessageBody& body) {
-        onRoomMessage(body);
-    });
-    
-    networkClient->setRoomErrorCallback([this](const RoomErrorBody& body) {
-        onRoomError(body);
-    });
-}
-
-void GameManager::connectToServerWithRooms(const std::string& serverIP, unsigned short port)
-{
-    if (!networkClient) {
-        initializeNetworking(playerName);
-    }
-    
-    if (networkClient->connect(serverIP, port, playerName)) {
-        isConnected = ServerState::CONNECT;
-        statusText.setString("Connecting to server...");
-    } else {
-        isConnected = ServerState::DISCONNECT;
-        statusText.setString("Failed to connect to server");
-        currentState = State::ERRORSERVER;
-    }
-}
-
-void GameManager::createRoom(const std::string& roomName, uint8_t maxPlayers)
-{
-    if (networkClient && networkClient->isConnected()) {
-        networkClient->createRoom(roomName, maxPlayers);
-    }
-}
-
-void GameManager::joinRoom(const std::string& roomName)
-{
-    if (networkClient && networkClient->isConnected()) {
-        networkClient->joinRoom(roomName);
-    }
-}
-
-void GameManager::leaveRoom()
-{
-    if (networkClient && networkClient->isConnected()) {
-        networkClient->leaveRoom();
-    }
-}
-
-void GameManager::refreshRoomList()
-{
-    if (networkClient && networkClient->isConnected()) {
-        networkClient->listRooms();
-    }
-}
-
-void GameManager::sendRoomMessage(const std::string& message)
-{
-    if (networkClient && networkClient->isConnected()) {
-        networkClient->sendMessage(message);
-    }
-}
-
-void GameManager::onConnected(uint32_t playerId)
-{
-    std::cout << "Connected to server! Player ID: " << playerId << std::endl;
-    isConnected = ServerState::CONNECT;
-    statusText.setString("");
-    refreshRoomList();
-}
-
-void GameManager::onRoomCreated(const RtypeServer::RoomCreatedBody& body)
-{
-    if (body.success) {
-        std::cout << "Room '" << body.roomName << "' created successfully!" << std::endl;
-        statusText.setString("");
-        currentRoomName = body.roomName;
-        inRoom = true;
-    } else {
-        std::cout << "Failed to create room '" << body.roomName << "'" << std::endl;
-        statusText.setString("Failed to create room");
-    }
-}
-
-void GameManager::onRoomJoined(const RtypeServer::RoomJoinedBody& body)
-{
-    if (body.success) {
-        std::cout << "Joined room '" << body.roomName << "' with " << (int)body.playerCount << " players" << std::endl;
-        statusText.setString("");
-        currentRoomName = body.roomName;
-        inRoom = true;
-        
-    int maxPlayers = getMaxPlayersForMode(gameMode);
-    numberPlayerToWait.setString("Waiting players: " + std::to_string(body.playerCount) + "/" + std::to_string(maxPlayers));
-        
-        refreshRoomList();
-    } else {
-        std::cout << "Failed to join room '" << body.roomName << "'" << std::endl;
-        statusText.setString("Failed to join room");
-    }
-}
-
-void GameManager::onRoomLeft(const RtypeServer::RoomLeftBody& body)
-{
-    if (body.success) {
-        std::cout << "Left room successfully" << std::endl;
-        statusText.setString("");
-        currentRoomName.clear();
-        inRoom = false;
-        
-        numberPlayerToWait.setString("Waiting players: 0/");
-        refreshRoomList();
-    } else {
-        std::cout << "Failed to leave room" << std::endl;
-        statusText.setString("Failed to leave room");
-    }
-}
-
-void GameManager::onRoomList(const RtypeServer::RoomListBody& body)
-{
-    availableRooms = body.rooms;
-    
-    if (currentState == State::LOBBY && !currentRoomName.empty()) {
-        for (const auto& r : availableRooms) {
-            if (r.roomName == currentRoomName) {
-                int maxPlayers = getMaxPlayersForMode(gameMode);
-                numberPlayerToWait.setString("Waiting players: " + std::to_string(r.currentPlayers) + "/" + std::to_string(maxPlayers));
-                break;
-            }
-        }
-    }
-    if (this->waitingRoomAction) {
-        bool found = false;
-        for (const auto& r : availableRooms) {
-            if (r.roomName == this->waitingRoomName) {
-                found = true;
-                break;
-            }
-        }
-        if (found) {
-            joinRoom(this->waitingRoomName);
-        } else {
-            createRoom(this->waitingRoomName, this->waitingRoomMaxPlayers);
-        }
-        this->waitingRoomAction = false;
-    }
-}
-
-void GameManager::onRoomMessage(const RtypeServer::RoomMessageBody& body)
-{
-    std::cout << "[Room] " << body.senderName << ": " << body.message << std::endl;
-}
-
-void GameManager::onRoomError(const RtypeServer::RoomErrorBody& body)
-{
-    std::cout << "Room error: " << body.errorMessage << std::endl;
-    statusText.setString("Error: " + body.errorMessage);
-}
-
