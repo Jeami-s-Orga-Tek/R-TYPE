@@ -429,7 +429,6 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
     if (currentState == State::LAUNCH) {
-        sf::FloatRect coinBounds = insertCoinText.getGlobalBounds();
         currentState = State::MENU;
         updateStatusTextPosition(false);
         statusText.setString("");
