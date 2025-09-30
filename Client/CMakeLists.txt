@@ -37,6 +37,7 @@ target_link_libraries(r-type_client PRIVATE
   sfml-window
   sfml-system
   ${SFML_LIBRARIES}
-  ${Boost_LIBRARIES}
+  Boost::system
+  Boost::asio
   pthread
 )
