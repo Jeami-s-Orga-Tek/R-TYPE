@@ -61,7 +61,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
 
     dlclose(handle);
 
-    if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
+    if (!font.loadFromFile("assets/r-type.otf")) {
         std::cerr << "Unable to load Carlito font, trying Symbola..." << std::endl;
     }
     if (!username.loadFile()) {
@@ -382,6 +382,7 @@ void GameManager::render(sf::RenderWindow& window) {
         player.draw(window);
     } else if (currentState == State::LEADERBOARD) {
         trophy.draw(window);
+        backButton.draw(window);
     } else if (currentState == State::GAME) {
         // window.close();
         gameDemo(window);
@@ -596,6 +597,10 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             player.starshipRect.top = newTop;
             player.starshipSprite.setTextureRect(player.starshipRect);
         }
+    } else if (currentState == State::LEADERBOARD) {
+        if (backButton.isClicked(mousePos)) {
+            currentState = State::MENU;
+        }
     } else if (currentState == State::LOBBY) {
     } else if (currentState == State::ERRORSERVER) {
         if (paramButton.isClicked(mousePos)) {
@@ -634,6 +639,8 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
         applyButtonLocker.setHovered(applyButtonLocker.isClicked(mousePos));
         leftButtonSelection.setHovered(leftButtonSelection.isClicked(mousePos));
         rightButtonSelection.setHovered(rightButtonSelection.isClicked(mousePos));
+    } else if (currentState == State::LEADERBOARD) {
+        backButton.setHovered(backButton.isClicked(mousePos));
     } else if (currentState == State::CONTROLS) {
         backButton.setHovered(backButton.isClicked(mousePos));
     } else if (currentState == State::LOBBY) {
