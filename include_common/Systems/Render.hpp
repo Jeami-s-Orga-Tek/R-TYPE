@@ -8,8 +8,6 @@
 #ifndef RENDER_HPP_
 #define RENDER_HPP_
 
-//TEMP SYSTEM THIS IS BAD AND JUST FOR TESTING !!!! !!!! !! !
-#include <SFML/Graphics.hpp>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -18,6 +16,7 @@
 #include "Mediator.hpp"
 #include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
+#include "Renderer.hpp"
 
 namespace Engine {
     namespace Systems {
@@ -33,60 +32,51 @@ namespace Engine {
         };
 
         typedef struct Sprite_s {
+            std::string texture_name;
             Utils::Vec2 size;
             Utils::Vec2 pos;
             std::uint32_t frames;
-            // std::vector<std::byte> img_data {};
-            sf::Texture texture {};
-            sf::Sprite sprite {};
         } Sprite;
 
         class RenderSystem : public System {
             public:
-                void addSprite(const std::string &sprite_name, const std::string &img_path, const Utils::Vec2 &size, const Utils::Vec2 &pos, std::uint32_t frames, std::uint32_t frame_nb) {
+                void addTexture(std::shared_ptr<Engine::Renderer> renderer, const std::string &texture_name, const std::string &file_path) {
+                    renderer->loadTexture(texture_name, file_path);
+                }
+
+                void addSprite(std::shared_ptr<Engine::Renderer> renderer, const std::string &sprite_name, const std::string &texture_name, const Utils::Vec2 &size, const Utils::Vec2 &pos, std::uint32_t frames, std::uint32_t frame_nb) {
+                    renderer->createSprite(sprite_name, texture_name);
+
                     Sprite sprite {};
-                    if (!sprite.texture.loadFromFile(img_path)) {
-                        throw SpriteError("Couldn't load sprite texture from img file D:");
-                    }
-                    sprite.sprite.setTexture(sprite.texture);
-                    sprite.sprite.setTextureRect({
-                        static_cast<int>(pos.x * frame_nb),
-                        static_cast<int>(pos.y),
-                        static_cast<int>(size.x),
-                        static_cast<int>(size.y)
-                    });
-                    sprite.frames = frames;
                     sprite.size = size;
                     sprite.pos = pos;
-
+                    sprite.frames = frames;
+                    sprite.texture_name = texture_name;
                     sprites.insert({sprite_name, sprite});
                 }
 
-                void update(std::shared_ptr<Mediator> mediator, sf::RenderWindow &window) {
+                void update(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator) {
                     for (const auto &entity : entities) {
                         const auto &transform = mediator->getComponent<Components::Transform>(entity);
-                        // sf::RectangleShape rectangle(sf::Vector2f(50.f, 50.f));
-                        // rectangle.setPosition(transform.pos.x, transform.pos.y);
-                        // window.draw(rectangle);
-
                         const auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
+
                         auto sprite_find = sprites.find(entity_sprite.sprite_name);
                         if (sprite_find == sprites.end()) {
                             throw SpriteError("Couldn't find sprite for an entity D:");
                         }
                         auto &sprite = sprite_find->second;
-                        sprite.sprite.setTexture(sprite.texture);
-                        sprite.sprite.setPosition({transform.pos.x, transform.pos.y});
-                        sprite.sprite.setRotation(transform.rot);
-                        sprite.sprite.setTextureRect({
+
+                        renderer->setSpriteTexture(entity_sprite.sprite_name, sprite.texture_name);
+                        renderer->setSpriteTextureRect(entity_sprite.sprite_name,
                             static_cast<int>(sprite.pos.x * entity_sprite.frame_nb),
                             static_cast<int>(sprite.pos.y),
                             static_cast<int>(sprite.size.x),
                             static_cast<int>(sprite.size.y)
-                        });
-                        sprite.sprite.setScale({transform.scale, transform.scale});
-
-                        window.draw(sprite.sprite);
+                        );
+                        renderer->setSpritePosition(entity_sprite.sprite_name, transform.pos.x, transform.pos.y);
+                        renderer->setSpriteRotation(entity_sprite.sprite_name, transform.rot);
+                        renderer->setSpriteScale(entity_sprite.sprite_name, transform.scale);
+                        renderer->drawSprite(entity_sprite.sprite_name);
                     }
                 };
 

@@ -26,6 +26,7 @@
 #include "Username.hpp"
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
+#include "Renderer.hpp"
 
 #include "Systems/Physics.hpp"
 #include "Systems/Render.hpp"
@@ -129,6 +130,7 @@ class GameManager {
         std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
         std::shared_ptr<Engine::NetworkManager> networkManager;
 
+        std::shared_ptr<Engine::Renderer> renderer;
     public:
         GameManager(sf::Vector2u windowSize);
 

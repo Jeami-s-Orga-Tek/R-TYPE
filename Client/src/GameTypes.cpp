@@ -18,6 +18,7 @@
 #include "Systems/Physics.hpp"
 #include "Systems/Render.hpp"
 #include "Systems/PlayerControl.hpp"
+#include "Renderers/SFML.hpp"
 
 using boost::asio::ip::udp;
 
@@ -969,60 +970,17 @@ void GameManager::applyCurrentResolution(sf::RenderWindow& window)
 
 void GameManager::gameDemo(sf::RenderWindow &window)
 {
-    // window.setFramerateLimit(0);
+    window.close();
 
-    // void *handle = dlopen("libengine.so", RTLD_LAZY);
-    // if (!handle) {
-    //     std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
-    //     return;
-    // }
+    renderer = std::make_shared<Engine::Renderers::SFML>();
+    renderer->createWindow(800, 600, "R du TYPE");
 
-    // std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
-    // const char *error = dlerror();
-    // if (error) {
-    //     std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
-    //     dlclose(handle);
-    //     return;
-    // }
-
-    // void (*deleteMediatorFunc)(Engine::Mediator*) = (void (*)(Engine::Mediator*))(dlsym(handle, "deleteMediator"));
-    // error = dlerror();
-    // if (error) {
-    //     std::cerr << "Cannot load symbol 'deleteMediator': " << error << std::endl;
-    //     dlclose(handle);
-    //     return (84);
-    // }
-
-    // std::shared_ptr<Engine::Mediator> mediator = createMediatorFunc();
-
-    // networkManager->mediator = createMediatorFunc();
     std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
-    // mediator->init();
 
-    // auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
-    // auto render_system = mediator->registerSystem<Engine::Systems::RenderSystem>();
-    
-    // auto player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
-    // player_control_system->init(mediator);
+    render_system->addTexture(renderer, "player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
 
-    render_system->addSprite("player", "assets/sprites/r-typesheet1.gif", {32, 14}, {101, 3}, 10, 1);
-    render_system->addSprite("weak_player_projectile", "assets/sprites/r-typesheet1.gif", {16, 4}, {249, 90}, 1, 1);
-
-    // Engine::Signature signature;
-    // signature.set(mediator->getComponentType<Engine::Components::Gravity>());
-    // signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
-    // signature.set(mediator->getComponentType<Engine::Components::Transform>());
-    // signature.set(mediator->getComponentType<Engine::Components::Sprite>());
-
-    int entity_number = 0;
-
-    // for (int i = 0; i < entity_number; i++) {
-    //     Engine::Entity entity = mediator->createEntity();
-    //     mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
-    //     mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
-    //     mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
-    //     mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
-    // }
+    render_system->addSprite(renderer, "player", "player_sprite_sheet", {32, 14}, {101, 3}, 10, 1);
+    render_system->addSprite(renderer, "weak_player_projectile", "player_sprite_sheet", {16, 4}, {249, 90}, 1, 1);
 
     const float FIXED_DT = 1.0f / 60.0f;
     float accumulator = 0.0f;
@@ -1031,28 +989,13 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     int frame_count = 0;
     float fps = 0.0f;
     float fps_timer = 0.0f;
-    sf::Font font;
-    font.loadFromFile("assets/r-type.otf");
-    sf::Text fps_text;
-    fps_text.setFont(font);
-    fps_text.setCharacterSize(20);
-    fps_text.setFillColor(sf::Color::Green);
-    fps_text.setPosition(10, 10);
 
-    std::bitset<5> buttons {};
-    sf::Event event;
-    while (window.isOpen()) {
-        buttons.reset();
+    renderer->loadFont("basic", "assets/r-type.otf");
 
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-            if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Space && window.hasFocus()) {
-                    buttons.set(static_cast<std::size_t>(Engine::InputButtons::SHOOT));
-                }
-            }
-        }
+    while (renderer->isWindowOpen()) {
+        renderer->clearWindow();
+
+        renderer->handleEvents(networkManager);
 
         auto currentTime = std::chrono::high_resolution_clock::now();
         float frameTime = std::chrono::duration<float>(currentTime - previousTime).count();
@@ -1065,41 +1008,16 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             fps = frame_count / fps_timer;
             frame_count = 0;
             fps_timer = 0.0f;
-            fps_text.setString(std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)));
         }
-
-        window.clear(sf::Color::Black);
-
-        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))) {
-            buttons.set(static_cast<std::size_t>(Engine::InputButtons::LEFT));
-        }
-        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D))) {
-            buttons.set(static_cast<std::size_t>(Engine::InputButtons::RIGHT));
-        }
-        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z))) {
-            buttons.set(static_cast<std::size_t>(Engine::InputButtons::UP));
-        }
-        if (window.hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))) {
-            buttons.set(static_cast<std::size_t>(Engine::InputButtons::DOWN));
-        }
-
-        Engine::Event player_input_event(static_cast<Engine::EventId>(Engine::EventsIds::PLAYER_INPUT));
-        player_input_event.setParam(0, networkManager->player_id);
-        player_input_event.setParam(1, buttons);
-        mediator->sendEvent(player_input_event);
-        networkManager->sendInput(networkManager->player_id, networkManager->room_id, buttons);
+        renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
 
         while (accumulator >= FIXED_DT) {
             player_control_system->update(networkManager, FIXED_DT);
             physics_system->update(mediator, FIXED_DT);
-            render_system->update(mediator, window);
+            render_system->update(renderer, mediator);
             accumulator -= FIXED_DT;
         }
 
-        window.draw(fps_text);
-        window.display();
+        renderer->displayWindow();
     }
-
-    // deleteMediatorFunc(mediator);
-    // dlclose(handle);
 }

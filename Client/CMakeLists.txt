@@ -10,7 +10,7 @@ include_directories(../include_common)
 
 include_directories(include)
 
-file(GLOB SOURCES src/*.cpp)
+file(GLOB SOURCES src/*.cpp src/Renderers/*.cpp)
 
 include(../cmake/CPM.cmake)
 
@@ -36,6 +36,7 @@ target_link_libraries(r-type_client PRIVATE
   sfml-graphics
   sfml-window
   sfml-system
+  sfml-audio
   ${SFML_LIBRARIES}
   Boost::system
   Boost::asio
