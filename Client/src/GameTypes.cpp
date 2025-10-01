@@ -8,8 +8,6 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include <boost/system/error_code.hpp>
-#include <chrono>
-#include <thread>
 #include <dlfcn.h>
 #include <fstream>
 
@@ -22,12 +20,13 @@
 using boost::asio::ip::udp;
 
 GameManager::GameManager(sf::Vector2u windowSize)
-    : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
+    : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), locker(windowSize), errorServer(windowSize), player(windowSize),
       waitingPlayersCounter(1),
       gameMode(GameMode::SOLO),
       trophy(windowSize),
       particleSystem(windowSize, 300),
       currentState(State::LAUNCH),
+      starshipColor(StarshipColor::BLUE),
       isConnected(ServerState::DEFAULT),
       UsernameGame(""),
       isDraggingVolume(false),
@@ -92,6 +91,7 @@ GameManager::GameManager(sf::Vector2u windowSize)
     if (!launch.loadResources() || !parameters.loadResources() || !controlsConfig.loadResources() || !player.loadResources() || !errorServer.loadResources() || !trophy.loadResources()) {
         std::cerr << "Erreur lors du chargement des ressources" << std::endl;
     }
+    locker.setPlayer(&player);
 
     soloButton = Button(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 350), sf::Vector2f(100, 40), "Solo",font);
     duoButton = Button(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 300), sf::Vector2f(100, 40), "Duo",font);
@@ -583,19 +583,10 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             statusText.setString("");
         }
         if (leftButtonSelection.isClicked(mousePos)) {
-            int newTop = player.starshipRect.top - 17;
-            if (newTop < 0)
-                newTop = 0;
-            player.starshipRect.top = newTop;
-            player.starshipSprite.setTextureRect(player.starshipRect);
+            locker.previousStarshipColor();
         }
         if (rightButtonSelection.isClicked(mousePos)) {
-            int maxTop = 17 * 4;
-            int newTop = player.starshipRect.top + 17;
-            if (newTop > maxTop)
-                newTop = maxTop;
-            player.starshipRect.top = newTop;
-            player.starshipSprite.setTextureRect(player.starshipRect);
+            locker.nextStarshipColor();
         }
     } else if (currentState == State::LEADERBOARD) {
         if (backButton.isClicked(mousePos)) {
@@ -961,7 +952,7 @@ void GameManager::applyCurrentResolution(sf::RenderWindow& window)
 // void GameManager::initMediator()
 // {
 //     if (!mediator)
-//         return;
+//         //
 
 //     mediator->init();
 // }

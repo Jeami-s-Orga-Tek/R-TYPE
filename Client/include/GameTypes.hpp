@@ -21,6 +21,7 @@
 #include "ErrorServer.hpp"
 #include "Player.hpp"
 #include "Launch.hpp"
+#include "Locker.hpp"
 #include "ControlsConfig.hpp"
 #include "Leaderboard.hpp"
 #include "Username.hpp"
@@ -44,6 +45,13 @@ enum class State {
     QUIT
 };
 
+enum class StarshipColor {
+    BLUE,
+    PURPLE,
+    GREEN,
+    RED
+};
+
 enum class ServerState {
     CONNECT,
     DISCONNECT,
@@ -63,6 +71,7 @@ class GameManager {
         Parameters parameters;
         ControlsConfig controlsConfig;
         Lobby lobby;
+        Locker locker;
         ErrorServer errorServer;
         Player player;
         ParamButton paramButton;
@@ -110,6 +119,7 @@ class GameManager {
         sf::Clock deltaClock;
         
         State currentState;
+        StarshipColor starshipColor;
         ServerState isConnected;
 
         std::string UsernameGame;
