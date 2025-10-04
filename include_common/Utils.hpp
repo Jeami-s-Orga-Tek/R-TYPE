@@ -54,6 +54,106 @@ namespace Engine {
                 float y = 0.0f;
         };
 
+        class Vec2Int
+        {
+            public:
+                Vec2Int() {};
+                Vec2Int(int x, int y) {
+                    this->x = x;
+                    this->y = y;
+                };
+
+                Vec2Int operator+(Vec2Int const& v) {
+                    return (Vec2Int(x + v.x, y + v.y));
+                }
+
+                Vec2Int operator+=(Vec2Int const& v) {
+                    x += v.x;
+                    y += v.y;
+                    return (*this);
+                }
+
+                Vec2Int operator-(Vec2Int const& v) {
+                    return (Vec2Int(x - v.x, y - v.y));
+                }
+
+                Vec2Int operator-=(Vec2Int const& v) {
+                    x -= v.x;
+                    y -= v.y;
+                    return (*this);
+                }
+
+                Vec2Int operator*(int f) const {
+                    return (Vec2Int(this->x * f, this->y * f));
+                }
+
+                int x = 0;
+                int y = 0;
+        };
+
+        class Vec2UInt
+        {
+            public:
+                Vec2UInt() {};
+                Vec2UInt(unsigned int x, unsigned int y) {
+                    this->x = x;
+                    this->y = y;
+                };
+
+                Vec2UInt operator+(Vec2UInt const& v) {
+                    return (Vec2UInt(x + v.x, y + v.y));
+                }
+
+                Vec2UInt operator+=(Vec2UInt const& v) {
+                    x += v.x;
+                    y += v.y;
+                    return (*this);
+                }
+
+                Vec2UInt operator-(Vec2UInt const& v) {
+                    return (Vec2UInt(x - v.x, y - v.y));
+                }
+
+                Vec2UInt operator-=(Vec2UInt const& v) {
+                    x -= v.x;
+                    y -= v.y;
+                    return (*this);
+                }
+
+                Vec2Int operator*(unsigned int f) const {
+                    return (Vec2Int(this->x * f, this->y * f));
+                }
+
+                unsigned int x = 0;
+                unsigned int y = 0;
+        };
+
+        class Rect
+        {
+            public:
+                Rect() {}
+                Rect(float x, float y, float width, float height)
+                    : x(x), y(y), width(width), height(height) {}
+
+                bool contains(float px, float py) const {
+                    return (px >= x && px <= x + width && py >= y && py <= y + height);
+                }
+
+                bool contains(const Vec2& point) const {
+                    return contains(point.x, point.y);
+                }
+
+                bool intersects(const Rect& other) const {
+                    return !(x + width < other.x || other.x + other.width < x ||
+                             y + height < other.y || other.y + other.height < y);
+                }
+
+                float x = 0.0f;
+                float y = 0.0f;
+                float width = 0.0f;
+                float height = 0.0f;
+        };
+
         class Color
         {
             public:

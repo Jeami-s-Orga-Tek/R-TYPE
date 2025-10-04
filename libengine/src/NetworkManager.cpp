@@ -12,8 +12,11 @@
 #include <cstring>
 
 #include "NetworkManager.hpp"
-#include "Systems/Physics.hpp"
-#include "Systems/PlayerControl.hpp"
+#include "Components/Gravity.hpp"
+#include "Components/PlayerInfo.hpp"
+#include "Components/RigidBody.hpp"
+#include "Components/ShootingCooldown.hpp"
+#include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
 
 Engine::NetworkManager::NetworkManager(Role role, const std::string &address, uint16_t port)
@@ -29,53 +32,12 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     mediator->registerComponent<Engine::Components::PlayerInfo>();
     mediator->registerComponent<Engine::Components::ShootingCooldown>();
 
-    componentRegistry.registerType(
-        typeid(Engine::Components::Gravity).name(),
-        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
-            const auto *comp = reinterpret_cast<const Engine::Components::Gravity *>(data);
-            mediator.addComponent(entity, *comp);
-        }
-    );
-    componentRegistry.registerType(
-        typeid(Engine::Components::RigidBody).name(),
-        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
-            const auto *comp = reinterpret_cast<const Engine::Components::RigidBody *>(data);
-            mediator.addComponent(entity, *comp);
-        }
-    );
-    componentRegistry.registerType(
-        typeid(Engine::Components::Transform).name(),
-        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
-            const auto *comp = reinterpret_cast<const Engine::Components::Transform *>(data);
-            // std::cout << comp->pos.x << " " << comp->pos.y << std::endl;
-            mediator.addComponent(entity, *comp);
-        }
-    );
-    componentRegistry.registerType(
-        typeid(Engine::Components::Sprite).name(),
-        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
-            const auto *comp = reinterpret_cast<const Engine::Components::Sprite *>(data);
-            // std::cout << comp->sprite_name << std::endl;
-            mediator.addComponent(entity, *comp);
-        }
-    );
-    componentRegistry.registerType(
-        typeid(Engine::Components::PlayerInfo).name(),
-        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
-            const auto *comp = reinterpret_cast<const Engine::Components::PlayerInfo *>(data);
-            mediator.addComponent(entity, *comp);
-            // if (player_id == MAX_ENTITIES)
-            //     player_id = comp->player_id;
-            // std::cout << "player id pls :( " << player_id << std::endl;
-        }
-    );
-    componentRegistry.registerType(
-        typeid(Engine::Components::ShootingCooldown).name(),
-        [](Engine::Entity entity, const void *data, size_t, Engine::Mediator &mediator) {
-            const auto *comp = reinterpret_cast<const Engine::Components::ShootingCooldown *>(data);
-            mediator.addComponent(entity, *comp);
-        }
-    );
+    registerComponent<Engine::Components::Gravity>();
+    registerComponent<Engine::Components::RigidBody>();
+    registerComponent<Engine::Components::Transform>();
+    registerComponent<Engine::Components::PlayerInfo>();
+    registerComponent<Engine::Components::ShootingCooldown>();
+    registerComponent<Engine::Components::Sprite>();
     
     if (role == Role::SERVER) {
         socket.open(boost::asio::ip::udp::v4());
@@ -392,7 +354,6 @@ void Engine::NetworkManager::receiveComponent()
 
     Entity entity_id = component_body.entity_id;
     uint8_t name_len = component_body.name_len;
-    uint32_t component_len = component_body.component_len;
 
     std::string type_name(reinterpret_cast<char *>(recv_buffer.data() + sizeof(PacketHeader) + sizeof(ComponentBody)), name_len);
     const void *component_data = recv_buffer.data() + sizeof(PacketHeader) + sizeof(ComponentBody) + name_len;
@@ -402,7 +363,7 @@ void Engine::NetworkManager::receiveComponent()
     // std::cout << "Type Name: " << type_name << std::endl;
     // std::cout << "Component Data Length: " << component_len << std::endl;
 
-    componentRegistry.addComponentByType(type_name, entity_id, component_data, component_len, *mediator);
+    componentRegistry.addComponentByType(type_name, entity_id, component_data, *mediator);
 }
 
 Engine::NetworkManager::~NetworkManager()
@@ -473,7 +434,7 @@ int Engine::NetworkManager::getConnectedPlayers()
     return (client_endpoints.size());
 }
 
-extern "C" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address = "127.0.0.1", uint16_t port = 8080) {
+extern "C++" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address = "127.0.0.1", uint16_t port = 8080) {
     return (std::make_shared<Engine::NetworkManager>(role, address, port));
 }
 

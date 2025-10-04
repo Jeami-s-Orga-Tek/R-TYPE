@@ -27,6 +27,7 @@
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
 #include "Renderer.hpp"
+#include "Utils.hpp"
 
 #include "Systems/Physics.hpp"
 #include "Systems/Render.hpp"
@@ -159,7 +160,6 @@ class GameManager {
         int getCurrentFps() const { return currentFps; }
         
     private:
-
         void handleKeyPress(sf::Event& event, sf::RenderWindow& window);
         void handleMouseClick(sf::Event& event, sf::RenderWindow& window);
         void handleMouseMove(sf::RenderWindow& window);

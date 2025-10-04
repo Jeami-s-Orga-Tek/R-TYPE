@@ -12,7 +12,6 @@
 #include <boost/asio.hpp>
 #include <array>
 #include <thread>
-#include <queue>
 
 #include "Entity.hpp"
 #include "Mediator.hpp"
@@ -142,6 +141,7 @@ namespace Engine {
         boost::asio::ip::udp::endpoint temp_sender_endpoint;
 
         ComponentRegistry componentRegistry;
+        template<typename ComponentType> void registerComponent();
     };
 };
 
@@ -161,7 +161,18 @@ void Engine::NetworkManager::sendInput(const uint32_t player_id, const uint16_t 
     socket.send_to(boost::asio::buffer(buf), remote_endpoint);
 }
 
-extern "C" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address, uint16_t port);
+template<typename ComponentType>
+void Engine::NetworkManager::registerComponent() {
+    componentRegistry.registerType(
+        typeid(ComponentType).name(),
+        [](Entity entity, const void *data, Mediator &mediator) {
+            const auto* comp = reinterpret_cast<const ComponentType*>(data);
+            mediator.addComponent(entity, *comp);
+        }
+    );
+}
+
+extern "C++" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address, uint16_t port);
 
 extern "C" void deleteNetworkManager(Engine::NetworkManager *networkManager);
 

@@ -20,8 +20,6 @@
 #include "Systems/PlayerControl.hpp"
 #include "Renderers/SFML.hpp"
 
-using boost::asio::ip::udp;
-
 GameManager::GameManager(sf::Vector2u windowSize)
     : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
       waitingPlayersCounter(1),
@@ -68,6 +66,11 @@ GameManager::GameManager(sf::Vector2u windowSize)
     if (!username.loadFile()) {
         std::cerr << "Files not load for username" << std::endl;
     }
+
+    // renderer = std::make_shared<Engine::Renderers::SFML>();
+    // renderer->createWindow(800, 600, "R du TYPE");
+
+    // renderer->loadFont("basic", "assets/r-type.otf");
 
     username = Username(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 150), sf::Vector2f(200, 50), UsernameGame, font);
 
