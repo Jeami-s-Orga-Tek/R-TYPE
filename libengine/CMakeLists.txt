@@ -24,13 +24,14 @@ file(GLOB_RECURSE SOURCES src/*.cpp)
 
 add_library(engine SHARED ${SOURCES})
 
+target_link_libraries(engine PRIVATE $<$<BOOL:${WIN32}>:ws2_32>)
+
 target_include_directories(engine PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(engine PRIVATE
   Boost::system
   Boost::asio
   pthread
 )
-target_link_libraries(engine PRIVATE $<$<BOOL:${WIN32}>:ws2_32>)
 
 # TEMP REMOVE LATER
 # target_link_libraries(engine PRIVATE sfml-graphics sfml-window sfml-system)
