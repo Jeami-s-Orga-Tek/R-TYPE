@@ -2,9 +2,9 @@ name: R-Type CI/CD
 
 on:
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, dev/WindowsCompilation ]
   push:
-    branches: [ main ]
+    branches: [ main, dev/WindowsCompilation ]
     tags:
       - "v*"
 
