@@ -27,3 +27,4 @@ add_executable(r-type_server ${SOURCES})
 
 target_link_libraries(r-type_server PRIVATE engine Boost::system Boost::asio)
 target_link_libraries(r-type_server PRIVATE ${CMAKE_DL_LIBS})
+target_link_libraries(r-type_server PRIVATE $<$<BOOL:${WIN32}>:ws2_32>)
