@@ -93,7 +93,7 @@ int main()
 
     int entity_number = 0;
 
-    for (uint i = 0; i < entity_number; i++) {
+    for (unsigned int i = 0; i < entity_number; i++) {
         Engine::Entity entity = mediator->createEntity();
         mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
         mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
