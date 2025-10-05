@@ -30,6 +30,7 @@ target_link_libraries(engine PRIVATE
   Boost::asio
   pthread
 )
+target_link_libraries(engine PRIVATE $<$<BOOL:${WIN32}>:ws2_32>)
 
 # TEMP REMOVE LATER
 # target_link_libraries(engine PRIVATE sfml-graphics sfml-window sfml-system)
