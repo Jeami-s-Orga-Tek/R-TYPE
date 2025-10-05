@@ -172,7 +172,7 @@ void Engine::NetworkManager::registerComponent() {
     );
 }
 
-extern "C++" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address, uint16_t port);
+extern "C" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address, uint16_t port);
 
 extern "C" void deleteNetworkManager(Engine::NetworkManager *networkManager);
 

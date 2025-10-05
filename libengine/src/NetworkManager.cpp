@@ -434,7 +434,7 @@ int Engine::NetworkManager::getConnectedPlayers()
     return (client_endpoints.size());
 }
 
-extern "C++" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address = "127.0.0.1", uint16_t port = 8080) {
+extern "C" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address = "127.0.0.1", uint16_t port = 8080) {
     return (std::make_shared<Engine::NetworkManager>(role, address, port));
 }
 
