@@ -10,9 +10,9 @@
 #include <boost/system/error_code.hpp>
 #include <chrono>
 #include <thread>
-#include <dlfcn.h>
 #include <fstream>
 
+#include "dlfcn_compat.hpp"
 #include "GameTypes.hpp"
 #include "Mediator.hpp"
 #include "Systems/Physics.hpp"

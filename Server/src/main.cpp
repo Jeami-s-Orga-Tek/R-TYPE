@@ -8,11 +8,11 @@
 
 #include <iostream>
 #include <csignal>
-#include <dlfcn.h>
 #include <memory>
 #include <thread>
 #include <chrono>
 
+#include "dlfcn_compat.hpp"
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
 #include "Systems/Physics.hpp"

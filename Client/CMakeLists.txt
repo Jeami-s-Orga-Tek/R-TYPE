@@ -42,3 +42,6 @@ target_link_libraries(r-type_client PRIVATE
   Boost::asio
   pthread
 )
+
+target_link_libraries(r-type_client PRIVATE ${CMAKE_DL_LIBS})
+
