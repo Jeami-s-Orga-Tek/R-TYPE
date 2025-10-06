@@ -147,9 +147,9 @@ int main()
 
         while (accumulator >= FIXED_DT) {
             if (!have_players_spawned && networkManager->getConnectedPlayers() >= 2) {
-                networkManager->createEnemy(rand() % 400, rand() % 400, ENEMY_TYPES::SIMPLE);
                 for (int i = 0; i < networkManager->getConnectedPlayers(); i++)
                     networkManager->createPlayer();
+                networkManager->createEnemy(rand() % 400, rand() % 400, ENEMY_TYPES::SIMPLE);
                 have_players_spawned = true;
             }
 
