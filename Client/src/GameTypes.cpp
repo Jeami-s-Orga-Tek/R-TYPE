@@ -457,7 +457,8 @@ void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow&)
 void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
     if (event.mouseButton.button != sf::Mouse::Left) return;
 
-    Engine::Utils::Vec2Int mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2i sfMousePos = sf::Mouse::getPosition(window);
+    Engine::Utils::Vec2Int mousePos(sfMousePos.x, sfMousePos.y);
 
     if (currentState == State::LAUNCH) {
         if (connectToServer("127.0.0.1", 8080)) {
@@ -595,7 +596,8 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
 
 void GameManager::handleMouseMove(sf::RenderWindow& window)
 {
-    Engine::Utils::Vec2Int mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2i sfMousePos = sf::Mouse::getPosition(window);
+    Engine::Utils::Vec2Int mousePos(sfMousePos.x, sfMousePos.y);
     
     if (currentState == State::MENU) {
         paramButton.setHovered(paramButton.isClicked(mousePos));
@@ -779,7 +781,8 @@ void GameManager::cycleDisplayMode(sf::RenderWindow& window)
     }
     
     parameters.setDisplayMode(nextMode);
-    Engine::Utils::Vec2UInt currentSize = window.getSize();
+    sf::Vector2u sfml_size = window.getSize();
+    Engine::Utils::Vec2UInt currentSize(sfml_size.x, sfml_size.y);
     switch (nextMode) {
         case DisplayMode::WINDOWED:
             window.create(sf::VideoMode(currentSize.x, currentSize.y), "R-Type Client", sf::Style::Default);

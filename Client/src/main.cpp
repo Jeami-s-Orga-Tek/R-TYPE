@@ -5,7 +5,9 @@
 ** main
 */
 
+#include <SFML/System/Vector2.hpp>
 #include <iostream>
+#include "Utils.hpp"
 #include "dlfcn_compat.hpp"
 #include "GameTypes.hpp"
 
@@ -19,7 +21,9 @@ int main()
         std::cerr << "Warning: Failed to load libengine.so: " << dlerror() << std::endl;
     }
     
-    GameManager gameManager(window.getSize());
+    sf::Vector2u sfml_window_size = window.getSize();
+    Engine::Utils::Vec2UInt window_size(sfml_window_size.x, sfml_window_size.y);
+    GameManager gameManager(window_size);
     
     while (window.isOpen() && !gameManager.shouldClose()) {
         gameManager.handleEvents(window);
