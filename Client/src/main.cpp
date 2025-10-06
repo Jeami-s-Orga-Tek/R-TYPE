@@ -6,7 +6,7 @@
 */
 
 #include <iostream>
-#include <dlfcn.h>
+#include "dlfcn_compat.hpp"
 #include "GameTypes.hpp"
 
 int main()

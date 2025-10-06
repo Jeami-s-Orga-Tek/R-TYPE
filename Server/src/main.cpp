@@ -7,7 +7,7 @@
 
 
 #include <iostream>
-#include <dlfcn.h>
+#include <csignal>
 #include <memory>
 #include <chrono>
 
@@ -16,6 +16,7 @@
 #include "Components/RigidBody.hpp"
 #include "Components/Transform.hpp"
 #include "Entity.hpp"
+#include "dlfcn_compat.hpp"
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
 #include "Systems/Physics.hpp"

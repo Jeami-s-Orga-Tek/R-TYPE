@@ -9,9 +9,10 @@
 #include <boost/asio.hpp>
 #include <boost/system/error_code.hpp>
 #include <chrono>
-#include <dlfcn.h>
+#include <thread>
 #include <fstream>
 
+#include "dlfcn_compat.hpp"
 #include "GameTypes.hpp"
 #include "Mediator.hpp"
 #include "Systems/Collision.hpp"
