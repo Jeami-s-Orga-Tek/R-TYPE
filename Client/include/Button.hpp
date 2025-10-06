@@ -11,6 +11,8 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+#include "Utils.hpp"
+
 class Button {
 public:
     Button() = default;
@@ -18,7 +20,7 @@ public:
     ~Button() = default;
     
     void draw(sf::RenderWindow& window);
-    bool isClicked(sf::Vector2i mousePos);
+    bool isClicked(Engine::Utils::Vec2Int mousePos);
     void setHovered(bool hovered);
 
     void updatePosition(sf::Vector2f newPosition);

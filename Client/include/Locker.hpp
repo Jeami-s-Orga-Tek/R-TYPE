@@ -11,20 +11,22 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+#include "Utils.hpp"
+
 class Locker {
 public:
-    Locker(sf::Vector2u windowSize);
+    Locker(Engine::Utils::Vec2UInt windowSize);
     ~Locker() = default;
     bool loadResources();
     void draw(sf::RenderWindow& window);
     void handleEvent(const sf::Event& event, sf::RenderWindow& window);
     void update();
-    void updateWindowSize(sf::Vector2u newSize);
+    void updateWindowSize(Engine::Utils::Vec2UInt newSize);
 
 private:
     sf::Texture logoTexture;
     sf::Sprite logoSprite;
-    sf::Vector2u windowSize;
+    Engine::Utils::Vec2UInt windowSize;
 
     void centerLogo();
 };

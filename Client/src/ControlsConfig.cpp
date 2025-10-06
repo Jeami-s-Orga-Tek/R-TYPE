@@ -9,7 +9,7 @@
 #include <iostream>
 #include <algorithm>
 
-ControlsConfig::ControlsConfig(sf::Vector2u windowSize) : windowSize(windowSize),
+ControlsConfig::ControlsConfig(Engine::Utils::Vec2UInt windowSize) : windowSize(windowSize),
     waitingForKeyInput(false),
     currentActionBeingSet(ControlAction::MOVE_LEFT)
 {
@@ -113,7 +113,7 @@ void ControlsConfig::handleEvent(const sf::Event& event, sf::RenderWindow& windo
         }
     }
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-        sf::Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
+        Engine::Utils::Vec2Int mousePos(event.mouseButton.x, event.mouseButton.y);
         ControlAction action;
         if (isControlButtonClicked(mousePos, action)) {
             startKeyCapture(action);
@@ -130,7 +130,7 @@ void ControlsConfig::update()
 {
 }
 
-void ControlsConfig::updateWindowSize(sf::Vector2u newSize)
+void ControlsConfig::updateWindowSize(Engine::Utils::Vec2UInt newSize)
 {
     windowSize = newSize;
     updateControlSettingsPositions();
@@ -229,10 +229,10 @@ void ControlsConfig::cancelKeyCapture()
     }
 }
 
-bool ControlsConfig::isControlButtonClicked(sf::Vector2i mousePos, ControlAction& action) const
+bool ControlsConfig::isControlButtonClicked(Engine::Utils::Vec2Int mousePos, ControlAction& action) const
 {
     for (int i = 0; i < 5; i++) {
-        if (ControlButtons[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+        if (ControlButtons[i].getGlobalBounds().contains(sf::Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)))) {
             action = static_cast<ControlAction>(i);
             return true;
         }

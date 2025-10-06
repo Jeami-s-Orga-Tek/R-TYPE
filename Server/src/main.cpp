@@ -7,16 +7,21 @@
 
 
 #include <iostream>
-#include <csignal>
 #include <dlfcn.h>
 #include <memory>
-#include <thread>
 #include <chrono>
 
+#include "Components/EnemyInfo.hpp"
+#include "Components/Hitbox.hpp"
+#include "Components/RigidBody.hpp"
+#include "Components/Transform.hpp"
+#include "Entity.hpp"
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
 #include "Systems/Physics.hpp"
 #include "Systems/PlayerControl.hpp"
+#include "Systems/Collision.hpp"
+#include "Systems/Enemy.hpp"
 #include "Components/Sprite.hpp"
 
 // int main(int argc, char* argv[])
@@ -60,6 +65,8 @@ int main()
     mediator->registerComponent<Engine::Components::Sprite>();
     mediator->registerComponent<Engine::Components::PlayerInfo>();
     mediator->registerComponent<Engine::Components::ShootingCooldown>();
+    mediator->registerComponent<Engine::Components::Hitbox>();
+    mediator->registerComponent<Engine::Components::EnemyInfo>();
 
     auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
 
@@ -84,23 +91,44 @@ int main()
         networkManager->mediator->setSystemSignature<Engine::Systems::PlayerControl>(signature);
     }
 
-    Engine::Signature signature;
-    signature.set(mediator->getComponentType<Engine::Components::Gravity>());
-    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
-    signature.set(mediator->getComponentType<Engine::Components::Transform>());
-    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
-    signature.set(mediator->getComponentType<Engine::Components::PlayerInfo>());
+    auto collision_system = mediator->registerSystem<Engine::Systems::Collision>();
 
-    int entity_number = 0;
-
-    for (uint i = 0; i < entity_number; i++) {
-        Engine::Entity entity = mediator->createEntity();
-        mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
-        mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
-        mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
-        mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
-        mediator->addComponent(entity, Engine::Components::PlayerInfo{.player_id = i});
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Hitbox>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::Collision>(signature);
     }
+
+    auto enemy_system = mediator->registerSystem<Engine::Systems::EnemySystem>();
+    enemy_system->init(networkManager);
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::RigidBody>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Hitbox>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::EnemyInfo>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::EnemySystem>(signature);
+    }
+
+    // Engine::Signature signature;
+    // signature.set(mediator->getComponentType<Engine::Components::Gravity>());
+    // signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
+    // signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    // signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    // signature.set(mediator->getComponentType<Engine::Components::PlayerInfo>());
+
+    // int entity_number = 0;
+
+    // for (uint i = 0; i < entity_number; i++) {
+    //     Engine::Entity entity = mediator->createEntity();
+    //     mediator->addComponent(entity, Engine::Components::Gravity{.force = Engine::Utils::Vec2(0.0f, 15.0f)});
+    //     mediator->addComponent(entity, Engine::Components::RigidBody{.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)});
+    //     mediator->addComponent(entity, Engine::Components::Transform{.pos = Engine::Utils::Vec2(0.0f, 0.0f), .rot = 0.0f, .scale = 2.0f});
+    //     mediator->addComponent(entity, Engine::Components::Sprite{.sprite_name = "player", .frame_nb = 1});
+    //     mediator->addComponent(entity, Engine::Components::PlayerInfo{.player_id = i});
+    // }
 
     std::cout << "NetworkManager server started. Press Ctrl+C to exit." << std::endl;
 
@@ -117,22 +145,32 @@ int main()
         accumulator += frameTime;
 
         while (accumulator >= FIXED_DT) {
-            if (networkManager->getConnectedPlayers() >= 2 && !have_players_spawned) {
+            if (!have_players_spawned && networkManager->getConnectedPlayers() >= 2) {
+                networkManager->createEnemy(rand() % 400, rand() % 400, ENEMY_TYPES::SIMPLE);
                 for (int i = 0; i < networkManager->getConnectedPlayers(); i++)
                     networkManager->createPlayer();
                 have_players_spawned = true;
             }
 
+            if (have_players_spawned && rand() % 100 == 0) {
+                // std::cout << "ENEMY SPAWN" << std::endl;
+                networkManager->createEnemy(rand() % 400, rand() % 400, ENEMY_TYPES::SIMPLE);
+                // std::cout << "ENEMY SPAWN FINSH" << std::endl;
+            }
+
             player_control_system->update(networkManager, FIXED_DT);
             physics_system->update(mediator, FIXED_DT);
+            enemy_system->update(networkManager, FIXED_DT);
+            collision_system->update(networkManager);
 
             // for (int i = 0; i < networkManager->mediator->getEntityCount(); i++) {
             //     const auto &comp = networkManager->mediator->getComponent<Engine::Components::Transform>(i);
             //     networkManager->sendComponent(i, comp);
             // }
-            
+
             accumulator -= FIXED_DT;
-        }        
+
+        }
     }
 
     dlclose(handle);

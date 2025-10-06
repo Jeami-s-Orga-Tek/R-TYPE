@@ -11,6 +11,7 @@
 #include <exception>
 #include <unordered_map>
 #include <stdexcept>
+#include <iostream>
 
 #include "Entity.hpp"
 
@@ -40,7 +41,7 @@ namespace Engine {
             void insertEntity(Entity entity, T component);
             void removeEntity(Entity entity);
             T &getComponent(Entity entity);
-            void entityDestroyed(Entity entity);
+            void entityDestroyed(Entity entity) override;
         private:
             std::array<T, MAX_ENTITIES> components {};
             std::unordered_map<Entity, std::size_t> entity_to_index_map {};
@@ -58,10 +59,15 @@ void Engine::ComponentArray<T>::insertEntity(Engine::Entity entity, T component)
         return;
     }
 
+    // std::cout << "1" << std::endl;
     entity_to_index_map[entity] = size;
+    // std::cout << "2" << std::endl;
     index_to_entity_map[size] = entity;
+    // std::cout << "3" << std::endl;
     components[size] = component;
+    // std::cout << "4" << std::endl;
     size++;
+    // std::cout << "5 : " << size << std::endl;
 }
 
 template <typename T>

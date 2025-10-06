@@ -6,6 +6,7 @@
 */
 
 #include <stdexcept>
+#include <iostream>
 
 #include "EntityManager.hpp"
 
@@ -30,8 +31,8 @@ Engine::Entity Engine::EntityManager::createEntity()
 
 void Engine::EntityManager::destroyEntity(Engine::Entity entity)
 {
-    if (entity > entity_count)
-        throw std::runtime_error("Trying to delete non-existent entity !!!!");
+    // if (entity > entity_count)
+    //     throw std::runtime_error("Trying to delete non-existent entity !!!!");
 
     signatures[entity].reset();
     available_entities.push(entity);
@@ -40,16 +41,18 @@ void Engine::EntityManager::destroyEntity(Engine::Entity entity)
 
 void Engine::EntityManager::setSignature(Entity entity, Signature signature)
 {
-    if (entity > entity_count)
-        throw std::runtime_error("Trying to set sign to non-existent entity !!!!");
+    // if (entity > entity_count)
+    //     throw std::runtime_error("Trying to set sign to non-existent entity !!!!");
 
     signatures[entity] = signature;
 }
 
 Engine::Signature Engine::EntityManager::getSignature(Entity entity)
 {
-    if (entity > entity_count)
-        throw std::runtime_error("Trying to get sign to non-existent entity !!!!");
+    // std::cout << "sign : " << entity << std::endl;
+
+    // if (entity > entity_count)
+    //     throw std::runtime_error("Trying to get sign to non-existent entity !!!!");
 
     return (signatures[entity]);
 }

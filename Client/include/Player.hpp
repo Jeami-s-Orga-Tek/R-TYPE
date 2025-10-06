@@ -11,15 +11,17 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+#include "Utils.hpp"
+
 class Player {
 public:
-    Player(sf::Vector2u windowSize);
+    Player(Engine::Utils::Vec2UInt windowSize);
     ~Player() = default;
     bool loadResources();
     void draw(sf::RenderWindow& window);
     void handleEvent(const sf::Event& event, sf::RenderWindow& window);
     void update();
-    void updateWindowSize(sf::Vector2u newSize);
+    void updateWindowSize(Engine::Utils::Vec2UInt newSize);
     void updateAnimationStarship();
     sf::Vector2f getPosition() const { return starshipSprite.getPosition(); }
     sf::Vector2f getSize() const { return starshipSprite.getGlobalBounds().getSize(); }
@@ -29,7 +31,7 @@ public:
 
 private:
     sf::Texture starshipTexture;
-    sf::Vector2u windowSize;
+    Engine::Utils::Vec2UInt windowSize;
 
     sf::Clock starshipClock;
     int starshipCounter = 0;

@@ -12,23 +12,25 @@
 #include <string>
 #include <fstream>
 
+#include "Utils.hpp"
+
 class Leaderboard {
 public:
-    Leaderboard(sf::Vector2u windowSize);
+    Leaderboard(Engine::Utils::Vec2UInt windowSize);
     ~Leaderboard() = default;
     bool loadResources();
     void draw(sf::RenderWindow& window);
     void drawRoundedRectangle(sf::RenderWindow& window);
     void handleEvent(const sf::Event& event, sf::RenderWindow& window);
     void update();
-    void updateWindowSize(sf::Vector2u newSize);
+    void updateWindowSize(Engine::Utils::Vec2UInt newSize);
 
     sf::RectangleShape leaderboardRectangle;
 private:
     sf::IntRect trophyRect;
     sf::Sprite trophySprite;
     sf::Texture trophyTexture;
-    sf::Vector2u windowSize;
+    Engine::Utils::Vec2UInt windowSize;
 
     void centerImage();
 };

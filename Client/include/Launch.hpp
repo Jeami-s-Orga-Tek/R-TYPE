@@ -9,23 +9,23 @@
 #define LAUNCH_HPP_
 
 #include <SFML/Graphics.hpp>
-#include <string>
+
+#include "Utils.hpp"
 
 class Launch {
 public:
-    Launch(sf::Vector2u windowSize);
+    Launch(Engine::Utils::Vec2UInt windowSize);
     ~Launch() = default;
     bool loadResources();
     void draw(sf::RenderWindow& window);
     void handleEvent(const sf::Event& event, sf::RenderWindow& window);
     void update();
-    void updateWindowSize(sf::Vector2u newSize);
+    void updateWindowSize(Engine::Utils::Vec2UInt newSize);
 
 private:
     sf::Texture logoTexture;
     sf::Sprite logoSprite;
-    sf::Vector2u windowSize;
-
+    Engine::Utils::Vec2UInt windowSize;
 
     void centerLogo();
 };

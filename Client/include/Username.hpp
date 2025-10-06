@@ -12,6 +12,8 @@
 #include <string>
 #include <fstream>
 
+#include "Utils.hpp"
+
 class Username {
 public:
     Username() = default;
@@ -20,7 +22,7 @@ public:
 
     bool loadFile();
     void draw(sf::RenderWindow& window);
-    bool isClicked(sf::Vector2i mousePos);
+    bool isClicked(Engine::Utils::Vec2Int mousePos);
     void setHovered(bool hovered);
 
     void updatePosition(sf::Vector2f newPosition);

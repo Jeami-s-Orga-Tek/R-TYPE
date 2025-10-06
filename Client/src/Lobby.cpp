@@ -8,7 +8,7 @@
 #include "Lobby.hpp"
 #include <iostream>
 
-Lobby::Lobby(sf::Vector2u windowSize) : windowSize(windowSize)
+Lobby::Lobby(Engine::Utils::Vec2UInt windowSize) : windowSize(windowSize)
 {
 }
 
@@ -58,7 +58,7 @@ void Lobby::update()
 {
 }
 
-void Lobby::updateWindowSize(sf::Vector2u newSize)
+void Lobby::updateWindowSize(Engine::Utils::Vec2UInt newSize)
 {
     windowSize = newSize;
     centerLogo();

@@ -18,6 +18,9 @@ namespace Engine {
 
     enum class EventsIds : EventId {
         PLAYER_INPUT,
+        COLLISION,
+        ENEMY_DESTROYED,
+        PLAYER_HIT,
     };
 
     enum class InputButtons {

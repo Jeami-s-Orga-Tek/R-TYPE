@@ -8,7 +8,7 @@
 #include "Menu.hpp"
 #include <iostream>
 
-Menu::Menu(sf::Vector2u windowSize) : windowSize(windowSize)
+Menu::Menu(Engine::Utils::Vec2UInt windowSize) : windowSize(windowSize)
 {
 }
 
@@ -58,7 +58,7 @@ void Menu::update()
 {
 }
 
-void Menu::updateWindowSize(sf::Vector2u newSize)
+void Menu::updateWindowSize(Engine::Utils::Vec2UInt newSize)
 {
     windowSize = newSize;
     centerLogo();

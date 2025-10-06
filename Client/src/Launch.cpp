@@ -8,7 +8,7 @@
 #include "Launch.hpp"
 #include <iostream>
 
-Launch::Launch(sf::Vector2u windowSize) : windowSize(windowSize)
+Launch::Launch(Engine::Utils::Vec2UInt windowSize) : windowSize(windowSize)
 {
 }
 
@@ -58,7 +58,7 @@ void Launch::update()
 {
 }
 
-void Launch::updateWindowSize(sf::Vector2u newSize)
+void Launch::updateWindowSize(Engine::Utils::Vec2UInt newSize)
 {
     windowSize = newSize;
     centerLogo();

@@ -9,18 +9,20 @@
 #include <boost/asio.hpp>
 #include <boost/system/error_code.hpp>
 #include <chrono>
-#include <thread>
 #include <dlfcn.h>
 #include <fstream>
 
 #include "GameTypes.hpp"
 #include "Mediator.hpp"
+#include "Systems/Collision.hpp"
+#include "Systems/Enemy.hpp"
 #include "Systems/Physics.hpp"
 #include "Systems/Render.hpp"
 #include "Systems/PlayerControl.hpp"
 #include "Renderers/SFML.hpp"
+#include "Utils.hpp"
 
-GameManager::GameManager(sf::Vector2u windowSize)
+GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
     : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
       waitingPlayersCounter(1),
       gameMode(GameMode::SOLO),
@@ -60,8 +62,8 @@ GameManager::GameManager(sf::Vector2u windowSize)
 
     dlclose(handle);
 
-    if (!font.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
-        std::cerr << "Unable to load Carlito font, trying Symbola..." << std::endl;
+    if (!font.loadFromFile("assets/r-type.otf")) {
+        std::cerr << "Unable to load font" << std::endl;
     }
     if (!username.loadFile()) {
         std::cerr << "Files not load for username" << std::endl;
@@ -72,13 +74,16 @@ GameManager::GameManager(sf::Vector2u windowSize)
 
     // renderer->loadFont("basic", "assets/r-type.otf");
 
-    username = Username(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 150), sf::Vector2f(200, 50), UsernameGame, font);
+    const int mid_window_x = static_cast<int>(windowSize.x / 2);
+    const int mid_window_y = static_cast<int>(windowSize.y / 2);
 
-    playButton = Button(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 250), sf::Vector2f(200, 50), "Play", font);
+    username = Username(sf::Vector2f(mid_window_x - 100, windowSize.y - 150), sf::Vector2f(200, 50), UsernameGame, font);
 
-    paramButton = ParamButton(sf::Vector2f(windowSize.x/2 - 100, windowSize.y - 200), sf::Vector2f(125, 40), "Parameters", font);
-    fps30Button = ParamButton(sf::Vector2f(windowSize.x/2 - 90, windowSize.y - 60), sf::Vector2f(80, 40), "FPS 30", font);
-    fps60Button = ParamButton(sf::Vector2f(windowSize.x/2 + 10, windowSize.y - 60), sf::Vector2f(80, 40), "FPS 60", font);
+    playButton = Button(sf::Vector2f(mid_window_x - 100, windowSize.y - 250), sf::Vector2f(200, 50), "Play", font);
+
+    paramButton = ParamButton(sf::Vector2f(mid_window_x - 100, windowSize.y - 200), sf::Vector2f(125, 40), "Parameters", font);
+    fps30Button = ParamButton(sf::Vector2f(mid_window_x - 90, windowSize.y - 60), sf::Vector2f(80, 40), "FPS 30", font);
+    fps60Button = ParamButton(sf::Vector2f(mid_window_x + 10, windowSize.y - 60), sf::Vector2f(80, 40), "FPS 60", font);
     backButton = Button(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40), "Back", font);
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
     float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
@@ -91,33 +96,33 @@ GameManager::GameManager(sf::Vector2u windowSize)
     controlsButton.setCharacterSize(12);
     
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
-    applyResolutionButton = Button(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35), "Apply", font);
+    applyResolutionButton = Button(sf::Vector2f(mid_window_x - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35), "Apply", font);
     
     if (!launch.loadResources() || !parameters.loadResources() || !controlsConfig.loadResources() || !player.loadResources() || !errorServer.loadResources() || !trophy.loadResources()) {
         std::cerr << "Erreur lors du chargement des ressources" << std::endl;
     }
 
-    soloButton = Button(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 350), sf::Vector2f(100, 40), "Solo",font);
-    duoButton = Button(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 300), sf::Vector2f(100, 40), "Duo",font);
-    trioButton = Button(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 250), sf::Vector2f(100, 40), "Trio",font);
-    squadButton = Button(sf::Vector2f(windowSize.x / 2 - 350, windowSize.y - 200), sf::Vector2f(100, 40), "Squad",font);
-    modeButton = Button(sf::Vector2f(windowSize.x/2 - 350, windowSize.y - 150), sf::Vector2f(100, 40), "Mode", font);
-    playButton = Button(sf::Vector2f(windowSize.x/2 + 250, windowSize.y - 100), sf::Vector2f(100, 40), "Play", font);
+    soloButton = Button(sf::Vector2f(mid_window_x - 350, windowSize.y - 350), sf::Vector2f(100, 40), "Solo",font);
+    duoButton = Button(sf::Vector2f(mid_window_x - 350, windowSize.y - 300), sf::Vector2f(100, 40), "Duo",font);
+    trioButton = Button(sf::Vector2f(mid_window_x - 350, windowSize.y - 250), sf::Vector2f(100, 40), "Trio",font);
+    squadButton = Button(sf::Vector2f(mid_window_x - 350, windowSize.y - 200), sf::Vector2f(100, 40), "Squad",font);
+    modeButton = Button(sf::Vector2f(mid_window_x - 350, windowSize.y - 150), sf::Vector2f(100, 40), "Mode", font);
+    playButton = Button(sf::Vector2f(mid_window_x + 250, windowSize.y - 100), sf::Vector2f(100, 40), "Play", font);
 
     numberPlayerToWait.setFont(font);
     numberPlayerToWait.setCharacterSize(10);
     numberPlayerToWait.setFillColor(sf::Color::Yellow);
     sf::FloatRect numberPlayerToWaitBounds = numberPlayerToWait.getLocalBounds();
-    numberPlayerToWait.setPosition(windowSize.x / 2 - numberPlayerToWaitBounds.width / 2, 20);
+    numberPlayerToWait.setPosition(mid_window_x - numberPlayerToWaitBounds.width / 2, 20);
 
-    lockerButton = Button(sf::Vector2f(windowSize.x/2 + 250, windowSize.y - 100), sf::Vector2f(100, 40), "Locker", font);
-    leftButtonSelection = Button(sf::Vector2f(windowSize.x/2 - 50, windowSize.y + 50), sf::Vector2f(100, 40), "<", font);
-    rightButtonSelection = Button(sf::Vector2f(windowSize.x/2 - 50, windowSize.y + 50), sf::Vector2f(100, 40), ">", font);
-    applyButtonLocker = Button(sf::Vector2f(windowSize.x/2 - 50, windowSize.y - 200), sf::Vector2f(100, 40), "Apply", font);
+    lockerButton = Button(sf::Vector2f(mid_window_x + 250, windowSize.y - 100), sf::Vector2f(100, 40), "Locker", font);
+    leftButtonSelection = Button(sf::Vector2f(mid_window_x - 50, windowSize.y + 50), sf::Vector2f(100, 40), "<", font);
+    rightButtonSelection = Button(sf::Vector2f(mid_window_x - 50, windowSize.y + 50), sf::Vector2f(100, 40), ">", font);
+    applyButtonLocker = Button(sf::Vector2f(mid_window_x - 50, windowSize.y - 200), sf::Vector2f(100, 40), "Apply", font);
 
-    leaderboard = Button(sf::Vector2f(windowSize.x/2 - 350, windowSize.y - 100), sf::Vector2f(200, 50), "Leaderboard", font);
-    trophy.leaderboardRectangle.setSize(sf::Vector2f(windowSize.x/2, windowSize.y/2 + 150));
-    trophy.leaderboardRectangle.setPosition(sf::Vector2f(windowSize.x/2 - 200,windowSize.y/2 - 200));
+    leaderboard = Button(sf::Vector2f(mid_window_x - 350, windowSize.y - 100), sf::Vector2f(200, 50), "Leaderboard", font);
+    trophy.leaderboardRectangle.setSize(sf::Vector2f(mid_window_x, mid_window_y + 150));
+    trophy.leaderboardRectangle.setPosition(sf::Vector2f(mid_window_x - 200, mid_window_y - 200));
 
     statusText.setFont(font);
     statusText.setCharacterSize(10);
@@ -133,44 +138,21 @@ GameManager::GameManager(sf::Vector2u windowSize)
     insertCoinText.setCharacterSize(38);
     insertCoinText.setFillColor(sf::Color::Yellow);
     sf::FloatRect bounds = insertCoinText.getLocalBounds();
-    insertCoinText.setPosition(windowSize.x/2 - bounds.width/2, windowSize.y/2 - bounds.height/2 + 50);
+    insertCoinText.setPosition(mid_window_x - bounds.width/2, mid_window_y - bounds.height/2 + 50);
 
     paramButton.setupVolumeBar(sf::Vector2f(windowSize.x - 220, windowSize.y - 80), 200.f);
     particleSystem.setParameters(&parameters);
-    username.setCharacterSize(10);
-    backButton.setCharacterSize(10);
-    fps30Button.setCharacterSize(10);
-    fps60Button.setCharacterSize(10);
-    paramButton.setCharacterSize(10);
-    resolutionButton.setCharacterSize(10);
-    displayModeButton.setCharacterSize(10);
-    graphicsQualityButton.setCharacterSize(10);
-    colorBlindModeButton.setCharacterSize(10);
-
-    applyResolutionButton.setCharacterSize(10);
-
-    soloButton.setCharacterSize(10);
-    duoButton.setCharacterSize(10);
-    trioButton.setCharacterSize(10);
-    squadButton.setCharacterSize(10);
-
-    modeButton.setCharacterSize(10);
-    playButton.setCharacterSize(10);
-
-    leaderboard.setCharacterSize(10);
-    lockerButton.setCharacterSize(10);
-
-    leftButtonSelection.setCharacterSize(10);
-    rightButtonSelection.setCharacterSize(10);
-    applyButtonLocker.setCharacterSize(10);
 }
 
-void GameManager::updatePositions(sf::Vector2u windowSize)
+void GameManager::updatePositions(Engine::Utils::Vec2UInt windowSize)
 {
+    const int mid_window_x = static_cast<int>(windowSize.x / 2);
+    const int mid_window_y = static_cast<int>(windowSize.y / 2);
+
     paramButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(125, 40));
     username.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(125, 40));
-    fps30Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - 90, windowSize.y - 60), sf::Vector2f(80, 40));
-    fps60Button.updatePositionAndSize(sf::Vector2f(windowSize.x/2 + 10, windowSize.y - 60), sf::Vector2f(80, 40));
+    fps30Button.updatePositionAndSize(sf::Vector2f(mid_window_x - 90, windowSize.y - 60), sf::Vector2f(80, 40));
+    fps60Button.updatePositionAndSize(sf::Vector2f(mid_window_x + 10, windowSize.y - 60), sf::Vector2f(80, 40));
     backButton.updatePositionAndSize(sf::Vector2f(50, windowSize.y - 100), sf::Vector2f(100, 40));
 
     float leftColX = 50;
@@ -185,14 +167,14 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
 
     lockerButton.updatePositionAndSize(sf::Vector2f(50, 50), sf::Vector2f(100, 40));
 
-    leftButtonSelection.updatePositionAndSize(sf::Vector2f(50, windowSize.y / 2 - 20),sf::Vector2f(100, 40));
-    rightButtonSelection.updatePositionAndSize(sf::Vector2f(windowSize.x - 150, windowSize.y / 2 - 20),
+    leftButtonSelection.updatePositionAndSize(sf::Vector2f(50, mid_window_y - 20),sf::Vector2f(100, 40));
+    rightButtonSelection.updatePositionAndSize(sf::Vector2f(windowSize.x - 150, mid_window_y - 20),
                                                sf::Vector2f(100, 40));
-    applyButtonLocker.updatePositionAndSize(sf::Vector2f(windowSize.x / 2 - 50, windowSize.y - 100),
+    applyButtonLocker.updatePositionAndSize(sf::Vector2f(mid_window_y - 50, windowSize.y - 100),
                                             sf::Vector2f(100, 40));
     leaderboard.updatePositionAndSize(sf::Vector2f(50,  100),
                                             sf::Vector2f(125, 40));
-    trophy.leaderboardRectangle.setPosition(sf::Vector2f(windowSize.x/2 - 200,windowSize.y/2 - 200));
+    trophy.leaderboardRectangle.setPosition(sf::Vector2f(mid_window_x - 200,mid_window_y - 200));
 
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
     float buttonX = std::min((float)(windowSize.x - buttonWidth - 20), (float)(windowSize.x * 0.75f));
@@ -202,13 +184,13 @@ void GameManager::updatePositions(sf::Vector2u windowSize)
     colorBlindModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30));
     controlsButton.updatePositionAndSize(sf::Vector2f(buttonX, 400), sf::Vector2f(buttonWidth, 30));
     float applyButtonWidth = std::min(150.0f, windowSize.x * 0.25f);
-    applyResolutionButton.updatePositionAndSize(sf::Vector2f(windowSize.x/2 - applyButtonWidth/2, 450),
+    applyResolutionButton.updatePositionAndSize(sf::Vector2f(mid_window_x - applyButtonWidth/2, 450),
                                                 sf::Vector2f(applyButtonWidth, 35));
 
     sf::FloatRect numberPlayerToWaitBounds = numberPlayerToWait.getLocalBounds();
-    numberPlayerToWait.setPosition(windowSize.x / 2 - numberPlayerToWaitBounds.width / 2, 20);
+    numberPlayerToWait.setPosition(mid_window_x - numberPlayerToWaitBounds.width / 2, 20);
     sf::FloatRect insertCoinTextBounds = insertCoinText.getLocalBounds();
-    insertCoinText.setPosition(windowSize.x/2 - insertCoinTextBounds.width/2, windowSize.y/2 - insertCoinTextBounds.height/2 + 50);
+    insertCoinText.setPosition(mid_window_x - insertCoinTextBounds.width/2, mid_window_y - insertCoinTextBounds.height/2 + 50);
 }
 
 void GameManager::handleEvents(sf::RenderWindow& window)
@@ -474,7 +456,7 @@ void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow&)
 void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
     if (event.mouseButton.button != sf::Mouse::Left) return;
 
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    Engine::Utils::Vec2Int mousePos = sf::Mouse::getPosition(window);
 
     if (currentState == State::LAUNCH) {
         if (connectToServer("127.0.0.1", 8080)) {
@@ -612,7 +594,7 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
 
 void GameManager::handleMouseMove(sf::RenderWindow& window)
 {
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    Engine::Utils::Vec2Int mousePos = sf::Mouse::getPosition(window);
     
     if (currentState == State::MENU) {
         paramButton.setHovered(paramButton.isClicked(mousePos));
@@ -649,7 +631,7 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
 
 void GameManager::handleWindowResize(sf::Event& event)
 {
-    sf::Vector2u newSize(event.size.width, event.size.height);
+    Engine::Utils::Vec2UInt newSize(event.size.width, event.size.height);
 
     if (currentState == State::LAUNCH) {
         launch.updateWindowSize(newSize);
@@ -675,7 +657,7 @@ void GameManager::handleWindowResize(sf::Event& event)
     colorBlindModeButton.updatePositionAndSize(sf::Vector2f(buttonX, 350), sf::Vector2f(buttonWidth, 30));
     
     float applyButtonWidth = std::min(150.0f, newSize.x * 0.25f);
-    applyResolutionButton.updatePositionAndSize(sf::Vector2f(newSize.x/2 - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35));
+    applyResolutionButton.updatePositionAndSize(sf::Vector2f(static_cast<float>(newSize.x) / 2.0f - applyButtonWidth/2, 450), sf::Vector2f(applyButtonWidth, 35));
     
     if (currentState == State::SETTINGS) {
         updateStatusTextPosition(true);
@@ -728,60 +710,31 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
         networkManager->mediator->setSystemSignature<Engine::Systems::PlayerControl>(signature);
     }
 
+    collision_system = networkManager->mediator->registerSystem<Engine::Systems::Collision>();
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Hitbox>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::Collision>(signature);
+    }
+
+    enemy_system = networkManager->mediator->registerSystem<Engine::Systems::EnemySystem>();
+    enemy_system->init(networkManager);
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::RigidBody>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Hitbox>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::EnemyInfo>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::EnemySystem>(signature);
+    }
+
     // TEMP
-    networkManager->send_hello("BASSIROU", 12345);
+    networkManager->send_hello(UsernameGame, 12345);
 
     return (true);
-    // try {
-    //     boost::asio::io_context io_context;
-    //     udp::socket socket(io_context);
-    //     udp::resolver resolver(io_context);   
-    //     udp::resolver::results_type endpoints = resolver.resolve(udp::v4(), serverIP, std::to_string(port));
-    //     udp::endpoint server_endpoint = *endpoints.begin();
-        
-    //     socket.open(udp::v4());
-    //     std::string message = "CONNECT";
-    //     std::cout << "Sending connection message to server " << serverIP << ":" << port << std::endl;
-    //     boost::system::error_code send_error;
-    //     size_t bytes_sent = socket.send_to(boost::asio::buffer(message), server_endpoint, 0, send_error);
-        
-    //     if (send_error) {
-    //         std::cerr << "Error sending: " << send_error.message() << std::endl;
-    //         return false;
-    //     }
-    //     std::cout << "Message envoyé (" << bytes_sent << " bytes)" << std::endl;
-    //     socket.non_blocking(true);
-    //     char buffer[1024];
-    //     udp::endpoint sender_endpoint;
-    //     auto start_time = std::chrono::steady_clock::now();
-    //     const auto timeout = std::chrono::seconds(5);
-        
-    //     while (std::chrono::steady_clock::now() - start_time < timeout) {
-    //         boost::system::error_code receive_error;
-    //         size_t bytes_received = socket.receive_from(
-    //             boost::asio::buffer(buffer), 
-    //             sender_endpoint, 
-    //             0, 
-    //             receive_error
-    //         );
-    //         if (!receive_error && bytes_received > 0) {
-    //             std::string response(buffer, bytes_received);
-    //             std::cout << "Server response: " << response << std::endl;
-    //             socket.close();
-    //             return true;
-    //         } else if (receive_error != boost::asio::error::would_block) {
-    //             std::cerr << "Error receiving: " << receive_error.message() << std::endl;
-    //             break;
-    //         }
-    //         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    //     }
-    //     std::cout << "Timeout - No response from server" << std::endl;
-    //     socket.close();
-    //     return false;
-    // } catch (const std::exception& e) {
-    //     std::cerr << "Connection exception: " << e.what() << std::endl;
-    //     return false;
-    // }
 }
 
 void GameManager::cycleResolution()
@@ -825,7 +778,7 @@ void GameManager::cycleDisplayMode(sf::RenderWindow& window)
     }
     
     parameters.setDisplayMode(nextMode);
-    sf::Vector2u currentSize = window.getSize();
+    Engine::Utils::Vec2UInt currentSize = window.getSize();
     switch (nextMode) {
         case DisplayMode::WINDOWED:
             window.create(sf::VideoMode(currentSize.x, currentSize.y), "R-Type Client", sf::Style::Default);
@@ -909,7 +862,7 @@ void GameManager::cycleColorBlindMode()
 void GameManager::applyCurrentResolution(sf::RenderWindow& window)
 {
     ResolutionMode currentRes = parameters.getCurrentResolution();
-    sf::Vector2u newSize = parameters.getResolutionSize(currentRes);
+    Engine::Utils::Vec2UInt newSize = parameters.getResolutionSize(currentRes);
     
     DisplayMode currentMode = parameters.getCurrentDisplayMode();
     if (currentMode == DisplayMode::WINDOWED) {
@@ -926,54 +879,10 @@ void GameManager::applyCurrentResolution(sf::RenderWindow& window)
     handleWindowResize(resizeEvent);
 }
 
-// void GameManager::createMediator()
-// {
-//     void *handle = dlopen("libengine.so", RTLD_LAZY);
-//     if (!handle) {
-//         std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
-//         return;
-//     }
-
-//     std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
-//     const char *error = dlerror();
-//     if (error) {
-//         std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
-//         dlclose(handle);
-//         throw std::runtime_error("");
-//     }
-
-//     this->createNetworkManagerFunc = (std::shared_ptr<Engine::NetworkManager> (*)(Engine::NetworkManager::Role, const std::string &, uint16_t))(dlsym(handle, "createNetworkManager"));
-//     error = dlerror();
-//     if (error) {
-//         std::cerr << "Cannot load symbol 'createNetworkManager': " << error << std::endl;
-//         dlclose(handle);
-//         throw std::runtime_error("");
-//     }
-
-//     this->mediator = createMediatorFunc();
-
-//     dlclose(handle);
-// }
-
-// void GameManager::initMediator()
-// {
-//     if (!mediator)
-//         return;
-
-//     mediator->init();
-// }
-
-// void GameManager::initMediatorNetwork(const std::string &address, uint16_t port)
-// {
-//     if (!mediator)
-//         return;
-
-//     mediator->initNetworkManager(Engine::NetworkManager::Role::CLIENT, address, port);
-// }
-
 void GameManager::gameDemo(sf::RenderWindow &window)
 {
-    window.close();
+    if (window.isOpen())
+        window.close();
 
     renderer = std::make_shared<Engine::Renderers::SFML>();
     renderer->createWindow(800, 600, "R du TYPE");
@@ -981,9 +890,11 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
 
     render_system->addTexture(renderer, "player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
+    render_system->addTexture(renderer, "ground_enemy_sprite_sheet", "assets/sprites/r-typesheet7.gif");
 
     render_system->addSprite(renderer, "player", "player_sprite_sheet", {32, 14}, {101, 3}, 10, 1);
     render_system->addSprite(renderer, "weak_player_projectile", "player_sprite_sheet", {16, 4}, {249, 90}, 1, 1);
+    render_system->addSprite(renderer, "ground_enemy", "ground_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
 
     const float FIXED_DT = 1.0f / 60.0f;
     float accumulator = 0.0f;
@@ -1017,6 +928,8 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         while (accumulator >= FIXED_DT) {
             player_control_system->update(networkManager, FIXED_DT);
             physics_system->update(mediator, FIXED_DT);
+            collision_system->update(networkManager);
+            enemy_system->update(networkManager, FIXED_DT);
             render_system->update(renderer, mediator);
             accumulator -= FIXED_DT;
         }

@@ -12,6 +12,8 @@
 #include <string>
 #include <vector>
 
+#include "Utils.hpp"
+
 enum class ResolutionMode {
     RES_800x600,
     RES_1280x720,
@@ -40,14 +42,14 @@ enum class ColorBlindMode {
 
 class Parameters {
 public:
-    Parameters(sf::Vector2u windowSize);
+    Parameters(Engine::Utils::Vec2UInt windowSize);
     ~Parameters() = default;
 
     bool loadResources();
     void draw(sf::RenderWindow& window);
     void handleEvent(const sf::Event& event, sf::RenderWindow& window);
     void update();
-    void updateWindowSize(sf::Vector2u newSize);
+    void updateWindowSize(Engine::Utils::Vec2UInt newSize);
     
     ResolutionMode getCurrentResolution() const { return currentResolution; }
     DisplayMode getCurrentDisplayMode() const { return currentDisplayMode; }
@@ -58,7 +60,7 @@ public:
     void setDisplayMode(DisplayMode mode);
     void setGraphicsQuality(GraphicsQuality quality);
     void setColorBlindMode(ColorBlindMode mode);
-    sf::Vector2u getResolutionSize(ResolutionMode resolution) const;
+    Engine::Utils::Vec2UInt getResolutionSize(ResolutionMode resolution) const;
     
     sf::Color applyColorBlindFilter(const sf::Color& originalColor) const;
 
@@ -76,7 +78,7 @@ private:
     sf::Text ColorBlindValue;
     
     sf::Font FontParamsText;
-    sf::Vector2u windowSize;
+    Engine::Utils::Vec2UInt windowSize;
 
     ResolutionMode currentResolution;
     DisplayMode currentDisplayMode;

@@ -51,9 +51,9 @@ void Username::draw(sf::RenderWindow& window)
     window.draw(label);
 }
 
-bool Username::isClicked(sf::Vector2i mousePos)
+bool Username::isClicked(Engine::Utils::Vec2Int mousePos)
 {
-    return shape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos));
+    return shape.getGlobalBounds().contains(sf::Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)));
 }
 
 void Username::setHovered(bool hovered)

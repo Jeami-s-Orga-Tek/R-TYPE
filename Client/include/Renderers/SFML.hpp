@@ -13,7 +13,6 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
-
 #include "Renderer.hpp"
 
 namespace Engine {

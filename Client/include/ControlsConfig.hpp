@@ -12,6 +12,8 @@
 #include <string>
 #include <map>
 
+#include "Utils.hpp"
+
 enum class ControlAction {
     MOVE_LEFT,
     MOVE_RIGHT,
@@ -22,21 +24,21 @@ enum class ControlAction {
 
 class ControlsConfig {
 public:
-    ControlsConfig(sf::Vector2u windowSize);
+    ControlsConfig(Engine::Utils::Vec2UInt windowSize);
     ~ControlsConfig() = default;
 
     bool loadResources();
     void draw(sf::RenderWindow& window);
     void handleEvent(const sf::Event& event, sf::RenderWindow& window);
     void update();
-    void updateWindowSize(sf::Vector2u newSize);
+    void updateWindowSize(Engine::Utils::Vec2UInt newSize);
     sf::Keyboard::Key getControlKey(ControlAction action) const;
     void setControlKey(ControlAction action, sf::Keyboard::Key key);
     std::string getKeyName(sf::Keyboard::Key key) const;
     bool isWaitingForKeyInput() const;
     void startKeyCapture(ControlAction action);
     void cancelKeyCapture();
-    bool isControlButtonClicked(sf::Vector2i mousePos, ControlAction& action) const;
+    bool isControlButtonClicked(Engine::Utils::Vec2Int mousePos, ControlAction& action) const;
 
 private:
     sf::Text ControlsTitle;
@@ -45,7 +47,7 @@ private:
     sf::RectangleShape ControlButtons[5];
     
     sf::Font FontControlsText;
-    sf::Vector2u windowSize;
+    Engine::Utils::Vec2UInt windowSize;
     std::map<ControlAction, sf::Keyboard::Key> controlKeys;
     bool waitingForKeyInput;
     ControlAction currentActionBeingSet;

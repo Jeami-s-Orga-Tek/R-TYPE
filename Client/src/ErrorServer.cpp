@@ -8,7 +8,7 @@
 #include "ErrorServer.hpp"
 #include <iostream>
 
-ErrorServer::ErrorServer(sf::Vector2u windowSize) : windowSize(windowSize)
+ErrorServer::ErrorServer(Engine::Utils::Vec2UInt windowSize) : windowSize(windowSize)
 {
 }
 
@@ -58,7 +58,7 @@ void ErrorServer::update()
 {
 }
 
-void ErrorServer::updateWindowSize(sf::Vector2u newSize)
+void ErrorServer::updateWindowSize(Engine::Utils::Vec2UInt newSize)
 {
     windowSize = newSize;
     centerLogo();

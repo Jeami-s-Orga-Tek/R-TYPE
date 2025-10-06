@@ -27,7 +27,11 @@ Engine::Entity Engine::Mediator::createEntity()
 
 void Engine::Mediator::destroyEntity(Entity entity)
 {
-    return (entityManager->destroyEntity(entity));
+    std::cout << entity << " destroyed !" << std::endl;
+
+    entityManager->destroyEntity(entity);
+    componentManager->entityDestroyed(entity);
+    systemManager->entityDestroyed(entity);
 }
 
 // template <typename T>

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <algorithm>
 
-Parameters::Parameters(sf::Vector2u windowSize) : windowSize(windowSize),
+Parameters::Parameters(Engine::Utils::Vec2UInt windowSize) : windowSize(windowSize),
     currentResolution(ResolutionMode::RES_800x600),
     currentDisplayMode(DisplayMode::WINDOWED),
     currentGraphicsQuality(GraphicsQuality::MEDIUM),
@@ -103,7 +103,7 @@ void Parameters::update()
 {
 }
 
-void Parameters::updateWindowSize(sf::Vector2u newSize)
+void Parameters::updateWindowSize(Engine::Utils::Vec2UInt newSize)
 {
     windowSize = newSize;
     centerText();
@@ -224,13 +224,13 @@ std::string Parameters::getColorBlindModeString(ColorBlindMode mode) const
     }
 }
 
-sf::Vector2u Parameters::getResolutionSize(ResolutionMode resolution) const
+Engine::Utils::Vec2UInt Parameters::getResolutionSize(ResolutionMode resolution) const
 {
     switch (resolution) {
-        case ResolutionMode::RES_800x600: return sf::Vector2u(800, 600);
-        case ResolutionMode::RES_1280x720: return sf::Vector2u(1280, 720);
-        case ResolutionMode::RES_1920x1080: return sf::Vector2u(1920, 1080);
-        default: return sf::Vector2u(800, 600);
+        case ResolutionMode::RES_800x600: return Engine::Utils::Vec2UInt(800, 600);
+        case ResolutionMode::RES_1280x720: return Engine::Utils::Vec2UInt(1280, 720);
+        case ResolutionMode::RES_1920x1080: return Engine::Utils::Vec2UInt(1920, 1080);
+        default: return Engine::Utils::Vec2UInt(800, 600);
     }
 }
 

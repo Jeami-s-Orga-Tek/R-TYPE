@@ -33,9 +33,9 @@ void ParamButton::draw(sf::RenderWindow& window)
     window.draw(label);
 }
 
-bool ParamButton::isClicked(sf::Vector2i mousePos)
+bool ParamButton::isClicked(Engine::Utils::Vec2Int mousePos)
 {
-    return shape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos));
+    return shape.getGlobalBounds().contains(sf::Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)));
 }
 
 void ParamButton::setHovered(bool hovered)
@@ -73,11 +73,11 @@ void ParamButton::drawVolumeBar(sf::RenderWindow& window)
     window.draw(volumeText);
 }
 
-bool ParamButton::isVolumeBarClicked(sf::Vector2i mousePos) const
+bool ParamButton::isVolumeBarClicked(Engine::Utils::Vec2Int mousePos) const
 {
     if (!volumeBarInitialized) return false;
     sf::FloatRect sliderRect(volumeBar.getPosition().x, volumeBar.getPosition().y - 10, volumeBar.getSize().x, 30);
-    return sliderRect.contains(static_cast<sf::Vector2f>(mousePos));
+    return sliderRect.contains(sf::Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)));
 }
 
 void ParamButton::setVolumeFromMouse(int mouseX)

@@ -13,7 +13,6 @@
 #include <cstdint>
 
 #include "Button.hpp"
-#include "Menu.hpp"
 #include "Parameters.hpp"
 #include "ParamButton.hpp"
 #include "ParticleSystem.hpp"
@@ -32,6 +31,8 @@
 #include "Systems/Physics.hpp"
 #include "Systems/Render.hpp"
 #include "Systems/PlayerControl.hpp"
+#include "Systems/Collision.hpp"
+#include "Systems/Enemy.hpp"
 
 enum class State {
     LAUNCH,
@@ -126,6 +127,8 @@ class GameManager {
         std::shared_ptr<Engine::Systems::PhysicsSystem> physics_system {};
         std::shared_ptr<Engine::Systems::RenderSystem> render_system {};
         std::shared_ptr<Engine::Systems::PlayerControl> player_control_system {};
+        std::shared_ptr<Engine::Systems::Collision> collision_system {};
+        std::shared_ptr<Engine::Systems::EnemySystem> enemy_system {};
 
         std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
         std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
@@ -133,7 +136,7 @@ class GameManager {
 
         std::shared_ptr<Engine::Renderer> renderer;
     public:
-        GameManager(sf::Vector2u windowSize);
+        GameManager(Engine::Utils::Vec2UInt windowSize);
 
         ~GameManager() = default;
 
@@ -141,7 +144,7 @@ class GameManager {
         void update();
         void render(sf::RenderWindow& window);
         bool shouldClose() const;
-        void updatePositions(sf::Vector2u windowSize);
+        void updatePositions(Engine::Utils::Vec2UInt windowSize);
         void cycleResolution();
         void cycleDisplayMode(sf::RenderWindow& window);
         void cycleGraphicsQuality();

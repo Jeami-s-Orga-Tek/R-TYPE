@@ -12,7 +12,7 @@
 #include <cmath>
 #include <algorithm>
 
-ParticleSystem::ParticleSystem(sf::Vector2u winSize, int maxPart)
+ParticleSystem::ParticleSystem(Engine::Utils::Vec2UInt winSize, int maxPart)
     : windowSize(winSize), generator(std::random_device{}()), distribution(0.0f, 1.0f),
       maxParticles(maxPart), spawnRate(2.0f), spawnTimer(0.0f), parameters(nullptr)
 {
@@ -89,9 +89,9 @@ void ParticleSystem::render(sf::RenderWindow& window)
     }
 }
 
-void ParticleSystem::updateWindowSize(sf::Vector2u newSize)
+void ParticleSystem::updateWindowSize(Engine::Utils::Vec2UInt newSize)
 {
-    sf::Vector2u oldSize = windowSize;
+    Engine::Utils::Vec2UInt oldSize = windowSize;
     windowSize = newSize;
 
     if (oldSize.x > 0 && oldSize.y > 0) {

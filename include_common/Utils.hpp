@@ -9,6 +9,7 @@
 #define UTILS_HPP_
 
 #include <cstdint>
+#include <SFML/System/Vector2.hpp>
 
 namespace Engine {
     namespace Utils {
@@ -20,11 +21,10 @@ namespace Engine {
         class Vec2
         {
             public:
-                Vec2() {};
-                Vec2(float x, float y) {
-                    this->x = x;
-                    this->y = y;
-                };
+                Vec2() = default;
+                Vec2(float x, float y) : x(x), y(y) {}
+                Vec2(const sf::Vector2f& v) : x(v.x), y(v.y) {}
+                operator sf::Vector2f() const { return sf::Vector2f(x, y); }
 
                 Vec2 operator+(Vec2 const& v) {
                     return (Vec2(x + v.x, y + v.y));
@@ -57,11 +57,10 @@ namespace Engine {
         class Vec2Int
         {
             public:
-                Vec2Int() {};
-                Vec2Int(int x, int y) {
-                    this->x = x;
-                    this->y = y;
-                };
+                Vec2Int() = default;
+                Vec2Int(int x, int y) : x(x), y(y) {}
+                Vec2Int(const sf::Vector2i& v) : x(v.x), y(v.y) {}
+                operator sf::Vector2i() const { return sf::Vector2i(x, y); }
 
                 Vec2Int operator+(Vec2Int const& v) {
                     return (Vec2Int(x + v.x, y + v.y));
@@ -94,11 +93,10 @@ namespace Engine {
         class Vec2UInt
         {
             public:
-                Vec2UInt() {};
-                Vec2UInt(unsigned int x, unsigned int y) {
-                    this->x = x;
-                    this->y = y;
-                };
+                Vec2UInt() = default;
+                Vec2UInt(unsigned int x, unsigned int y) : x(x), y(y) {}
+                Vec2UInt(const sf::Vector2u& v) : x(v.x), y(v.y) {}
+                operator sf::Vector2u() const { return sf::Vector2u(x, y); }
 
                 Vec2UInt operator+(Vec2UInt const& v) {
                     return (Vec2UInt(x + v.x, y + v.y));

@@ -17,7 +17,7 @@ Button::Button(sf::Vector2f position, sf::Vector2f size, const std::string& text
     
     label.setFont(font);
     label.setString(text);
-    label.setCharacterSize(24);
+    label.setCharacterSize(10);
     label.setFillColor(sf::Color::White);
     label.setStyle(sf::Text::Bold);
     sf::FloatRect textBounds = label.getLocalBounds();
@@ -33,9 +33,9 @@ void Button::draw(sf::RenderWindow& window)
     window.draw(label);
 }
 
-bool Button::isClicked(sf::Vector2i mousePos)
+bool Button::isClicked(Engine::Utils::Vec2Int mousePos)
 {
-    return shape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos));
+    return shape.getGlobalBounds().contains(sf::Vector2f(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)));
 }
 
 void Button::setHovered(bool hovered)

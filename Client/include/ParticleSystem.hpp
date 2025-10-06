@@ -13,6 +13,8 @@
 #include <vector>
 #include <random>
 
+#include "Utils.hpp"
+
 class Parameters;
 
 enum class ParticleType {
@@ -47,7 +49,7 @@ struct Particle {
 class ParticleSystem {
     private:
         std::vector<Particle> particles;
-        sf::Vector2u windowSize;
+        Engine::Utils::Vec2UInt windowSize;
         std::mt19937 generator;
         std::uniform_real_distribution<float> distribution;
         
@@ -61,12 +63,12 @@ class ParticleSystem {
         const Parameters* parameters;
         
     public:
-        ParticleSystem(sf::Vector2u winSize, int maxPart = 500);
+        ParticleSystem(Engine::Utils::Vec2UInt winSize, int maxPart = 500);
         ~ParticleSystem() = default;
         
         void update(float deltaTime);
         void render(sf::RenderWindow& window);
-        void updateWindowSize(sf::Vector2u newSize);
+        void updateWindowSize(Engine::Utils::Vec2UInt newSize);
         void setMaxParticles(int maxPart);
         void setParameters(const Parameters* params);
         

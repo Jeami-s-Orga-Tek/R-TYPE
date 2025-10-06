@@ -8,7 +8,7 @@
 #include "Player.hpp"
 #include <iostream>
 
-Player::Player(sf::Vector2u windowSize) : windowSize(windowSize)
+Player::Player(Engine::Utils::Vec2UInt windowSize) : windowSize(windowSize)
 {
 }
 
@@ -90,7 +90,7 @@ void Player::updateAnimationStarship()
     starshipClock.restart();
 }
 
-void Player::updateWindowSize(sf::Vector2u newSize)
+void Player::updateWindowSize(Engine::Utils::Vec2UInt newSize)
 {
     windowSize = newSize;
     centerImage();

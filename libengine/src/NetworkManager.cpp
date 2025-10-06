@@ -12,12 +12,15 @@
 #include <cstring>
 
 #include "NetworkManager.hpp"
+#include "Components/EnemyInfo.hpp"
 #include "Components/Gravity.hpp"
+#include "Components/Hitbox.hpp"
 #include "Components/PlayerInfo.hpp"
 #include "Components/RigidBody.hpp"
 #include "Components/ShootingCooldown.hpp"
 #include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
+#include "Utils.hpp"
 
 Engine::NetworkManager::NetworkManager(Role role, const std::string &address, uint16_t port)
     : role(role), address(address), port(port), io_context(), socket(io_context)
@@ -28,9 +31,11 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     mediator->registerComponent<Engine::Components::Gravity>();
     mediator->registerComponent<Engine::Components::RigidBody>();
     mediator->registerComponent<Engine::Components::Transform>();
-    mediator->registerComponent<Engine::Components::Sprite>();
     mediator->registerComponent<Engine::Components::PlayerInfo>();
     mediator->registerComponent<Engine::Components::ShootingCooldown>();
+    mediator->registerComponent<Engine::Components::Sprite>();
+    mediator->registerComponent<Engine::Components::Hitbox>();
+    mediator->registerComponent<Engine::Components::EnemyInfo>();
 
     registerComponent<Engine::Components::Gravity>();
     registerComponent<Engine::Components::RigidBody>();
@@ -38,6 +43,8 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     registerComponent<Engine::Components::PlayerInfo>();
     registerComponent<Engine::Components::ShootingCooldown>();
     registerComponent<Engine::Components::Sprite>();
+    registerComponent<Engine::Components::Hitbox>();
+    registerComponent<Engine::Components::EnemyInfo>();
     
     if (role == Role::SERVER) {
         socket.open(boost::asio::ip::udp::v4());
@@ -63,7 +70,7 @@ void Engine::NetworkManager::receivePacket()
 {
     if (role == Role::CLIENT) {
         boost::asio::ip::udp::endpoint sender_endpoint;
-        size_t len = socket.receive_from(boost::asio::buffer(recv_buffer), sender_endpoint);
+        socket.receive_from(boost::asio::buffer(recv_buffer), sender_endpoint);
     }
 }
 
@@ -285,22 +292,6 @@ void Engine::NetworkManager::sendComponent(const Entity &entity, const T &compon
     }
 }
 
-// template <std::size_t S>
-// void Engine::NetworkManager::sendInput(const uint32_t player_id, const uint16_t room_id, const std::bitset<S> inputs)
-// {
-//     std::array<uint8_t, sizeof(PacketHeader) + sizeof(InputBody)> buf {};
-//     const PacketHeader &ph = createPacketHeader(MSG_INPUT);
-//     std::memcpy(buf.data(), &ph, sizeof(ph));
-
-//     InputBody ib = {
-//         .player_id = player_id,
-//         .room_id = room_id,
-//         .input_data = inputs.to_ullong(),
-//     };
-//     std::memcpy(buf.data() + sizeof(ph), &ib, sizeof(ib));
-//     socket.send_to(boost::asio::buffer(buf), remote_endpoint);
-// }
-
 void Engine::NetworkManager::receiveWelcome()
 {
     WelcomeBody welcome_body;
@@ -358,10 +349,10 @@ void Engine::NetworkManager::receiveComponent()
     std::string type_name(reinterpret_cast<char *>(recv_buffer.data() + sizeof(PacketHeader) + sizeof(ComponentBody)), name_len);
     const void *component_data = recv_buffer.data() + sizeof(PacketHeader) + sizeof(ComponentBody) + name_len;
 
-    // std::cout << "COMPONENT RECEIVED:" << std::endl;
-    // std::cout << "Entity ID: " << entity_id << std::endl;
-    // std::cout << "Type Name: " << type_name << std::endl;
-    // std::cout << "Component Data Length: " << component_len << std::endl;
+    std::cout << "COMPONENT RECEIVED:" << std::endl;
+    std::cout << "Entity ID: " << entity_id << std::endl;
+    std::cout << "Type Name: " << type_name << std::endl;
+    std::cout << "Component Data Length: " << component_body.component_len << std::endl;
 
     componentRegistry.addComponentByType(type_name, entity_id, component_data, *mediator);
 }
@@ -413,6 +404,7 @@ void Engine::NetworkManager::createPlayerProjectile(float x, float y)
     signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
 
     Engine::Entity entity = mediator->createEntity();
 
@@ -422,11 +414,45 @@ void Engine::NetworkManager::createPlayerProjectile(float x, float y)
     mediator->addComponent(entity, projectile_transform);
     const Engine::Components::Sprite projectile_sprite = {.sprite_name = "weak_player_projectile", .frame_nb = 1};
     mediator->addComponent(entity, projectile_sprite);
+    const Utils::Rect hitbox_rect(x, y, 32, 8);
+    const Engine::Components::Hitbox projectile_hitbox = {.bounds = hitbox_rect, .active = true, .layer = HITBOX_LAYERS::PLAYER_PROJECTILE, .damage = 10};
+    mediator->addComponent(entity, projectile_hitbox);
 
     sendEntity(entity, signature);
     sendComponent<Engine::Components::RigidBody>(entity, projectile_rigidbody);
     sendComponent<Engine::Components::Transform>(entity, projectile_transform);
     sendComponent<Engine::Components::Sprite>(entity, projectile_sprite);
+    sendComponent<Engine::Components::Hitbox>(entity, projectile_hitbox);
+}
+
+void Engine::NetworkManager::createEnemy(float x, float y, ENEMY_TYPES enemy_type)
+{
+    Engine::Signature signature;
+    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
+    signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
+    signature.set(mediator->getComponentType<Engine::Components::EnemyInfo>());
+
+    Engine::Entity entity = mediator->createEntity();
+
+    const Engine::Components::RigidBody enemy_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
+    mediator->addComponent(entity, enemy_rigidbody);
+    const Engine::Components::Transform enemy_transform = {.pos = Engine::Utils::Vec2(x, y), .rot = 0.0f, .scale = 2.0f};
+    mediator->addComponent(entity, enemy_transform);
+    const Engine::Components::Sprite enemy_sprite = {.sprite_name = "ground_enemy", .frame_nb = 1};
+    mediator->addComponent(entity, enemy_sprite);
+    const Engine::Components::Hitbox enemy_hitbox = {.bounds = Utils::Rect(x, y, 66, 66), .active = true, .layer = HITBOX_LAYERS::ENEMY, .damage = 10};
+    mediator->addComponent(entity, enemy_hitbox);
+    const Engine::Components::EnemyInfo enemy_enemyinfo = {.health = 20, .maxHealth = 20, .type = static_cast<int>(enemy_type), .scoreValue = 100, .speed = 0.0f, .isActive = true};
+    mediator->addComponent(entity, enemy_enemyinfo);
+
+    sendEntity(entity, signature);
+    sendComponent<Engine::Components::RigidBody>(entity, enemy_rigidbody);
+    sendComponent<Engine::Components::Transform>(entity, enemy_transform);
+    sendComponent<Engine::Components::Sprite>(entity, enemy_sprite);
+    sendComponent<Engine::Components::Hitbox>(entity, enemy_hitbox);
+    sendComponent<Engine::Components::EnemyInfo>(entity, enemy_enemyinfo);
 }
 
 int Engine::NetworkManager::getConnectedPlayers()

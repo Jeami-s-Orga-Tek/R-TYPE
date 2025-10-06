@@ -17,11 +17,14 @@
 #include "Mediator.hpp"
 #include "ComponentRegistry.hpp"
 
+#include "Components/EnemyInfo.hpp"
+
 namespace Engine {
     class NetworkManager {
     public:
         void createPlayer();
         void createPlayerProjectile(float x, float y);
+        void createEnemy(float x, float y, ENEMY_TYPES enemy_type);
 
         enum class Role {
             CLIENT,
@@ -52,7 +55,7 @@ namespace Engine {
         
         void startServer();
         
-        #pragma pack(1)
+        #pragma pack(push, 1)
         struct PacketHeader {
             uint16_t magic;
             uint8_t version;
@@ -61,52 +64,59 @@ namespace Engine {
             uint32_t ack;
             uint32_t ack_bits;
         };
+        #pragma pack(pop)
 
         PacketHeader createPacketHeader(MsgType type, uint32_t seq = 0, uint32_t ack = 0, uint32_t ack_bits = 0);
 
-        #pragma pack(1)
+        #pragma pack(push, 1)
         struct HelloBody {
             uint32_t nonce;
             uint8_t version;
             uint8_t name_len;
         };
+        #pragma pack(pop)
 
-        #pragma pack(1)
+        #pragma pack(push, 1)
         struct WelcomeBody {
             uint32_t player_id;
             uint16_t room_id;
             uint32_t baseline_tick;
         };
+        #pragma pack(pop)
 
         void send_hello(const std::string &client_name, uint32_t nonce);
         void send_welcome();
         void send_pong(uint32_t seq);
         void send_ping(uint32_t seq);
 
-        #pragma pack(1)
+        #pragma pack(push, 1)
         struct InputBody {
             uint32_t player_id;
             uint16_t room_id;
             uint64_t input_data;
         };
+        #pragma pack(pop)
 
-        #pragma pack(1)
+        #pragma pack(push, 1)
         struct EntityBody {
             uint32_t entity_id;
             uint64_t signature;
         };
+        #pragma pack(pop)
 
-        #pragma pack(1)
+        #pragma pack(push, 1)
         struct EntityDestroyBody {
             uint32_t entity_id;
         };
+        #pragma pack(pop)
 
-        #pragma pack(1)
+        #pragma pack(push, 1)
         struct ComponentBody {
             uint32_t entity_id;
             uint8_t name_len;
             uint32_t component_len;
         };
+        #pragma pack(pop)
 
         template <std::size_t S> void sendInput(const uint32_t player_id, const uint16_t room_id, const std::bitset<S> inputs);
         void sendEntity(const Entity &entity, const Signature &signature);

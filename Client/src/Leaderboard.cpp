@@ -8,7 +8,7 @@
 #include "Leaderboard.hpp"
 #include <iostream>
 
-Leaderboard::Leaderboard(sf::Vector2u windowSize) : windowSize(windowSize)
+Leaderboard::Leaderboard(Engine::Utils::Vec2UInt windowSize) : windowSize(windowSize)
 {
 }
 
@@ -138,7 +138,7 @@ void Leaderboard::update()
 {
 }
 
-void Leaderboard::updateWindowSize(sf::Vector2u newSize)
+void Leaderboard::updateWindowSize(Engine::Utils::Vec2UInt newSize)
 {
     windowSize = newSize;
     centerImage();

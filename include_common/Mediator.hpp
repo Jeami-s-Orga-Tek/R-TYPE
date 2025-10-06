@@ -8,6 +8,7 @@
 #ifndef MEDIATOR_HPP_
 #define MEDIATOR_HPP_
 
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -27,6 +28,7 @@ namespace Engine {
             template <typename T> void registerComponent();
             template <typename T> void addComponent(Entity entity, T component);
             template <typename T> void removeComponent(Entity entity);
+            template <typename T> bool hasComponent(Entity entity);
             template <typename T> T &getComponent(Entity entity);
             template <typename T> ComponentType getComponentType();
             template <typename T> std::shared_ptr<T> registerSystem();
@@ -67,6 +69,17 @@ void Engine::Mediator::removeComponent(Entity entity)
     signature.set(componentManager->getComponentType<T>(), false);
     entityManager->setSignature(entity, signature);
     systemManager->entitySignatureChanged(entity, signature);
+}
+
+template <typename T>
+bool Engine::Mediator::hasComponent(Entity entity)
+{
+    try {
+        componentManager->getComponent<T>(entity);
+        return (true);
+    } catch (const std::exception &) {
+        return (false);
+    }
 }
 
 template <typename T>

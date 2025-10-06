@@ -8,7 +8,7 @@
 #include "Locker.hpp"
 #include <iostream>
 
-Locker::Locker(sf::Vector2u windowSize) : windowSize(windowSize)
+Locker::Locker(Engine::Utils::Vec2UInt windowSize) : windowSize(windowSize)
 {
 }
 
@@ -58,7 +58,7 @@ void Locker::update()
 {
 }
 
-void Locker::updateWindowSize(sf::Vector2u newSize)
+void Locker::updateWindowSize(Engine::Utils::Vec2UInt newSize)
 {
     windowSize = newSize;
     centerLogo();

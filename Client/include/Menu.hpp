@@ -11,21 +11,23 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+#include "Utils.hpp"
+
 class Menu {
     public:
-        Menu(sf::Vector2u windowSize);
+        Menu(Engine::Utils::Vec2UInt windowSize);
         ~Menu() = default;
         
         bool loadResources();
         void draw(sf::RenderWindow& window);
         void handleEvent(const sf::Event& event, sf::RenderWindow& window);
         void update();
-        void updateWindowSize(sf::Vector2u newSize);
+        void updateWindowSize(Engine::Utils::Vec2UInt newSize);
 
     private:
         sf::Texture logoTexture;
         sf::Sprite logoSprite;
-        sf::Vector2u windowSize;
+        Engine::Utils::Vec2UInt windowSize;
         
         void centerLogo();
     };

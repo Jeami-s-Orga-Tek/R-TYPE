@@ -11,6 +11,8 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+#include "Utils.hpp"
+
 class ParamButton {
 public:
     ParamButton() = default;
@@ -18,7 +20,7 @@ public:
     ~ParamButton() = default;
 
     void draw(sf::RenderWindow& window);
-    bool isClicked(sf::Vector2i mousePos);
+    bool isClicked(Engine::Utils::Vec2Int mousePos);
     void setHovered(bool hovered);
     sf::Vector2f getPosition() const { return shape.getPosition(); }
     
@@ -29,7 +31,7 @@ public:
 
     void setupVolumeBar(sf::Vector2f position, float width);
     void drawVolumeBar(sf::RenderWindow& window);
-    bool isVolumeBarClicked(sf::Vector2i mousePos) const;
+    bool isVolumeBarClicked(Engine::Utils::Vec2Int mousePos) const;
     void setVolumeFromMouse(int mouseX);
     float getVolume() const { return volumeValue; }
     void setVolume(float value);
