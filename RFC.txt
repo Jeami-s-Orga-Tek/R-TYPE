@@ -9,9 +9,9 @@ PacketHeader :
 
 MSG_TYPES :
 	-	MSG_HELLO = 1,
-        -	MSG_WELCOME = 2,
-        -	MSG_PING = 3,
-        -	MSG_PONG = 4,
+	-	MSG_WELCOME = 2,
+	-	MSG_PING = 3,
+	-	MSG_PONG = 4,
 	-	MSG_INPUT = 5,
 	-	MSG_ENTITY = 6,
 	-	MSG_ENTITY_DESTROY = 7,

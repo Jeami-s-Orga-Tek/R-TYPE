@@ -137,6 +137,7 @@ int main()
     float accumulator = 0.0f;
     auto previousTime = std::chrono::high_resolution_clock::now();
 
+    const int PLAYER_NB = 4;
     bool have_players_spawned = false;
 
     while (true) {
@@ -146,16 +147,16 @@ int main()
         accumulator += frameTime;
 
         while (accumulator >= FIXED_DT) {
-            if (!have_players_spawned && networkManager->getConnectedPlayers() >= 2) {
+            if (!have_players_spawned && networkManager->getConnectedPlayers() >= PLAYER_NB) {
                 for (int i = 0; i < networkManager->getConnectedPlayers(); i++)
                     networkManager->createPlayer();
-                networkManager->createEnemy(rand() % 400, rand() % 400, ENEMY_TYPES::SIMPLE);
+                networkManager->createEnemy(1000, rand() % 400, ENEMY_TYPES::SIMPLE);
                 have_players_spawned = true;
             }
 
             if (have_players_spawned && rand() % 100 == 0) {
                 // std::cout << "ENEMY SPAWN" << std::endl;
-                networkManager->createEnemy(rand() % 400, rand() % 400, ENEMY_TYPES::SIMPLE);
+                networkManager->createEnemy(1000, rand() % 400, static_cast<ENEMY_TYPES>(rand() % 2));
                 // std::cout << "ENEMY SPAWN FINSH" << std::endl;
             }
 

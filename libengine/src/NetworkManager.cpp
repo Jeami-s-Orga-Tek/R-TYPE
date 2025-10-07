@@ -8,6 +8,7 @@
 #include <boost/asio.hpp>
 #include <iostream>
 #include <array>
+#include <string>
 #include <thread>
 #include <cstring>
 
@@ -382,11 +383,15 @@ void Engine::NetworkManager::createPlayer()
     mediator->addComponent(entity, player_rigidbody);
     const Engine::Components::Transform player_transform = {.pos = Engine::Utils::Vec2(static_cast<float>(rand() % 500), static_cast<float>(rand() % 500)), .rot = 0.0f, .scale = 2.0f};
     mediator->addComponent(entity, player_transform);
-    const Engine::Components::Sprite player_sprite = {.sprite_name = "player", .frame_nb = 1};
+    const std::string player_sprite_name = std::string("player_") + std::to_string((entity % 5) + 1);
+    Engine::Components::Sprite player_sprite = {};
+    std::strncpy(player_sprite.sprite_name, player_sprite_name.c_str(), sizeof(player_sprite.sprite_name) - 1);
+    player_sprite.sprite_name[sizeof(player_sprite.sprite_name) - 1] = '\0';
+    player_sprite.frame_nb = 1;
     mediator->addComponent(entity, player_sprite);
     const Engine::Components::PlayerInfo player_info = {.player_id = entity};
     mediator->addComponent(entity, player_info);
-    const Engine::Components::ShootingCooldown player_cooldown = {.cooldown_time = 15, .cooldown = 0};
+    const Engine::Components::ShootingCooldown player_cooldown = {.cooldown_time = 5, .cooldown = 0};
     mediator->addComponent(entity, player_cooldown);
 
     sendEntity(entity, signature);
@@ -436,7 +441,7 @@ void Engine::NetworkManager::createEnemy(float x, float y, ENEMY_TYPES enemy_typ
 
     Engine::Entity entity = mediator->createEntity();
 
-    const Engine::Components::RigidBody enemy_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
+    const Engine::Components::RigidBody enemy_rigidbody = {.velocity = Engine::Utils::Vec2(10.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, enemy_rigidbody);
     const Engine::Components::Transform enemy_transform = {.pos = Engine::Utils::Vec2(x, y), .rot = 0.0f, .scale = 2.0f};
     mediator->addComponent(entity, enemy_transform);
@@ -444,7 +449,7 @@ void Engine::NetworkManager::createEnemy(float x, float y, ENEMY_TYPES enemy_typ
     mediator->addComponent(entity, enemy_sprite);
     const Engine::Components::Hitbox enemy_hitbox = {.bounds = Utils::Rect(x, y, 66, 66), .active = true, .layer = HITBOX_LAYERS::ENEMY, .damage = 10};
     mediator->addComponent(entity, enemy_hitbox);
-    const Engine::Components::EnemyInfo enemy_enemyinfo = {.health = 20, .maxHealth = 20, .type = static_cast<int>(enemy_type), .scoreValue = 100, .speed = 0.0f, .isActive = true};
+    const Engine::Components::EnemyInfo enemy_enemyinfo = {.health = 20, .maxHealth = 20, .type = static_cast<int>(enemy_type), .scoreValue = 100, .speed = 50.0f, .isActive = true};
     mediator->addComponent(entity, enemy_enemyinfo);
 
     sendEntity(entity, signature);

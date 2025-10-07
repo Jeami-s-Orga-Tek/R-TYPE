@@ -85,7 +85,7 @@ namespace Engine {
                             break;
                         case ENEMY_TYPES::SINE_WAVE:
                             rigidbody.velocity.x = -enemyComp.speed;
-                            rigidbody.velocity.y = sin(transform.pos.x * 0.01f) * 50.0f;
+                            rigidbody.velocity.y = sin(transform.pos.x * 0.1f) * 200.0f;
                             break;
                     }
                 }

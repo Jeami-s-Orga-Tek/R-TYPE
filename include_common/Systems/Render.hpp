@@ -62,6 +62,7 @@ namespace Engine {
 
                         auto sprite_find = sprites.find(entity_sprite.sprite_name);
                         if (sprite_find == sprites.end()) {
+                            std::cerr << entity_sprite.sprite_name << std::endl;
                             throw SpriteError("Couldn't find sprite for an entity D:");
                         }
                         auto &sprite = sprite_find->second;

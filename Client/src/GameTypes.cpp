@@ -893,11 +893,16 @@ void GameManager::gameDemo(sf::RenderWindow &window)
 
     std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
 
-    render_system->addTexture(renderer, "player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
+    render_system->addTexture(renderer, "players_sprite_sheet", "assets/sprites/vaisseaux.gif");
+    render_system->addTexture(renderer, "base_player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
     render_system->addTexture(renderer, "ground_enemy_sprite_sheet", "assets/sprites/r-typesheet7.gif");
 
-    render_system->addSprite(renderer, "player", "player_sprite_sheet", {32, 14}, {101, 3}, 10, 1);
-    render_system->addSprite(renderer, "weak_player_projectile", "player_sprite_sheet", {16, 4}, {249, 90}, 1, 1);
+    render_system->addSprite(renderer, "player_1", "players_sprite_sheet", {32, 17}, {0, 0}, 5, 1);
+    render_system->addSprite(renderer, "player_2", "players_sprite_sheet", {32, 17}, {0, 17}, 5, 1);
+    render_system->addSprite(renderer, "player_3", "players_sprite_sheet", {32, 17}, {0, 34}, 5, 1);
+    render_system->addSprite(renderer, "player_4", "players_sprite_sheet", {32, 17}, {0, 51}, 5, 1);
+    render_system->addSprite(renderer, "player_5", "players_sprite_sheet", {32, 17}, {0, 68}, 5, 1);
+    render_system->addSprite(renderer, "weak_player_projectile", "base_player_sprite_sheet", {16, 4}, {249, 90}, 1, 1);
     render_system->addSprite(renderer, "ground_enemy", "ground_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
 
     const float FIXED_DT = 1.0f / 60.0f;
