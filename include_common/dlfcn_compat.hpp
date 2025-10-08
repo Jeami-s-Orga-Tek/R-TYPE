@@ -18,7 +18,7 @@
 inline void* dlopen(const char* p, int) { return (void*)LoadLibraryA(p); }
 inline void* dlsym(void* h, const char* s) { return (void*)GetProcAddress((HMODULE)h, s); }
 inline int dlclose(void* h) { return FreeLibrary((HMODULE)h) ? 0 : -1; }
-inline char* dlerror() { return (char*)"dlerror not available on Windows"; }
+inline char* dlerror() { return (char*)NULL; }
 #else
 #include <dlfcn.h>
 #endif
