@@ -1,15 +1,10 @@
 var searchData=
 [
-  ['rendersystem_0',['RenderSystem',['../classEngine_1_1Systems_1_1RenderSystem.html',1,'Engine::Systems']]],
-  ['rigidbody_5fs_1',['RigidBody_s',['../structEngine_1_1Components_1_1RigidBody__s.html',1,'Engine::Components']]],
-  ['room_2',['Room',['../classRtypeServer_1_1Room.html',1,'RtypeServer']]],
-  ['roomcreatedbody_3',['RoomCreatedBody',['../structRtypeServer_1_1RoomCreatedBody.html',1,'RtypeServer']]],
-  ['roomerrorbody_4',['RoomErrorBody',['../structRtypeServer_1_1RoomErrorBody.html',1,'RtypeServer']]],
-  ['roominfo_5',['RoomInfo',['../structRtypeServer_1_1RoomInfo.html',1,'RtypeServer']]],
-  ['roominfoentry_6',['RoomInfoEntry',['../structRtypeServer_1_1RoomInfoEntry.html',1,'RtypeServer']]],
-  ['roomjoinedbody_7',['RoomJoinedBody',['../structRtypeServer_1_1RoomJoinedBody.html',1,'RtypeServer']]],
-  ['roomleftbody_8',['RoomLeftBody',['../structRtypeServer_1_1RoomLeftBody.html',1,'RtypeServer']]],
-  ['roomlistbody_9',['RoomListBody',['../structRtypeServer_1_1RoomListBody.html',1,'RtypeServer']]],
-  ['roommanager_10',['RoomManager',['../classRtypeServer_1_1RoomManager.html',1,'RtypeServer']]],
-  ['roommessagebody_11',['RoomMessageBody',['../structRtypeServer_1_1RoomMessageBody.html',1,'RtypeServer']]]
+  ['sfml_0',['SFML',['../classEngine_1_1Renderers_1_1SFML.html',1,'Engine::Renderers']]],
+  ['shootingcooldown_5fs_1',['ShootingCooldown_s',['../structEngine_1_1Components_1_1ShootingCooldown__s.html',1,'Engine::Components']]],
+  ['sprite_5fs_2',['Sprite_s',['../structEngine_1_1Components_1_1Sprite__s.html',1,'Engine::Components::Sprite_s'],['../structEngine_1_1Systems_1_1Sprite__s.html',1,'Engine::Systems::Sprite_s']]],
+  ['spriteerror_3',['SpriteError',['../classEngine_1_1Systems_1_1SpriteError.html',1,'Engine::Systems']]],
+  ['system_4',['System',['../classEngine_1_1System.html',1,'Engine']]],
+  ['systemmanager_5',['SystemManager',['../classEngine_1_1SystemManager.html',1,'Engine']]],
+  ['systemmanagererror_6',['SystemManagerError',['../classEngine_1_1SystemManagerError.html',1,'Engine']]]
 ];

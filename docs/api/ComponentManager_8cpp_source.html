@@ -163,7 +163,20 @@ $(function(){initNavTree('ComponentManager_8cpp_source.html',''); initResizable(
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">// {</span></div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">//     return (getComponentArray&lt;T&gt;()-&gt;getComponent(entity));</span></div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">// }</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classEngine_1_1ComponentManager.html#a6dd8a8f21dea1631338b061180305684">   66</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classEngine_1_1ComponentManager.html#a6dd8a8f21dea1631338b061180305684">Engine::ComponentManager::entityDestroyed</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Entity</a> entity)</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>{</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;pair : <a class="code hl_variable" href="classEngine_1_1ComponentManager.html#a0cded27172e427c912877ab72e3c44bf">component_arrays</a>) {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keyword">const</span> <span class="keyword">auto</span> &amp;component = pair.second;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        component-&gt;entityDestroyed(entity);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    }</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>}</div>
+</div>
 <div class="ttc" id="aComponentManager_8hpp_html"><div class="ttname"><a href="ComponentManager_8hpp.html">ComponentManager.hpp</a></div></div>
+<div class="ttc" id="aclassEngine_1_1ComponentManager_html_a0cded27172e427c912877ab72e3c44bf"><div class="ttname"><a href="classEngine_1_1ComponentManager.html#a0cded27172e427c912877ab72e3c44bf">Engine::ComponentManager::component_arrays</a></div><div class="ttdeci">std::unordered_map&lt; std::string, std::shared_ptr&lt; IComponentArray &gt; &gt; component_arrays</div><div class="ttdef"><b>Definition</b> <a href="ComponentManager_8hpp_source.html#l00043">ComponentManager.hpp:43</a></div></div>
+<div class="ttc" id="aclassEngine_1_1ComponentManager_html_a6dd8a8f21dea1631338b061180305684"><div class="ttname"><a href="classEngine_1_1ComponentManager.html#a6dd8a8f21dea1631338b061180305684">Engine::ComponentManager::entityDestroyed</a></div><div class="ttdeci">void entityDestroyed(Entity entity)</div><div class="ttdef"><b>Definition</b> <a href="#l00066">ComponentManager.cpp:66</a></div></div>
+<div class="ttc" id="anamespaceEngine_html_ac461a3f8921baac5988df8684459f56f"><div class="ttname"><a href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Engine::Entity</a></div><div class="ttdeci">std::uint32_t Entity</div><div class="ttdef"><b>Definition</b> <a href="Entity_8hpp_source.html#l00018">Entity.hpp:18</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -39,7 +39,7 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="classParameters.html#a249664d3d5d74a6b09b367b692e8e560" target="_top" xlink:title=" ">
+<g id="a_Node000005"><a xlink:href="classParameters.html#aac22cfbba7232b289298637e456bd9b6" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="515.62,-20 359.38,-20 359.38,0 515.62,0 515.62,-20"/>
 <text text-anchor="middle" x="437.5" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">Parameters::updateWindowSize</text>
 </a>
@@ -75,7 +75,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classGameManager.html#a72e1318dfab6fad06bd4126d12f6a537" target="_top" xlink:title=" ">
+<g id="a_Node000004"><a xlink:href="classGameManager.html#ae60f9a9c5dc48f158537ed98d2b6dbfe" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="149.5,-58 0,-58 0,-38 149.5,-38 149.5,-58"/>
 <text text-anchor="middle" x="74.75" y="-44.5" font-family="Helvetica,sans-Serif" font-size="10.00">GameManager::GameManager</text>
 </a>

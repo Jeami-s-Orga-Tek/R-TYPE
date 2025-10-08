@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['ping_0',['PING',['../namespaceRtypeServer.html#a2ae8a74f56e9b13322005c8e64a568c5ae07ff41a486c27c095a15898dcca34d1',1,'RtypeServer::PING'],['../namespaceRtypeServer.html#a2ae8a74f56e9b13322005c8e64a568c5ae07ff41a486c27c095a15898dcca34d1',1,'RtypeServer::PING'],['../namespaceRtypeServer.html#a2ae8a74f56e9b13322005c8e64a568c5ae07ff41a486c27c095a15898dcca34d1',1,'RtypeServer::PING'],['../namespaceRtypeServer.html#a2ae8a74f56e9b13322005c8e64a568c5ae07ff41a486c27c095a15898dcca34d1',1,'RtypeServer::PING']]],
-  ['player_5finput_1',['PLAYER_INPUT',['../namespaceEngine.html#ae9534b1f5d4ffb600087726e3e56f3c5a180c1b797f83d66065d0313fa7e863d1',1,'Engine']]],
-  ['pong_2',['PONG',['../namespaceRtypeServer.html#a2ae8a74f56e9b13322005c8e64a568c5a15c94917c8795679ecb650ed760c27f0',1,'RtypeServer::PONG'],['../namespaceRtypeServer.html#a2ae8a74f56e9b13322005c8e64a568c5a15c94917c8795679ecb650ed760c27f0',1,'RtypeServer::PONG'],['../namespaceRtypeServer.html#a2ae8a74f56e9b13322005c8e64a568c5a15c94917c8795679ecb650ed760c27f0',1,'RtypeServer::PONG'],['../namespaceRtypeServer.html#a2ae8a74f56e9b13322005c8e64a568c5a15c94917c8795679ecb650ed760c27f0',1,'RtypeServer::PONG']]],
-  ['protanopia_3',['PROTANOPIA',['../Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1fa3d779c7b9db72d2597275565059d6aba',1,'Parameters.hpp']]]
+  ['res_5f1280x720_0',['RES_1280x720',['../Parameters_8hpp.html#a8ece09a5e741dd114391f80170674244aa181d2f232de4d70a5615e7d273bb56d',1,'Parameters.hpp']]],
+  ['res_5f1920x1080_1',['RES_1920x1080',['../Parameters_8hpp.html#a8ece09a5e741dd114391f80170674244a7d71499d30f48705d444a747144f6624',1,'Parameters.hpp']]],
+  ['res_5f800x600_2',['RES_800x600',['../Parameters_8hpp.html#a8ece09a5e741dd114391f80170674244a47ccee5dce1907c3a7121c7034b74363',1,'Parameters.hpp']]],
+  ['right_3',['RIGHT',['../namespaceEngine.html#a1f53607dd1427cdc834829bae8238b64a21507b40c80068eda19865706fdc2403',1,'Engine']]]
 ];

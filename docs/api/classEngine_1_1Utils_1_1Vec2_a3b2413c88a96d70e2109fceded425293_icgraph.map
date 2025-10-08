@@ -1,0 +1,9 @@
+<map id="Engine::Utils::Vec2::Vec2" name="Engine::Utils::Vec2::Vec2">
+<area shape="rect" id="Node000001" title=" " alt="" coords="187,72,320,115"/>
+<area shape="rect" id="Node000002" href="$classEngine_1_1Utils_1_1Vec2.html#a611ba04a5627a6727ae55fe29655db22" title=" " alt="" coords="5,5,139,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,69,131,51,133,46,180,64"/>
+<area shape="rect" id="Node000003" href="$classEngine_1_1Utils_1_1Vec2.html#a60c6282ccbc0d2155cfb7eab49746748" title=" " alt="" coords="5,72,139,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,96,139,96,139,91,171,91"/>
+<area shape="rect" id="Node000004" href="$classEngine_1_1Utils_1_1Vec2.html#aa7ae876c27dd841d1f30efca7b43cbb0" title=" " alt="" coords="5,139,139,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="180,123,133,141,131,136,178,118"/>
+</map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📐_20gameplay_20prototype_0',['📐 Gameplay (prototype)',['../index.html#autotoc_md19',1,'']]]
+  ['🚀_20quick_20start_0',['🚀 Quick Start',['../index.html#autotoc_md4',1,'']]]
 ];

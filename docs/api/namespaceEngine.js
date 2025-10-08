@@ -1,28 +1,36 @@
 var namespaceEngine =
 [
     [ "Components", "namespaceEngine_1_1Components.html", "namespaceEngine_1_1Components" ],
+    [ "Renderers", "namespaceEngine_1_1Renderers.html", "namespaceEngine_1_1Renderers" ],
     [ "Systems", "namespaceEngine_1_1Systems.html", "namespaceEngine_1_1Systems" ],
     [ "Utils", "namespaceEngine_1_1Utils.html", "namespaceEngine_1_1Utils" ],
     [ "ComponentArray", "classEngine_1_1ComponentArray.html", "classEngine_1_1ComponentArray" ],
     [ "ComponentArrayError", "classEngine_1_1ComponentArrayError.html", "classEngine_1_1ComponentArrayError" ],
     [ "ComponentManager", "classEngine_1_1ComponentManager.html", "classEngine_1_1ComponentManager" ],
     [ "ComponentManagerError", "classEngine_1_1ComponentManagerError.html", "classEngine_1_1ComponentManagerError" ],
+    [ "ComponentRegistry", "classEngine_1_1ComponentRegistry.html", "classEngine_1_1ComponentRegistry" ],
     [ "EntityManager", "classEngine_1_1EntityManager.html", "classEngine_1_1EntityManager" ],
     [ "EntityManagerError", "classEngine_1_1EntityManagerError.html", "classEngine_1_1EntityManagerError" ],
     [ "Event", "classEngine_1_1Event.html", "classEngine_1_1Event" ],
     [ "EventManager", "classEngine_1_1EventManager.html", "classEngine_1_1EventManager" ],
     [ "IComponentArray", "classEngine_1_1IComponentArray.html", "classEngine_1_1IComponentArray" ],
     [ "Mediator", "classEngine_1_1Mediator.html", "classEngine_1_1Mediator" ],
+    [ "NetworkManager", "classEngine_1_1NetworkManager.html", "classEngine_1_1NetworkManager" ],
+    [ "Renderer", "classEngine_1_1Renderer.html", "classEngine_1_1Renderer" ],
     [ "System", "classEngine_1_1System.html", "classEngine_1_1System" ],
     [ "SystemManager", "classEngine_1_1SystemManager.html", "classEngine_1_1SystemManager" ],
     [ "SystemManagerError", "classEngine_1_1SystemManagerError.html", "classEngine_1_1SystemManagerError" ],
+    [ "ComponentAdder", "namespaceEngine.html#ad3f7fc5a62a802417ecb4509131943bc", null ],
     [ "ComponentType", "namespaceEngine.html#aade0eb98b8a7dc80f516aa26064dbd50", null ],
     [ "Entity", "namespaceEngine.html#ac461a3f8921baac5988df8684459f56f", null ],
     [ "EventId", "namespaceEngine.html#a3c3b1b42a70f283204ca617031c34e56", null ],
     [ "EventParamId", "namespaceEngine.html#a3303a533332d8664c8cb3417ada7ecb6", null ],
     [ "Signature", "namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5", null ],
     [ "EventsIds", "namespaceEngine.html#ae9534b1f5d4ffb600087726e3e56f3c5", [
-      [ "PLAYER_INPUT", "namespaceEngine.html#ae9534b1f5d4ffb600087726e3e56f3c5a180c1b797f83d66065d0313fa7e863d1", null ]
+      [ "PLAYER_INPUT", "namespaceEngine.html#ae9534b1f5d4ffb600087726e3e56f3c5a180c1b797f83d66065d0313fa7e863d1", null ],
+      [ "COLLISION", "namespaceEngine.html#ae9534b1f5d4ffb600087726e3e56f3c5afc3ca10632f0c7aa3aaea07a234377db", null ],
+      [ "ENEMY_DESTROYED", "namespaceEngine.html#ae9534b1f5d4ffb600087726e3e56f3c5ae411c04bcad96d68861c90fb57fec9ba", null ],
+      [ "PLAYER_HIT", "namespaceEngine.html#ae9534b1f5d4ffb600087726e3e56f3c5ab0fffa9fd055d193a673aff6928ab54d", null ]
     ] ],
     [ "InputButtons", "namespaceEngine.html#a1f53607dd1427cdc834829bae8238b64", [
       [ "LEFT", "namespaceEngine.html#a1f53607dd1427cdc834829bae8238b64a684d325a7303f52e64011467ff5c5758", null ],

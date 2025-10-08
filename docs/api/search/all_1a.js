@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['y_0',['y',['../classEngine_1_1Utils_1_1Vec2.html#a387dd055855d07b7ea4b5c9cf34b5a5c',1,'Engine::Utils::Vec2']]]
+  ['—_20e_20g_20fedora_2041_0',['Prerequisites (Linux — e.g., Fedora 41)',['../index.html#autotoc_md5',1,'']]],
+  ['—_20online_20shoot’em_20up_20game_20engine_20c_2017_1',['R‑TYPE — Online Shoot’em Up + Game Engine (C++17)',['../index.html',1,'']]]
 ];

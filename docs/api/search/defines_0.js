@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['kmagic_0',['kMagic',['../Server_2src_2net_2Protocol_8hpp.html#a0c4e940df63668330e3e32b1ecd3d9c2',1,'kMagic:&#160;Protocol.hpp'],['../Client_2include_2net_2Protocol_8hpp.html#a0c4e940df63668330e3e32b1ecd3d9c2',1,'kMagic:&#160;Protocol.hpp']]],
-  ['kprotoversion_1',['kProtoVersion',['../Server_2src_2net_2Protocol_8hpp.html#a88e6e7605c5fe61125a342cc798868c0',1,'kProtoVersion:&#160;Protocol.hpp'],['../Client_2include_2net_2Protocol_8hpp.html#a88e6e7605c5fe61125a342cc798868c0',1,'kProtoVersion:&#160;Protocol.hpp']]]
+  ['max_5fcomponents_0',['MAX_COMPONENTS',['../Entity_8hpp.html#a6d8c910a1fdb6d4762a05f7250e64322',1,'Entity.hpp']]],
+  ['max_5fentities_1',['MAX_ENTITIES',['../Entity_8hpp.html#a0b7e155f796ed5e7b49b0f44867135ee',1,'Entity.hpp']]]
 ];

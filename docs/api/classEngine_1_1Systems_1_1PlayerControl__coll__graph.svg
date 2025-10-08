@@ -14,17 +14,17 @@
 <g id="a_Node000001"><a xlink:title=" ">
 <polygon fill="#999999" stroke="none" points="150,-84 0,-84 0,0 150,0 150,-84"/>
 <text text-anchor="start" x="4.88" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">Engine::Systems::PlayerControl</text>
-<text text-anchor="start" x="23" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
-<text text-anchor="start" x="49" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">buttons</text>
-<text text-anchor="start" x="21.5" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="49" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">init()</text>
-<text text-anchor="start" x="21.5" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="49" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">update()</text>
-<text text-anchor="start" x="21.5" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="49" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">inputListener()</text>
+<text text-anchor="start" x="16" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
+<text text-anchor="start" x="35" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">player_id_to_buttons</text>
+<text text-anchor="start" x="14.5" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="35" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">init()</text>
+<text text-anchor="start" x="14.5" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="35" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">update()</text>
+<text text-anchor="start" x="14.5" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="35" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">inputListener()</text>
 <polygon fill="#666666" stroke="#666666" points="0,-66 0,-66 150,-66 150,-66 0,-66"/>
-<polygon fill="#666666" stroke="#666666" points="0,-50 0,-50 47,-50 47,-50 0,-50"/>
-<polygon fill="#666666" stroke="#666666" points="47,-50 47,-50 150,-50 150,-50 47,-50"/>
+<polygon fill="#666666" stroke="#666666" points="0,-50 0,-50 33,-50 33,-50 0,-50"/>
+<polygon fill="#666666" stroke="#666666" points="33,-50 33,-50 150,-50 150,-50 33,-50"/>
 <polygon fill="none" stroke="#666666" points="0,0 0,-84 150,-84 150,0 0,0"/>
 </a>
 </g>

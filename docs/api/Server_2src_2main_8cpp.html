@@ -97,42 +97,43 @@ $(function(){initNavTree('Server_2src_2main_8cpp.html',''); initResizable(true);
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">main.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;iostream&gt;</code><br />
-<code>#include &lt;boost/asio.hpp&gt;</code><br />
 <code>#include &lt;csignal&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
-<code>#include &quot;<a class="el" href="UdpServer_8hpp_source.html">net/UdpServer.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Log_8hpp_source.html">util/Log.hpp</a>&quot;</code><br />
+<code>#include &lt;chrono&gt;</code><br />
+<code>#include &quot;<a class="el" href="EnemyInfo_8hpp_source.html">Components/EnemyInfo.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Hitbox_8hpp_source.html">Components/Hitbox.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="RigidBody_8hpp_source.html">Components/RigidBody.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Transform_8hpp_source.html">Components/Transform.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Entity_8hpp_source.html">Entity.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="dlfcn__compat_8hpp_source.html">dlfcn_compat.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="NetworkManager_8hpp_source.html">NetworkManager.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Physics_8hpp_source.html">Systems/Physics.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="PlayerControl_8hpp_source.html">Systems/PlayerControl.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Collision_8hpp_source.html">Systems/Collision.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Enemy_8hpp_source.html">Systems/Enemy.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Sprite_8hpp_source.html">Components/Sprite.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Server/src/main.cpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="Server_2src_2main_8cpp__incl.svg" width="1416" height="411"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="Server_2src_2main_8cpp__incl.svg" width="3428" height="635"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="Server_2src_2main_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a8ee3282bc313e547dbbb8d4f4010db61" id="r_a8ee3282bc313e547dbbb8d4f4010db61"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ee3282bc313e547dbbb8d4f4010db61">signalHandler</a> (int signum)</td></tr>
-<tr class="separator:a8ee3282bc313e547dbbb8d4f4010db61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ddf1224851353fc92bfbff6f499fa97" id="r_a0ddf1224851353fc92bfbff6f499fa97"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])</td></tr>
-<tr class="separator:a0ddf1224851353fc92bfbff6f499fa97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a817736daa9e83382a9d00220aa8984ae" id="r_a817736daa9e83382a9d00220aa8984ae"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; boost::asio::io_context &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a817736daa9e83382a9d00220aa8984ae">g_io</a></td></tr>
-<tr class="separator:a817736daa9e83382a9d00220aa8984ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abdb2d9e5872edf7170bd0c854aa97a10" id="r_abdb2d9e5872edf7170bd0c854aa97a10"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classRtypeServer_1_1UdpServer.html">RtypeServer::UdpServer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abdb2d9e5872edf7170bd0c854aa97a10">g_server</a></td></tr>
-<tr class="separator:abdb2d9e5872edf7170bd0c854aa97a10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae66f6b31b5ad750f1fe042a706a4e3d4" id="r_ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a> ()</td></tr>
+<tr class="separator:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a0ddf1224851353fc92bfbff6f499fa97" name="a0ddf1224851353fc92bfbff6f499fa97"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ddf1224851353fc92bfbff6f499fa97">&#9670;&#160;</a></span>main()</h2>
+<a id="ae66f6b31b5ad750f1fe042a706a4e3d4" name="ae66f6b31b5ad750f1fe042a706a4e3d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae66f6b31b5ad750f1fe042a706a4e3d4">&#9670;&#160;</a></span>main()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -140,110 +141,20 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">int main </td>
           <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>argc</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>argv</em></span>[]&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Server_2src_2main_8cpp_source.html#l00025">25</a> of file <a class="el" href="Server_2src_2main_8cpp_source.html">Server/src/main.cpp</a>.</p>
-
-<p class="reference">References <a class="el" href="Server_2src_2main_8cpp_source.html#l00015">g_io</a>, <a class="el" href="Server_2src_2main_8cpp_source.html#l00016">g_server</a>, <a class="el" href="Log_8hpp_source.html#l00054">RtypeServer::infof()</a>, and <a class="el" href="Server_2src_2main_8cpp_source.html#l00018">signalHandler()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="Server_2src_2main_8cpp_a0ddf1224851353fc92bfbff6f499fa97_cgraph.svg" width="384" height="63"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-
-</div>
-</div>
-<a id="a8ee3282bc313e547dbbb8d4f4010db61" name="a8ee3282bc313e547dbbb8d4f4010db61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ee3282bc313e547dbbb8d4f4010db61">&#9670;&#160;</a></span>signalHandler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void signalHandler </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>signum</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Server_2src_2main_8cpp_source.html#l00018">18</a> of file <a class="el" href="Server_2src_2main_8cpp_source.html">Server/src/main.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Server_2src_2main_8cpp_source.html#l00029">29</a> of file <a class="el" href="Server_2src_2main_8cpp_source.html">Server/src/main.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="Server_2src_2main_8cpp_source.html#l00015">g_io</a>, and <a class="el" href="Log_8hpp_source.html#l00054">RtypeServer::infof()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Server_2src_2main_8cpp_source.html#l00025">main()</a>.</p>
+<p class="reference">References <a class="el" href="Enemy_8hpp_source.html#l00025">Engine::Systems::EnemySystem::init()</a>, <a class="el" href="PlayerControl_8hpp_source.html#l00030">Engine::Systems::PlayerControl::init()</a>, <a class="el" href="classEngine_1_1NetworkManager.html#a5474dacdbc312e2fb4afd85e61097dc6a3d27c95bfdbea691b250894d96852844">Engine::NetworkManager::SERVER</a>, and <a class="el" href="EnemyInfo_8hpp.html#a13d0f7865800aab9571ab1d8131a4695ae5564829e2f85f6a6873a9d5c4f26d09">SIMPLE</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="Server_2src_2main_8cpp_a8ee3282bc313e547dbbb8d4f4010db61_cgraph.svg" width="287" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="Server_2src_2main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4_cgraph.svg" width="851" height="120"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="Server_2src_2main_8cpp_a8ee3282bc313e547dbbb8d4f4010db61_icgraph.svg" width="208" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a817736daa9e83382a9d00220aa8984ae" name="a817736daa9e83382a9d00220aa8984ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a817736daa9e83382a9d00220aa8984ae">&#9670;&#160;</a></span>g_io</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unique_ptr&lt;boost::asio::io_context&gt; g_io</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Server_2src_2main_8cpp_source.html#l00015">15</a> of file <a class="el" href="Server_2src_2main_8cpp_source.html">Server/src/main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Server_2src_2main_8cpp_source.html#l00025">main()</a>, and <a class="el" href="Server_2src_2main_8cpp_source.html#l00018">signalHandler()</a>.</p>
-
-</div>
-</div>
-<a id="abdb2d9e5872edf7170bd0c854aa97a10" name="abdb2d9e5872edf7170bd0c854aa97a10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abdb2d9e5872edf7170bd0c854aa97a10">&#9670;&#160;</a></span>g_server</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unique_ptr&lt;<a class="el" href="classRtypeServer_1_1UdpServer.html">RtypeServer::UdpServer</a>&gt; g_server</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Server_2src_2main_8cpp_source.html#l00016">16</a> of file <a class="el" href="Server_2src_2main_8cpp_source.html">Server/src/main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Server_2src_2main_8cpp_source.html#l00025">main()</a>.</p>
 
 </div>
 </div>

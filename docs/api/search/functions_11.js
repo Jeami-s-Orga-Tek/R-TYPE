@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vec2_0',['Vec2',['../classEngine_1_1Utils_1_1Vec2.html#a7667789ad61a7bd61810ddd4cff7c834',1,'Engine::Utils::Vec2::Vec2()'],['../classEngine_1_1Utils_1_1Vec2.html#a62e631c2d63bf00f82331a296d663ca2',1,'Engine::Utils::Vec2::Vec2(float x, float y)']]]
+  ['what_0',['what',['../classEngine_1_1ComponentArrayError.html#aa44022d6d49709258178854f92136b52',1,'Engine::ComponentArrayError::what()'],['../classEngine_1_1ComponentManagerError.html#a59c05334432dadee1320b03472de4e64',1,'Engine::ComponentManagerError::what()'],['../classEngine_1_1EntityManagerError.html#a5420687e1b040be9280cbc70bf2ac0db',1,'Engine::EntityManagerError::what()'],['../classEngine_1_1SystemManagerError.html#aab412f51bc66d606fa15f1c3037e8c30',1,'Engine::SystemManagerError::what()'],['../classEngine_1_1Systems_1_1SpriteError.html#a07f37e769e7b0e6b2a9898d5891dfa7c',1,'Engine::Systems::SpriteError::what()']]]
 ];
