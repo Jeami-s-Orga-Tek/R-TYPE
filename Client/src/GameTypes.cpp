@@ -900,6 +900,10 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     renderer = std::make_shared<Engine::Renderers::SFML>();
     renderer->createWindow(800, 600, "R du TYPE");
 
+    renderer->loadAudio("launchCoin", "assets/sound/Start_sound.mp3");
+    renderer->loadAudio("launchCoin", "assets/sound/pause.wav");
+    renderer->loadAudio("launchCoin", "assets/sound/shoot.wav");
+
     std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
 
     render_system->addTexture(renderer, "players_sprite_sheet", "assets/sprites/vaisseaux.gif");
