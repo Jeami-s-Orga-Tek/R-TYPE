@@ -25,6 +25,7 @@ namespace Engine {
         void createPlayer();
         void createPlayerProjectile(float x, float y);
         void createEnemy(float x, float y, ENEMY_TYPES enemy_type);
+        void createBackground();
 
         enum class Role {
             CLIENT,

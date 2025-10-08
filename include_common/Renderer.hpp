@@ -43,6 +43,7 @@ namespace Engine {
             virtual void setSpriteScale(const std::string &id, float scale) = 0;
             virtual void drawSprite(const std::string &id) = 0;
             virtual void removeSprite(const std::string &id) = 0;
+            virtual void scrollSprite(const std::string &id) = 0;
 
             virtual bool loadAudio(const std::string &id, const std::string &filepath) = 0;
             virtual void playAudio(const std::string &id, bool loop = false) = 0;

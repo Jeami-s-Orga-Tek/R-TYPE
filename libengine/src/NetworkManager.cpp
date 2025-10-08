@@ -460,6 +460,23 @@ void Engine::NetworkManager::createEnemy(float x, float y, ENEMY_TYPES enemy_typ
     sendComponent<Engine::Components::EnemyInfo>(entity, enemy_enemyinfo);
 }
 
+void Engine::NetworkManager::createBackground()
+{
+    Engine::Signature signature;
+    signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+
+    Engine::Entity entity = mediator->createEntity();
+
+    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Vec2(0, 0), .rot = 0.0f, .scale = 3.0f};
+    mediator->addComponent(entity, projectile_transform);
+    const Engine::Components::Sprite projectile_sprite = {.sprite_name = "space_background", .frame_nb = 1, .scrolling = true, .is_background = true};
+    mediator->addComponent(entity, projectile_sprite);
+    sendEntity(entity, signature);
+    sendComponent<Engine::Components::Transform>(entity, projectile_transform);
+    sendComponent<Engine::Components::Sprite>(entity, projectile_sprite);
+}
+
 int Engine::NetworkManager::getConnectedPlayers()
 {
     return (client_endpoints.size());

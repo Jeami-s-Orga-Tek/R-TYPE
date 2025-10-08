@@ -55,12 +55,8 @@ namespace Engine {
                     sprites.insert({sprite_name, sprite});
                 }
 
-                void update(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator) {
-                    for (const auto &entity : entities) {
-                        const auto &transform = mediator->getComponent<Components::Transform>(entity);
-                        const auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
-
-                        auto sprite_find = sprites.find(entity_sprite.sprite_name);
+                void drawSprite(std::shared_ptr<Engine::Renderer> renderer, Components::Sprite entity_sprite, Components::Transform transform) {
+                    auto sprite_find = sprites.find(entity_sprite.sprite_name);
                         if (sprite_find == sprites.end()) {
                             std::cerr << entity_sprite.sprite_name << std::endl;
                             throw SpriteError("Couldn't find sprite for an entity D:");
@@ -68,16 +64,40 @@ namespace Engine {
                         auto &sprite = sprite_find->second;
 
                         renderer->setSpriteTexture(entity_sprite.sprite_name, sprite.texture_name);
-                        renderer->setSpriteTextureRect(entity_sprite.sprite_name,
-                            static_cast<int>(sprite.pos.x * entity_sprite.frame_nb),
-                            static_cast<int>(sprite.pos.y),
-                            static_cast<int>(sprite.size.x),
-                            static_cast<int>(sprite.size.y)
-                        );
+                        if (entity_sprite.scrolling) {
+                            renderer->scrollSprite(entity_sprite.sprite_name);
+                        } else {
+                            renderer->setSpriteTextureRect(entity_sprite.sprite_name,
+                                static_cast<int>(sprite.pos.x * entity_sprite.frame_nb),
+                                static_cast<int>(sprite.pos.y),
+                                static_cast<int>(sprite.size.x),
+                                static_cast<int>(sprite.size.y)
+                            );
+                        }
                         renderer->setSpritePosition(entity_sprite.sprite_name, transform.pos.x, transform.pos.y);
                         renderer->setSpriteRotation(entity_sprite.sprite_name, transform.rot);
                         renderer->setSpriteScale(entity_sprite.sprite_name, transform.scale);
                         renderer->drawSprite(entity_sprite.sprite_name);
+                }
+
+                void update(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator) {
+                    for (const auto &entity : entities) {
+                        const auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
+
+                        if (entity_sprite.is_background) {
+                            const auto &transform = mediator->getComponent<Components::Transform>(entity);
+
+                            drawSprite(renderer, entity_sprite, transform);
+                        }
+                    }
+                    for (const auto &entity : entities) {
+                        const auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
+                        
+                        if (!entity_sprite.is_background) {
+                            const auto &transform = mediator->getComponent<Components::Transform>(entity);
+
+                            drawSprite(renderer, entity_sprite, transform);
+                        }
                     }
                 };
 

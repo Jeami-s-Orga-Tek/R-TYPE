@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 #include "Renderers/SFML.hpp"
 #include "Event.hpp"
@@ -91,6 +92,7 @@ bool Engine::Renderers::SFML::loadTexture(const std::string& id, const std::stri
 	sf::Texture texture;
 	if (!texture.loadFromFile(filepath))
 		return (false);
+	texture.setRepeated(true);
 	textures[id] = std::move(texture);
 	return (true);
 }
@@ -160,6 +162,19 @@ void Engine::Renderers::SFML::drawSprite(const std::string& id)
 void Engine::Renderers::SFML::removeSprite(const std::string& id)
 {
 	sprites.erase(id);
+}
+
+void Engine::Renderers::SFML::scrollSprite(const std::string& id)
+{
+	auto it = sprites.find(id);
+    if (it != sprites.end()) {
+		it->second.setTextureRect(sf::IntRect(
+			static_cast<int>(it->second.getTextureRect().left + 1),
+			it->second.getTextureRect().top,
+			it->second.getTextureRect().width,
+			it->second.getTextureRect().height
+		));
+	}
 }
 
 bool Engine::Renderers::SFML::loadAudio(const std::string& id, const std::string& filepath)

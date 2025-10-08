@@ -40,6 +40,7 @@ namespace Engine {
                 void setSpriteScale(const std::string& id, float scale) override;
                 void drawSprite(const std::string& id) override;
                 void removeSprite(const std::string& id) override;
+                void scrollSprite(const std::string &id) override;
 
                 bool loadAudio(const std::string& id, const std::string& filepath) override;
                 void playAudio(const std::string& id, bool loop = false) override;

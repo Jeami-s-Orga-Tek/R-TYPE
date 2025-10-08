@@ -159,6 +159,7 @@ int main()
                 for (int i = 0; i < networkManager->getConnectedPlayers(); i++)
                     networkManager->createPlayer();
                 networkManager->createEnemy(1000, rand() % 400, ENEMY_TYPES::SIMPLE);
+                networkManager->createBackground();
                 have_players_spawned = true;
             }
 

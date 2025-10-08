@@ -19,6 +19,8 @@ namespace Engine {
         typedef struct Sprite_s {
             char sprite_name[255];
             std::uint32_t frame_nb;
+            bool scrolling = false;
+            bool is_background = false;
         } Sprite;
     };
 };
