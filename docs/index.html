@@ -1,10 +1,17 @@
+<!--
+---- EPITECH PROJECT, 2025
+---- R-Type
+---- File description:
+---- index
+--->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>R·TYPE — Online Shoot’em Up + Engine</title>
-  <meta name="description" content="Modern C++17 multiplayer R-Type-like with a custom ECS engine, an authoritative UDP server (Boost.Asio) and an SFML client." />
+  <meta name="description" content="Modern C++17 multiplayer R-Type-like with a custom ECS engine, a UDP networking layer (Boost.Asio) and an SFML client." />
   <style>
     :root {
       --bg: #0a0f1a;
@@ -35,9 +42,7 @@
     header.hero{position:relative;min-height:78vh;display:grid;place-items:center;overflow:hidden}
     .hero-canvas{position:absolute;inset:0;z-index:-1;background:#000}
     .hero-inner{max-width:1100px;padding:110px 20px 56px;text-align:center}
-    h1.title{margin:0 0 12px;font-size:clamp(38px,6.8vw,76px);letter-spacing:.06em;font-weight:900;
-      background:linear-gradient(90deg,#8be9ff,#b98aff,#25ddff);
-      -webkit-background-clip:text;background-clip:text;color:transparent}
+    h1.title{margin:0 0 12px;font-size:clamp(38px,6.8vw,76px);letter-spacing:.06em;font-weight:900;background:linear-gradient(90deg,#8be9ff,#b98aff,#25ddff);-webkit-background-clip:text;background-clip:text;color:transparent}
     p.lead{margin:0 auto 20px;color:var(--muted);max-width:880px}
     .badges{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0 4px}
     .badge{border:1px solid var(--border);background:rgba(16,24,42,.8);border-radius:999px;padding:6px 10px;font-size:12px;color:#cbd5e1}
@@ -61,13 +66,10 @@
     .shot .cap{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.65));padding:8px 10px;font-size:12px;color:#d7ddff}
     code,pre{background:#0f1628;border:1px solid #1c2745;border-radius:12px}
     pre{padding:14px;overflow:auto}
-    /* Two-columns in architecture */
     .cols{display:grid;gap:18px;grid-template-columns:1fr 1fr}
     .mermaid{background:#0f1628;border:1px solid #1c2745;border-radius:12px;padding:16px}
-    /* Timeline */
     .timeline{display:grid;gap:12px}
     .step{border-left:3px solid #3b82f6;padding:8px 12px;background:#0f1628;border-radius:8px;border-top:1px solid #1c2745}
-    /* Footer */
     footer{border-top:1px solid #111a2f;color:var(--muted);text-align:center;padding:48px 0 80px}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
@@ -105,8 +107,8 @@
       <a href="#gameplay">Gameplay</a>
       <a href="#build">Build</a>
       <a href="#arch">Architecture</a>
+      <a href="docs/api/index.html" target="_blank" rel="noopener">API Docs</a>
       <a href="#gallery">Gallery</a>
-      <a href="api/index.html">API Docs</a>
       <span class="spacer"></span>
       <a class="badge" href="#contact">Contact</a>
     </div>
@@ -116,24 +118,24 @@
     <canvas class="hero-canvas" id="starfield"></canvas>
     <div class="hero-inner">
       <h1 class="title">R·TYPE — Online Shoot’em Up + Engine</h1>
-      <p class="lead">A multiplayer R-Type‑like written in modern C++17. It ships a custom <b>ECS</b> engine, an authoritative <b>UDP</b> server powered by <b>Boost.Asio</b>, and a graphical <b>SFML</b> client.</p>
+      <p class="lead">A multiplayer R-Type-like in modern C++17. Ships a custom <b>ECS</b> engine (shared library), a UDP networking layer (<b>Boost.Asio</b>), and an <b>SFML</b> graphical client.</p>
       <div class="badges">
         <span class="badge">C++17</span>
         <span class="badge">CMake</span>
         <span class="badge">CPM.cmake</span>
-        <span class="badge">SFML 2.6.x</span>
-        <span class="badge">Boost 1.86</span>
+        <span class="badge">SFML 2.6.2</span>
+        <span class="badge">Boost 1.86.0</span>
         <span class="badge">Linux · Windows (WIP)</span>
       </div>
       <div class="cta">
         <a class="btn" href="#build">Build & Run</a>
         <a class="btn alt" href="#gallery">See Screens</a>
-        <a class="btn" href="api/index.html">API Docs</a>
+        <a class="btn" href="docs/api/index.html" target="_blank" rel="noopener">API Docs</a>
       </div>
       <div class="kpis">
-        <div class="kpi"><h3>5 018</h3><p>Lines of C/C++</p></div>
-        <div class="kpi"><h3>22</h3><p>.cpp files</p></div>
-        <div class="kpi"><h3>32</h3><p>headers</p></div>
+        <div class="kpi"><h3>6 681</h3><p>Lines of C/C++</p></div>
+        <div class="kpi"><h3>23</h3><p>.cpp files</p></div>
+        <div class="kpi"><h3>42</h3><p>headers</p></div>
         <div class="kpi"><h3>60 FPS</h3><p>Menu & gameplay</p></div>
       </div>
     </div>
@@ -143,12 +145,11 @@
     <section id="features">
       <h2>What’s inside</h2>
       <div class="grid">
-        <article class="card"><h3>Graphical Client (SFML)</h3><p>Clean UI flow <em>Launch → Menu → Lobby → Parameters → Play</em>. Smooth starfield, particles, embedded fonts & sounds. Remappable controls and 30/60 FPS caps.</p></article>
-        <article class="card"><h3>Authoritative UDP Server</h3><p>Asynchronous networking with Boost.Asio: binary handshake, ping/heartbeat, welcome & lobby messages. Server remains stable even if a client hiccups.</p></article>
-        <article class="card"><h3>Custom Game Engine</h3><p>Entity‑Component‑System core with a Mediator to decouple subsystems (render, physics, input, net). Reusable managers for Entities, Components, and Systems.</p></article>
-        <article class="card"><h3>Co‑op Ready</h3><p>Designed for up to 4 players (Solo/Duo/Trio/Squad). Distinct player identity and missile systems on both sides.</p></article>
-        <article class="card"><h3>Settings & Accessibility</h3><p>Resolution & display mode, graphics quality, color‑blind profiles, audio volume, controls page to tweak inputs.</p></article>
-        <article class="card"><h3>DX‑free Build</h3><p>Self‑contained builds via CMake + CPM.cmake. Dependencies are fetched on first configure and binaries land at the repo root.</p></article>
+        <article class="card"><h3>Graphical Client (SFML)</h3><p>UI flow <em>Launch → Menu → Lobby → Parameters → Play</em>. Particle/starfield background, embedded fonts, control remapping, username & leaderboard screens.</p></article>
+        <article class="card"><h3>UDP Networking (Boost.Asio)</h3><p>Shared <code>NetworkManager</code> handles client/server roles over UDP, message send/receive loop and endpoints registry. Authoritative server loop is under active development.</p></article>
+        <article class="card"><h3>Custom ECS Engine</h3><p>Entity/Component/System core with <code>Mediator</code>, registry & managers. Components: <code>Transform</code>, <code>Sprite</code>, <code>RigidBody</code>, <code>Hitbox</code>, <code>Gravity</code>, <code>PlayerInfo</code>, <code>EnemyInfo</code>, <code>ShootingCooldown</code>. Systems: <code>PlayerControl</code>, <code>Physics</code>, <code>Collision</code>, <code>Enemy</code>, <code>Render</code>.</p></article>
+        <article class="card"><h3>Cross-platform Build</h3><p>Dependencies via CPM.cmake: SFML 2.6.2, Boost 1.86.0. Binaries drop at the repo root; the engine is a shared library (<code>libengine.so/.dll</code>).</p></article>
+        <article class="card"><h3>Quality</h3><p>GitHub Actions CI (see <code>.github/workflows/ci.yml</code>) and helper scripts in <code>ci/</code>.</p></article>
       </div>
     </section>
 
@@ -158,9 +159,9 @@
         <div class="card">
           <h3>Core loop</h3>
           <ul>
-            <li>Fly forward, dodge bullets and hazards.</li>
-            <li>Fire missiles (player & enemy); collision & damage.</li>
-            <li>Pickup power‑ups (WIP), clear waves, beat the boss (WIP).</li>
+            <li>Side-scroll, dodge hazards, shoot missiles.</li>
+            <li>Enemies, collisions, damage; spawning handled by systems.</li>
+            <li>Power-ups & bosses (WIP).</li>
           </ul>
         </div>
         <div class="card">
@@ -182,22 +183,22 @@
           <ul>
             <li>Linux (tested) or Windows (MSVC, WIP)</li>
             <li>CMake ≥ 3.10, a C++17 compiler</li>
-            <li>Internet access for first-time dependency fetch (CPM.cmake)</li>
+            <li>Internet access on first configure (CPM.cmake)</li>
           </ul>
         </div>
         <div class="card">
           <h3>Linux quick start</h3>
           <pre><code>cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
-./r-type_server &amp;
+./r-type_server &
 ./r-type_client</code></pre>
-          <p class="muted">Binaries are produced at the repository root.</p>
+          <p class="muted">Binaries are produced at the repository root (<code>CMAKE_RUNTIME_OUTPUT_DIRECTORY</code>).</p>
         </div>
         <div class="card">
           <h3>Windows (MSVC, WIP)</h3>
           <pre><code>cmake -S . -B build -G "Visual Studio 17 2022" -A x64
 cmake --build build --config Release
-r-type_server.exe  &amp;
+r-type_server.exe  &
 r-type_client.exe</code></pre>
         </div>
       </div>
@@ -207,85 +208,85 @@ r-type_client.exe</code></pre>
   CI.md
   CMakeLists.txt
   README.md
-.github/
-  workflows/
-.idea/
-Client/
-  CMakeLists.txt
-  include/
-    Button.hpp
-    ControlsConfig.hpp
-    ErrorServer.hpp
-    GameTypes.hpp
-    Launch.hpp
-    Lobby.hpp
-    Locker.hpp
-    Menu.hpp
-    ParamButton.hpp
-    Parameters.hpp
-    ParticleSystem.hpp
-    Player.hpp
-  src/
-    Button.cpp
-    ControlsConfig.cpp
-    ErrorServer.cpp
-    GameTypes.cpp
-    Launch.cpp
-    Lobby.cpp
-    Locker.cpp
-    Menu.cpp
-    ParamButton.cpp
-    Parameters.cpp
-    ParticleSystem.cpp
-    Player.cpp
-    main.cpp
-Server/
-  CMakeLists.txt
-  src/
-    main.cpp
-    net/
-      Protocol.cpp
-      Protocol.hpp
-      UdpServer.cpp
-      UdpServer.hpp
-    util/
-      Log.cpp
-      Log.hpp
-assets/
-  sprites/
-ci/
-cmake/
-  CPM.cmake
-include_common/
-  ComponentArray.hpp
-  ComponentManager.hpp
-  Entity.hpp
-  EntityManager.hpp
-  Event.hpp
-  EventManager.hpp
-  Mediator.hpp
-  System.hpp
-  SystemManager.hpp
-  Utils.hpp
-  Components/
+  Client/
+    CMakeLists.txt
+    include/
+      Button.hpp
+      ControlsConfig.hpp
+      ErrorServer.hpp
+      GameTypes.hpp
+      Launch.hpp
+      Leaderboard.hpp
+      Lobby.hpp
+      Locker.hpp
+      Menu.hpp
+      ParamButton.hpp
+      Parameters.hpp
+      ParticleSystem.hpp
+      Player.hpp
+      Username.hpp
+      Renderers/SFML.hpp
+    src/
+      Button.cpp
+      ControlsConfig.cpp
+      ErrorServer.cpp
+      GameTypes.cpp
+      Launch.cpp
+      Leaderboard.cpp
+      Lobby.cpp
+      Locker.cpp
+      Menu.cpp
+      ParamButton.cpp
+      Parameters.cpp
+      ParticleSystem.cpp
+      Player.cpp
+      Renderers/SFML.cpp
+      Username.cpp
+      main.cpp
+  include_common/
+    Collision.hpp
+    ComponentArray.hpp
+    ComponentManager.hpp
+    ComponentRegistry.hpp
+    Enemy.hpp
+    EnemyInfo.hpp
+    Entity.hpp
+    EntityManager.hpp
+    Event.hpp
+    EventManager.hpp
     Gravity.hpp
-    RigidBody.hpp
-    Sprite.hpp
-    Transform.hpp
-  Systems/
+    Hitbox.hpp
+    Mediator.hpp
+    NetworkManager.hpp
     Physics.hpp
     PlayerControl.hpp
+    PlayerInfo.hpp
     Render.hpp
-libengine/
-  CMakeLists.txt
-  src/
-    ComponentArray.cpp
-    ComponentManager.cpp
-    EntityManager.cpp
-    Mediator.cpp
-    SystemManager.cpp
-sound/
-sprite/</code></pre>
+    Renderer.hpp
+    RigidBody.hpp
+    ShootingCooldown.hpp
+    Sprite.hpp
+    System.hpp
+    SystemManager.hpp
+    Transform.hpp
+    Utils.hpp
+    dlfcn_compat.hpp
+  libengine/
+    CMakeLists.txt
+    src/
+      ComponentArray.cpp
+      ComponentManager.cpp
+      EntityManager.cpp
+      Mediator.cpp
+      NetworkManager.cpp
+      SystemManager.cpp
+  Server/
+    CMakeLists.txt
+    src/
+      main.cpp
+  docs/
+    api/
+      index.html</code></pre>
       </div>
     </section>
 
@@ -297,66 +298,57 @@ sprite/</code></pre>
 flowchart LR
   subgraph Client["Client (SFML)"]
     Input["Input"] -->|events| ECS_Cl["ECS"]
-    Render["Render"] --> ECS_Cl
-    NetC["UDP Client"] --> ECS_Cl
+    Render["Renderers/SFML"] --> ECS_Cl
+    NetC["NetworkManager (UDP)"] --> ECS_Cl
   end
-
-  subgraph Engine["ECS Engine"]
-    Entities["Entities"]
-    Components["Components"]
-    Systems["Systems"]
+  subgraph Engine["Engine (libengine.so/.dll)"]
     Mediator["Mediator"]
-    Mediator -.-> Entities
-    Mediator -.-> Components
-    Mediator -.-> Systems
+    Entities["Entities"]:::dim
+    Components["Components"]:::dim
+    Systems["Systems"]:::dim
+    Mediator -.controls.-> Entities
+    Mediator -.controls.-> Components
+    Mediator -.controls.-> Systems
   end
-
-  subgraph Server["Server (Boost.Asio UDP)"]
-    NetS["UDP Server"] --> GameLoop["GameLoop"]
-    GameLoop -->|snapshots| NetS
-    Auth["Authoritative Rules"]
+  subgraph Server["Server"]
+    SMain["Main loop"] --> NetS["NetworkManager (UDP)"]
+    Auth["Authoritative rules (WIP)"] -.-> SMain
   end
-
   Client <--> Server
-  ECS_Cl -.-> Engine
+  ECS_Cl -.uses.-> Engine
+  classDef dim fill:#0e1630,stroke:#1c2745,color:#cbd5e1;
           </div>
         </div>
         <div class="card">
-          <h3>Networking protocol</h3>
+          <h3>Messaging sketch</h3>
           <div class="mermaid">
 sequenceDiagram
-  participant C as "Client"
-  participant S as "Server"
-  
+  participant C as Client
+  participant S as Server
   rect rgb(16, 68, 151)
-    Note over C,S: Connection Phase
-    C->>+S: UDP_CONNECT
-    S-->>-C: WELCOME + PlayerID
+    Note over C,S: Connect
+    C->>+S: HELLO
+    S-->>-C: WELCOME (id)
   end
-  
   rect rgb(21, 128, 61)
-    Note over C,S: Lobby Phase
-    C->>+S: JOIN_LOBBY (mode)
-    S-->>C: LOBBY_STATE (players)
+    Note over C,S: Lobby
+    C->>+S: JOIN(mode)
+    S-->>C: LOBBY_STATE
     C->>S: READY
     S-->>-C: GAME_START
   end
-  
   rect rgb(194, 65, 12)
-    Note over C,S: Game Loop (60 FPS)
-    C->>+S: INPUT (keys, mouse)
-    Note over S: Process inputs<br/>Update entities
-    S-->>-C: WORLD_STATE (positions)
-    Note over C,S: Repeat every 16ms
+    Note over C,S: Game Loop (16ms)
+    C->>+S: INPUT(keys)
+    S-->>-C: WORLD_STATE(entities)
   end
-  
   rect rgb(107, 33, 168)
-    Note over C,S: Disconnection
-    C->>+S: DISCONNECT
-    S-->>-C: ACK_DISCONNECT
+    Note over C,S: Disconnect
+    C->>+S: BYE
+    S-->>-C: ACK
   end
           </div>
-          <p class="muted">UDP-based protocol with authoritative server handling inputs and broadcasting world state to all clients.</p>
+          <p class="muted">Both sides use the same <code>NetworkManager</code> abstraction (Boost.Asio UDP).</p>
         </div>
       </div>
     </section>
@@ -364,20 +356,17 @@ sequenceDiagram
     <section id="gallery">
       <h2>Gallery</h2>
       <div class="carousel">
-        <figure class="shot"><img src="assets/screen1.png" alt="Launch screen — Insert Coin"><figcaption class="cap">Launch — “INSERT COIN”</figcaption></figure>
-        <figure class="shot"><img src="assets/screen2.png" alt="Main menu with starfield"><figcaption class="cap">Main Menu + Starfield</figcaption></figure>
-        <figure class="shot"><img src="assets/screen3.png" alt="Parameters screen"><figcaption class="cap">Parameters (video, color‑blind, FPS cap)</figcaption></figure>
-        <figure class="shot"><img src="assets/screen4.png" alt="Lobby modes"><figcaption class="cap">Lobby modes (Solo/Duo/Trio/Squad)</figcaption></figure>
+        <figure class="shot"><img src="assets/sprites/trophy.png" alt="Trophy icon"><figcaption class="cap">In-game trophy asset</figcaption></figure>
       </div>
+      <p class="muted">More screenshots coming as features land.</p>
     </section>
 
     <section id="roadmap">
       <h2>Roadmap</h2>
       <div class="timeline">
         <div class="step"><b>Boss & patterns</b> — scripted behaviors, weak points, phases.</div>
-        <div class="step"><b>Power‑ups</b> — charge shot, options, shields.</div>
+        <div class="step"><b>Power-ups</b> — charge shot, options, shields.</div>
         <div class="step"><b>More levels</b> — parallax backgrounds, hazards, checkpoints.</div>
-        <div class="step"><b>Soundtrack & SFX</b> — music loop per stage, victory cues.</div>
         <div class="step"><b>Windows packaging</b> — installer or portable build.</div>
       </div>
     </section>
@@ -385,7 +374,7 @@ sequenceDiagram
     <section id="contact">
       <h2>Credits & Contact</h2>
       <div class="card">
-        <p>Built by a small student team as part of the Advanced C++ (Epitech) module. Questions, feedback or collaborations? Open an issue on the repository or reach out on LinkedIn.</p>
+        <p>Student project (Epitech). Questions or feedback? Open an issue or ping me on LinkedIn.</p>
       </div>
     </section>
   </main>
@@ -398,7 +387,7 @@ sequenceDiagram
   let w, h, stars=[];
   function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = Math.max(520, window.innerHeight*0.78); }
   window.addEventListener('resize', resize); resize();
-  function init(n=220){ stars = Array.from({length:n}, () => ({ x: Math.random()*w, y: Math.random()*h, z: Math.random()*1.5+0.2 })); }
+  function init(n=240){ stars = Array.from({length:n}, () => ({ x: Math.random()*w, y: Math.random()*h, z: Math.random()*1.5+0.2 })); }
   init();
   function draw(){
     ctx.clearRect(0,0,w,h);
