@@ -1,55 +1,227 @@
-PacketHeader : 
-	-	MAGIC : uint_16 = 0xCAFE
-	-	PROTO_VERSION : uint_8 = 1
-	-	TYPE : uint_8
-	-	SEQ : uint_32
-	-	ACK : uint_32
-	-	ACK_SEQ : uint_32
-	16 Bytes
+R-TYPE Game Protocol (RGP) Specification
+=============================================
 
-MSG_TYPES :
-	-	MSG_HELLO = 1,
-	-	MSG_WELCOME = 2,
-	-	MSG_PING = 3,
-	-	MSG_PONG = 4,
-	-	MSG_INPUT = 5,
-	-	MSG_ENTITY = 6,
-	-	MSG_ENTITY_DESTROY = 7,
-	-	MSG_COMPONENT = 8,
+Request for Comments: R-TYPE-001
+Category: Informational
+Date: October 2025
 
-HelloBody (connection data from player) :
-	-	NONCE : uint_32
-	-	PROTO_VERSION : uint_8 = 1
-	-	NAME_LEN : uint_8 (max name len : 255)
-	-	NAME_BYTE : NAME_LEN bytes (max 255)
-	6 Bytes + NAME_LEN bytes (max 266)
+Abstract
 
-WelcomeBody (player data from server) :
-	-	PLAYER_ID : uint_32
-	-	ROOM_ID : uint_16
-	-	BASELINE_TICK : uint_32
-	10 Bytes
+   The R-TYPE Game Protocol (RGP) is a UDP-based protocol designed for
+   real-time multiplayer communication in the R-TYPE space shooter game.
+   This document describes the packet format, message types, and
+   communication flow for client-server interactions.
 
-InputBody (player input data from client) : 
-	-	PLAYER_ID : uint_32
-	-	ROOM_ID : uint_16
-	-	INPUT_DATA : uint_64
-	14 Bytes
+Table of Contents
 
-EntityBody :
-	-	ENTITY_ID : uint_32
-	-	SIGNATURE : uint_64
-	12 Bytes
+   1. Introduction
+   2. Protocol Overview
+   3. Packet Format
+   4. Message Types
+   5. Connection Establishment
+   6. Game State Synchronization
 
-EntityDestroyBody :
-	-	ENTITY_ID : uint_32
-	4 Bytes
+1. Introduction
 
-ComponentBody :
-	-	ENTITY_ID : uint_32
-	-	NAME_LEN : uint_8
-	-	COMPONENT_LEN : uint_32
-	-	NAME : NAME_LEN bytes (max 255)
-	-	COMPONENT_DATA : COMPONENT_LEN bytes (max 4294967295)
-	9 Bytes + NAME_LEN bytes + COMPONENT_LEN bytes (max 4294967559)
+   The R-TYPE Game Protocol (RGP) provides a lightweight, UDP-based
+   communication protocol for real-time multiplayer gaming. The protocol
+   is designed to handle player input, entity synchronization, and game
+   state management with minimal latency.
 
+   Key design goals:
+   - Low latency communication
+   - Reliable entity state synchronization
+   - Efficient bandwidth utilization
+   - Simple connection management
+
+2. Protocol Overview
+
+   RGP operates over UDP and uses a custom packet format with reliable
+   delivery mechanisms. The protocol supports:
+   
+   - Client-server architecture
+   - Real-time input transmission
+   - Entity-component-system synchronization
+   - Connection management with heartbeat
+
+   Protocol version: 1
+   Magic number: 0xCAFE
+   Default port: 8080
+
+3. Packet Format
+
+3.1 Packet Header
+
+   All RGP packets begin with a 16-byte header:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |            MAGIC (0xCAFE)     |  VERSION  |     TYPE      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        SEQUENCE NUMBER                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                     ACKNOWLEDGMENT NUMBER                     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                      ACKNOWLEDGMENT BITS                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   MAGIC (16 bits): Protocol identifier, always 0xCAFE
+   VERSION (8 bits): Protocol version, currently 1
+   TYPE (8 bits): Message type (see Section 4)
+   SEQUENCE NUMBER (32 bits): Packet sequence number for ordering
+   ACKNOWLEDGMENT NUMBER (32 bits): Last received sequence number
+   ACKNOWLEDGMENT BITS (32 bits): Bitmask of recently received packets
+
+4. Message Types
+
+   The following message types are defined:
+
+   +-------+------------------+----------------------------------+
+   | Value | Name             | Description                      |
+   +-------+------------------+----------------------------------+
+   | 1     | MSG_HELLO        | Client connection request        |
+   | 2     | MSG_WELCOME      | Server connection acknowledgment |
+   | 3     | MSG_PING         | Keep-alive request               |
+   | 4     | MSG_PONG         | Keep-alive response              |
+   | 5     | MSG_INPUT        | Player input data                |
+   | 6     | MSG_ENTITY       | Entity creation/update           |
+   | 7     | MSG_ENTITY_DESTROY| Entity destruction              |
+   | 8     | MSG_COMPONENT    | Component data update            |
+   +-------+------------------+----------------------------------+
+
+4.1 MSG_HELLO (Type = 1)
+
+   Sent by client to initiate connection.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                            NONCE                              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  VERSION  | NAME_LEN  |           PLAYER_NAME               ...
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   NONCE (32 bits): Random number for connection verification
+   VERSION (8 bits): Client protocol version
+   NAME_LEN (8 bits): Length of player name (max 255)
+   PLAYER_NAME (variable): UTF-8 encoded player name
+
+4.2 MSG_WELCOME (Type = 2)
+
+   Sent by server in response to MSG_HELLO.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                          PLAYER_ID                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |           ROOM_ID             |          Reserved             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        BASELINE_TICK                         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   PLAYER_ID (32 bits): Unique identifier assigned to the player
+   ROOM_ID (16 bits): Game room/session identifier
+   BASELINE_TICK (32 bits): Current game tick for synchronization
+
+4.3 MSG_PING (Type = 3) / MSG_PONG (Type = 4)
+
+   Keep-alive messages. No additional payload beyond header.
+
+4.4 MSG_INPUT (Type = 5)
+
+   Player input data from client to server.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                          PLAYER_ID                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |           ROOM_ID             |          Reserved             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   |                         INPUT_DATA                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   PLAYER_ID (32 bits): Player identifier
+   ROOM_ID (16 bits): Room identifier
+   INPUT_DATA (64 bits): Bitfield representing pressed keys/actions
+
+4.5 MSG_ENTITY (Type = 6)
+
+   Entity creation or update notification.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                          ENTITY_ID                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   |                         SIGNATURE                            |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   ENTITY_ID (32 bits): Unique entity identifier
+   SIGNATURE (64 bits): Component signature bitmask
+
+4.6 MSG_ENTITY_DESTROY (Type = 7)
+
+   Entity destruction notification.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                          ENTITY_ID                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   ENTITY_ID (32 bits): Entity identifier to destroy
+
+4.7 MSG_COMPONENT (Type = 8)
+
+   Component data update.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                          ENTITY_ID                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | NAME_LEN  |                COMPONENT_LEN                     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                      COMPONENT_NAME                         ...
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                      COMPONENT_DATA                         ...
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   ENTITY_ID (32 bits): Target entity identifier
+   NAME_LEN (8 bits): Length of component type name
+   COMPONENT_LEN (32 bits): Length of component data in bytes
+   COMPONENT_NAME (variable): Component type identifier string
+   COMPONENT_DATA (variable): Serialized component data
+
+5. Connection Establishment
+
+   The connection flow follows this sequence:
+
+   Client                                    Server
+     |                                         |
+     |------------ MSG_HELLO ----------------->|
+     |                                         |
+     |<----------- MSG_WELCOME ----------------|
+     |                                         |
+     |------------ MSG_PING ------------------>|
+     |                                         |
+     |<----------- MSG_PONG -------------------|
+     |                                         |
+
+   1. Client sends MSG_HELLO with player name and nonce
+   2. Server responds with MSG_WELCOME containing player ID and room info
+   3. Regular MSG_PING/MSG_PONG exchanges maintain connection
+
+6. Game State Synchronization
+
+   Game state is synchronized using the Entity-Component-System pattern:
+
+   1. Server sends MSG_ENTITY when entities are created
+   2. Server sends MSG_COMPONENT to update entity components
+   3. Server sends MSG_ENTITY_DESTROY when entities are removed
+   4. Clients send MSG_INPUT for player actions

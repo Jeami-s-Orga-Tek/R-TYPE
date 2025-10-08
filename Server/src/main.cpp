@@ -28,11 +28,19 @@
 // int main(int argc, char* argv[])
 int main()
 {
+    #if defined(_WIN32)
+    void *handle = dlopen("libengine.dll", RTLD_LAZY);
+    if (!handle) {
+        std::cerr << "Failed to load libengine.dll: " << dlerror() << std::endl;
+        throw std::runtime_error("");
+    }
+    #else
     void *handle = dlopen("libengine.so", RTLD_LAZY);
     if (!handle) {
         std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
-        return (84);
+        throw std::runtime_error("");
     }
+    #endif
 
     std::shared_ptr<Engine::Mediator> (*createMediatorFunc)() = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
     char *error = dlerror();

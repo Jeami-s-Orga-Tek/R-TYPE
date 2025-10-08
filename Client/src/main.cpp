@@ -16,10 +16,19 @@ int main()
     sf::RenderWindow window(sf::VideoMode(800, 600), "R-Type Client");
     window.setFramerateLimit(60);
     
+    #if defined(_WIN32)
+    void *handle = dlopen("libengine.dll", RTLD_LAZY);
+    if (!handle) {
+        std::cerr << "Failed to load libengine.dll: " << dlerror() << std::endl;
+        throw std::runtime_error("");
+    }
+    #else
     void *handle = dlopen("libengine.so", RTLD_LAZY);
     if (!handle) {
-        std::cerr << "Warning: Failed to load libengine.so: " << dlerror() << std::endl;
+        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
+        throw std::runtime_error("");
     }
+    #endif
     
     sf::Vector2u sfml_window_size = window.getSize();
     Engine::Utils::Vec2UInt window_size(sfml_window_size.x, sfml_window_size.y);

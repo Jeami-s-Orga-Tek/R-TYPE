@@ -39,11 +39,20 @@ GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
       isEditingUsername(false),
       cursorPos(0)
 {
+
+    #if defined(_WIN32)
+    void *handle = dlopen("libengine.dll", RTLD_LAZY);
+    if (!handle) {
+        std::cerr << "Failed to load libengine.dll: " << dlerror() << std::endl;
+        throw std::runtime_error("");
+    }
+    #else
     void *handle = dlopen("libengine.so", RTLD_LAZY);
     if (!handle) {
         std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
         throw std::runtime_error("");
     }
+    #endif
 
     createMediatorFunc = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
     char *error = dlerror();
