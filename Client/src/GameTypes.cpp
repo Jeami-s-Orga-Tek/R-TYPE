@@ -318,12 +318,32 @@ void GameManager::update()
     if (currentState != State::LAUNCH) {
         fpsDisplay.setString("FPS: " + std::to_string(currentFps));
     }
+    
+    if (networkManager && star_field_system) {
+        star_field_system->update(networkManager->mediator, deltaTime);
+    }
+    
     particleSystem.update(deltaTime);
 }
 
 void GameManager::render(sf::RenderWindow& window) {
     window.clear(sf::Color::Black);
     particleSystem.render(window);
+    
+    if (networkManager && star_field_system && currentState == State::GAME) {
+        for (const auto &entity : star_field_system->entities) {
+            try {
+                auto &transform = networkManager->mediator->getComponent<Engine::Components::Transform>(entity);
+                auto &starField = networkManager->mediator->getComponent<Engine::Components::StarField>(entity);
+                
+                sf::CircleShape star(0.8f * transform.scale);
+                star.setFillColor(sf::Color(255, 255, 255, (sf::Uint8)(starField.brightness * 180)));
+                star.setPosition(transform.pos.x, transform.pos.y);
+                window.draw(star);
+            } catch (const std::exception&) {
+            }
+        }
+    }
 
     if (currentState == State::LAUNCH) {
         launch.draw(window);
@@ -743,7 +763,25 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
         networkManager->mediator->setSystemSignature<Engine::Systems::EnemySystem>(signature);
     }
 
-    // TEMP
+    star_field_system = networkManager->mediator->registerSystem<Engine::Systems::StarFieldSystem>();
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::StarField>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Sprite>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::StarFieldSystem>(signature);
+    }
+
+    star_field_system->initializeStarField(networkManager->mediator, 120);
+
+    if (!renderer) {
+        renderer = std::make_shared<Engine::Renderers::SFML>();
+    }
+    
+    render_system->addTexture(renderer, "star_texture", "assets/sprites/r-typesheet1.gif");
+    render_system->addSprite(renderer, "star", "star_texture", {1, 1}, {250, 100}, 1, 1);
+
     networkManager->send_hello(UsernameGame, 12345);
 
     return (true);
@@ -913,6 +951,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addSprite(renderer, "player_5", "players_sprite_sheet", {32, 17}, {0, 68}, 5, 1);
     render_system->addSprite(renderer, "weak_player_projectile", "base_player_sprite_sheet", {16, 4}, {249, 90}, 1, 1);
     render_system->addSprite(renderer, "ground_enemy", "ground_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
+    render_system->addSprite(renderer, "star", "player_sprite_sheet", {2, 2}, {249, 90}, 1, 1);
 
     const float FIXED_DT = 1.0f / 60.0f;
     float accumulator = 0.0f;
@@ -943,9 +982,33 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         }
         renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
 
+        if (star_field_system) {
+            int starIndex = 0;
+            for (const auto &entity : star_field_system->entities) {
+                try {
+                    auto &transform = mediator->getComponent<Engine::Components::Transform>(entity);
+                    auto &starField = mediator->getComponent<Engine::Components::StarField>(entity);
+                    
+                    std::string starSpriteId = "runtime_star_" + std::to_string(starIndex);
+                    
+                    if (!renderer->createSprite(starSpriteId, "player_sprite_sheet")) {
+                    }
+                    
+                    renderer->setSpriteTextureRect(starSpriteId, 249, 90, 2, 2);
+                    renderer->setSpritePosition(starSpriteId, transform.pos.x, transform.pos.y);
+                    renderer->setSpriteScale(starSpriteId, transform.scale);
+                    renderer->drawSprite(starSpriteId);
+                    
+                    starIndex++;
+                } catch (const std::exception&) {
+                }
+            }
+        }
+
         while (accumulator >= FIXED_DT) {
             player_control_system->update(networkManager, FIXED_DT);
             physics_system->update(mediator, FIXED_DT);
+            star_field_system->update(mediator, FIXED_DT);
             collision_system->update(networkManager);
             enemy_system->update(networkManager, FIXED_DT);
             render_system->update(renderer, mediator);
