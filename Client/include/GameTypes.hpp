@@ -5,7 +5,6 @@
 ** GameTypes
 */
 
-
 #ifndef GAMETYPES_HPP_
 #define GAMETYPES_HPP_
 
@@ -33,6 +32,7 @@
 #include "Systems/PlayerControl.hpp"
 #include "Systems/Collision.hpp"
 #include "Systems/Enemy.hpp"
+#include "Systems/StarField.hpp"
 
 enum class State {
     LAUNCH,
@@ -129,6 +129,7 @@ class GameManager {
         std::shared_ptr<Engine::Systems::PlayerControl> player_control_system {};
         std::shared_ptr<Engine::Systems::Collision> collision_system {};
         std::shared_ptr<Engine::Systems::EnemySystem> enemy_system {};
+        std::shared_ptr<Engine::Systems::StarFieldSystem> star_field_system {};
 
         std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
         std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
