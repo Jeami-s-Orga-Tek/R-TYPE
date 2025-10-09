@@ -1,6 +1,6 @@
 var classParticleSystem =
 [
-    [ "ParticleSystem", "classParticleSystem.html#ae72dbb14519c81be430c51f887d1ad17", null ],
+    [ "ParticleSystem", "classParticleSystem.html#a8f00c29d48dc27b6ab446df1914b1c3f", null ],
     [ "~ParticleSystem", "classParticleSystem.html#af03943bfe7941afbe00a675fa09fd81e", null ],
     [ "getRandomColor", "classParticleSystem.html#a45c54539a80ca1de8f827e3c081f4dc0", null ],
     [ "getRandomLife", "classParticleSystem.html#a0bfa46f2bc767edf8e857b6308708b31", null ],
@@ -14,7 +14,7 @@ var classParticleSystem =
     [ "spawnParticle", "classParticleSystem.html#aa446ccbbc59cb9dc98c3dce3b6aedd4a", null ],
     [ "update", "classParticleSystem.html#a166fd86f020b6024d7d42723762d7cb2", null ],
     [ "updateParticle", "classParticleSystem.html#ad0dcb05d87185411a342566a37b2eee1", null ],
-    [ "updateWindowSize", "classParticleSystem.html#ab16846d63b08d7fda5cdc6e897913d03", null ],
+    [ "updateWindowSize", "classParticleSystem.html#a5cf1945d047b8a5c2f636b5af701cc25", null ],
     [ "distribution", "classParticleSystem.html#ab9df80bbe90884a0bbc4d573d4d10bef", null ],
     [ "dustColors", "classParticleSystem.html#aad55604402be36bb743ef64085cc7d08", null ],
     [ "generator", "classParticleSystem.html#a4e3d57815332d7ac39f4cdc7a9b74ac9", null ],
@@ -25,5 +25,5 @@ var classParticleSystem =
     [ "spawnRate", "classParticleSystem.html#a1827d508339871ca9c95635b899de4c4", null ],
     [ "spawnTimer", "classParticleSystem.html#a0e76f6fd595ff4705bb8c54c3dfdfc24", null ],
     [ "starColors", "classParticleSystem.html#a8226a8d30117ce51f628d4b76a59ecbe", null ],
-    [ "windowSize", "classParticleSystem.html#a09cea43b02ed0eba2f917a14c50bbaf8", null ]
+    [ "windowSize", "classParticleSystem.html#aecb9d87b7eb19b7a3312a7e91593e6b9", null ]
 ];

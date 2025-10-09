@@ -1,6 +1,6 @@
 var classParameters =
 [
-    [ "Parameters", "classParameters.html#a047eda252eadb2d5991d3f63f0579339", null ],
+    [ "Parameters", "classParameters.html#a2e3ca92e0018721f3bef90626c5a30a8", null ],
     [ "~Parameters", "classParameters.html#ac98709c00479386d18d1759965d7d00d", null ],
     [ "applyColorBlindFilter", "classParameters.html#a11623d0313272ad8e9841469facbaa7a", null ],
     [ "centerText", "classParameters.html#a580c3fa59ac382709b50a0fddf1350e3", null ],
@@ -12,7 +12,7 @@ var classParameters =
     [ "getCurrentResolution", "classParameters.html#a679561c2f5dfe92294135e7bcf71f531", null ],
     [ "getDisplayModeString", "classParameters.html#a461466b15c2fa714bb7c93b5a8b7e034", null ],
     [ "getGraphicsQualityString", "classParameters.html#a457a6ed2d096be7f5b648c7df1c7fafa", null ],
-    [ "getResolutionSize", "classParameters.html#aa9813f7dd967628e4a5fbb7188c8675b", null ],
+    [ "getResolutionSize", "classParameters.html#aed7adcc0e919f1d76e4880fe49f99220", null ],
     [ "getResolutionString", "classParameters.html#ab06f51d4f6cecc5d4ca32f6a770fca12", null ],
     [ "handleEvent", "classParameters.html#ac68047f87a6de361336845e593e217a7", null ],
     [ "loadResources", "classParameters.html#a8e74ddb8f408ad9e725e3784f8a873e7", null ],
@@ -23,7 +23,7 @@ var classParameters =
     [ "setupVideoSettings", "classParameters.html#a97f0af15da3b0a1a8b3702fc5b56556e", null ],
     [ "update", "classParameters.html#aa352d204de4a2e17e84484d008c41b7b", null ],
     [ "updateVideoSettingsPositions", "classParameters.html#abeed7c94e97e5aa1339f807a23765a4b", null ],
-    [ "updateWindowSize", "classParameters.html#a249664d3d5d74a6b09b367b692e8e560", null ],
+    [ "updateWindowSize", "classParameters.html#aac22cfbba7232b289298637e456bd9b6", null ],
     [ "AccessibilityTitle", "classParameters.html#ae322593ef642b783dcfcc0fc64adbb88", null ],
     [ "ColorBlindLabel", "classParameters.html#ae3ed7db100bea332e55a6c4739951d64", null ],
     [ "ColorBlindValue", "classParameters.html#abe43c4209b3b2ad4f5d4c2ec3bc29775", null ],
@@ -40,5 +40,5 @@ var classParameters =
     [ "ResolutionLabel", "classParameters.html#afef7de93851f0d78f83d2d36cc4f0df0", null ],
     [ "ResolutionValue", "classParameters.html#ab9a6d37838a841422392b81ab47f89e1", null ],
     [ "VideoSectionTitle", "classParameters.html#ae5e1e31a0ff7a09650802df26a925c37", null ],
-    [ "windowSize", "classParameters.html#a748487e0a6a143ae0f2d0f0678c5e74d", null ]
+    [ "windowSize", "classParameters.html#acec7a20bde8ad8118c30e52e9d43425a", null ]
 ];

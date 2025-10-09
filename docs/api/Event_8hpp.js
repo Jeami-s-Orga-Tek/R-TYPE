@@ -4,7 +4,10 @@ var Event_8hpp =
     [ "EventId", "Event_8hpp.html#a3c3b1b42a70f283204ca617031c34e56", null ],
     [ "EventParamId", "Event_8hpp.html#a3303a533332d8664c8cb3417ada7ecb6", null ],
     [ "EventsIds", "Event_8hpp.html#ae9534b1f5d4ffb600087726e3e56f3c5", [
-      [ "PLAYER_INPUT", "Event_8hpp.html#ae9534b1f5d4ffb600087726e3e56f3c5a180c1b797f83d66065d0313fa7e863d1", null ]
+      [ "PLAYER_INPUT", "Event_8hpp.html#ae9534b1f5d4ffb600087726e3e56f3c5a180c1b797f83d66065d0313fa7e863d1", null ],
+      [ "COLLISION", "Event_8hpp.html#ae9534b1f5d4ffb600087726e3e56f3c5afc3ca10632f0c7aa3aaea07a234377db", null ],
+      [ "ENEMY_DESTROYED", "Event_8hpp.html#ae9534b1f5d4ffb600087726e3e56f3c5ae411c04bcad96d68861c90fb57fec9ba", null ],
+      [ "PLAYER_HIT", "Event_8hpp.html#ae9534b1f5d4ffb600087726e3e56f3c5ab0fffa9fd055d193a673aff6928ab54d", null ]
     ] ],
     [ "InputButtons", "Event_8hpp.html#a1f53607dd1427cdc834829bae8238b64", [
       [ "LEFT", "Event_8hpp.html#a1f53607dd1427cdc834829bae8238b64a684d325a7303f52e64011467ff5c5758", null ],

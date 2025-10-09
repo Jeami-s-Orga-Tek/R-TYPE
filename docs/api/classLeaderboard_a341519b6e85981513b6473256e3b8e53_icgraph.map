@@ -1,0 +1,11 @@
+<map id="Leaderboard::centerImage" name="Leaderboard::centerImage">
+<area shape="rect" id="Node000001" title=" " alt="" coords="513,56,685,83"/>
+<area shape="rect" id="Node000002" href="$classLeaderboard.html#a9dade7164f5bc1ba54117647b896515f" title=" " alt="" coords="273,5,445,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="517,55,425,35,426,30,518,50"/>
+<area shape="rect" id="Node000003" href="$classLeaderboard.html#aae704c36e1e66a58e8530792b4da6ef1" title=" " alt="" coords="265,56,452,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="497,72,453,72,453,67,497,67"/>
+<area shape="rect" id="Node000005" href="$classLeaderboard.html#a4248bdf680c2182d27caaed2667d6132" title=" " alt="" coords="253,107,465,133"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="518,89,426,109,425,103,517,84"/>
+<area shape="rect" id="Node000004" href="$classGameManager.html#ae60f9a9c5dc48f158537ed98d2b6dbfe" title=" " alt="" coords="5,56,205,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="249,72,205,72,205,67,249,67"/>
+</map>

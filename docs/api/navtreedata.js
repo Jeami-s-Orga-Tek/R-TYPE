@@ -26,14 +26,13 @@ var NAVTREE =
 [
   [ "R-TYPE", "index.html", [
     [ "R‑TYPE — Online Shoot’em Up + Game Engine (C++17)", "index.html", "index" ],
+    [ "UserLeaderboard", "md_Client_2UserLeaderboard.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
-        [ "Functions", "namespacemembers_func.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ],
-        [ "Enumerator", "namespacemembers_eval.html", null ]
+        [ "Enumerations", "namespacemembers_enum.html", null ]
       ] ]
     ] ],
     [ "Classes", "annotated.html", [
@@ -44,7 +43,8 @@ var NAVTREE =
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", "functions_vars" ],
-        [ "Typedefs", "functions_type.html", null ]
+        [ "Enumerations", "functions_enum.html", null ],
+        [ "Enumerator", "functions_eval.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -52,7 +52,6 @@ var NAVTREE =
       [ "File Members", "globals.html", [
         [ "All", "globals.html", null ],
         [ "Functions", "globals_func.html", null ],
-        [ "Variables", "globals_vars.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
@@ -63,12 +62,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "Button_8cpp.html",
-"Server_2src_2net_2Protocol_8hpp.html#a2ae8a74f56e9b13322005c8e64a568c5a5e06c0fa0c26747bc205909c36906c08",
-"classEngine_1_1SystemManager.html#a59da3e2a00002747f5475c88bdb89e68",
-"classNetworkClient.html#a63e9cc30befffc26dd9afab0cba1028e",
-"classRtypeServer_1_1Protocol.html#abf9277d10028bf2b7016d86ad3a43036",
-"functions_vars.html",
-"structRtypeServer_1_1MessageBody.html#aa113ffe97e9b28c3911f7ff7c7692dd3"
+"classControlsConfig.html#a92bcc46259a29f22b14e76b64bf1d39c",
+"classEngine_1_1NetworkManager.html#a8d48e705ea4d08a5c2ba600b0de3d837",
+"classEngine_1_1Utils_1_1Color.html#af504a15db3f3c42643629e92d2a314ab",
+"classParamButton.html#a3e103014316be12021ac80edf7c8594b",
+"namespaceEngine.html#ae9534b1f5d4ffb600087726e3e56f3c5afc3ca10632f0c7aa3aaea07a234377db"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

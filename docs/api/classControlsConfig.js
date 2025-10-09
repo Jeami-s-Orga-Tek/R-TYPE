@@ -1,6 +1,6 @@
 var classControlsConfig =
 [
-    [ "ControlsConfig", "classControlsConfig.html#a7a4cee10f23bedace19f46c8bb1018a6", null ],
+    [ "ControlsConfig", "classControlsConfig.html#af66c42e56749961d4ebb5d6fbdf7b27c", null ],
     [ "~ControlsConfig", "classControlsConfig.html#aca05ad8402e93a8ff44f211c07cfa610", null ],
     [ "cancelKeyCapture", "classControlsConfig.html#ad218bc10857ddae59029265b257a4eb9", null ],
     [ "draw", "classControlsConfig.html#aee10925f5a8bef01c9f7f5bb594479cf", null ],
@@ -8,7 +8,7 @@ var classControlsConfig =
     [ "getControlKey", "classControlsConfig.html#a9b47dde168697f98fe6ee0ba1432ff22", null ],
     [ "getKeyName", "classControlsConfig.html#a98c32bfcca7b184b230394e79bdac59e", null ],
     [ "handleEvent", "classControlsConfig.html#a1744d263bd924fcefd9c35afb9344f5b", null ],
-    [ "isControlButtonClicked", "classControlsConfig.html#a856b97e670b795cee0393eab9a71a907", null ],
+    [ "isControlButtonClicked", "classControlsConfig.html#a1eb516a8ea52ab049a0ae9eec86e209d", null ],
     [ "isWaitingForKeyInput", "classControlsConfig.html#a5741a044d1e3196d9eb1a03405c39da0", null ],
     [ "loadResources", "classControlsConfig.html#a971fd58e74e4b77a02dd7d2b4c9a796e", null ],
     [ "setControlKey", "classControlsConfig.html#aa2fe4477b60057141a0cf43e1a064805", null ],
@@ -16,7 +16,7 @@ var classControlsConfig =
     [ "startKeyCapture", "classControlsConfig.html#ade541947fd00028b06949da7ef182f51", null ],
     [ "update", "classControlsConfig.html#afe3f4b90e2b61394602746d04f8492b4", null ],
     [ "updateControlSettingsPositions", "classControlsConfig.html#a5d7aa2d264ab4f3dfeb428e81e6c2f82", null ],
-    [ "updateWindowSize", "classControlsConfig.html#a29454ab2f1df0b805317617e7e3b545d", null ],
+    [ "updateWindowSize", "classControlsConfig.html#ab9310632253afc9ed37f86920dd58a43", null ],
     [ "ControlButtons", "classControlsConfig.html#ae5dbe03f61de61ed275589517b365853", null ],
     [ "controlKeys", "classControlsConfig.html#a59ec42157bad0b64226928825a2de6a9", null ],
     [ "ControlLabels", "classControlsConfig.html#a92bcc46259a29f22b14e76b64bf1d39c", null ],
@@ -25,5 +25,5 @@ var classControlsConfig =
     [ "currentActionBeingSet", "classControlsConfig.html#a3c989a09078054e79c143c00b99d6514", null ],
     [ "FontControlsText", "classControlsConfig.html#af896ca04471a89378ff4b36742764a16", null ],
     [ "waitingForKeyInput", "classControlsConfig.html#a77bcceada14255d5e4728305afe6cd1f", null ],
-    [ "windowSize", "classControlsConfig.html#a281e4f2ff6facc224aa906417ed06108", null ]
+    [ "windowSize", "classControlsConfig.html#a212d3bd51c98733d213d5bde06431b4d", null ]
 ];

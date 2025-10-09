@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classButton.html#a96e705aa9d92e90b1e437fb772a00865" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="classButton.html#aaeb4f984d04352c089537dc7ca4c9631" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="322.62,-184 231.62,-184 231.62,-164 322.62,-164 322.62,-184"/>
 <text text-anchor="middle" x="277.12" y="-170.5" font-family="Helvetica,sans-Serif" font-size="10.00">Button::isClicked</text>
 </a>
@@ -38,7 +38,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classParamButton.html#a225cd80fbb7827fd8f17c8c756977650" target="_top" xlink:title=" ">
+<g id="a_Node000003"><a xlink:href="classParamButton.html#ad6c1a9d8474f6c27ac61fb6025e221fc" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="336.88,-146 217.38,-146 217.38,-126 336.88,-126 336.88,-146"/>
 <text text-anchor="middle" x="277.12" y="-132.5" font-family="Helvetica,sans-Serif" font-size="10.00">ParamButton::isClicked</text>
 </a>

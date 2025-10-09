@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🧩_20troubleshooting_20faq_0',['🧩 Troubleshooting (FAQ)',['../index.html#autotoc_md27',1,'']]]
+  ['🧭_20project_20architecture_20mermaid_0',['🧭 Project Architecture (Mermaid)',['../index.html#autotoc_md23',1,'']]]
 ];

@@ -1,6 +1,6 @@
 var classEngine_1_1Utils_1_1Vec2 =
 [
-    [ "Vec2", "classEngine_1_1Utils_1_1Vec2.html#a7667789ad61a7bd61810ddd4cff7c834", null ],
+    [ "Vec2", "classEngine_1_1Utils_1_1Vec2.html#a3b2413c88a96d70e2109fceded425293", null ],
     [ "Vec2", "classEngine_1_1Utils_1_1Vec2.html#a62e631c2d63bf00f82331a296d663ca2", null ],
     [ "operator*", "classEngine_1_1Utils_1_1Vec2.html#a611ba04a5627a6727ae55fe29655db22", null ],
     [ "operator+", "classEngine_1_1Utils_1_1Vec2.html#a60c6282ccbc0d2155cfb7eab49746748", null ],

@@ -1,6 +1,30 @@
 var searchData=
 [
-  ['texture_0',['texture',['../structEngine_1_1Systems_1_1Sprite__s.html#aa80d4af510e87971fc7b800374a08cf9',1,'Engine::Systems::Sprite_s']]],
-  ['triobutton_1',['trioButton',['../classGameManager.html#a1326ce865a787a8b6d00998610cf4707',1,'GameManager']]],
-  ['type_2',['type',['../classEngine_1_1Event.html#a09fa5914d8a08bb39862212ac67c8122',1,'Engine::Event::type'],['../structRtypeServer_1_1NetHeader.html#a2e01cb969beda381955d66a3fddae7c4',1,'RtypeServer::NetHeader::type'],['../structParticle.html#abd8b570239b18eb394b692834b5b4453',1,'Particle::type']]]
+  ['scale_0',['scale',['../structEngine_1_1Components_1_1Transform__s.html#a1a4bccf4f95d5ec90c0937a30b422fff',1,'Engine::Components::Transform_s']]],
+  ['scintillation_1',['scintillation',['../structParticle.html#a0bca5f3822aadc0de3c74fcbc77b53c4',1,'Particle']]],
+  ['scorevalue_2',['scoreValue',['../structEngine_1_1Components_1_1EnemyInfo__s.html#abd7b03125a6bf2003ee099ad2d838956',1,'Engine::Components::EnemyInfo_s']]],
+  ['seq_3',['seq',['../structEngine_1_1NetworkManager_1_1PacketHeader.html#a5f544e239b8cde9f2a1dbc1b022d7ab4',1,'Engine::NetworkManager::PacketHeader']]],
+  ['shape_4',['shape',['../classButton.html#ab86193fd8a7d8930880ddd5890adcd5f',1,'Button::shape'],['../classParamButton.html#ab6dec616cef65b29fee7992120fff713',1,'ParamButton::shape'],['../classUsername.html#a18bcda5c3e2efa113450c60d33c57e27',1,'Username::shape']]],
+  ['signature_5',['signature',['../structEngine_1_1NetworkManager_1_1EntityBody.html#a64e47f9a7e5996563aecf93f23638fb9',1,'Engine::NetworkManager::EntityBody']]],
+  ['signatures_6',['signatures',['../classEngine_1_1EntityManager.html#a0503faaeca728ffd3d00c7a8a638dcae',1,'Engine::EntityManager::signatures'],['../classEngine_1_1SystemManager.html#a59da3e2a00002747f5475c88bdb89e68',1,'Engine::SystemManager::signatures']]],
+  ['size_7',['size',['../classEngine_1_1ComponentArray.html#a9db177af18f8e716375f7f0f7716d5d1',1,'Engine::ComponentArray::size'],['../structEngine_1_1Systems_1_1Sprite__s.html#acfb2761eb14506e0c012b326abad4a8f',1,'Engine::Systems::Sprite_s::size'],['../structParticle.html#aad08a7cb8108751b7a49ed65118873f9',1,'Particle::size']]],
+  ['socket_8',['socket',['../classEngine_1_1NetworkManager.html#ac13f6cb060b2123c53398050613fd458',1,'Engine::NetworkManager']]],
+  ['solobutton_9',['soloButton',['../classGameManager.html#adad859f890c68ecd4dbb4c6b1ed31524',1,'GameManager']]],
+  ['soundbuffers_10',['soundBuffers',['../classEngine_1_1Renderers_1_1SFML.html#a627e727290af7bfbb2ecff2a6c068c8e',1,'Engine::Renderers::SFML']]],
+  ['sounds_11',['sounds',['../classEngine_1_1Renderers_1_1SFML.html#ae1661b9bfae23989325b846c6632711c',1,'Engine::Renderers::SFML']]],
+  ['spawnrate_12',['spawnRate',['../classParticleSystem.html#a1827d508339871ca9c95635b899de4c4',1,'ParticleSystem']]],
+  ['spawntimer_13',['spawnTimer',['../classParticleSystem.html#a0e76f6fd595ff4705bb8c54c3dfdfc24',1,'ParticleSystem']]],
+  ['speed_14',['speed',['../structEngine_1_1Components_1_1EnemyInfo__s.html#a583d9ef512feb27401a484e3237a8ec6',1,'Engine::Components::EnemyInfo_s']]],
+  ['sprite_5fname_15',['sprite_name',['../structEngine_1_1Components_1_1Sprite__s.html#a0983a972739aafd8f70e0ab575b4ef2b',1,'Engine::Components::Sprite_s']]],
+  ['sprites_16',['sprites',['../classEngine_1_1Systems_1_1RenderSystem.html#a11153b461ac2233073c273623ba351ae',1,'Engine::Systems::RenderSystem::sprites'],['../classEngine_1_1Renderers_1_1SFML.html#a45470168b3b6305892b30cc5d22aacd4',1,'Engine::Renderers::SFML::sprites']]],
+  ['squadbutton_17',['squadButton',['../classGameManager.html#ae3e8d6d21afa8499917e83dee8395dd5',1,'GameManager']]],
+  ['starcolors_18',['starColors',['../classParticleSystem.html#a8226a8d30117ce51f628d4b76a59ecbe',1,'ParticleSystem']]],
+  ['starshipclock_19',['starshipClock',['../classPlayer.html#af8ababd0096150e15f30c2330e04139d',1,'Player']]],
+  ['starshipcounter_20',['starshipCounter',['../classPlayer.html#a41978e7a69a072817314c83f0d21a4b6',1,'Player']]],
+  ['starshiprect_21',['starshipRect',['../classPlayer.html#aa2faebca7863b3f7f783ed8740ada873',1,'Player']]],
+  ['starshipsprite_22',['starshipSprite',['../classPlayer.html#a76687582643bc2960e0239df6d6571cb',1,'Player']]],
+  ['starshiptexture_23',['starshipTexture',['../classPlayer.html#a661698601094b44bbdda292a3a899dea',1,'Player']]],
+  ['statustext_24',['statusText',['../classGameManager.html#a0be7f5afe4bbf5c65549e1ad8a892e98',1,'GameManager']]],
+  ['systemmanager_25',['systemManager',['../classEngine_1_1Mediator.html#af47b1bf4549bb9cc1cc6c166db5a832e',1,'Engine::Mediator']]],
+  ['systems_26',['systems',['../classEngine_1_1SystemManager.html#acb097c5f1e04106ec4a63703eadf6e71',1,'Engine::SystemManager']]]
 ];

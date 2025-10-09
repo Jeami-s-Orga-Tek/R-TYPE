@@ -39,7 +39,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classControlsConfig.html#a856b97e670b795cee0393eab9a71a907" target="_top" xlink:title=" ">
+<g id="a_Node000004"><a xlink:href="classControlsConfig.html#a1eb516a8ea52ab049a0ae9eec86e209d" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="315.12,-170 188.88,-170 188.88,-138 315.12,-138 315.12,-170"/>
 <text text-anchor="start" x="196.88" y="-156.5" font-family="Helvetica,sans-Serif" font-size="10.00">ControlsConfig::isControl</text>
 <text text-anchor="middle" x="252" y="-144.5" font-family="Helvetica,sans-Serif" font-size="10.00">ButtonClicked</text>

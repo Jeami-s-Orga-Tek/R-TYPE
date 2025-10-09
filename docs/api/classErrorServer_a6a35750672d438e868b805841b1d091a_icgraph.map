@@ -1,0 +1,14 @@
+<map id="ErrorServer::updateWindowSize" name="ErrorServer::updateWindowSize">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1067,43,1274,69"/>
+<area shape="rect" id="Node000002" href="$classGameManager.html#a0a220f16a3e2d31baa08c03bec5c88b6" title=" " alt="" coords="820,35,1019,77"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1051,59,1020,59,1020,53,1051,53"/>
+<area shape="rect" id="Node000003" href="$classGameManager.html#a948792a1ef6f0a0c8c21fae779c4b525" title=" " alt="" coords="583,5,772,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="804,45,772,41,773,35,805,39"/>
+<area shape="rect" id="Node000005" href="$classGameManager.html#a6cea7fca5fecdd4f8a32912d4bfc233f" title=" " alt="" coords="103,43,296,69"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="804,62,772,63,344,63,297,62,297,56,344,57,772,57,804,57"/>
+<area shape="rect" id="Node000004" href="$classGameManager.html#aeed1dd73db1c39b2e39d30d9d37c1f6c" title=" " alt="" coords="344,5,535,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="568,29,536,29,536,24,568,24"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="329,43,297,47,296,42,328,38"/>
+<area shape="rect" id="Node000006" href="$Client_2src_2main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,43,55,69"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="87,59,55,59,55,53,87,53"/>
+</map>

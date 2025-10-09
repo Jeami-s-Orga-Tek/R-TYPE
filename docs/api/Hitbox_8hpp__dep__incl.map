@@ -1,0 +1,22 @@
+<map id="Hitbox.hpp" name="Hitbox.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="216,5,301,32"/>
+<area shape="rect" id="Node000002" href="$Collision_8hpp.html" title=" " alt="" coords="54,80,151,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,41,131,82,129,77,217,36"/>
+<area shape="rect" id="Node000006" href="$Server_2src_2main_8cpp.html" title=" " alt="" coords="185,155,260,181"/>
+<area shape="poly" id="edge12_Node000001_Node000006" title=" " alt="" coords="272,46,279,76,276,107,260,135,240,156,236,152,255,132,271,106,274,76,267,47"/>
+<area shape="rect" id="Node000007" href="$Enemy_8hpp.html" title=" " alt="" coords="175,80,262,107"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="246,47,228,81,223,78,242,45"/>
+<area shape="rect" id="Node000008" href="$NetworkManager_8cpp.html" title=" " alt="" coords="336,80,482,107"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="299,37,384,77,382,82,297,41"/>
+<area shape="rect" id="Node000003" href="$GameTypes_8cpp.html" title=" " alt="" coords="104,229,221,256"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="68,118,50,131,36,147,30,163,34,180,48,196,65,209,105,227,103,232,62,214,44,200,29,183,25,163,32,144,47,128,65,113"/>
+<area shape="rect" id="Node000004" href="$GameTypes_8hpp.html" title=" " alt="" coords="44,155,161,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="105,122,105,154,100,154,100,122"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="138,113,203,152,200,156,135,117"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="125,192,154,227,150,231,120,195"/>
+<area shape="rect" id="Node000005" href="$Client_2src_2main_8cpp.html" title=" " alt="" coords="5,229,80,256"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="85,195,55,231,51,227,80,192"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="249,115,263,130,274,146,279,164,274,183,261,199,245,213,209,231,206,226,242,208,257,196,269,180,273,164,269,149,259,133,245,119"/>
+<area shape="poly" id="edge9_Node000007_Node000004" title=" " alt="" coords="187,118,124,156,121,152,184,113"/>
+<area shape="poly" id="edge10_Node000007_Node000006" title=" " alt="" coords="223,122,224,154,219,154,217,123"/>
+</map>
