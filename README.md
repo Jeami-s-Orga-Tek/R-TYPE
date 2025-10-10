@@ -46,6 +46,18 @@ _Ubuntu/Debian:_
 sudo apt-get install cmake ninja-build g++ libsfml-dev
 ```
 
+
+### Prerequisites & Build (Windows — Chocolatey)
+```powershell 
+choco install cmake python ninja mingw
+git clone https://github.com/Jeami-s-Orga-Tek/R-TYPE.git
+cd R-TYPE
+cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release --parallel
+cp build\_deps\sfml-src\extlibs\bin\x64\openal32.dll .
+```
+
+
 ### Build
 From the **repository root**:
 ```bash
@@ -266,5 +278,5 @@ direction LR
 
 ## 🤝 Credits & License
 
-- **Authors:** Tiziano BLANC, Edouard DUPUCH, Olivier DUBO, and Valentin .
+- **Authors:** Tiziano BLANC, Edouard DUPUCH, Olivier DUBO, and Valentin ROUSSEAU.
 - **Sprites & inspirations:** R‑Type universe.
