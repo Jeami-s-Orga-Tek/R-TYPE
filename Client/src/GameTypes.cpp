@@ -12,6 +12,9 @@
 #include <thread>
 #include <fstream>
 
+#include "Components/Sound.hpp"
+#include "Entity.hpp"
+#include "Systems/SoundPlayer.hpp"
 #include "dlfcn_compat.hpp"
 #include "GameTypes.hpp"
 #include "Mediator.hpp"
@@ -743,6 +746,14 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
         networkManager->mediator->setSystemSignature<Engine::Systems::EnemySystem>(signature);
     }
 
+    sound_system = networkManager->mediator->registerSystem<Engine::Systems::SoundSystem>();
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Sound>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::SoundSystem>(signature);
+    }
+
     // TEMP
     networkManager->send_hello(UsernameGame, 12345);
 
@@ -916,6 +927,9 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addSprite(renderer, "ground_enemy", "ground_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "space_background", "space_background_texture", {1226, 207}, {0, 0}, 1, 1);
 
+    sound_system->addSound(renderer, "background_music", "assets/sound/Stage2_sound.mp3");
+    sound_system->addSound(renderer, "projectile_shoot", "assets/sound/01LASER.BD_00000.wav");
+
     const float FIXED_DT = 1.0f / 60.0f;
     float accumulator = 0.0f;
     auto previousTime = std::chrono::high_resolution_clock::now();
@@ -950,6 +964,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             collision_system->update(networkManager);
             enemy_system->update(networkManager, FIXED_DT);
             render_system->update(renderer, mediator);
+            sound_system->update(renderer, mediator);
             accumulator -= FIXED_DT;
         }
         renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);

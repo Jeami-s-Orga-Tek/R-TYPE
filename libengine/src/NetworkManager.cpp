@@ -22,6 +22,7 @@
 #include "Components/PlayerInfo.hpp"
 #include "Components/RigidBody.hpp"
 #include "Components/ShootingCooldown.hpp"
+#include "Components/Sound.hpp"
 #include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
 #include "Entity.hpp"
@@ -50,6 +51,7 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     registerComponent<Engine::Components::Sprite>();
     registerComponent<Engine::Components::Hitbox>();
     registerComponent<Engine::Components::EnemyInfo>();
+    registerComponent<Engine::Components::Sound>();
     
     if (role == Role::SERVER) {
         socket.open(boost::asio::ip::udp::v4());
@@ -484,6 +486,7 @@ void Engine::NetworkManager::createPlayerProjectile(float x, float y)
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
     signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
+    signature.set(mediator->getComponentType<Engine::Components::Sound>());
 
     Engine::Entity entity = mediator->createEntity();
 
@@ -496,12 +499,15 @@ void Engine::NetworkManager::createPlayerProjectile(float x, float y)
     const Utils::Rect hitbox_rect(x, y, 32, 8);
     const Engine::Components::Hitbox projectile_hitbox = {.bounds = hitbox_rect, .active = true, .layer = HITBOX_LAYERS::PLAYER_PROJECTILE, .damage = 10};
     mediator->addComponent(entity, projectile_hitbox);
+    const Engine::Components::Sound projectile_sound = {.sound_name = "projectile_shoot"};
+    mediator->addComponent(entity, projectile_sound);
 
     sendEntity(entity, signature);
     sendComponent<Engine::Components::RigidBody>(entity, projectile_rigidbody);
     sendComponent<Engine::Components::Transform>(entity, projectile_transform);
     sendComponent<Engine::Components::Sprite>(entity, projectile_sprite);
     sendComponent<Engine::Components::Hitbox>(entity, projectile_hitbox);
+    sendComponent<Engine::Components::Sound>(entity, projectile_sound);
 }
 
 void Engine::NetworkManager::createEnemy(float x, float y, ENEMY_TYPES enemy_type)
@@ -539,16 +545,21 @@ void Engine::NetworkManager::createBackground()
     Engine::Signature signature;
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    signature.set(mediator->getComponentType<Engine::Components::Sound>());
 
     Engine::Entity entity = mediator->createEntity();
 
-    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Vec2(0, 0), .rot = 0.0f, .scale = 3.0f};
-    mediator->addComponent(entity, projectile_transform);
-    const Engine::Components::Sprite projectile_sprite = {.sprite_name = "space_background", .frame_nb = 1, .scrolling = true, .is_background = true};
-    mediator->addComponent(entity, projectile_sprite);
+    const Engine::Components::Transform background_transform = {.pos = Engine::Utils::Vec2(0, 0), .rot = 0.0f, .scale = 3.0f};
+    mediator->addComponent(entity, background_transform);
+    const Engine::Components::Sprite background_sprite = {.sprite_name = "space_background", .frame_nb = 1, .scrolling = true, .is_background = true};
+    mediator->addComponent(entity, background_sprite);
+    const Engine::Components::Sound background_sound = {.sound_name = "background_music"};
+    mediator->addComponent(entity, background_sound);
+
     sendEntity(entity, signature);
-    sendComponent<Engine::Components::Transform>(entity, projectile_transform);
-    sendComponent<Engine::Components::Sprite>(entity, projectile_sprite);
+    sendComponent<Engine::Components::Transform>(entity, background_transform);
+    sendComponent<Engine::Components::Sprite>(entity, background_sprite);
+    sendComponent<Engine::Components::Sound>(entity, background_sound);
 }
 
 int Engine::NetworkManager::getConnectedPlayers()

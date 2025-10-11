@@ -14,8 +14,10 @@
 #include "Components/EnemyInfo.hpp"
 #include "Components/Hitbox.hpp"
 #include "Components/RigidBody.hpp"
+#include "Components/Sound.hpp"
 #include "Components/Transform.hpp"
 #include "Entity.hpp"
+#include "Systems/SoundPlayer.hpp"
 #include "dlfcn_compat.hpp"
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
@@ -76,6 +78,7 @@ int main()
     mediator->registerComponent<Engine::Components::ShootingCooldown>();
     mediator->registerComponent<Engine::Components::Hitbox>();
     mediator->registerComponent<Engine::Components::EnemyInfo>();
+    mediator->registerComponent<Engine::Components::Sound>();
 
     auto physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
 
