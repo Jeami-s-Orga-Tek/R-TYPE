@@ -6,11 +6,14 @@
 */
 
 #include <boost/asio.hpp>
+#include <chrono>
+#include <cstddef>
 #include <iostream>
 #include <array>
 #include <string>
 #include <thread>
 #include <cstring>
+#include <vector>
 
 #include "NetworkManager.hpp"
 #include "Components/EnemyInfo.hpp"
@@ -21,6 +24,7 @@
 #include "Components/ShootingCooldown.hpp"
 #include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
+#include "Entity.hpp"
 #include "Utils.hpp"
 
 Engine::NetworkManager::NetworkManager(Role role, const std::string &address, uint16_t port)
@@ -29,14 +33,14 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     mediator = std::make_shared<Engine::Mediator>();
     mediator->init();
 
-    mediator->registerComponent<Engine::Components::Gravity>();
-    mediator->registerComponent<Engine::Components::RigidBody>();
-    mediator->registerComponent<Engine::Components::Transform>();
-    mediator->registerComponent<Engine::Components::PlayerInfo>();
-    mediator->registerComponent<Engine::Components::ShootingCooldown>();
-    mediator->registerComponent<Engine::Components::Sprite>();
-    mediator->registerComponent<Engine::Components::Hitbox>();
-    mediator->registerComponent<Engine::Components::EnemyInfo>();
+    // mediator->registerComponent<Engine::Components::Gravity>();
+    // mediator->registerComponent<Engine::Components::RigidBody>();
+    // mediator->registerComponent<Engine::Components::Transform>();
+    // mediator->registerComponent<Engine::Components::PlayerInfo>();
+    // mediator->registerComponent<Engine::Components::ShootingCooldown>();
+    // mediator->registerComponent<Engine::Components::Sprite>();
+    // mediator->registerComponent<Engine::Components::Hitbox>();
+    // mediator->registerComponent<Engine::Components::EnemyInfo>();
 
     registerComponent<Engine::Components::Gravity>();
     registerComponent<Engine::Components::RigidBody>();
@@ -89,6 +93,9 @@ void Engine::NetworkManager::start_receive()
         [this](boost::system::error_code ec, std::size_t bytes_recvd) {
             if (!ec && bytes_recvd > 0) {
                 handle_receive(bytes_recvd);
+                if (client_timeout_clocks.find(remote_endpoint) != client_timeout_clocks.end()) {
+                    client_timeout_clocks[remote_endpoint] = std::chrono::steady_clock::now();
+                }
             }
             start_receive();
         }
@@ -113,11 +120,14 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
         switch (header.type) {
             case MSG_HELLO: {
                 auto it = std::find_if(client_endpoints.begin(), client_endpoints.end(),
-                    [this](const boost::asio::ip::udp::endpoint &ep) {
-                        return ep == remote_endpoint;
+                    [this](const std::pair<const long unsigned int, boost::asio::ip::basic_endpoint<boost::asio::ip::udp>> &ep) {
+                        return ep.second == remote_endpoint;
                     });
                 if (it == client_endpoints.end()) {
-                    client_endpoints.push_back(remote_endpoint);
+                    // client_endpoints.push_back(remote_endpoint);
+                    client_endpoints[client_endpoints.size()] = remote_endpoint;
+                    // client_timeout_clocks.push_back(std::chrono::steady_clock::now());
+                    client_timeout_clocks[remote_endpoint] = std::chrono::steady_clock::now();
                 }
                 send_welcome();
                 break;
@@ -143,7 +153,7 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
                 receiveEntity();
                 break;
             case MSG_ENTITY_DESTROYED:
-
+                receiveDestroyEntity();
                 break;
             case MSG_COMPONENT:
                 receiveComponent();
@@ -151,6 +161,36 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
             default:
                 break;
         }
+    }
+}
+
+void Engine::NetworkManager::handleTimeouts()
+{
+    const auto &now = std::chrono::steady_clock::now();
+
+    std::vector<std::size_t> clients_to_delete {};
+    for (const auto &remote_endpoint : client_endpoints) {
+        if (client_timeout_clocks.find(remote_endpoint.second) == client_timeout_clocks.end()) {
+            continue;
+        }
+        auto &timeout_clock = client_timeout_clocks[remote_endpoint.second];
+
+        std::chrono::duration<double> time_since_last_packet(now - timeout_clock);
+        // std::cout << remote_endpoint.first << " LAST PACKET : " << time_since_last_packet.count() << std::endl;
+        if (time_since_last_packet > std::chrono::seconds(10)) {
+            // auto &transform = mediator->getComponent<Components::Transform>(client_id);
+
+            // transform.pos.x = -10000;
+            // transform.pos.x = -10000;
+            mediator->destroyEntity(remote_endpoint.first);
+            sendDestroyEntity(remote_endpoint.first);
+            clients_to_delete.push_back(remote_endpoint.first);
+            client_timeout_clocks.erase(remote_endpoint.second);
+            // client_endpoints.erase(remote_endpoint.first);
+        }
+    }
+    for (const auto &id : clients_to_delete) {
+        client_endpoints.erase(id);
     }
 }
 
@@ -258,7 +298,27 @@ void Engine::NetworkManager::sendEntity(const Entity &entity, const Signature &s
 
     if (role == Role::SERVER) {
         for (const auto &endpoint : client_endpoints) {
-            socket.send_to(boost::asio::buffer(buf), endpoint);
+            socket.send_to(boost::asio::buffer(buf), endpoint.second);
+        }
+    } else {
+        socket.send_to(boost::asio::buffer(buf), remote_endpoint);
+    }
+}
+
+void Engine::NetworkManager::sendDestroyEntity(const Entity &entity)
+{
+    std::array<uint8_t, sizeof(PacketHeader) + sizeof(EntityDestroyBody)> buf {};
+    const PacketHeader &ph = createPacketHeader(MSG_ENTITY_DESTROYED);
+    std::memcpy(buf.data(), &ph, sizeof(ph));
+
+    EntityDestroyBody eb = {
+        .entity_id = entity,
+    };
+    std::memcpy(buf.data() + sizeof(ph), &eb, sizeof(eb));
+
+    if (role == Role::SERVER) {
+        for (const auto &endpoint : client_endpoints) {
+            socket.send_to(boost::asio::buffer(buf), endpoint.second);
         }
     } else {
         socket.send_to(boost::asio::buffer(buf), remote_endpoint);
@@ -286,7 +346,7 @@ void Engine::NetworkManager::sendComponent(const Entity &entity, const T &compon
 
     if (role == Role::SERVER) {
         for (const auto &endpoint : client_endpoints) {
-            socket.send_to(boost::asio::buffer(buf.data(), buf.size()), endpoint);
+            socket.send_to(boost::asio::buffer(buf.data(), buf.size()), endpoint.second);
         }
     } else {
         socket.send_to(boost::asio::buffer(buf.data(), buf.size()), remote_endpoint);
@@ -337,6 +397,20 @@ void Engine::NetworkManager::receiveEntity()
     std::cout << "Signature: " << signature << std::endl;
 
     mediator->createEntity();
+}
+
+void Engine::NetworkManager::receiveDestroyEntity()
+{
+    EntityDestroyBody entity_body;
+    std::memcpy(&entity_body, recv_buffer.data() + sizeof(PacketHeader), sizeof(entity_body));
+
+    Entity entity_id = entity_body.entity_id;
+
+    // std::cout << "ENTITY RECEIVED:" << std::endl;
+    // std::cout << "Entity ID: " << entity_id << std::endl;
+    // std::cout << "Signature: " << signature << std::endl;
+
+    mediator->destroyEntity(entity_id);
 }
 
 void Engine::NetworkManager::receiveComponent()

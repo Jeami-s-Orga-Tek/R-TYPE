@@ -8,10 +8,13 @@
 #ifndef NETWORKMANAGER_HPP_
 #define NETWORKMANAGER_HPP_
 
+#include <chrono>
 #include <cstdint>
 #include <boost/asio.hpp>
 #include <array>
 #include <thread>
+#include <unordered_map>
+#include <vector>
 
 #include "Entity.hpp"
 #include "Mediator.hpp"
@@ -56,7 +59,7 @@ namespace Engine {
         
         void startServer();
         
-        #pragma pack(push, 1)
+        // #pragma pack(push, 1)
         struct PacketHeader {
             uint16_t magic;
             uint8_t version;
@@ -65,68 +68,71 @@ namespace Engine {
             uint32_t ack;
             uint32_t ack_bits;
         };
-        #pragma pack(pop)
+        // #pragma pack(pop)
 
         PacketHeader createPacketHeader(MsgType type, uint32_t seq = 0, uint32_t ack = 0, uint32_t ack_bits = 0);
 
-        #pragma pack(push, 1)
+        // #pragma pack(push, 1)
         struct HelloBody {
             uint32_t nonce;
             uint8_t version;
             uint8_t name_len;
         };
-        #pragma pack(pop)
+        // #pragma pack(pop)
 
-        #pragma pack(push, 1)
+        // #pragma pack(push, 1)
         struct WelcomeBody {
             uint32_t player_id;
             uint16_t room_id;
             uint32_t baseline_tick;
         };
-        #pragma pack(pop)
+        // #pragma pack(pop)
 
         void send_hello(const std::string &client_name, uint32_t nonce);
         void send_welcome();
         void send_pong(uint32_t seq);
         void send_ping(uint32_t seq);
+        void handleTimeouts();
 
-        #pragma pack(push, 1)
+        // #pragma pack(push, 1)
         struct InputBody {
             uint32_t player_id;
             uint16_t room_id;
             uint64_t input_data;
         };
-        #pragma pack(pop)
+        // #pragma pack(pop)
 
-        #pragma pack(push, 1)
+        // #pragma pack(push, 1)
         struct EntityBody {
             uint32_t entity_id;
             uint64_t signature;
         };
-        #pragma pack(pop)
+        // #pragma pack(pop)
 
-        #pragma pack(push, 1)
+        // #pragma pack(push, 1)
         struct EntityDestroyBody {
             uint32_t entity_id;
         };
-        #pragma pack(pop)
+        // #pragma pack(pop)
 
-        #pragma pack(push, 1)
+        // #pragma pack(push, 1)
         struct ComponentBody {
             uint32_t entity_id;
             uint8_t name_len;
             uint32_t component_len;
         };
-        #pragma pack(pop)
+        // #pragma pack(pop)
 
         template <std::size_t S> void sendInput(const uint32_t player_id, const uint16_t room_id, const std::bitset<S> inputs);
         void sendEntity(const Entity &entity, const Signature &signature);
         template <typename T> void sendComponent(const Entity &entity, const T &component);
+        void sendDestroyEntity(const Entity &entity);
 
         void receiveWelcome();
         void receiveInputs();
         void receiveEntity();
         void receiveComponent();
+        void receiveDestroyEntity();
         
         void start_receive();
 
@@ -148,8 +154,10 @@ namespace Engine {
         std::array<uint8_t, 1024> recv_buffer;
         std::thread io_thread;
 
-        std::vector<boost::asio::ip::udp::endpoint> client_endpoints;
+        // std::vector<boost::asio::ip::udp::endpoint> client_endpoints;
+        std::unordered_map<std::size_t, boost::asio::ip::udp::endpoint> client_endpoints {};
         boost::asio::ip::udp::endpoint temp_sender_endpoint;
+        std::unordered_map<boost::asio::ip::udp::endpoint, std::chrono::time_point<std::chrono::steady_clock>> client_timeout_clocks {};
 
         ComponentRegistry componentRegistry;
         template<typename ComponentType> void registerComponent();
@@ -174,6 +182,7 @@ void Engine::NetworkManager::sendInput(const uint32_t player_id, const uint16_t 
 
 template<typename ComponentType>
 void Engine::NetworkManager::registerComponent() {
+    mediator->registerComponent<ComponentType>();
     componentRegistry.registerType(
         typeid(ComponentType).name(),
         [](Entity entity, const void *data, Mediator &mediator) {

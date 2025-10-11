@@ -22,6 +22,8 @@ namespace Engine {
             virtual ~Renderer() = default;
 
             virtual bool createWindow(int width, int height, const std::string &title) = 0;
+            virtual unsigned int getWindowHeight() = 0;
+            virtual unsigned int getWindowWidth() = 0;
             virtual void clearWindow() = 0;
             virtual void displayWindow() = 0;
             virtual void closeWindow() = 0;

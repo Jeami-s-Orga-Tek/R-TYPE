@@ -23,6 +23,8 @@ namespace Engine {
                 ~SFML();
                 
                 bool createWindow(int width, int height, const std::string &title) override;
+                unsigned int getWindowHeight() override;
+                unsigned int getWindowWidth() override;
                 void clearWindow() override;
                 void displayWindow() override;
                 void closeWindow() override;

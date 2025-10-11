@@ -92,7 +92,7 @@ namespace Engine {
 
                     if (rectA.intersects(rectB)) {
                         if (active_collisions.find(collisionPair) == active_collisions.end()) {
-                            std::cout << "NEW COLLISION !!\n" << "e a : " << a << " e b : " << b << std::endl;
+                            // std::cout << "NEW COLLISION !!\n" << "e a : " << a << " e b : " << b << std::endl;
                             Event collisionEvent(static_cast<Engine::EventId>(EventsIds::COLLISION));
                             collisionEvent.setParam(0, a);
                             collisionEvent.setParam(1, b);

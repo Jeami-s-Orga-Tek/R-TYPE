@@ -24,6 +24,20 @@ bool Engine::Renderers::SFML::createWindow(int width, int height, const std::str
 	return (window != nullptr);
 }
 
+unsigned int Engine::Renderers::SFML::getWindowHeight()
+{
+	if (window)
+		return (window->getSize().y);
+	return (0);
+}
+
+unsigned int Engine::Renderers::SFML::getWindowWidth()
+{
+	if (window)
+		return (window->getSize().x);
+	return (0);
+}
+
 void Engine::Renderers::SFML::clearWindow()
 {
 	if (window)

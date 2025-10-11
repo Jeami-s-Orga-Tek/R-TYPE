@@ -51,16 +51,16 @@ namespace Engine {
                         return;
                     }
                     
-                    std::cout << "damag enenemy" << std::endl;
+                    // std::cout << "damag enenemy" << std::endl;
                     auto &enemyComp = networkManager->mediator->getComponent<Components::EnemyInfo>(enemy);
-                    std::cout << "damag enenemy 2" << std::endl;
+                    // std::cout << "damag enenemy 2" << std::endl;
                     auto &hitbox = networkManager->mediator->getComponent<Components::Hitbox>(projectile);
-                    std::cout << "damag enenemy 3" << std::endl;
+                    // std::cout << "damag enenemy 3" << std::endl;
                     
                     enemyComp.health -= hitbox.damage;
 
                     if (enemyComp.health <= 0) {
-                        std::cout << "YOU SHOULD DELETE THE ENTITY ! NOW !!!" << std::endl;
+                        // std::cout << "YOU SHOULD DELETE THE ENTITY ! NOW !!!" << std::endl;
                         // Event destroyEvent(static_cast<EventId>(EventsIds::ENEMY_DESTROYED));
                         // destroyEvent.setParam(0, enemy);
                         // destroyEvent.setParam(1, enemyComp.scoreValue);

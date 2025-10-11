@@ -179,6 +179,8 @@ int main()
             //     networkManager->sendComponent(i, comp);
             // }
 
+            networkManager->handleTimeouts();
+
             accumulator -= FIXED_DT;
 
         }
