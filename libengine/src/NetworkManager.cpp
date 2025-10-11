@@ -553,7 +553,7 @@ void Engine::NetworkManager::createBackground()
     mediator->addComponent(entity, background_transform);
     const Engine::Components::Sprite background_sprite = {.sprite_name = "space_background", .frame_nb = 1, .scrolling = true, .is_background = true};
     mediator->addComponent(entity, background_sprite);
-    const Engine::Components::Sound background_sound = {.sound_name = "background_music"};
+    const Engine::Components::Sound background_sound = {.sound_name = "background_music", .looping = true};
     mediator->addComponent(entity, background_sound);
 
     sendEntity(entity, signature);
