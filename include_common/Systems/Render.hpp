@@ -55,7 +55,7 @@ namespace Engine {
                     sprites.insert({sprite_name, sprite});
                 }
 
-                void drawSprite(std::shared_ptr<Engine::Renderer> renderer, Components::Sprite entity_sprite, Components::Transform transform) {
+                void drawSprite(std::shared_ptr<Engine::Renderer> renderer, Components::Sprite entity_sprite, Components::Transform transform, float deltaTime = 0.0f) {
                     auto sprite_find = sprites.find(entity_sprite.sprite_name);
                         if (sprite_find == sprites.end()) {
                             std::cerr << entity_sprite.sprite_name << std::endl;
@@ -65,7 +65,18 @@ namespace Engine {
 
                         renderer->setSpriteTexture(entity_sprite.sprite_name, sprite.texture_name);
                         if (entity_sprite.scrolling) {
-                            renderer->scrollSprite(entity_sprite.sprite_name);
+                            const float SCROLL_SPEED = 60.0f;
+                            float scrollAmount = SCROLL_SPEED * deltaTime;
+
+                            auto& scrollPos = spriteScrollPositions[entity_sprite.sprite_name];
+                            scrollPos += scrollAmount;
+                            
+                            renderer->setSpriteTextureRect(entity_sprite.sprite_name,
+                                static_cast<int>(scrollPos),
+                                static_cast<int>(sprite.pos.y),
+                                static_cast<int>(sprite.size.x),
+                                static_cast<int>(sprite.size.y)
+                            );
                         } else {
                             renderer->setSpriteTextureRect(entity_sprite.sprite_name,
                                 static_cast<int>(sprite.pos.x * entity_sprite.frame_nb),
@@ -80,14 +91,14 @@ namespace Engine {
                         renderer->drawSprite(entity_sprite.sprite_name);
                 }
 
-                void update(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator) {
+                void update(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator, float deltaTime = 0.016f) {
                     for (const auto &entity : entities) {
                         const auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
 
                         if (entity_sprite.is_background) {
                             const auto &transform = mediator->getComponent<Components::Transform>(entity);
 
-                            drawSprite(renderer, entity_sprite, transform);
+                            drawSprite(renderer, entity_sprite, transform, deltaTime);
                         }
                     }
                     for (const auto &entity : entities) {
@@ -96,13 +107,14 @@ namespace Engine {
                         if (!entity_sprite.is_background) {
                             const auto &transform = mediator->getComponent<Components::Transform>(entity);
 
-                            drawSprite(renderer, entity_sprite, transform);
+                            drawSprite(renderer, entity_sprite, transform, deltaTime);
                         }
                     }
                 };
 
             private:
                 std::unordered_map<std::string, Sprite> sprites {};
+                std::unordered_map<std::string, float> spriteScrollPositions {};
         };
     };
 };

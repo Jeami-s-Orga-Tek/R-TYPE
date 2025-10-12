@@ -908,9 +908,13 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     sound_system->addSound(renderer, "background_music", "assets/sound/Stage2_sound.mp3");
     sound_system->addSound(renderer, "projectile_shoot", "assets/sound/01LASER.BD_00000.wav");
 
-    const float FIXED_DT = 1.0f / 60.0f;
+    const float TARGET_FPS = static_cast<float>(currentFps);
+    const float FIXED_DT = 1.0f / TARGET_FPS;
+    const auto FRAME_DURATION = std::chrono::microseconds(static_cast<long>(1000000.0f / TARGET_FPS));
+    
     float accumulator = 0.0f;
-    auto previousTime = std::chrono::high_resolution_clock::now();
+    auto previous_time = std::chrono::high_resolution_clock::now();
+    auto frame_start_time = previous_time;
 
     int frame_count = 0;
     float fps = 0.0f;
@@ -919,13 +923,17 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     renderer->loadFont("basic", "assets/r-type.otf");
 
     while (renderer->isWindowOpen()) {
+        frame_start_time = std::chrono::high_resolution_clock::now();
+        
         renderer->clearWindow();
-
         renderer->handleEvents(networkManager);
 
         auto currentTime = std::chrono::high_resolution_clock::now();
-        float frameTime = std::chrono::duration<float>(currentTime - previousTime).count();
-        previousTime = currentTime;
+        float frameTime = std::chrono::duration<float>(currentTime - previous_time).count();
+
+        frameTime = std::min(frameTime, FIXED_DT * 5.0f);
+        
+        previous_time = currentTime;
         accumulator += frameTime;
 
         frame_count++;
@@ -941,12 +949,21 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             physics_system->update(mediator, FIXED_DT);
             collision_system->update(networkManager);
             enemy_system->update(networkManager, FIXED_DT);
-            render_system->update(renderer, mediator);
-            sound_system->update(renderer, mediator);
             accumulator -= FIXED_DT;
         }
-        renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
+
+        render_system->update(renderer, mediator, frameTime);
+        sound_system->update(renderer, mediator);
         
+        renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
         renderer->displayWindow();
+
+        auto frame_end_time = std::chrono::high_resolution_clock::now();
+        auto frame_processing_time = frame_end_time - frame_start_time;
+        
+        if (frame_processing_time < FRAME_DURATION) {
+            auto sleepTime = FRAME_DURATION - frame_processing_time;
+            std::this_thread::sleep_for(sleepTime);
+        }
     }
 }

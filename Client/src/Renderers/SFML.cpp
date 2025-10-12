@@ -20,7 +20,7 @@ Engine::Renderers::SFML::SFML()
 bool Engine::Renderers::SFML::createWindow(int width, int height, const std::string &title)
 {
 	window = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), title);
-	window->setFramerateLimit(60);
+	// window->setFramerateLimit(60);
 	return (window != nullptr);
 }
 

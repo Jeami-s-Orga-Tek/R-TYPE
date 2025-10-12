@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <stdexcept>
+#include <thread>
 
 #include "Server.hpp"
 #include "dlfcn_compat.hpp"
@@ -115,8 +116,11 @@ void RTypeServer::Server::gameLoop()
     std::cout << "NetworkManager server started. Press Ctrl+C to exit." << std::endl;
 
     const float FIXED_DT = 1.0f / 60.0f;
+    const auto FRAME_DURATION = std::chrono::duration_cast<std::chrono::microseconds>(
+        std::chrono::duration<float>(FIXED_DT));
+    
     float accumulator = 0.0f;
-    auto previousTime = std::chrono::high_resolution_clock::now();
+    auto previous_time = std::chrono::high_resolution_clock::now();
 
     const int PLAYER_NB = 4;
     bool have_players_spawned = false;
@@ -124,10 +128,11 @@ void RTypeServer::Server::gameLoop()
     std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
 
     while (true) {
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float frameTime = std::chrono::duration<float>(currentTime - previousTime).count();
-        previousTime = currentTime;
-        accumulator += frameTime;
+        auto frame_start = std::chrono::high_resolution_clock::now();
+        auto current_time = frame_start;
+        float frame_time = std::chrono::duration<float>(current_time - previous_time).count();
+        previous_time = current_time;
+        accumulator += frame_time;
 
         while (accumulator >= FIXED_DT) {
             if (!have_players_spawned && networkManager->getConnectedPlayers() >= PLAYER_NB) {
@@ -150,6 +155,12 @@ void RTypeServer::Server::gameLoop()
             networkManager->handleTimeouts();
 
             accumulator -= FIXED_DT;
+        }
+
+        auto frame_end = std::chrono::high_resolution_clock::now();
+        auto frame_elapsed = frame_end - frame_start;
+        if (frame_elapsed < FRAME_DURATION) {
+            std::this_thread::sleep_for(FRAME_DURATION - frame_elapsed);
         }
     }
 }
