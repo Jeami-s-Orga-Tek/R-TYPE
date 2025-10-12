@@ -15,7 +15,7 @@
 #include "Components/Sound.hpp"
 #include "Entity.hpp"
 #include "Systems/SoundPlayer.hpp"
-#include "dlfcn_compat.hpp"
+#include "DLLoader.hpp"
 #include "GameTypes.hpp"
 #include "Mediator.hpp"
 #include "Systems/Collision.hpp"
@@ -44,36 +44,14 @@ GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
 {
 
     #if defined(_WIN32)
-    void *handle = dlopen("libengine.dll", RTLD_LAZY);
-    if (!handle) {
-        std::cerr << "Failed to load libengine.dll: " << dlerror() << std::endl;
-        throw std::runtime_error("");
-    }
+    const std::string libName = "libengine.dll";
     #else
-    void *handle = dlopen("libengine.so", RTLD_LAZY);
-    if (!handle) {
-        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
-        throw std::runtime_error("");
-    }
+    const std::string libName = "libengine.so";
     #endif
 
-    createMediatorFunc = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
-    char *error = dlerror();
-    if (error) {
-        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
-        dlclose(handle);
-        throw std::runtime_error("");
-    }
-
-    createNetworkManagerFunc = (std::shared_ptr<Engine::NetworkManager> (*)(Engine::NetworkManager::Role, const std::string &, uint16_t))(dlsym(handle, "createNetworkManager"));
-    error = dlerror();
-    if (error) {
-        std::cerr << "Cannot load symbol 'createNetworkManager': " << error << std::endl;
-        dlclose(handle);
-        throw std::runtime_error("");
-    }
-
-    dlclose(handle);
+    Engine::DLLoader loader;
+    createMediatorFunc = loader.getFunction<std::shared_ptr<Engine::Mediator>(*)()>(libName, "createMediator");
+    createNetworkManagerFunc = loader.getFunction<std::shared_ptr<Engine::NetworkManager>(*)(Engine::NetworkManager::Role, const std::string &, uint16_t)>(libName, "createNetworkManager");
 
     if (!font.loadFromFile("assets/r-type.otf")) {
         std::cerr << "Unable to load font" << std::endl;

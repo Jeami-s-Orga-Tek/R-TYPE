@@ -20,6 +20,7 @@
 #include "Entity.hpp"
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
+#include "DLLoader.hpp"
 
 RTypeServer::Server::Server()
 {
@@ -28,36 +29,14 @@ RTypeServer::Server::Server()
 void RTypeServer::Server::loadEngineLib()
 {
     #if defined(_WIN32)
-    void *handle = dlopen("libengine.dll", RTLD_LAZY);
-    if (!handle) {
-        std::cerr << "Failed to load libengine.dll: " << dlerror() << std::endl;
-        throw std::runtime_error("");
-    }
+    const std::string libName = "libengine.dll";
     #else
-    void *handle = dlopen("libengine.so", RTLD_LAZY);
-    if (!handle) {
-        std::cerr << "Failed to load libengine.so: " << dlerror() << std::endl;
-        throw std::runtime_error("");
-    }
+    const std::string libName = "libengine.so";
     #endif
 
-    createMediatorFunc = (std::shared_ptr<Engine::Mediator> (*)())(dlsym(handle, "createMediator"));
-    char *error = dlerror();
-    if (error) {
-        std::cerr << "Cannot load symbol 'createMediator': " << error << std::endl;
-        dlclose(handle);
-        throw std::runtime_error(error);
-    }
-
-    createNetworkManagerFunc = (std::shared_ptr<Engine::NetworkManager> (*)(Engine::NetworkManager::Role, const std::string &, uint16_t))(dlsym(handle, "createNetworkManager"));
-    error = dlerror();
-    if (error) {
-        std::cerr << "Cannot load symbol 'createNetworkManager': " << error << std::endl;
-        dlclose(handle);
-        throw std::runtime_error(error);
-    }
-
-    dlclose(handle);
+    Engine::DLLoader loader;
+    createMediatorFunc = loader.getFunction<std::shared_ptr<Engine::Mediator>(*)()>(libName, "createMediator");
+    createNetworkManagerFunc = loader.getFunction<std::shared_ptr<Engine::NetworkManager>(*)(Engine::NetworkManager::Role, const std::string &, uint16_t)>(libName, "createNetworkManager");
 }
 
 void RTypeServer::Server::startServer(Engine::NetworkManager::Role role, const std::string &ip, uint16_t port)
