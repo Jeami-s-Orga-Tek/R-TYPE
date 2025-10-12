@@ -20,16 +20,9 @@
 #include "Mediator.hpp"
 #include "ComponentRegistry.hpp"
 
-#include "Components/EnemyInfo.hpp"
-
 namespace Engine {
     class NetworkManager {
     public:
-        void createPlayer();
-        void createPlayerProjectile(float x, float y);
-        void createEnemy(float x, float y, ENEMY_TYPES enemy_type);
-        void createBackground();
-
         enum class Role {
             CLIENT,
             SERVER
@@ -190,6 +183,34 @@ void Engine::NetworkManager::registerComponent() {
             mediator.addComponent(entity, *comp);
         }
     );
+}
+
+template <typename T>
+void Engine::NetworkManager::sendComponent(const Entity &entity, const T &component)
+{
+    const std::string type_name = typeid(T).name();
+    size_t total_size = sizeof(PacketHeader) + sizeof(ComponentBody) + type_name.size() + sizeof(component);
+    std::vector<uint8_t> buf(total_size);
+
+    const PacketHeader &ph = createPacketHeader(MSG_COMPONENT);
+    std::memcpy(buf.data(), &ph, sizeof(ph));
+
+    ComponentBody cb = {
+        .entity_id = entity,
+        .name_len = static_cast<uint8_t>(type_name.length()),
+        .component_len = static_cast<uint32_t>(sizeof(component)),
+    };
+    std::memcpy(buf.data() + sizeof(ph), &cb, sizeof(cb));
+    std::memcpy(buf.data() + sizeof(ph) + sizeof(cb), type_name.data(), cb.name_len);
+    std::memcpy(buf.data() + sizeof(ph) + sizeof(cb) + cb.name_len, &component, sizeof(component));
+
+    if (role == Role::SERVER) {
+        for (const auto &endpoint : client_endpoints) {
+            socket.send_to(boost::asio::buffer(buf.data(), buf.size()), endpoint.second);
+        }
+    } else {
+        socket.send_to(boost::asio::buffer(buf.data(), buf.size()), remote_endpoint);
+    }
 }
 
 extern "C" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address, uint16_t port);

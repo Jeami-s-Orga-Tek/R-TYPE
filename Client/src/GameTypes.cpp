@@ -716,7 +716,7 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
     }
     
     player_control_system = networkManager->mediator->registerSystem<Engine::Systems::PlayerControl>();
-    player_control_system->init(networkManager->mediator);
+    player_control_system->init(networkManager->mediator, [](float, float) {});
 
     {
         Engine::Signature signature;

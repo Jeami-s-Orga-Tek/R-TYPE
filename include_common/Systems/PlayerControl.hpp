@@ -8,6 +8,7 @@
 #ifndef PLAYERCONTROL_HPP_
 #define PLAYERCONTROL_HPP_
 
+#include <functional>
 #include <memory>
 #include <bitset>
 #include <unordered_map>
@@ -27,8 +28,10 @@ namespace Engine {
     namespace Systems {
         class PlayerControl : public System {
             public:
-                void init(std::shared_ptr<Mediator> mediator) {
+                void init(std::shared_ptr<Mediator> mediator, const std::function<void(float, float)> &projCreator) {
                     mediator->addEventListener(static_cast<EventId>(EventsIds::PLAYER_INPUT), [this](Event &event) { this->inputListener(event); });
+
+                    playerProjectileCreator = projCreator;
                 }
 
                 void update(std::shared_ptr<NetworkManager> networkManager, float dt) {
@@ -72,8 +75,10 @@ namespace Engine {
                         }
                         if (buttons.test(static_cast<std::size_t>(InputButtons::SHOOT))) {
                             if (player_cooldown.cooldown <= 0) {
-                                if (networkManager->getRole() == NetworkManager::Role::SERVER)
-                                    networkManager->createPlayerProjectile(transform.pos.x, transform.pos.y);
+                                if (networkManager->getRole() == NetworkManager::Role::SERVER) {
+                                    // networkManager->createPlayerProjectile(transform.pos.x, transform.pos.y);
+                                    playerProjectileCreator(transform.pos.x, transform.pos.y);
+                                }
                                 player_cooldown.cooldown = player_cooldown.cooldown_time;
                             }
                         }
@@ -156,6 +161,7 @@ namespace Engine {
 
             private:
                 // std::bitset<5> buttons {};
+                std::function<void(float, float)> playerProjectileCreator;
                 std::unordered_map<uint32_t, std::bitset<5>> player_id_to_buttons;
         };
     };

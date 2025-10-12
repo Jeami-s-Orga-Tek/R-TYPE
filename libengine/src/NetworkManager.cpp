@@ -26,22 +26,12 @@
 #include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
 #include "Entity.hpp"
-#include "Utils.hpp"
 
 Engine::NetworkManager::NetworkManager(Role role, const std::string &address, uint16_t port)
     : role(role), address(address), port(port), io_context(), socket(io_context)
 {
     mediator = std::make_shared<Engine::Mediator>();
     mediator->init();
-
-    // mediator->registerComponent<Engine::Components::Gravity>();
-    // mediator->registerComponent<Engine::Components::RigidBody>();
-    // mediator->registerComponent<Engine::Components::Transform>();
-    // mediator->registerComponent<Engine::Components::PlayerInfo>();
-    // mediator->registerComponent<Engine::Components::ShootingCooldown>();
-    // mediator->registerComponent<Engine::Components::Sprite>();
-    // mediator->registerComponent<Engine::Components::Hitbox>();
-    // mediator->registerComponent<Engine::Components::EnemyInfo>();
 
     registerComponent<Engine::Components::Gravity>();
     registerComponent<Engine::Components::RigidBody>();
@@ -327,34 +317,6 @@ void Engine::NetworkManager::sendDestroyEntity(const Entity &entity)
     }
 }
 
-template <typename T>
-void Engine::NetworkManager::sendComponent(const Entity &entity, const T &component)
-{
-    const std::string type_name = typeid(T).name();
-    size_t total_size = sizeof(PacketHeader) + sizeof(ComponentBody) + type_name.size() + sizeof(component);
-    std::vector<uint8_t> buf(total_size);
-
-    const PacketHeader &ph = createPacketHeader(MSG_COMPONENT);
-    std::memcpy(buf.data(), &ph, sizeof(ph));
-
-    ComponentBody cb = {
-        .entity_id = entity,
-        .name_len = static_cast<uint8_t>(type_name.length()),
-        .component_len = static_cast<uint32_t>(sizeof(component)),
-    };
-    std::memcpy(buf.data() + sizeof(ph), &cb, sizeof(cb));
-    std::memcpy(buf.data() + sizeof(ph) + sizeof(cb), type_name.data(), cb.name_len);
-    std::memcpy(buf.data() + sizeof(ph) + sizeof(cb) + cb.name_len, &component, sizeof(component));
-
-    if (role == Role::SERVER) {
-        for (const auto &endpoint : client_endpoints) {
-            socket.send_to(boost::asio::buffer(buf.data(), buf.size()), endpoint.second);
-        }
-    } else {
-        socket.send_to(boost::asio::buffer(buf.data(), buf.size()), remote_endpoint);
-    }
-}
-
 void Engine::NetworkManager::receiveWelcome()
 {
     WelcomeBody welcome_body;
@@ -439,127 +401,6 @@ Engine::NetworkManager::~NetworkManager()
     io_context.stop();
     if (io_thread.joinable())
         io_thread.join();
-}
-
-void Engine::NetworkManager::createPlayer()
-{
-    Engine::Signature signature;
-    signature.set(mediator->getComponentType<Engine::Components::Gravity>());
-    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
-    signature.set(mediator->getComponentType<Engine::Components::Transform>());
-    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
-    signature.set(mediator->getComponentType<Engine::Components::PlayerInfo>());
-    signature.set(mediator->getComponentType<Engine::Components::ShootingCooldown>());
-
-    Engine::Entity entity = mediator->createEntity();
-
-    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(0.0f, 15.0f)};
-    mediator->addComponent(entity, player_gravity);
-    const Engine::Components::RigidBody player_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
-    mediator->addComponent(entity, player_rigidbody);
-    const Engine::Components::Transform player_transform = {.pos = Engine::Utils::Vec2(static_cast<float>(rand() % 500), static_cast<float>(rand() % 500)), .rot = 0.0f, .scale = 2.0f};
-    mediator->addComponent(entity, player_transform);
-    const std::string player_sprite_name = std::string("player_") + std::to_string((entity % 5) + 1);
-    Engine::Components::Sprite player_sprite = {};
-    std::strncpy(player_sprite.sprite_name, player_sprite_name.c_str(), sizeof(player_sprite.sprite_name) - 1);
-    player_sprite.sprite_name[sizeof(player_sprite.sprite_name) - 1] = '\0';
-    player_sprite.frame_nb = 1;
-    mediator->addComponent(entity, player_sprite);
-    const Engine::Components::PlayerInfo player_info = {.player_id = entity};
-    mediator->addComponent(entity, player_info);
-    const Engine::Components::ShootingCooldown player_cooldown = {.cooldown_time = 5, .cooldown = 0};
-    mediator->addComponent(entity, player_cooldown);
-
-    sendEntity(entity, signature);
-    sendComponent<Engine::Components::Gravity>(entity, player_gravity);
-    sendComponent<Engine::Components::RigidBody>(entity, player_rigidbody);
-    sendComponent<Engine::Components::Transform>(entity, player_transform);
-    sendComponent<Engine::Components::Sprite>(entity, player_sprite);
-    sendComponent<Engine::Components::PlayerInfo>(entity, player_info);
-    sendComponent<Engine::Components::ShootingCooldown>(entity, player_cooldown);
-}
-
-void Engine::NetworkManager::createPlayerProjectile(float x, float y)
-{
-    Engine::Signature signature;
-    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
-    signature.set(mediator->getComponentType<Engine::Components::Transform>());
-    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
-    signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
-    signature.set(mediator->getComponentType<Engine::Components::Sound>());
-
-    Engine::Entity entity = mediator->createEntity();
-
-    const Engine::Components::RigidBody projectile_rigidbody = {.velocity = Engine::Utils::Vec2(200.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
-    mediator->addComponent(entity, projectile_rigidbody);
-    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Vec2(x, y), .rot = 0.0f, .scale = 2.0f};
-    mediator->addComponent(entity, projectile_transform);
-    const Engine::Components::Sprite projectile_sprite = {.sprite_name = "weak_player_projectile", .frame_nb = 1};
-    mediator->addComponent(entity, projectile_sprite);
-    const Utils::Rect hitbox_rect(x, y, 32, 8);
-    const Engine::Components::Hitbox projectile_hitbox = {.bounds = hitbox_rect, .active = true, .layer = HITBOX_LAYERS::PLAYER_PROJECTILE, .damage = 10};
-    mediator->addComponent(entity, projectile_hitbox);
-    const Engine::Components::Sound projectile_sound = {.sound_name = "projectile_shoot"};
-    mediator->addComponent(entity, projectile_sound);
-
-    sendEntity(entity, signature);
-    sendComponent<Engine::Components::RigidBody>(entity, projectile_rigidbody);
-    sendComponent<Engine::Components::Transform>(entity, projectile_transform);
-    sendComponent<Engine::Components::Sprite>(entity, projectile_sprite);
-    sendComponent<Engine::Components::Hitbox>(entity, projectile_hitbox);
-    sendComponent<Engine::Components::Sound>(entity, projectile_sound);
-}
-
-void Engine::NetworkManager::createEnemy(float x, float y, ENEMY_TYPES enemy_type)
-{
-    Engine::Signature signature;
-    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
-    signature.set(mediator->getComponentType<Engine::Components::Transform>());
-    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
-    signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
-    signature.set(mediator->getComponentType<Engine::Components::EnemyInfo>());
-
-    Engine::Entity entity = mediator->createEntity();
-
-    const Engine::Components::RigidBody enemy_rigidbody = {.velocity = Engine::Utils::Vec2(10.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
-    mediator->addComponent(entity, enemy_rigidbody);
-    const Engine::Components::Transform enemy_transform = {.pos = Engine::Utils::Vec2(x, y), .rot = 0.0f, .scale = 2.0f};
-    mediator->addComponent(entity, enemy_transform);
-    const Engine::Components::Sprite enemy_sprite = {.sprite_name = "ground_enemy", .frame_nb = 1};
-    mediator->addComponent(entity, enemy_sprite);
-    const Engine::Components::Hitbox enemy_hitbox = {.bounds = Utils::Rect(x, y, 66, 66), .active = true, .layer = HITBOX_LAYERS::ENEMY, .damage = 10};
-    mediator->addComponent(entity, enemy_hitbox);
-    const Engine::Components::EnemyInfo enemy_enemyinfo = {.health = 20, .maxHealth = 20, .type = static_cast<int>(enemy_type), .scoreValue = 100, .speed = 50.0f, .isActive = true};
-    mediator->addComponent(entity, enemy_enemyinfo);
-
-    sendEntity(entity, signature);
-    sendComponent<Engine::Components::RigidBody>(entity, enemy_rigidbody);
-    sendComponent<Engine::Components::Transform>(entity, enemy_transform);
-    sendComponent<Engine::Components::Sprite>(entity, enemy_sprite);
-    sendComponent<Engine::Components::Hitbox>(entity, enemy_hitbox);
-    sendComponent<Engine::Components::EnemyInfo>(entity, enemy_enemyinfo);
-}
-
-void Engine::NetworkManager::createBackground()
-{
-    Engine::Signature signature;
-    signature.set(mediator->getComponentType<Engine::Components::Transform>());
-    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
-    signature.set(mediator->getComponentType<Engine::Components::Sound>());
-
-    Engine::Entity entity = mediator->createEntity();
-
-    const Engine::Components::Transform background_transform = {.pos = Engine::Utils::Vec2(0, 0), .rot = 0.0f, .scale = 3.0f};
-    mediator->addComponent(entity, background_transform);
-    const Engine::Components::Sprite background_sprite = {.sprite_name = "space_background", .frame_nb = 1, .scrolling = true, .is_background = true};
-    mediator->addComponent(entity, background_sprite);
-    const Engine::Components::Sound background_sound = {.sound_name = "background_music", .looping = true};
-    mediator->addComponent(entity, background_sound);
-
-    sendEntity(entity, signature);
-    sendComponent<Engine::Components::Transform>(entity, background_transform);
-    sendComponent<Engine::Components::Sprite>(entity, background_sprite);
-    sendComponent<Engine::Components::Sound>(entity, background_sound);
 }
 
 int Engine::NetworkManager::getConnectedPlayers()
