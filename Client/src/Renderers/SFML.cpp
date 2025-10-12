@@ -82,6 +82,26 @@ void Engine::Renderers::SFML::handleEvents(std::shared_ptr<Engine::NetworkManage
 		}
 	}
 
+	if (window->hasFocus() && sf::Joystick::isConnected(0)) {
+		float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
+		float y = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
+
+		const float threshold = 30.f;
+
+		if (x < -threshold)
+			buttons.set(static_cast<std::size_t>(Engine::InputButtons::LEFT));
+		if (x > threshold)
+			buttons.set(static_cast<std::size_t>(Engine::InputButtons::RIGHT));
+		if (y < -threshold)
+			buttons.set(static_cast<std::size_t>(Engine::InputButtons::UP));
+		if (y > threshold)
+			buttons.set(static_cast<std::size_t>(Engine::InputButtons::DOWN));
+
+		if (sf::Joystick::isButtonPressed(0, 0)) {
+			buttons.set(static_cast<std::size_t>(Engine::InputButtons::SHOOT));
+		}
+	}
+
 	if (window->hasFocus() && (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))) {
 		buttons.set(static_cast<std::size_t>(Engine::InputButtons::LEFT));
 	}
