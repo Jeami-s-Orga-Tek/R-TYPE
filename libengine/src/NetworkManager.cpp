@@ -121,14 +121,14 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
                     // client_timeout_clocks.push_back(std::chrono::steady_clock::now());
                     client_timeout_clocks[remote_endpoint] = std::chrono::steady_clock::now();
                 }
-                send_welcome();
+                sendWelcome();
                 break;
             }
             case MSG_PING:
-                send_pong(header.seq);
+                sendPong(header.seq);
                 break;
             case MSG_PONG:
-                send_ping(header.seq);
+                sendPing(header.seq);
                 break;
             case MSG_INPUT:
                 receiveInputs();
@@ -204,9 +204,10 @@ Engine::NetworkManager::PacketHeader Engine::NetworkManager::createPacketHeader(
     return (header);
 }
 
-void Engine::NetworkManager::send_hello(const std::string &client_name, uint32_t nonce)
+void Engine::NetworkManager::sendHello(const std::string &client_name, uint32_t nonce)
 {
     std::string name = client_name.substr(0, 255);
+    name.resize(255, '\0');
     size_t name_len = name.size();
     size_t total_size = sizeof(PacketHeader) + 6 + name_len;
     std::vector<uint8_t> buf(total_size);
@@ -227,7 +228,7 @@ void Engine::NetworkManager::send_hello(const std::string &client_name, uint32_t
     socket.send_to(boost::asio::buffer(buf.data(), total_size), remote_endpoint);
 }
 
-void Engine::NetworkManager::send_welcome()
+void Engine::NetworkManager::sendWelcome()
 {
     std::array<uint8_t, sizeof(PacketHeader) + sizeof(WelcomeBody)> buf {};
     const PacketHeader &ph = createPacketHeader(MSG_WELCOME);
@@ -260,7 +261,7 @@ void Engine::NetworkManager::send_welcome()
     socket.send_to(boost::asio::buffer(buf), remote_endpoint);
 }
 
-void Engine::NetworkManager::send_pong(uint32_t seq)
+void Engine::NetworkManager::sendPong(uint32_t seq)
 {
     std::array<uint8_t, 16> buf {};
     const PacketHeader &ph = createPacketHeader(MSG_PONG, htonl(seq));
@@ -268,7 +269,7 @@ void Engine::NetworkManager::send_pong(uint32_t seq)
     socket.send_to(boost::asio::buffer(buf), remote_endpoint);
 }
 
-void Engine::NetworkManager::send_ping(uint32_t seq)
+void Engine::NetworkManager::sendPing(uint32_t seq)
 {
     std::array<uint8_t, 16> buf {};
     const PacketHeader &ph = createPacketHeader(MSG_PING, htonl(seq));

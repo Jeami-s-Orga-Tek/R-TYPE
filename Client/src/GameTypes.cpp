@@ -755,7 +755,7 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
     }
 
     // TEMP
-    networkManager->send_hello(UsernameGame, 12345);
+    networkManager->sendHello(UsernameGame, 12345);
 
     return (true);
 }

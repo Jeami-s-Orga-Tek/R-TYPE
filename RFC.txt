@@ -54,18 +54,6 @@ Table of Contents
 
    All RGP packets begin with a 16-byte header:
 
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |            MAGIC (0xCAFE)     |  VERSION  |     TYPE      |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                        SEQUENCE NUMBER                        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                     ACKNOWLEDGMENT NUMBER                     |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                      ACKNOWLEDGMENT BITS                      |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
    MAGIC (16 bits): Protocol identifier, always 0xCAFE
    VERSION (8 bits): Protocol version, currently 1
    TYPE (8 bits): Message type (see Section 4)
@@ -77,49 +65,31 @@ Table of Contents
 
    The following message types are defined:
 
-   +-------+------------------+----------------------------------+
-   | Value | Name             | Description                      |
-   +-------+------------------+----------------------------------+
-   | 1     | MSG_HELLO        | Client connection request        |
-   | 2     | MSG_WELCOME      | Server connection acknowledgment |
-   | 3     | MSG_PING         | Keep-alive request               |
-   | 4     | MSG_PONG         | Keep-alive response              |
-   | 5     | MSG_INPUT        | Player input data                |
-   | 6     | MSG_ENTITY       | Entity creation/update           |
+   +-------+-------------------+----------------------------------+
+   | Value | Name              | Description                      |
+   +-------+-------------------+----------------------------------+
+   | 1     | MSG_HELLO         | Client connection request        |
+   | 2     | MSG_WELCOME       | Server connection acknowledgment |
+   | 3     | MSG_PING          | Keep-alive request               |
+   | 4     | MSG_PONG          | Keep-alive response              |
+   | 5     | MSG_INPUT         | Player input data                |
+   | 6     | MSG_ENTITY        | Entity creation/update           |
    | 7     | MSG_ENTITY_DESTROY| Entity destruction              |
-   | 8     | MSG_COMPONENT    | Component data update            |
-   +-------+------------------+----------------------------------+
+   | 8     | MSG_COMPONENT     | Component data update            |
+   +-------+-------------------+----------------------------------+
 
 4.1 MSG_HELLO (Type = 1)
 
    Sent by client to initiate connection.
 
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                            NONCE                              |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  VERSION  | NAME_LEN  |           PLAYER_NAME               ...
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
    NONCE (32 bits): Random number for connection verification
    VERSION (8 bits): Client protocol version
-   NAME_LEN (8 bits): Length of player name (max 255)
-   PLAYER_NAME (variable): UTF-8 encoded player name
+   NAME_LEN (8 bits): Length of player name (255)
+   PLAYER_NAME (255 bits): UTF-8 encoded player name
 
 4.2 MSG_WELCOME (Type = 2)
 
    Sent by server in response to MSG_HELLO.
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                          PLAYER_ID                           |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |           ROOM_ID             |          Reserved             |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                        BASELINE_TICK                         |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    PLAYER_ID (32 bits): Unique identifier assigned to the player
    ROOM_ID (16 bits): Game room/session identifier
@@ -133,17 +103,6 @@ Table of Contents
 
    Player input data from client to server.
 
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                          PLAYER_ID                           |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |           ROOM_ID             |          Reserved             |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                                                               |
-   |                         INPUT_DATA                           |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
    PLAYER_ID (32 bits): Player identifier
    ROOM_ID (16 bits): Room identifier
    INPUT_DATA (64 bits): Bitfield representing pressed keys/actions
@@ -152,15 +111,6 @@ Table of Contents
 
    Entity creation or update notification.
 
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                          ENTITY_ID                           |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                                                               |
-   |                         SIGNATURE                            |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
    ENTITY_ID (32 bits): Unique entity identifier
    SIGNATURE (64 bits): Component signature bitmask
 
@@ -168,29 +118,11 @@ Table of Contents
 
    Entity destruction notification.
 
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                          ENTITY_ID                           |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
    ENTITY_ID (32 bits): Entity identifier to destroy
 
 4.7 MSG_COMPONENT (Type = 8)
 
    Component data update.
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                          ENTITY_ID                           |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   | NAME_LEN  |                COMPONENT_LEN                     |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                      COMPONENT_NAME                         ...
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                      COMPONENT_DATA                         ...
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    ENTITY_ID (32 bits): Target entity identifier
    NAME_LEN (8 bits): Length of component type name
