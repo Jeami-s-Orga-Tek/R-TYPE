@@ -6,7 +6,6 @@
 */
 
 #include <cstdint>
-#include <dlfcn.h>
 #include <stdexcept>
 
 #include "Server.hpp"
