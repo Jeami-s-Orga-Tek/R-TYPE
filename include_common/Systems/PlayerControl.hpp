@@ -84,7 +84,8 @@ namespace Engine {
                         }
 
                         if (has_moved) {
-                            networkManager->sendComponent(entity, transform);
+                            std::cout << transform.pos.x << " " << transform.pos.y << std::endl;
+                            // networkManager->sendComponent(entity, transform);
                         }
 
                         // auto &rigidbody = mediator->getComponent<Components::RigidBody>(entity);

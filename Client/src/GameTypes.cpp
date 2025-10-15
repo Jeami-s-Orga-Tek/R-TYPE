@@ -225,7 +225,7 @@ void GameManager::gameDemo()
         render_system->update(renderer, mediator, frameTime);
         sound_system->update(renderer, mediator);
         
-        renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
+        // renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
         renderer->displayWindow();
 
         auto frame_end_time = std::chrono::high_resolution_clock::now();

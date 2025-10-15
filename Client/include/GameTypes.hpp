@@ -55,7 +55,7 @@ class GameManager {
 
         std::string UsernameGame;
 
-        int currentFps;
+        int currentFps = 60;
 
         std::shared_ptr<Engine::Systems::PhysicsSystem> physics_system {};
         std::shared_ptr<Engine::Systems::RenderSystem> render_system {};

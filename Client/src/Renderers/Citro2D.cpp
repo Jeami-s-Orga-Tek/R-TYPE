@@ -114,7 +114,7 @@ bool Engine::Renderers::Citro2D::createSprite(const std::string& id, const std::
 
 void Engine::Renderers::Citro2D::setSpritePosition(const std::string& id, float x, float y)
 {
-    C2D_SpriteMove(&sprites[id].sprite, x, y);
+    C2D_SpriteSetPos(&sprites[id].sprite, x, y);
 }
 
 void Engine::Renderers::Citro2D::setSpriteTexture(const std::string& id, const std::string& textureId)
