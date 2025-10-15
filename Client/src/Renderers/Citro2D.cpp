@@ -5,6 +5,8 @@
 ** Citro2D
 */
 
+#include <tex3ds.h>
+
 #include "Renderers/Citro2D.hpp"
 
 Engine::Renderers::Citro2D::Citro2D()
@@ -12,8 +14,9 @@ Engine::Renderers::Citro2D::Citro2D()
     C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
 	C2D_Prepare();
-
+    
     top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+
 }
 
 bool Engine::Renderers::Citro2D::createWindow(int width, int height, const std::string &title)
@@ -36,6 +39,7 @@ void Engine::Renderers::Citro2D::clearWindow()
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
     C2D_TargetClear(top, C2D_Color32f(0.0f, 0.0f, 0.0f, 1.0f));
     C2D_SceneBegin(top);
+    C2D_SceneSize(600, 800, true);
 }
 
 void Engine::Renderers::Citro2D::displayWindow()
@@ -81,15 +85,14 @@ void Engine::Renderers::Citro2D::handleEvents(std::shared_ptr<Engine::NetworkMan
 	networkManager->mediator->sendEvent(player_input_event);
 }
 
-
 bool Engine::Renderers::Citro2D::loadTexture(const std::string& id, const std::string& filepath)
 {
     C2D_SpriteSheet spritesheet = C2D_SpriteSheetLoad(filepath.c_str());
     if (!spritesheet) {
-        // throw std::runtime_error("couldnt load texture");
         std::cout << "couldnt load texture " << filepath.c_str() << std::endl;
     }
     textures[id] = spritesheet;
+
     return (true);
 }
 
@@ -124,12 +127,6 @@ void Engine::Renderers::Citro2D::setSpriteTexture(const std::string& id, const s
 
 void Engine::Renderers::Citro2D::setSpriteTextureRect(const std::string& id, int left, int top, int width, int height)
 {
-    // auto &sprite = sprites[id];
-
-    // sprite.sprite.params.pos.x = left;
-    // sprite.sprite.params.pos.y = top;
-    // sprite.sprite.params.pos.w = width;
-    // sprite.sprite.params.pos.h = height;
 }
 
 void Engine::Renderers::Citro2D::setSpriteRotation(const std::string& id, float angle)

@@ -1,2 +1,26 @@
--f rgba8888 -z auto
-sprites/vaisseaux.png
+--atlas -f rgba8888 -z auto
+sprites/vaisseaux/vaisseaux_0.png
+sprites/vaisseaux/vaisseaux_1.png
+sprites/vaisseaux/vaisseaux_2.png
+sprites/vaisseaux/vaisseaux_3.png
+sprites/vaisseaux/vaisseaux_4.png
+sprites/vaisseaux/vaisseaux_6.png
+sprites/vaisseaux/vaisseaux_7.png
+sprites/vaisseaux/vaisseaux_8.png
+sprites/vaisseaux/vaisseaux_9.png
+sprites/vaisseaux/vaisseaux_10.png
+sprites/vaisseaux/vaisseaux_12.png
+sprites/vaisseaux/vaisseaux_13.png
+sprites/vaisseaux/vaisseaux_14.png
+sprites/vaisseaux/vaisseaux_15.png
+sprites/vaisseaux/vaisseaux_16.png
+sprites/vaisseaux/vaisseaux_18.png
+sprites/vaisseaux/vaisseaux_19.png
+sprites/vaisseaux/vaisseaux_20.png
+sprites/vaisseaux/vaisseaux_21.png
+sprites/vaisseaux/vaisseaux_22.png
+sprites/vaisseaux/vaisseaux_24.png
+sprites/vaisseaux/vaisseaux_25.png
+sprites/vaisseaux/vaisseaux_26.png
+sprites/vaisseaux/vaisseaux_27.png
+sprites/vaisseaux/vaisseaux_28.png
