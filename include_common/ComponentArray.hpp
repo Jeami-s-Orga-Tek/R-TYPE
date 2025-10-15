@@ -94,7 +94,7 @@ template <typename T>
 T &Engine::ComponentArray<T>::getComponent(Engine::Entity entity)
 {
     if (entity_to_index_map.find(entity) == entity_to_index_map.end())
-        throw std::runtime_error("Trying to get component not in component array !!!!!!");
+        throw std::runtime_error("ComponentArray Trying to get component not in component array !!!!!!");
 
     return (components[entity_to_index_map[entity]]);
 }

@@ -5,7 +5,7 @@
 ** NetworkManager
 */
 
-#include <boost/asio.hpp>
+// #include <boost/asio.hpp>
 #include <chrono>
 #include <cstddef>
 #include <iostream>
@@ -28,7 +28,7 @@
 #include "Entity.hpp"
 
 Engine::NetworkManager::NetworkManager(Role role, const std::string &address, uint16_t port)
-    : role(role), address(address), port(port), io_context(), socket(io_context)
+    : role(role), address(address), port(port)
 {
     mediator = std::make_shared<Engine::Mediator>();
     mediator->init();
@@ -43,56 +43,56 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     registerComponent<Engine::Components::EnemyInfo>();
     registerComponent<Engine::Components::Sound>();
     
-    if (role == Role::SERVER) {
-        socket.open(boost::asio::ip::udp::v4());
-        socket.bind(boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(address), port));
-        start_receive();
-        io_thread = std::thread([this]() { io_context.run(); });
-    } else {
-        socket.open(boost::asio::ip::udp::v4());
-        remote_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(address), port);
-        start_receive();
-        io_thread = std::thread([this]() { io_context.run(); });
-    }
+    // if (role == Role::SERVER) {
+    //     socket.open(boost::asio::ip::udp::v4());
+    //     socket.bind(boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(address), port));
+    //     start_receive();
+    //     io_thread = std::thread([this]() { io_context.run(); });
+    // } else {
+    //     socket.open(boost::asio::ip::udp::v4());
+    //     remote_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(address), port);
+    //     start_receive();
+    //     io_thread = std::thread([this]() { io_context.run(); });
+    // }
 }
 
-void Engine::NetworkManager::sendPacket(const void* data, size_t size)
-{
-    if (role == Role::CLIENT) {
-        socket.send_to(boost::asio::buffer(data, size), remote_endpoint);
-    }
-}
+// void Engine::NetworkManager::sendPacket(const void* data, size_t size)
+// {
+//     if (role == Role::CLIENT) {
+//         socket.send_to(boost::asio::buffer(data, size), remote_endpoint);
+//     }
+// }
 
-void Engine::NetworkManager::receivePacket()
-{
-    if (role == Role::CLIENT) {
-        boost::asio::ip::udp::endpoint sender_endpoint;
-        socket.receive_from(boost::asio::buffer(recv_buffer), sender_endpoint);
-    }
-}
+// void Engine::NetworkManager::receivePacket()
+// {
+//     if (role == Role::CLIENT) {
+//         boost::asio::ip::udp::endpoint sender_endpoint;
+//         socket.receive_from(boost::asio::buffer(recv_buffer), sender_endpoint);
+//     }
+// }
 
-void Engine::NetworkManager::startServer()
-{
-    if (role == Role::SERVER) {
-        start_receive();
-    }
-}
+// void Engine::NetworkManager::startServer()
+// {
+//     if (role == Role::SERVER) {
+//         start_receive();
+//     }
+// }
 
-void Engine::NetworkManager::start_receive()
-{
-    socket.async_receive_from(
-        boost::asio::buffer(recv_buffer), remote_endpoint,
-        [this](boost::system::error_code ec, std::size_t bytes_recvd) {
-            if (!ec && bytes_recvd > 0) {
-                handle_receive(bytes_recvd);
-                if (client_timeout_clocks.find(remote_endpoint) != client_timeout_clocks.end()) {
-                    client_timeout_clocks[remote_endpoint] = std::chrono::steady_clock::now();
-                }
-            }
-            start_receive();
-        }
-    );
-}
+// void Engine::NetworkManager::start_receive()
+// {
+//     socket.async_receive_from(
+//         boost::asio::buffer(recv_buffer), remote_endpoint,
+//         [this](boost::system::error_code ec, std::size_t bytes_recvd) {
+//             if (!ec && bytes_recvd > 0) {
+//                 handle_receive(bytes_recvd);
+//                 if (client_timeout_clocks.find(remote_endpoint) != client_timeout_clocks.end()) {
+//                     client_timeout_clocks[remote_endpoint] = std::chrono::steady_clock::now();
+//                 }
+//             }
+//             start_receive();
+//         }
+//     );
+// }
 
 void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
 {
@@ -100,10 +100,10 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
         return;
     PacketHeader header;
     std::memcpy(&header, recv_buffer.data(), sizeof(header));
-    header.magic = ntohs(header.magic);
-    header.seq = ntohl(header.seq);
-    header.ack = ntohl(header.ack);
-    header.ack_bits = ntohl(header.ack_bits);
+    header.magic = header.magic;
+    header.seq = header.seq;
+    header.ack = header.ack;
+    header.ack_bits = header.ack_bits;
 
     // std::cout << "RECEIVE " << (int)header.type << std::endl;
     if (header.magic != MAGIC || header.version != PROTO_VERSION)
@@ -111,16 +111,16 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
     if (role == Role::SERVER) {
         switch (header.type) {
             case MSG_HELLO: {
-                auto it = std::find_if(client_endpoints.begin(), client_endpoints.end(),
-                    [this](const std::pair<const long unsigned int, boost::asio::ip::basic_endpoint<boost::asio::ip::udp>> &ep) {
-                        return ep.second == remote_endpoint;
-                    });
-                if (it == client_endpoints.end()) {
-                    // client_endpoints.push_back(remote_endpoint);
-                    client_endpoints[client_endpoints.size()] = remote_endpoint;
-                    // client_timeout_clocks.push_back(std::chrono::steady_clock::now());
-                    client_timeout_clocks[remote_endpoint] = std::chrono::steady_clock::now();
-                }
+                // auto it = std::find_if(client_endpoints.begin(), client_endpoints.end(),
+                //     [this](const std::pair<const long unsigned int, boost::asio::ip::basic_endpoint<boost::asio::ip::udp>> &ep) {
+                //         return ep.second == remote_endpoint;
+                //     });
+                // if (it == client_endpoints.end()) {
+                //     // client_endpoints.push_back(remote_endpoint);
+                //     client_endpoints[client_endpoints.size()] = remote_endpoint;
+                //     // client_timeout_clocks.push_back(std::chrono::steady_clock::now());
+                //     client_timeout_clocks[remote_endpoint] = std::chrono::steady_clock::now();
+                // }
                 sendWelcome();
                 break;
             }
@@ -156,35 +156,35 @@ void Engine::NetworkManager::handle_receive(std::size_t bytes_recvd)
     }
 }
 
-void Engine::NetworkManager::handleTimeouts()
-{
-    const auto &now = std::chrono::steady_clock::now();
+// void Engine::NetworkManager::handleTimeouts()
+// {
+//     const auto &now = std::chrono::steady_clock::now();
 
-    std::vector<std::size_t> clients_to_delete {};
-    for (const auto &remote_endpoint : client_endpoints) {
-        if (client_timeout_clocks.find(remote_endpoint.second) == client_timeout_clocks.end()) {
-            continue;
-        }
-        auto &timeout_clock = client_timeout_clocks[remote_endpoint.second];
+//     std::vector<std::size_t> clients_to_delete {};
+//     for (const auto &remote_endpoint : client_endpoints) {
+//         if (client_timeout_clocks.find(remote_endpoint.second) == client_timeout_clocks.end()) {
+//             continue;
+//         }
+//         auto &timeout_clock = client_timeout_clocks[remote_endpoint.second];
 
-        std::chrono::duration<double> time_since_last_packet(now - timeout_clock);
-        // std::cout << remote_endpoint.first << " LAST PACKET : " << time_since_last_packet.count() << std::endl;
-        if (time_since_last_packet > std::chrono::seconds(10)) {
-            // auto &transform = mediator->getComponent<Components::Transform>(client_id);
+//         std::chrono::duration<double> time_since_last_packet(now - timeout_clock);
+//         // std::cout << remote_endpoint.first << " LAST PACKET : " << time_since_last_packet.count() << std::endl;
+//         if (time_since_last_packet > std::chrono::seconds(10)) {
+//             // auto &transform = mediator->getComponent<Components::Transform>(client_id);
 
-            // transform.pos.x = -10000;
-            // transform.pos.x = -10000;
-            mediator->destroyEntity(remote_endpoint.first);
-            sendDestroyEntity(remote_endpoint.first);
-            clients_to_delete.push_back(remote_endpoint.first);
-            client_timeout_clocks.erase(remote_endpoint.second);
-            // client_endpoints.erase(remote_endpoint.first);
-        }
-    }
-    for (const auto &id : clients_to_delete) {
-        client_endpoints.erase(id);
-    }
-}
+//             // transform.pos.x = -10000;
+//             // transform.pos.x = -10000;
+//             mediator->destroyEntity(remote_endpoint.first);
+//             sendDestroyEntity(remote_endpoint.first);
+//             clients_to_delete.push_back(remote_endpoint.first);
+//             client_timeout_clocks.erase(remote_endpoint.second);
+//             // client_endpoints.erase(remote_endpoint.first);
+//         }
+//     }
+//     for (const auto &id : clients_to_delete) {
+//         client_endpoints.erase(id);
+//     }
+// }
 
 Engine::NetworkManager::Role Engine::NetworkManager::getRole()
 {
@@ -194,7 +194,7 @@ Engine::NetworkManager::Role Engine::NetworkManager::getRole()
 Engine::NetworkManager::PacketHeader Engine::NetworkManager::createPacketHeader(MsgType type, uint32_t seq, uint32_t ack, uint32_t ack_bits)
 {
     PacketHeader header;
-    header.magic = htons(MAGIC);
+    header.magic = MAGIC;
     header.version = PROTO_VERSION;
     header.type = type;
     header.seq = seq;
@@ -204,128 +204,128 @@ Engine::NetworkManager::PacketHeader Engine::NetworkManager::createPacketHeader(
     return (header);
 }
 
-void Engine::NetworkManager::sendHello(const std::string &client_name, uint32_t nonce)
-{
-    std::string name = client_name.substr(0, 255);
-    name.resize(255, '\0');
-    size_t name_len = name.size();
-    size_t total_size = sizeof(PacketHeader) + 6 + name_len;
-    std::vector<uint8_t> buf(total_size);
+// void Engine::NetworkManager::sendHello(const std::string &client_name, uint32_t nonce)
+// {
+//     std::string name = client_name.substr(0, 255);
+//     name.resize(255, '\0');
+//     size_t name_len = name.size();
+//     size_t total_size = sizeof(PacketHeader) + 6 + name_len;
+//     std::vector<uint8_t> buf(total_size);
 
-    const PacketHeader &ph = createPacketHeader(MSG_HELLO);
-    std::memcpy(buf.data(), &ph, sizeof(ph));
+//     const PacketHeader &ph = createPacketHeader(MSG_HELLO);
+//     std::memcpy(buf.data(), &ph, sizeof(ph));
 
-    size_t offset = sizeof(ph);
-    uint32_t nonce_n = htonl(nonce);
-    buf[offset + 0] = (nonce_n >> 24) & 0xFF;
-    buf[offset + 1] = (nonce_n >> 16) & 0xFF;
-    buf[offset + 2] = (nonce_n >> 8) & 0xFF;
-    buf[offset + 3] = (nonce_n) & 0xFF;
-    buf[offset + 4] = PROTO_VERSION;
-    buf[offset + 5] = static_cast<uint8_t>(name_len);
-    std::memcpy(buf.data() + offset + 6, name.data(), name_len);
+//     size_t offset = sizeof(ph);
+//     uint32_t nonce_n = htonl(nonce);
+//     buf[offset + 0] = (nonce_n >> 24) & 0xFF;
+//     buf[offset + 1] = (nonce_n >> 16) & 0xFF;
+//     buf[offset + 2] = (nonce_n >> 8) & 0xFF;
+//     buf[offset + 3] = (nonce_n) & 0xFF;
+//     buf[offset + 4] = PROTO_VERSION;
+//     buf[offset + 5] = static_cast<uint8_t>(name_len);
+//     std::memcpy(buf.data() + offset + 6, name.data(), name_len);
 
-    socket.send_to(boost::asio::buffer(buf.data(), total_size), remote_endpoint);
-}
+//     socket.send_to(boost::asio::buffer(buf.data(), total_size), remote_endpoint);
+// }
 
-void Engine::NetworkManager::sendWelcome()
-{
-    std::array<uint8_t, sizeof(PacketHeader) + sizeof(WelcomeBody)> buf {};
-    const PacketHeader &ph = createPacketHeader(MSG_WELCOME);
-    std::memcpy(buf.data(), &ph, sizeof(ph));
+// void Engine::NetworkManager::sendWelcome()
+// {
+//     std::array<uint8_t, sizeof(PacketHeader) + sizeof(WelcomeBody)> buf {};
+//     const PacketHeader &ph = createPacketHeader(MSG_WELCOME);
+//     std::memcpy(buf.data(), &ph, sizeof(ph));
 
-    HelloBody hello_body;
-    std::memcpy(&hello_body, recv_buffer.data() + sizeof(PacketHeader), sizeof(hello_body));
-    std::vector<uint8_t> name_buffer(hello_body.name_len);
-    std::memcpy(name_buffer.data(), recv_buffer.data() + sizeof(PacketHeader) + sizeof(HelloBody), hello_body.name_len);
+//     HelloBody hello_body;
+//     std::memcpy(&hello_body, recv_buffer.data() + sizeof(PacketHeader), sizeof(hello_body));
+//     std::vector<uint8_t> name_buffer(hello_body.name_len);
+//     std::memcpy(name_buffer.data(), recv_buffer.data() + sizeof(PacketHeader) + sizeof(HelloBody), hello_body.name_len);
 
-    std::cout << "NONCE : " << (int)hello_body.nonce<< std::endl;
-    std::cout << "VERSION : " << (int)hello_body.version << std::endl;
-    std::cout << "NAME LEN : " << (int)hello_body.name_len << std::endl;
-    std::cout << "NAME : " << std::string(name_buffer.begin(), name_buffer.end()) << std::endl;
+//     std::cout << "NONCE : " << (int)hello_body.nonce<< std::endl;
+//     std::cout << "VERSION : " << (int)hello_body.version << std::endl;
+//     std::cout << "NAME LEN : " << (int)hello_body.name_len << std::endl;
+//     std::cout << "NAME : " << std::string(name_buffer.begin(), name_buffer.end()) << std::endl;
 
-    // TEMP. FILL ONCE THE LOBBY SYSTEM IS THERE
-    uint32_t player_id = client_endpoints.size();
-    if (player_id > 0)
-        player_id--;
-    WelcomeBody body {
-        .player_id = player_id, 
-        .room_id = 1,
-        .baseline_tick = 0
-    };
+//     // TEMP. FILL ONCE THE LOBBY SYSTEM IS THERE
+//     uint32_t player_id = client_endpoints.size();
+//     if (player_id > 0)
+//         player_id--;
+//     WelcomeBody body {
+//         .player_id = player_id, 
+//         .room_id = 1,
+//         .baseline_tick = 0
+//     };
 
-    body.player_id = htonl(body.player_id);
-    body.room_id = htons(body.room_id);
-    body.baseline_tick = htonl(body.baseline_tick);
-    std::memcpy(buf.data() + sizeof(ph), &body, sizeof(body));
-    socket.send_to(boost::asio::buffer(buf), remote_endpoint);
-}
+//     body.player_id = htonl(body.player_id);
+//     body.room_id = htons(body.room_id);
+//     body.baseline_tick = htonl(body.baseline_tick);
+//     std::memcpy(buf.data() + sizeof(ph), &body, sizeof(body));
+//     socket.send_to(boost::asio::buffer(buf), remote_endpoint);
+// }
 
-void Engine::NetworkManager::sendPong(uint32_t seq)
-{
-    std::array<uint8_t, 16> buf {};
-    const PacketHeader &ph = createPacketHeader(MSG_PONG, htonl(seq));
-    std::memcpy(buf.data(), &ph, sizeof(ph));
-    socket.send_to(boost::asio::buffer(buf), remote_endpoint);
-}
+// void Engine::NetworkManager::sendPong(uint32_t seq)
+// {
+//     std::array<uint8_t, 16> buf {};
+//     const PacketHeader &ph = createPacketHeader(MSG_PONG, htonl(seq));
+//     std::memcpy(buf.data(), &ph, sizeof(ph));
+//     socket.send_to(boost::asio::buffer(buf), remote_endpoint);
+// }
 
-void Engine::NetworkManager::sendPing(uint32_t seq)
-{
-    std::array<uint8_t, 16> buf {};
-    const PacketHeader &ph = createPacketHeader(MSG_PING, htonl(seq));
-    std::memcpy(buf.data(), &ph, sizeof(ph));
-    socket.send_to(boost::asio::buffer(buf), remote_endpoint);
-}
+// void Engine::NetworkManager::sendPing(uint32_t seq)
+// {
+//     std::array<uint8_t, 16> buf {};
+//     const PacketHeader &ph = createPacketHeader(MSG_PING, htonl(seq));
+//     std::memcpy(buf.data(), &ph, sizeof(ph));
+//     socket.send_to(boost::asio::buffer(buf), remote_endpoint);
+// }
 
-void Engine::NetworkManager::sendEntity(const Entity &entity, const Signature &signature)
-{
-    std::array<uint8_t, sizeof(PacketHeader) + sizeof(EntityBody)> buf {};
-    const PacketHeader &ph = createPacketHeader(MSG_ENTITY);
-    std::memcpy(buf.data(), &ph, sizeof(ph));
+// void Engine::NetworkManager::sendEntity(const Entity &entity, const Signature &signature)
+// {
+//     std::array<uint8_t, sizeof(PacketHeader) + sizeof(EntityBody)> buf {};
+//     const PacketHeader &ph = createPacketHeader(MSG_ENTITY);
+//     std::memcpy(buf.data(), &ph, sizeof(ph));
 
-    EntityBody eb = {
-        .entity_id = entity,
-        .signature = signature.to_ullong(),
-    };
-    std::memcpy(buf.data() + sizeof(ph), &eb, sizeof(eb));
+//     EntityBody eb = {
+//         .entity_id = entity,
+//         .signature = signature.to_ullong(),
+//     };
+//     std::memcpy(buf.data() + sizeof(ph), &eb, sizeof(eb));
 
-    if (role == Role::SERVER) {
-        for (const auto &endpoint : client_endpoints) {
-            socket.send_to(boost::asio::buffer(buf), endpoint.second);
-        }
-    } else {
-        socket.send_to(boost::asio::buffer(buf), remote_endpoint);
-    }
-}
+//     if (role == Role::SERVER) {
+//         for (const auto &endpoint : client_endpoints) {
+//             socket.send_to(boost::asio::buffer(buf), endpoint.second);
+//         }
+//     } else {
+//         socket.send_to(boost::asio::buffer(buf), remote_endpoint);
+//     }
+// }
 
-void Engine::NetworkManager::sendDestroyEntity(const Entity &entity)
-{
-    std::array<uint8_t, sizeof(PacketHeader) + sizeof(EntityDestroyBody)> buf {};
-    const PacketHeader &ph = createPacketHeader(MSG_ENTITY_DESTROYED);
-    std::memcpy(buf.data(), &ph, sizeof(ph));
+// void Engine::NetworkManager::sendDestroyEntity(const Entity &entity)
+// {
+//     std::array<uint8_t, sizeof(PacketHeader) + sizeof(EntityDestroyBody)> buf {};
+//     const PacketHeader &ph = createPacketHeader(MSG_ENTITY_DESTROYED);
+//     std::memcpy(buf.data(), &ph, sizeof(ph));
 
-    EntityDestroyBody eb = {
-        .entity_id = entity,
-    };
-    std::memcpy(buf.data() + sizeof(ph), &eb, sizeof(eb));
+//     EntityDestroyBody eb = {
+//         .entity_id = entity,
+//     };
+//     std::memcpy(buf.data() + sizeof(ph), &eb, sizeof(eb));
 
-    if (role == Role::SERVER) {
-        for (const auto &endpoint : client_endpoints) {
-            socket.send_to(boost::asio::buffer(buf), endpoint.second);
-        }
-    } else {
-        socket.send_to(boost::asio::buffer(buf), remote_endpoint);
-    }
-}
+//     if (role == Role::SERVER) {
+//         for (const auto &endpoint : client_endpoints) {
+//             socket.send_to(boost::asio::buffer(buf), endpoint.second);
+//         }
+//     } else {
+//         socket.send_to(boost::asio::buffer(buf), remote_endpoint);
+//     }
+// }
 
 void Engine::NetworkManager::receiveWelcome()
 {
     WelcomeBody welcome_body;
     std::memcpy(&welcome_body, recv_buffer.data() + sizeof(PacketHeader), sizeof(welcome_body));
 
-    welcome_body.player_id = ntohl(welcome_body.player_id);
-    welcome_body.room_id = ntohs(welcome_body.room_id);
-    welcome_body.baseline_tick = ntohl(welcome_body.baseline_tick);
+    welcome_body.player_id = welcome_body.player_id;
+    welcome_body.room_id = welcome_body.room_id;
+    welcome_body.baseline_tick = welcome_body.baseline_tick;
 
     std::cout << "WELCOME RECEIVED:" << std::endl;
     std::cout << "Player ID: " << welcome_body.player_id << std::endl;
@@ -340,7 +340,7 @@ void Engine::NetworkManager::receiveInputs()
 {
     InputBody input_body;
     std::memcpy(&input_body, recv_buffer.data() + sizeof(PacketHeader), sizeof(input_body));
-    uint32_t player_id = ntohl(input_body.player_id);
+    uint32_t player_id = input_body.player_id;
     std::bitset<5> input_bits(input_body.input_data);
 
     Engine::Event input_event(static_cast<EventId>(Engine::EventsIds::PLAYER_INPUT));
@@ -397,17 +397,17 @@ void Engine::NetworkManager::receiveComponent()
     componentRegistry.addComponentByType(type_name, entity_id, component_data, *mediator);
 }
 
-Engine::NetworkManager::~NetworkManager()
-{
-    io_context.stop();
-    if (io_thread.joinable())
-        io_thread.join();
-}
+// Engine::NetworkManager::~NetworkManager()
+// {
+//     io_context.stop();
+//     if (io_thread.joinable())
+//         io_thread.join();
+// }
 
-int Engine::NetworkManager::getConnectedPlayers()
-{
-    return (client_endpoints.size());
-}
+// int Engine::NetworkManager::getConnectedPlayers()
+// {
+//     return (client_endpoints.size());
+// }
 
 extern "C" std::shared_ptr<Engine::NetworkManager> createNetworkManager(Engine::NetworkManager::Role role, const std::string &address = "127.0.0.1", uint16_t port = 8080) {
     return (std::make_shared<Engine::NetworkManager>(role, address, port));

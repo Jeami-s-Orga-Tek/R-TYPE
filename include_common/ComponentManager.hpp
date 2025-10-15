@@ -75,8 +75,10 @@ Engine::ComponentType Engine::ComponentManager::getComponentType()
 {
     const std::string type_name = typeid(T).name();
 
+    std::cout << type_name << std::endl;
+
     if (component_types.find(type_name) == component_types.end())
-        throw std::runtime_error("Trying to get component not in component manager !!!!");
+        throw std::runtime_error("ComponentManager Trying to get component not in component manager !!!!");
 
     return (component_types[type_name]);
 }

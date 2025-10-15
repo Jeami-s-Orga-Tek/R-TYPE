@@ -5,30 +5,26 @@
 ** main
 */
 
-#include <SFML/System/Vector2.hpp>
+#include <cstdio>
 #include <exception>
 #include <iostream>
 #include "Utils.hpp"
-#include "dlfcn_compat.hpp"
 #include "GameTypes.hpp"
 
 int main()
 {
     try {
-        sf::RenderWindow window(sf::VideoMode(800, 600), "R-Type Client");
-        window.setFramerateLimit(60);
-
-        sf::Vector2u sfml_window_size = window.getSize();
-        Engine::Utils::Vec2UInt window_size(sfml_window_size.x, sfml_window_size.y);
-        GameManager gameManager(window_size);
+        GameManager gameManager;
         
-        while (window.isOpen() && !gameManager.shouldClose()) {
-            gameManager.handleEvents(window);
-            gameManager.update();
-            gameManager.render(window);
-        }
+        gameManager.connectToServer("127.0.0.1", 8080);
+        // while (true) {
+        //     printf("SAUCISSE BASSIROU EN 3D!!!\n");
+        // }
+        gameManager.gameDemo();
     } catch (const std::exception &e) {
-        std::cerr << "ERROR :( : " << e.what() << std::endl;
+        std::cout << "ERROR :( : " << e.what() << std::endl;
+        while (true) {
+        }
         return (84);
     }
     return (0);

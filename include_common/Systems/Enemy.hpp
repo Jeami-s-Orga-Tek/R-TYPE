@@ -9,6 +9,7 @@
 #define ENEMY_HPP_
 
 #include <memory>
+#include <cmath>
 
 #include "Components/EnemyInfo.hpp"
 #include "Components/Hitbox.hpp"
