@@ -21,7 +21,9 @@ Engine::Renderers::Citro2D::Citro2D()
 
 bool Engine::Renderers::Citro2D::createWindow(int width, int height, const std::string &title)
 {
-    return (false);
+    scene_width = width;
+    scene_height = height;
+    return (true);
 }
 
 unsigned int Engine::Renderers::Citro2D::getWindowHeight()
@@ -39,7 +41,8 @@ void Engine::Renderers::Citro2D::clearWindow()
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
     C2D_TargetClear(top, C2D_Color32f(0.0f, 0.0f, 0.0f, 1.0f));
     C2D_SceneBegin(top);
-    C2D_SceneSize(600, 800, true);
+    //Reversed width & height because 3ds screen are weird (intended)
+    C2D_SceneSize(scene_height, scene_width, true);
 }
 
 void Engine::Renderers::Citro2D::displayWindow()

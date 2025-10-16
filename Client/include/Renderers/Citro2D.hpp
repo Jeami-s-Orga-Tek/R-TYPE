@@ -72,6 +72,9 @@ namespace Engine {
                 const unsigned int SCREEN_WIDTH = 320;
                 const unsigned int SCREEN_HEIGHT = 240;
 
+                unsigned int scene_width = 800;
+                unsigned int scene_height = 600;
+
                 C3D_RenderTarget *top = nullptr;
                 std::unordered_map<std::string, C2D_SpriteSheet> textures;
                 std::unordered_map<std::string, Sprite> sprites;

@@ -43,6 +43,8 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     registerComponent<Engine::Components::EnemyInfo>();
     registerComponent<Engine::Components::Sound>();
     
+    
+
     // if (role == Role::SERVER) {
     //     socket.open(boost::asio::ip::udp::v4());
     //     socket.bind(boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(address), port));

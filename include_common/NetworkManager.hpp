@@ -117,8 +117,8 @@ namespace Engine {
 
         std::shared_ptr<Engine::Mediator> mediator;
 
-        uint32_t player_id;
-        uint16_t room_id;
+        uint32_t player_id = 0;
+        uint16_t room_id = 0;
 
         int getConnectedPlayers();
     private:
