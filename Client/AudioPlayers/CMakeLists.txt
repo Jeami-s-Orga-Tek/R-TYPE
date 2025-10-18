@@ -1,0 +1,11 @@
+file(GLOB AUDIOPLAYER_DIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *)
+list(FILTER AUDIOPLAYER_DIRS INCLUDE REGEX "^[A-Za-z0-9_]+$")
+set(AUDIOPLAYER "SFML" CACHE STRING "Choose Audio Player: ${AUDIOPLAYER_DIRS}")
+set_property(CACHE AUDIOPLAYER PROPERTY STRINGS ${AUDIOPLAYER_DIRS})
+
+set(AUDIOPLAYER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${AUDIOPLAYER}")
+if(EXISTS "${AUDIOPLAYER_DIR}/CMakeLists.txt")
+	add_subdirectory(${AUDIOPLAYER})
+else()
+	message(STATUS "Audio Player subdirectory '${AUDIOPLAYER_DIR}' does not exist. Skipping Audio Player build.")
+endif()

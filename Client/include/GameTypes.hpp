@@ -11,6 +11,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <cstdint>
+#include <memory>
 
 #include "Button.hpp"
 #include "Parameters.hpp"
@@ -28,6 +29,7 @@
 #include "NetworkManager.hpp"
 #include "Renderer.hpp"
 #include "Utils.hpp"
+#include "AudioPlayer.hpp"
 
 #include "Systems/Physics.hpp"
 #include "Systems/Render.hpp"
@@ -137,6 +139,7 @@ class GameManager {
         std::shared_ptr<Engine::NetworkManager> networkManager;
 
         std::shared_ptr<Engine::Renderer> renderer;
+        std::shared_ptr<Engine::AudioPlayer> audio_player;
     public:
         GameManager(Engine::Utils::Vec2UInt windowSize);
 

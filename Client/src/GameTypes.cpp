@@ -12,6 +12,7 @@
 #include <thread>
 #include <fstream>
 
+#include "AudioPlayer.hpp"
 #include "Components/Sound.hpp"
 #include "Entity.hpp"
 #include "Renderer.hpp"
@@ -889,14 +890,24 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     // renderer = std::make_shared<Engine::Renderers::SFML>();
 
     #if defined(_WIN32)
-    const std::string libName = "librenderer.dll";
+    const std::string renderer_lib_name = "librenderer.dll";
+    const std::string audio_player_lib_name = "libaudioplayer.dll";
     #else
-    const std::string libName = "librenderer.so";
+    const std::string renderer_lib_name = "librenderer.so";
+    const std::string audio_player_lib_name = "libaudioplayer.so";
     #endif
 
-    Engine::DLLoader loader;
-    auto createRendererFunc = loader.getFunction<std::shared_ptr<Engine::Renderer>(*)()>(libName, "createRenderer");
-    renderer = createRendererFunc();
+    {
+        Engine::DLLoader loader;
+        auto createRendererFunc = loader.getFunction<std::shared_ptr<Engine::Renderer>(*)()>(renderer_lib_name, "createRenderer");
+        renderer = createRendererFunc();
+    }
+
+    {
+        Engine::DLLoader loader;
+        auto createAudioPlayerFunc = loader.getFunction<std::shared_ptr<Engine::AudioPlayer>(*)()>(audio_player_lib_name, "createAudioPlayer");
+        audio_player = createAudioPlayerFunc();
+    }
 
     renderer->createWindow(800, 600, "R du TYPE");
 
@@ -916,8 +927,8 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addSprite(renderer, "ground_enemy", "ground_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "space_background", "space_background_texture", {1226, 207}, {0, 0}, 1, 1);
 
-    sound_system->addSound(renderer, "background_music", "assets/sound/Stage2_sound.mp3");
-    sound_system->addSound(renderer, "projectile_shoot", "assets/sound/01LASER.BD_00000.wav");
+    sound_system->addSound(audio_player, "background_music", "assets/sound/Stage2_sound.mp3");
+    sound_system->addSound(audio_player, "projectile_shoot", "assets/sound/01LASER.BD_00000.wav");
 
     const float TARGET_FPS = static_cast<float>(currentFps);
     const float FIXED_DT = 1.0f / TARGET_FPS;
@@ -964,7 +975,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         }
 
         render_system->update(renderer, mediator, frameTime);
-        sound_system->update(renderer, mediator);
+        sound_system->update(audio_player, mediator);
         
         renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
         renderer->displayWindow();

@@ -44,10 +44,10 @@ namespace Engine {
                 void removeSprite(const std::string& id) override;
                 void scrollSprite(const std::string &id) override;
 
-                bool loadAudio(const std::string& id, const std::string& filepath) override;
-                void playAudio(const std::string& id, bool loop = false) override;
-                void stopAudio(const std::string& id) override;
-                void unloadAudio(const std::string& id) override;
+                // bool loadAudio(const std::string& id, const std::string& filepath) override;
+                // void playAudio(const std::string& id, bool loop = false) override;
+                // void stopAudio(const std::string& id) override;
+                // void unloadAudio(const std::string& id) override;
 
                 bool loadFont(const std::string& id, const std::string& filepath) override;
                 void unloadFont(const std::string& id) override;
@@ -58,8 +58,6 @@ namespace Engine {
                 std::unordered_map<std::string, sf::Texture> textures;
                 std::unordered_map<std::string, sf::Sprite> sprites;
                 std::unordered_map<std::string, sf::Font> fonts;
-                std::unordered_map<std::string, sf::SoundBuffer> soundBuffers;
-                std::unordered_map<std::string, sf::Sound> sounds;
         };
     };
 };

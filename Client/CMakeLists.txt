@@ -31,10 +31,20 @@ set(RENDERER "SFML" CACHE STRING "Choose renderer")
 set(RENDERER_TARGET "renderer")
 set(RENDERER_DIR "Renderers/${RENDERER}")
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${RENDERER_DIR}/CMakeLists.txt")
-    add_subdirectory(${RENDERER_DIR})
-    set(RENDERER_LIB ${RENDERER_TARGET})
+  add_subdirectory(${RENDERER_DIR})
+  set(RENDERER_LIB ${RENDERER_TARGET})
 else()
-    message(FATAL_ERROR "Renderer subdirectory '${RENDERER_DIR}' does not exist.")
+  message(FATAL_ERROR "Renderer subdirectory '${RENDERER_DIR}' does not exist.")
+endif()
+
+set(AUDIOPLAYER "SFML" CACHE STRING "Choose audioplayer")
+set(AUDIOPLAYER_TARGET "audioplayer")
+set(AUDIOPLAYER_DIR "AudioPlayers/${AUDIOPLAYER}")
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${AUDIOPLAYER_DIR}/CMakeLists.txt")
+  add_subdirectory(${AUDIOPLAYER_DIR})
+  set(AUDIOPLAYER_LIB ${AUDIOPLAYER_TARGET})
+else()
+  message(FATAL_ERROR "Audioplayer subdirectory '${AUDIOPLAYER_DIR}' does not exist.")
 endif()
 
 add_executable(r-type_client ${SOURCES})
@@ -52,6 +62,7 @@ target_link_libraries(r-type_client PRIVATE
   Boost::asio
   pthread
   ${RENDERER_LIB}
+  ${AUDIOPLAYER_LIB}
 )
 
 target_link_libraries(r-type_client PRIVATE ${CMAKE_DL_LIBS})

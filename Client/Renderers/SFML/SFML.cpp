@@ -211,39 +211,39 @@ void Engine::Renderers::SFML::scrollSprite(const std::string& id)
 	}
 }
 
-bool Engine::Renderers::SFML::loadAudio(const std::string& id, const std::string& filepath)
-{
-	sf::SoundBuffer buffer;
-	if (!buffer.loadFromFile(filepath))
-		return (false);
-	soundBuffers[id] = std::move(buffer);
-	sf::Sound sound;
-	sound.setBuffer(soundBuffers[id]);
-	sounds[id] = std::move(sound);
-	return (true);
-}
+// bool Engine::Renderers::SFML::loadAudio(const std::string& id, const std::string& filepath)
+// {
+// 	sf::SoundBuffer buffer;
+// 	if (!buffer.loadFromFile(filepath))
+// 		return (false);
+// 	soundBuffers[id] = std::move(buffer);
+// 	sf::Sound sound;
+// 	sound.setBuffer(soundBuffers[id]);
+// 	sounds[id] = std::move(sound);
+// 	return (true);
+// }
 
-void Engine::Renderers::SFML::playAudio(const std::string& id, bool loop)
-{
-	auto it = sounds.find(id);
-	if (it != sounds.end()) {
-		it->second.setLoop(loop);
-		it->second.play();
-	}
-}
+// void Engine::Renderers::SFML::playAudio(const std::string& id, bool loop)
+// {
+// 	auto it = sounds.find(id);
+// 	if (it != sounds.end()) {
+// 		it->second.setLoop(loop);
+// 		it->second.play();
+// 	}
+// }
 
-void Engine::Renderers::SFML::stopAudio(const std::string& id)
-{
-	auto it = sounds.find(id);
-	if (it != sounds.end())
-		it->second.stop();
-}
+// void Engine::Renderers::SFML::stopAudio(const std::string& id)
+// {
+// 	auto it = sounds.find(id);
+// 	if (it != sounds.end())
+// 		it->second.stop();
+// }
 
-void Engine::Renderers::SFML::unloadAudio(const std::string& id)
-{
-	sounds.erase(id);
-	soundBuffers.erase(id);
-}
+// void Engine::Renderers::SFML::unloadAudio(const std::string& id)
+// {
+// 	sounds.erase(id);
+// 	soundBuffers.erase(id);
+// }
 
 bool Engine::Renderers::SFML::loadFont(const std::string& id, const std::string& filepath)
 {

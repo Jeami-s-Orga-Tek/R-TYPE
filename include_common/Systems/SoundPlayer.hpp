@@ -12,7 +12,7 @@
 #include <unordered_map>
 
 #include "Components/Sound.hpp"
-#include "Renderer.hpp"
+#include "AudioPlayer.hpp"
 #include "System.hpp"
 #include "Components/Sound.hpp"
 #include "Systems/PlayerControl.hpp"
@@ -25,17 +25,17 @@ namespace Engine {
 
         class SoundSystem : public System {
             public:
-                void addSound(std::shared_ptr<Engine::Renderer> renderer, const std::string &sound_name, const std::string &file_path) {
-                    renderer->loadAudio(sound_name, file_path);
+                void addSound(std::shared_ptr<Engine::AudioPlayer> audio_player, const std::string &sound_name, const std::string &file_path) {
+                    audio_player->loadAudio(sound_name, file_path);
                 }
 
-                void update(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator) {
+                void update(std::shared_ptr<Engine::AudioPlayer> audio_player, std::shared_ptr<Mediator> mediator) {
                     for (const auto &entity : entities) {
                         auto &sound_component = mediator->getComponent<Components::Sound>(entity);
                         if (sound_component.has_played)
                             continue;
 
-                        renderer->playAudio(sound_component.sound_name, sound_component.looping);
+                        audio_player->playAudio(sound_component.sound_name, sound_component.looping);
                         sound_component.has_played = true;
                     }
                 }
