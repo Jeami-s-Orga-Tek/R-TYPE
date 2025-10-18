@@ -12,4 +12,6 @@ target_link_libraries(renderer PRIVATE
     sfml-audio
     Boost::system
     Boost::asio
+    $<$<BOOL:${WIN32}>:ws2_32>
+    engine
 )
