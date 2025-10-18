@@ -9,7 +9,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
-#include "Renderers/SFML.hpp"
+#include "SFML.hpp"
 #include "Event.hpp"
 #include "NetworkManager.hpp"
 
@@ -282,4 +282,14 @@ void Engine::Renderers::SFML::drawText(const std::string& fontId, const std::str
 
 Engine::Renderers::SFML::~SFML()
 {
+}
+
+extern "C" std::shared_ptr<Engine::Renderers::SFML> createRenderer()
+{
+	return (std::make_shared<Engine::Renderers::SFML>());
+}
+
+extern "C" void deleteRenderer(Engine::Renderers::SFML *renderer)
+{
+	delete renderer;
 }

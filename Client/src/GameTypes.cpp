@@ -14,6 +14,7 @@
 
 #include "Components/Sound.hpp"
 #include "Entity.hpp"
+#include "Renderer.hpp"
 #include "Systems/SoundPlayer.hpp"
 #include "DLLoader.hpp"
 #include "GameTypes.hpp"
@@ -23,7 +24,6 @@
 #include "Systems/Physics.hpp"
 #include "Systems/Render.hpp"
 #include "Systems/PlayerControl.hpp"
-#include "Renderers/SFML.hpp"
 #include "Utils.hpp"
 
 GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
@@ -886,7 +886,18 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     if (window.isOpen())
         window.close();
 
-    renderer = std::make_shared<Engine::Renderers::SFML>();
+    // renderer = std::make_shared<Engine::Renderers::SFML>();
+
+    #if defined(_WIN32)
+    const std::string libName = "librenderer.dll";
+    #else
+    const std::string libName = "librenderer.so";
+    #endif
+
+    Engine::DLLoader loader;
+    auto createRendererFunc = loader.getFunction<std::shared_ptr<Engine::Renderer>(*)()>(libName, "createRenderer");
+    renderer = createRendererFunc();
+
     renderer->createWindow(800, 600, "R du TYPE");
 
     std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;

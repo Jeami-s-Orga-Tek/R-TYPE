@@ -1,0 +1,11 @@
+file(GLOB RENDERER_DIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *)
+list(FILTER RENDERER_DIRS INCLUDE REGEX "^[A-Za-z0-9_]+$")
+set(RENDERER "SFML" CACHE STRING "Choose renderer: ${RENDERER_DIRS}")
+set_property(CACHE RENDERER PROPERTY STRINGS ${RENDERER_DIRS})
+
+set(RENDERER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${RENDERER}")
+if(EXISTS "${RENDERER_DIR}/CMakeLists.txt")
+	add_subdirectory(${RENDERER})
+else()
+	message(STATUS "Renderer subdirectory '${RENDERER_DIR}' does not exist. Skipping renderer build.")
+endif()
