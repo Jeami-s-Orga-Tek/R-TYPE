@@ -16,6 +16,7 @@
 #include "Components/Sound.hpp"
 #include "Entity.hpp"
 #include "Renderer.hpp"
+#include "Systems/DevConsole.hpp"
 #include "Systems/SoundPlayer.hpp"
 #include "DLLoader.hpp"
 #include "GameTypes.hpp"
@@ -733,6 +734,9 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
         networkManager->mediator->setSystemSignature<Engine::Systems::SoundSystem>(signature);
     }
 
+    dev_console_system = networkManager->mediator->registerSystem<Engine::Systems::DevConsole>();
+    dev_console_system->init(networkManager->mediator);
+
     // TEMP
     networkManager->sendHello(UsernameGame, 12345);
 
@@ -973,11 +977,13 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             enemy_system->update(networkManager, FIXED_DT);
             accumulator -= FIXED_DT;
         }
-
+        
         render_system->update(renderer, mediator, frameTime);
         sound_system->update(audio_player, mediator);
         
         renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
+
+        dev_console_system->update(networkManager, renderer);
         renderer->displayWindow();
 
         auto frame_end_time = std::chrono::high_resolution_clock::now();

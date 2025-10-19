@@ -44,16 +44,14 @@ namespace Engine {
                 void removeSprite(const std::string& id) override;
                 void scrollSprite(const std::string &id) override;
 
-                // bool loadAudio(const std::string& id, const std::string& filepath) override;
-                // void playAudio(const std::string& id, bool loop = false) override;
-                // void stopAudio(const std::string& id) override;
-                // void unloadAudio(const std::string& id) override;
-
                 bool loadFont(const std::string& id, const std::string& filepath) override;
                 void unloadFont(const std::string& id) override;
                 void drawText(const std::string& fontId, const std::string& text, float x, float y, unsigned int size = 30, unsigned int color = 0xFFFFFFFF) override;
 
+                void drawRectangle(const Engine::Utils::Rect &rect, unsigned int color = 0xFFFFFFFF) override;
             private:
+                bool is_console_open = false;
+
                 std::shared_ptr<sf::RenderWindow> window;
                 std::unordered_map<std::string, sf::Texture> textures;
                 std::unordered_map<std::string, sf::Sprite> sprites;

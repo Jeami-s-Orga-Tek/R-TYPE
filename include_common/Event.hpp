@@ -21,6 +21,8 @@ namespace Engine {
         COLLISION,
         ENEMY_DESTROYED,
         PLAYER_HIT,
+        DEVCONSOLE_KEY_PRESSED,
+        DEVCONSOLE_TEXT_ENTERED,
     };
 
     enum class InputButtons {
@@ -29,6 +31,14 @@ namespace Engine {
         UP,
         DOWN,
         SHOOT,
+    };
+
+    enum class KeyCodes {
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN,
+        DELETE,
     };
 
     class Event {

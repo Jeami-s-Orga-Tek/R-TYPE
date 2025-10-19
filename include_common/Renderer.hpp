@@ -14,6 +14,7 @@
 
 #include "Event.hpp"
 #include "NetworkManager.hpp"
+#include "Utils.hpp"
 
 namespace Engine {
     class Renderer {
@@ -47,10 +48,7 @@ namespace Engine {
             virtual void removeSprite(const std::string &id) = 0;
             virtual void scrollSprite(const std::string &id) = 0;
 
-            // virtual bool loadAudio(const std::string &id, const std::string &filepath) = 0;
-            // virtual void playAudio(const std::string &id, bool loop = false) = 0;
-            // virtual void stopAudio(const std::string &id) = 0;
-            // virtual void unloadAudio(const std::string &id) = 0;
+            virtual void drawRectangle(const Engine::Utils::Rect &rect, unsigned int color = 0xFFFFFFFF) = 0;
     };
 };
 

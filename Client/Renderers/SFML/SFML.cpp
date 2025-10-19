@@ -9,6 +9,11 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
+#include <SFML/Window/Keyboard.hpp>
+#include <cstdint>
+#include <iostream>
+#include <sys/types.h>
+
 #include "SFML.hpp"
 #include "Event.hpp"
 #include "NetworkManager.hpp"
@@ -79,8 +84,61 @@ void Engine::Renderers::SFML::handleEvents(std::shared_ptr<Engine::NetworkManage
 			if (event.key.code == sf::Keyboard::Space && window->hasFocus()) {
 				buttons.set(static_cast<std::size_t>(Engine::InputButtons::SHOOT));
 			}
+			if (event.key.code == sf::Keyboard::Equal && window->hasFocus()) {
+				is_console_open = !is_console_open;
+				Engine::Event dev_console_input_event(static_cast<Engine::EventId>(Engine::EventsIds::DEVCONSOLE_KEY_PRESSED));
+				networkManager->mediator->sendEvent(dev_console_input_event);
+				continue;
+			}
+			
+			// std::cout << event.key.code << " " << event.key.scancode << " " << event.text.unicode << " " << sf::Keyboard::getDescription(event.key.scancode).toAnsiString() << std::endl;
+
+			uint32_t keycode = static_cast<uint32_t>(event.key.code);
+			
+			switch (event.key.code) {
+				case sf::Keyboard::Left:
+					keycode = static_cast<uint32_t>(KeyCodes::LEFT);
+					break;
+				case sf::Keyboard::Right:
+					keycode = static_cast<uint32_t>(KeyCodes::RIGHT);
+					break;
+				case sf::Keyboard::Up:
+					keycode = static_cast<uint32_t>(KeyCodes::UP);
+					break;
+				case sf::Keyboard::Down:
+					keycode = static_cast<uint32_t>(KeyCodes::DOWN);
+					break;
+				// case sf::Keyboard::Delete:
+				// 	keycode = static_cast<uint32_t>(KeyCodes::DELETE);
+				// 	break;
+				default:
+					continue;
+			}
+
+			Engine::Event dev_console_text_entered_event(static_cast<Engine::EventId>(Engine::EventsIds::DEVCONSOLE_TEXT_ENTERED));
+
+			dev_console_text_entered_event.setParam(0, keycode);
+			dev_console_text_entered_event.setParam(1, static_cast<uint32_t>(0));
+			networkManager->mediator->sendEvent(dev_console_text_entered_event);
+		}
+		if (event.type == sf::Event::TextEntered) {
+			if (!is_console_open || event.text.unicode == '=')
+				continue;
+
+			Engine::Event dev_console_text_entered_event(static_cast<Engine::EventId>(Engine::EventsIds::DEVCONSOLE_TEXT_ENTERED));
+
+			uint32_t keycode = static_cast<uint32_t>(event.key.code);
+			uint32_t unicode = static_cast<uint32_t>(event.text.unicode);
+
+			dev_console_text_entered_event.setParam(0, keycode);
+			dev_console_text_entered_event.setParam(1, unicode);
+			networkManager->mediator->sendEvent(dev_console_text_entered_event);
 		}
 	}
+
+	//Don't take player input when console is open (also pause and menus)
+	if (is_console_open)
+		return;
 
 	if (window->hasFocus() && sf::Joystick::isConnected(0)) {
 		float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
@@ -211,40 +269,6 @@ void Engine::Renderers::SFML::scrollSprite(const std::string& id)
 	}
 }
 
-// bool Engine::Renderers::SFML::loadAudio(const std::string& id, const std::string& filepath)
-// {
-// 	sf::SoundBuffer buffer;
-// 	if (!buffer.loadFromFile(filepath))
-// 		return (false);
-// 	soundBuffers[id] = std::move(buffer);
-// 	sf::Sound sound;
-// 	sound.setBuffer(soundBuffers[id]);
-// 	sounds[id] = std::move(sound);
-// 	return (true);
-// }
-
-// void Engine::Renderers::SFML::playAudio(const std::string& id, bool loop)
-// {
-// 	auto it = sounds.find(id);
-// 	if (it != sounds.end()) {
-// 		it->second.setLoop(loop);
-// 		it->second.play();
-// 	}
-// }
-
-// void Engine::Renderers::SFML::stopAudio(const std::string& id)
-// {
-// 	auto it = sounds.find(id);
-// 	if (it != sounds.end())
-// 		it->second.stop();
-// }
-
-// void Engine::Renderers::SFML::unloadAudio(const std::string& id)
-// {
-// 	sounds.erase(id);
-// 	soundBuffers.erase(id);
-// }
-
 bool Engine::Renderers::SFML::loadFont(const std::string& id, const std::string& filepath)
 {
 	sf::Font font;
@@ -278,6 +302,23 @@ void Engine::Renderers::SFML::drawText(const std::string& fontId, const std::str
 		color & 0xFF
 	));
 	window->draw(sfText);
+}
+
+void Engine::Renderers::SFML::drawRectangle(const Engine::Utils::Rect &rect, unsigned int color)
+{
+	if (!window)
+		return;
+
+	sf::RectangleShape sfml_rect(sf::Vector2f(rect.width, rect.height));
+	sfml_rect.setPosition(rect.x, rect.y);
+	sfml_rect.setFillColor(sf::Color(
+		(color >> 24) & 0xFF,
+		(color >> 16) & 0xFF,
+		(color >> 8) & 0xFF,
+		color & 0xFF
+	));
+
+	window->draw(sfml_rect);
 }
 
 Engine::Renderers::SFML::~SFML()
