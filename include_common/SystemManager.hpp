@@ -8,8 +8,10 @@
 #ifndef SYSTEMMANAGER_HPP_
 #define SYSTEMMANAGER_HPP_
 
+
 #include <unordered_map>
 #include <string>
+#include <vector>
 #include <memory>
 #include <stdexcept>
 
@@ -33,6 +35,7 @@ namespace Engine {
             template <typename T> void setSignature(Signature signature);
             void entityDestroyed(Entity entity);
             void entitySignatureChanged(Entity entity, Signature entity_signature);
+            std::vector<std::string> getSystemNames() const;
 
         private:
             std::unordered_map<std::string, Signature> signatures {};

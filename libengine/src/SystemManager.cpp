@@ -31,6 +31,15 @@
 //     signatures.insert({type_name, signature});
 // }
 
+std::vector<std::string> Engine::SystemManager::getSystemNames() const
+{
+    std::vector<std::string> names {};
+    for (const auto &pair : systems) {
+        names.push_back(pair.first);
+    }
+    return names;
+}
+
 void Engine::SystemManager::entityDestroyed(Entity entity)
 {
     for (auto const &pair : systems) {

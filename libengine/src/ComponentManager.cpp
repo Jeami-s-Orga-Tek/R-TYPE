@@ -63,6 +63,15 @@
 //     return (getComponentArray<T>()->getComponent(entity));
 // }
 
+std::vector<std::string> Engine::ComponentManager::getComponentsNames() const
+{
+    std::vector<std::string> names {};
+    for (const auto &pair : component_types) {
+        names.push_back(pair.first);
+    }
+    return names;
+}
+
 void Engine::ComponentManager::entityDestroyed(Entity entity)
 {
     for (const auto &pair : component_arrays) {

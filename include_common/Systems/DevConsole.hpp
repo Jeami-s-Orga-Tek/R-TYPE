@@ -79,11 +79,17 @@ namespace Engine {
             private:
                 void parseCommand(std::shared_ptr<NetworkManager> networkManager, std::shared_ptr<Renderer> renderer) {
                     if (command_to_parse == "list_entities") {
-                        old_std_out += "\tEntities: [stub: implement entity listing]\n";
+                        old_std_out += "\t" + std::to_string(networkManager->mediator->getEntityCount()) + "\n";
                     } else if (command_to_parse == "list_systems") {
-                        old_std_out += "\tSystems: [stub: implement system listing]\n";
+                        const auto &systems = networkManager->mediator->getSystemNames();
+                        for (const auto &system_name : systems) {
+                            old_std_out += "\t" + system_name + "\n";
+                        }
                     } else if (command_to_parse == "list_components") {
-                        old_std_out += "\tComponents: [stub: implement component listing]\n";
+                        const auto &components = networkManager->mediator->getComponentsNames();
+                        for (const auto &component_name : components) {
+                            old_std_out += "\t" + component_name + "\n";
+                        }
                     } else if (command_to_parse.rfind("help", 0) == 0) {
                         old_std_out += "\tAvailable commands: list_entities, list_systems, list_components, help\n";
                     } else if (!command_to_parse.empty()) {

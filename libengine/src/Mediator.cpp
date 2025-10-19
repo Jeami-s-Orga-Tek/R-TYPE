@@ -84,6 +84,16 @@ void Engine::Mediator::destroyEntity(Entity entity)
 //     systemManager->setSignature<T>(signature);
 // }
 
+std::vector<std::string> Engine::Mediator::getSystemNames() const
+{
+    return (systemManager->getSystemNames());
+}
+
+std::vector<std::string> Engine::Mediator::getComponentsNames() const
+{
+    return (componentManager->getComponentsNames());
+}
+
 void Engine::Mediator::addEventListener(EventId event_id, std::function<void(Event &)> const &listener) {
     eventManager->addListener(event_id, listener);
 }

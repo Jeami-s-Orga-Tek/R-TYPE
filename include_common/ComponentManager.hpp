@@ -12,6 +12,7 @@
 #include <string>
 #include <memory>
 #include <stdexcept>
+#include <vector>
 
 #include "Entity.hpp"
 #include "ComponentArray.hpp"
@@ -36,6 +37,7 @@ namespace Engine {
             template <typename T> void addComponent(Entity entity, T component);
             template <typename T> void removeComponent(Entity entity);
             template <typename T> T &getComponent(Entity entity);
+            std::vector<std::string> getComponentsNames() const;
             void entityDestroyed(Entity entity);
 
         private:

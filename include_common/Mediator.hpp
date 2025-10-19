@@ -31,8 +31,10 @@ namespace Engine {
             template <typename T> bool hasComponent(Entity entity);
             template <typename T> T &getComponent(Entity entity);
             template <typename T> ComponentType getComponentType();
+            std::vector<std::string> getComponentsNames() const;
             template <typename T> std::shared_ptr<T> registerSystem();
             template <typename T> void setSystemSignature(Signature signature);
+            std::vector<std::string> getSystemNames() const;
             void addEventListener(EventId eventId, std::function<void(Event &)> const &listener);
             void sendEvent(EventId eventId);
             void sendEvent(Event &event);
