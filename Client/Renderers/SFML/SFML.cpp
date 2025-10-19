@@ -109,7 +109,7 @@ void Engine::Renderers::SFML::handleEvents(std::shared_ptr<Engine::NetworkManage
 					keycode = static_cast<uint32_t>(KeyCodes::DOWN);
 					break;
 				// case sf::Keyboard::Delete:
-				// 	keycode = static_cast<uint32_t>(KeyCodes::DELETE);
+				// 	keycode = static_cast<uint32_t>(KeyCodes::DELETE_KEY);
 				// 	break;
 				default:
 					continue;

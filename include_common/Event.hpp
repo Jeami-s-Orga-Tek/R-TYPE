@@ -38,7 +38,7 @@ namespace Engine {
         RIGHT,
         UP,
         DOWN,
-        DELETE,
+        DELETE_KEY,
     };
 
     class Event {
