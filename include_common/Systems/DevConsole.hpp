@@ -36,8 +36,8 @@ namespace Engine {
 
                     const Engine::Utils::Vec2 window_size = {static_cast<float>(renderer->getWindowWidth()), static_cast<float>(renderer->getWindowHeight())};
                     renderer->drawRectangle({0, 0, window_size.x, window_size.y}, 0x333333EE);
-                    renderer->drawText("basic", old_std_out, 0, 0, 10);
-                    renderer->drawText("basic", current_command, 0, window_size.y - (window_size.y / 10.0f), 15);
+                    renderer->drawText("dev", old_std_out, 0, 0, 10);
+                    renderer->drawText("dev", current_command, 0, window_size.y - (window_size.y / 10.0f), 15);
                 };
 
                 void treatNewTextInput(Event &event) {
@@ -78,7 +78,32 @@ namespace Engine {
                 };
             private:
                 void parseCommand(std::shared_ptr<NetworkManager> networkManager, std::shared_ptr<Renderer> renderer) {
-                    if (command_to_parse == "list_entities") {
+                    if (command_to_parse.rfind("set ", 0) == 0) {
+                        size_t first_space = command_to_parse.find(' ');
+                        size_t second_space = command_to_parse.find(' ', first_space + 1);
+                        if (first_space != std::string::npos && second_space != std::string::npos) {
+                            std::string var = command_to_parse.substr(first_space + 1, second_space - first_space - 1);
+                            std::string value = command_to_parse.substr(second_space + 1);
+                            console_vars[var] = value;
+                            old_std_out += "\tSet var '" + var + "' to '" + value + "'\n";
+                        } else {
+                            old_std_out += "\tUsage: set <var> <value>\n";
+                        }
+                    } else if (command_to_parse.rfind("get ", 0) == 0) {
+                        size_t first_space = command_to_parse.find(' ');
+                        std::string var = command_to_parse.substr(first_space + 1);
+                        auto it = console_vars.find(var);
+                        if (it != console_vars.end()) {
+                            old_std_out += "\t" + var + " = '" + it->second + "'\n";
+                        } else {
+                            old_std_out += "\tVar '" + var + "' not found\n";
+                        }
+                    } else if (command_to_parse == "list_vars") {
+                        old_std_out += "\tConsole Vars:\n";
+                        for (const auto &pair : console_vars) {
+                            old_std_out += "\t  " + pair.first + " = '" + pair.second + "'\n";
+                        }
+                    } else if (command_to_parse == "list_entities") {
                         old_std_out += "\t" + std::to_string(networkManager->mediator->getEntityCount()) + "\n";
                     } else if (command_to_parse == "list_systems") {
                         const auto &systems = networkManager->mediator->getSystemNames();
@@ -91,7 +116,7 @@ namespace Engine {
                             old_std_out += "\t" + component_name + "\n";
                         }
                     } else if (command_to_parse.rfind("help", 0) == 0) {
-                        old_std_out += "\tAvailable commands: list_entities, list_systems, list_components, help\n";
+                        old_std_out += "\tAvailable commands: list_entities, list_systems, list_components, set <var> <value>, get <var>, list_vars, help\n";
                     } else if (!command_to_parse.empty()) {
                         old_std_out += "\tUnknown command: " + command_to_parse + "\n";
                     }
@@ -103,6 +128,7 @@ namespace Engine {
                 std::string current_command = "";
                 std::string command_to_parse = "";
                 uint16_t cursor_pos = 0;
+                std::unordered_map<std::string, std::string> console_vars;
         };
     };
 };

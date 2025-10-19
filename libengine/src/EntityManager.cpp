@@ -31,7 +31,8 @@ Engine::Entity Engine::EntityManager::createEntity()
 
 void Engine::EntityManager::destroyEntity(Engine::Entity entity)
 {
-    // if (entity > entity_count)
+    if (entity > entity_count)
+        return;
     //     throw std::runtime_error("Trying to delete non-existent entity !!!!");
 
     signatures[entity].reset();

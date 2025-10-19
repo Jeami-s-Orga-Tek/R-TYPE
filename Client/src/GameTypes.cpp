@@ -946,6 +946,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     float fps = 0.0f;
     float fps_timer = 0.0f;
 
+    renderer->loadFont("dev", "assets/dev.ttf");
     renderer->loadFont("basic", "assets/r-type.otf");
 
     while (renderer->isWindowOpen()) {
