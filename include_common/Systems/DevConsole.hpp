@@ -8,10 +8,14 @@
 #ifndef DEVCONSOLE_HPP_
 #define DEVCONSOLE_HPP_
 
+#include <boost/pfr/core.hpp>
 #include <cstdint>
+#include <cstdlib>
 #include <memory>
 #include <string>
+#include <boost/pfr/core_name.hpp>
 
+#include "Components/Transform.hpp"
 #include "Event.hpp"
 #include "Renderer.hpp"
 #include "System.hpp"
@@ -98,6 +102,18 @@ namespace Engine {
                         } else {
                             old_std_out += "\tVar '" + var + "' not found\n";
                         }
+                    } else if (command_to_parse.rfind("get_entity ", 0) == 0) {
+                        size_t first_space = command_to_parse.find(' ');
+                        Entity entity = std::stoi(command_to_parse.substr(first_space + 1));
+                        const auto &comp = networkManager->mediator->getComponent<Components::Transform>(entity);
+                        const auto &field_names = boost::pfr::names_as_array<typeof(comp)>();
+                        uint8_t index = 0;
+                        boost::pfr::for_each_field(comp, [this, field_names, &index](const auto &field) {
+                            std::ostringstream oss;
+                            oss << field_names[index] << " : " << field;
+                            old_std_out += "\t" + oss.str() + "\n";
+                            index++;
+                        });
                     } else if (command_to_parse == "list_vars") {
                         old_std_out += "\tConsole Vars:\n";
                         for (const auto &pair : console_vars) {
@@ -116,7 +132,7 @@ namespace Engine {
                             old_std_out += "\t" + component_name + "\n";
                         }
                     } else if (command_to_parse.rfind("help", 0) == 0) {
-                        old_std_out += "\tAvailable commands: list_entities, list_systems, list_components, set <var> <value>, get <var>, list_vars, help\n";
+                        old_std_out += "\tAvailable commands: list_entities, list_systems, list_components, set <var> <value>, get <var>, list_vars, get_entity <entity>, help\n";
                     } else if (!command_to_parse.empty()) {
                         old_std_out += "\tUnknown command: " + command_to_parse + "\n";
                     }

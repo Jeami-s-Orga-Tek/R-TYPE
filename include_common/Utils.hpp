@@ -9,6 +9,8 @@
 #define UTILS_HPP_
 
 #include <cstdint>
+#include <string>
+#include <ostream>
 
 namespace Engine {
     namespace Utils {
@@ -16,6 +18,7 @@ namespace Engine {
         //     float x;
         //     float y;
         // } Vec2;
+
 
         class Vec2
         {
@@ -47,9 +50,18 @@ namespace Engine {
                     return (Vec2(this->x * f, this->y * f));
                 }
 
+
+                std::string toString() const {
+                    return "Vec2(" + std::to_string(x) + ", " + std::to_string(y) + ")";
+                }
+                friend std::ostream &operator<<(std::ostream& os, const Vec2& v) {
+                    return os << v.toString();
+                }
+
                 float x = 0.0f;
                 float y = 0.0f;
         };
+
 
         class Vec2Int
         {
@@ -81,9 +93,18 @@ namespace Engine {
                     return (Vec2Int(this->x * f, this->y * f));
                 }
 
+
+                std::string toString() const {
+                    return "Vec2Int(" + std::to_string(x) + ", " + std::to_string(y) + ")";
+                }
+                friend std::ostream &operator<<(std::ostream& os, const Vec2Int& v) {
+                    return os << v.toString();
+                }
+
                 int x = 0;
                 int y = 0;
         };
+
 
         class Vec2UInt
         {
@@ -115,9 +136,19 @@ namespace Engine {
                     return (Vec2Int(this->x * f, this->y * f));
                 }
 
+
+                std::string toString() const {
+                    return "Vec2UInt(" + std::to_string(x) + ", " + std::to_string(y) + ")";
+                }
+
+                friend std::ostream &operator<<(std::ostream& os, const Vec2UInt& v) {
+                    return os << v.toString();
+                }
+
                 unsigned int x = 0;
                 unsigned int y = 0;
         };
+
 
         class Rect
         {
@@ -139,11 +170,21 @@ namespace Engine {
                              y + height < other.y || other.y + other.height < y);
                 }
 
+
+                std::string toString() const {
+                    return "Rect(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(width) + ", " + std::to_string(height) + ")";
+                }
+
+                friend std::ostream &operator<<(std::ostream& os, const Rect& v) {
+                    return os << v.toString();
+                }
+
                 float x = 0.0f;
                 float y = 0.0f;
                 float width = 0.0f;
                 float height = 0.0f;
         };
+
 
         class Color
         {
@@ -157,6 +198,14 @@ namespace Engine {
 
                 Color operator*(float f) const {
                     return (Color(this->r * f, this->g * f, this->b * f));
+                }
+
+
+                std::string toString() const {
+                    return "Color(" + std::to_string(r) + ", " + std::to_string(g) + ", " + std::to_string(b) + ")";
+                }
+                friend std::ostream& operator<<(std::ostream& os, const Color& v) {
+                    return os << v.toString();
                 }
 
                 std::uint8_t r = 0;
