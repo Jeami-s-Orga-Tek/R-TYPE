@@ -35,7 +35,8 @@ namespace Engine {
                         if (sound_component.has_played)
                             continue;
 
-                        audio_player->playAudio(sound_component.sound_name, sound_component.looping);
+                        std::string sound_name(sound_component.sound_name.data());
+                        audio_player->playAudio(sound_name, sound_component.looping);
                         sound_component.has_played = true;
                     }
                 }

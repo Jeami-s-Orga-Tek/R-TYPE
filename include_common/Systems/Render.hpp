@@ -56,39 +56,40 @@ namespace Engine {
                 }
 
                 void drawSprite(std::shared_ptr<Engine::Renderer> renderer, Components::Sprite entity_sprite, Components::Transform transform, float deltaTime = 0.0f) {
-                    auto sprite_find = sprites.find(entity_sprite.sprite_name);
+                    std::string sprite_name(entity_sprite.sprite_name.data());
+                    auto sprite_find = sprites.find(sprite_name);
                         if (sprite_find == sprites.end()) {
-                            std::cerr << entity_sprite.sprite_name << std::endl;
+                            std::cerr << sprite_name << std::endl;
                             throw SpriteError("Couldn't find sprite for an entity D:");
                         }
                         auto &sprite = sprite_find->second;
 
-                        renderer->setSpriteTexture(entity_sprite.sprite_name, sprite.texture_name);
+                        renderer->setSpriteTexture(sprite_name, sprite.texture_name);
                         if (entity_sprite.scrolling) {
                             const float SCROLL_SPEED = 60.0f;
                             float scrollAmount = SCROLL_SPEED * deltaTime;
 
-                            auto& scrollPos = spriteScrollPositions[entity_sprite.sprite_name];
+                            auto& scrollPos = spriteScrollPositions[sprite_name];
                             scrollPos += scrollAmount;
                             
-                            renderer->setSpriteTextureRect(entity_sprite.sprite_name,
+                            renderer->setSpriteTextureRect(sprite_name,
                                 static_cast<int>(scrollPos),
                                 static_cast<int>(sprite.pos.y),
                                 static_cast<int>(sprite.size.x),
                                 static_cast<int>(sprite.size.y)
                             );
                         } else {
-                            renderer->setSpriteTextureRect(entity_sprite.sprite_name,
+                            renderer->setSpriteTextureRect(sprite_name,
                                 static_cast<int>(sprite.pos.x * entity_sprite.frame_nb),
                                 static_cast<int>(sprite.pos.y),
                                 static_cast<int>(sprite.size.x),
                                 static_cast<int>(sprite.size.y)
                             );
                         }
-                        renderer->setSpritePosition(entity_sprite.sprite_name, transform.pos.x, transform.pos.y);
-                        renderer->setSpriteRotation(entity_sprite.sprite_name, transform.rot);
-                        renderer->setSpriteScale(entity_sprite.sprite_name, transform.scale);
-                        renderer->drawSprite(entity_sprite.sprite_name);
+                        renderer->setSpritePosition(sprite_name, transform.pos.x, transform.pos.y);
+                        renderer->setSpriteRotation(sprite_name, transform.rot);
+                        renderer->setSpriteScale(sprite_name, transform.scale);
+                        renderer->drawSprite(sprite_name);
                 }
 
                 void update(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator, float deltaTime = 0.016f) {

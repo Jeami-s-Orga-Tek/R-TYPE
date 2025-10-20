@@ -24,7 +24,7 @@ namespace RTypeServer {
             ~Server();
     
             void loadEngineLib();
-            void startServer(Engine::NetworkManager::Role role, const std::string &ip, uint16_t port);
+            void startServer(Engine::NetworkManager::Role role, const std::string &ip, uint16_t port, int player_nb);
             void initEngine();
             void gameLoop();
 
@@ -42,6 +42,8 @@ namespace RTypeServer {
             std::shared_ptr<Engine::Systems::PlayerControl> player_control_system {};
             std::shared_ptr<Engine::Systems::Collision> collision_system {};
             std::shared_ptr<Engine::Systems::EnemySystem> enemy_system {};
+
+            int player_nb = 4;
     };
 }
 

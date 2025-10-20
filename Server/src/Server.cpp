@@ -39,8 +39,9 @@ void RTypeServer::Server::loadEngineLib()
     createNetworkManagerFunc = loader.getFunction<std::shared_ptr<Engine::NetworkManager>(*)(Engine::NetworkManager::Role, const std::string &, uint16_t)>(libName, "createNetworkManager");
 }
 
-void RTypeServer::Server::startServer(Engine::NetworkManager::Role role, const std::string &ip, uint16_t port)
+void RTypeServer::Server::startServer(Engine::NetworkManager::Role role, const std::string &ip, uint16_t port, int player_nb)
 {
+    this->player_nb = player_nb;
     networkManager = createNetworkManagerFunc(role, ip, port);
 }
 
@@ -122,7 +123,6 @@ void RTypeServer::Server::gameLoop()
     float accumulator = 0.0f;
     auto previous_time = std::chrono::high_resolution_clock::now();
 
-    const int PLAYER_NB = 4;
     bool have_players_spawned = false;
 
     std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
@@ -135,7 +135,7 @@ void RTypeServer::Server::gameLoop()
         accumulator += frame_time;
 
         while (accumulator >= FIXED_DT) {
-            if (!have_players_spawned && networkManager->getConnectedPlayers() >= PLAYER_NB) {
+            if (!have_players_spawned && networkManager->getConnectedPlayers() >= player_nb) {
                 for (int i = 0; i < networkManager->getConnectedPlayers(); i++)
                     createPlayer();
                 createEnemy(1000, rand() % 400, ENEMY_TYPES::SIMPLE);
@@ -190,8 +190,8 @@ void RTypeServer::Server::createPlayer()
     mediator->addComponent(entity, player_transform);
     const std::string player_sprite_name = std::string("player_") + std::to_string((entity % 5) + 1);
     Engine::Components::Sprite player_sprite = {};
-    std::strncpy(player_sprite.sprite_name, player_sprite_name.c_str(), sizeof(player_sprite.sprite_name) - 1);
-    player_sprite.sprite_name[sizeof(player_sprite.sprite_name) - 1] = '\0';
+    std::strncpy(player_sprite.sprite_name.data(), player_sprite_name.c_str(), player_sprite.sprite_name.size() - 1);
+    player_sprite.sprite_name[player_sprite.sprite_name.size() - 1] = '\0';
     player_sprite.frame_nb = 1;
     mediator->addComponent(entity, player_sprite);
     const Engine::Components::PlayerInfo player_info = {.player_id = entity};

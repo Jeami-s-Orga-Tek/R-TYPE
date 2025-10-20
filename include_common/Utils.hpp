@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <string>
 #include <ostream>
+#include <array>
 
 namespace Engine {
     namespace Utils {
@@ -215,6 +216,13 @@ namespace Engine {
 
         
     };
+
 };
+
+template <size_t N>
+std::ostream &operator<<(std::ostream &os, const std::array<char, N> &arr) {
+    os << std::string(arr.data());
+    return (os);
+}
 
 #endif /* !UTILS_HPP_ */

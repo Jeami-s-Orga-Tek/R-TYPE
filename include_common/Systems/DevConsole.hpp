@@ -15,6 +15,14 @@
 #include <string>
 #include <boost/pfr/core_name.hpp>
 
+#include "Components/EnemyInfo.hpp"
+#include "Components/Gravity.hpp"
+#include "Components/Hitbox.hpp"
+#include "Components/PlayerInfo.hpp"
+#include "Components/RigidBody.hpp"
+#include "Components/ShootingCooldown.hpp"
+#include "Components/Sound.hpp"
+#include "Components/Sprite.hpp"
 #include "Components/Transform.hpp"
 #include "Event.hpp"
 #include "Renderer.hpp"
@@ -40,8 +48,8 @@ namespace Engine {
 
                     const Engine::Utils::Vec2 window_size = {static_cast<float>(renderer->getWindowWidth()), static_cast<float>(renderer->getWindowHeight())};
                     renderer->drawRectangle({0, 0, window_size.x, window_size.y}, 0x333333EE);
-                    renderer->drawText("dev", old_std_out, 0, 0, 10);
-                    renderer->drawText("dev", current_command, 0, window_size.y - (window_size.y / 10.0f), 15);
+                    renderer->drawText("dev", old_std_out, 0, 0, 20);
+                    renderer->drawText("dev", current_command, 0, window_size.y - (window_size.y / 10.0f), 25);
                 };
 
                 void treatNewTextInput(Event &event) {
@@ -62,6 +70,7 @@ namespace Engine {
                         }
                     }
                     else if (unicode == '\r' || unicode == '\n') {
+                        old_std_out = "";
                         command_to_parse = current_command;
                         old_std_out += current_command;
                         old_std_out += "\n";
@@ -105,15 +114,17 @@ namespace Engine {
                     } else if (command_to_parse.rfind("get_entity ", 0) == 0) {
                         size_t first_space = command_to_parse.find(' ');
                         Entity entity = std::stoi(command_to_parse.substr(first_space + 1));
-                        const auto &comp = networkManager->mediator->getComponent<Components::Transform>(entity);
-                        const auto &field_names = boost::pfr::names_as_array<typeof(comp)>();
-                        uint8_t index = 0;
-                        boost::pfr::for_each_field(comp, [this, field_names, &index](const auto &field) {
-                            std::ostringstream oss;
-                            oss << field_names[index] << " : " << field;
-                            old_std_out += "\t" + oss.str() + "\n";
-                            index++;
-                        });
+
+                        //TEMP
+                        reflectComponent<Components::EnemyInfo>(networkManager, entity);
+                        reflectComponent<Components::Gravity>(networkManager, entity);
+                        reflectComponent<Components::Hitbox>(networkManager, entity);
+                        reflectComponent<Components::PlayerInfo>(networkManager, entity);
+                        reflectComponent<Components::RigidBody>(networkManager, entity);
+                        reflectComponent<Components::ShootingCooldown>(networkManager, entity);
+                        reflectComponent<Components::Sound>(networkManager, entity);
+                        reflectComponent<Components::Sprite>(networkManager, entity);
+                        reflectComponent<Components::Transform>(networkManager, entity);
                     } else if (command_to_parse == "list_vars") {
                         old_std_out += "\tConsole Vars:\n";
                         for (const auto &pair : console_vars) {
@@ -137,6 +148,22 @@ namespace Engine {
                         old_std_out += "\tUnknown command: " + command_to_parse + "\n";
                     }
                     command_to_parse = "";
+                }
+
+                template <typename T>
+                void reflectComponent(std::shared_ptr<NetworkManager> networkManager, Entity entity) {
+                    try {
+                        const auto &comp = networkManager->mediator->getComponent<T>(entity);
+                        const auto &field_names = boost::pfr::names_as_array<typeof(comp)>();
+                        old_std_out += "\t" + std::string(typeid(T).name()) + " :\n";
+                        uint8_t index = 0;
+                        boost::pfr::for_each_field(comp, [this, field_names, &index](const auto &field) {
+                            std::ostringstream oss;
+                            oss << field_names[index] << " : " << field;
+                            old_std_out += "\t\t" + oss.str() + "\n";
+                            index++;
+                        });
+                    } catch (...) {}
                 }
 
                 bool is_open = false;

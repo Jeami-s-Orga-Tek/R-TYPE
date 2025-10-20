@@ -17,6 +17,20 @@ enum class HITBOX_LAYERS {
     ENEMY_PROJECTILE,
 };
 
+inline const char *toString(HITBOX_LAYERS h) {
+    switch (h) {
+        case HITBOX_LAYERS::PLAYER: return "PLAYER";
+        case HITBOX_LAYERS::PLAYER_PROJECTILE: return "PLAYER_PROJECTILE";
+        case HITBOX_LAYERS::ENEMY: return "ENEMY";
+        case HITBOX_LAYERS::ENEMY_PROJECTILE: return "ENEMY_PROJECTILE";
+        default: return "UNKNOWN";
+    }
+}
+
+inline std::ostream &operator<<(std::ostream &os, const HITBOX_LAYERS &h) {
+    return (os << toString(h));
+}
+
 namespace Engine {
     namespace Components {
         // #pragma pack(push, 1)   // if this pragma pack is deleted the component array of this hitbox component corrupts and dies / crashes somehow. i think i fucked the ecs up my bad :(
