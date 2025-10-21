@@ -23,11 +23,13 @@ CPMAddPackage(
   URL https://github.com/boostorg/boost/releases/download/boost-1.86.0/boost-1.86.0-cmake.tar.xz
   URL_HASH SHA256=2c5ec5edcdff47ff55e27ed9560b0a0b94b07bd07ed9928b476150e16b0efc57
   OPTIONS "BOOST_ENABLE_CMAKE ON" "BOOST_SKIP_INSTALL_RULES ON"
-          "BUILD_SHARED_LIBS OFF" "BOOST_INCLUDE_LIBRARIES container\\\;asio\\\;pfr"
+          "BUILD_SHARED_LIBS OFF" "BOOST_INCLUDE_LIBRARIES container\\\;asio\\\;pfr\\\;type_index"
 )
 
 add_executable(r-type_server ${SOURCES})
 
-target_link_libraries(r-type_server PRIVATE engine Boost::system Boost::asio Boost::pfr)
+target_include_directories(renderer PRIVATE ${Boost_INCLUDE_DIRS})
+
+target_link_libraries(r-type_server PRIVATE engine Boost::system Boost::asio Boost::pfr Boost::type_index)
 target_link_libraries(r-type_server PRIVATE ${CMAKE_DL_LIBS})
 target_link_libraries(r-type_server PRIVATE $<$<BOOL:${WIN32}>:ws2_32>)

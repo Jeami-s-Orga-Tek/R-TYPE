@@ -8,7 +8,6 @@
 #ifndef DEVCONSOLE_HPP_
 #define DEVCONSOLE_HPP_
 
-#include <any>
 #include <boost/pfr/core.hpp>
 #include <cstdint>
 #include <cstdlib>
