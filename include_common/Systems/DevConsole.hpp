@@ -8,12 +8,16 @@
 #ifndef DEVCONSOLE_HPP_
 #define DEVCONSOLE_HPP_
 
+#include <any>
 #include <boost/pfr/core.hpp>
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <boost/pfr/core_name.hpp>
+#include <boost/type_index.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "Components/EnemyInfo.hpp"
 #include "Components/Gravity.hpp"
@@ -125,6 +129,33 @@ namespace Engine {
                         reflectComponent<Components::Sound>(networkManager, entity);
                         reflectComponent<Components::Sprite>(networkManager, entity);
                         reflectComponent<Components::Transform>(networkManager, entity);
+                    } else if (command_to_parse.rfind("set_entity ", 0) == 0) {
+                        try {
+                            size_t first_space = command_to_parse.find(' ');
+                            Entity entity = std::stoi(command_to_parse.substr(first_space + 1));
+                            std::string component_name = "";
+                            size_t second_space = command_to_parse.find(' ', first_space + 1);
+                            size_t third_space = command_to_parse.find(' ', second_space + 1);
+                            if (second_space != std::string::npos && third_space != std::string::npos) {
+                                component_name = command_to_parse.substr(second_space + 1, third_space - second_space - 1);
+                                std::string field_name = command_to_parse.substr(third_space + 1, command_to_parse.find(' ', third_space + 1) - third_space - 1);
+                                std::string value = command_to_parse.substr(command_to_parse.find(' ', third_space + 1) + 1);
+
+                                //TEMP
+                                old_std_out += "\tSet entity " + std::to_string(entity) + " component '" + component_name + "', \nfield '" + field_name + "' to '" + value + "\n";
+                                setComponentValue<Components::EnemyInfo>(networkManager, entity, component_name, field_name, value);
+                                setComponentValue<Components::Gravity>(networkManager, entity, component_name, field_name, value);
+                                setComponentValue<Components::Hitbox>(networkManager, entity, component_name, field_name, value);
+                                setComponentValue<Components::PlayerInfo>(networkManager, entity, component_name, field_name, value);
+                                setComponentValue<Components::RigidBody>(networkManager, entity, component_name, field_name, value);
+                                setComponentValue<Components::ShootingCooldown>(networkManager, entity, component_name, field_name, value);
+                                setComponentValue<Components::Sound>(networkManager, entity, component_name, field_name, value);
+                                setComponentValue<Components::Sprite>(networkManager, entity, component_name, field_name, value);
+                                setComponentValue<Components::Transform>(networkManager, entity, component_name, field_name, value);
+                            } else {
+                                old_std_out += "\tUsage: set_entity <entity> <component> <field> <value>\n";
+                            }
+                        } catch (...) {}
                     } else if (command_to_parse == "list_vars") {
                         old_std_out += "\tConsole Vars:\n";
                         for (const auto &pair : console_vars) {
@@ -155,7 +186,7 @@ namespace Engine {
                     try {
                         const auto &comp = networkManager->mediator->getComponent<T>(entity);
                         const auto &field_names = boost::pfr::names_as_array<typeof(comp)>();
-                        old_std_out += "\t" + std::string(typeid(T).name()) + " :\n";
+                        old_std_out += "\t" + boost::typeindex::type_id<T>().pretty_name() + " :\n";
                         uint8_t index = 0;
                         boost::pfr::for_each_field(comp, [this, field_names, &index](const auto &field) {
                             std::ostringstream oss;
@@ -164,6 +195,35 @@ namespace Engine {
                             index++;
                         });
                     } catch (...) {}
+                }
+
+                template <typename T>
+                void setComponentValue(std::shared_ptr<NetworkManager> networkManager, Entity entity, const std::string &component_name, const std::string &field_name, std::string value) {
+                    try {
+                        if (component_name != boost::typeindex::type_id<T>().pretty_name())
+                            return;
+
+                        auto &comp = networkManager->mediator->getComponent<T>(entity);
+                        const auto &field_names = boost::pfr::names_as_array<typeof(comp)>();
+                        uint8_t index = 0;
+                        boost::pfr::for_each_field(comp, [this, &field_names, &index, &field_name, &value](auto &field) {
+                            if (field_names[index] == field_name) {
+                                // std::stringstream(value) >> value;
+                                // field = std::any_cast<decltype(field)>(value);
+
+                                //UGLY
+                                if constexpr (std::is_arithmetic_v<std::remove_reference_t<decltype(field)>>) {
+                                    field = boost::lexical_cast<std::remove_reference_t<decltype(field)>>(value);
+                                } else {
+                                    std::cout << "Custom type assignment not implemented for this field." << std::endl;
+                                }
+                                return;
+                            }
+                            index++;
+                        });
+                    } catch (const std::exception &e) {
+                        std::cerr << e.what() << std::endl;
+                    }
                 }
 
                 bool is_open = false;
