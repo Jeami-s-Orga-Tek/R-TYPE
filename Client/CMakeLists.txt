@@ -47,6 +47,16 @@ else()
   message(FATAL_ERROR "Audioplayer subdirectory '${AUDIOPLAYER_DIR}' does not exist.")
 endif()
 
+set(PHYSICSENGINE "Box2D" CACHE STRING "Choose PHYSICSENGINE")
+set(PHYSICSENGINE_TARGET "physicsengine")
+set(PHYSICSENGINE_DIR "../PhysicsEngines/${PHYSICSENGINE}")
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PHYSICSENGINE_DIR}/CMakeLists.txt")
+  add_subdirectory(${PHYSICSENGINE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/PhysicsEngines_Box2D)
+  set(PHYSICSENGINE_LIB ${PHYSICSENGINE_TARGET})
+else()
+  message(FATAL_ERROR "PHYSICSENGINE subdirectory '${CMAKE_CURRENT_SOURCE_DIR}/${PHYSICSENGINE_DIR}' does not exist.")
+endif()
+
 add_executable(r-type_client ${SOURCES})
 
 link_directories(${CMAKE_BINARY_DIR}/libengine)
@@ -65,6 +75,7 @@ target_link_libraries(r-type_client PRIVATE
   pthread
   ${RENDERER_LIB}
   ${AUDIOPLAYER_LIB}
+  ${PHYSICSENGINE_LIB}
 )
 
 target_link_libraries(r-type_client PRIVATE ${CMAKE_DL_LIBS})
