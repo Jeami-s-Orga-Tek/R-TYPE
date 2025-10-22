@@ -12,7 +12,7 @@
 
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
-#include "Systems/Physics.hpp"
+#include "Systems/PhysicsNoEngine.hpp"
 #include "Systems/PlayerControl.hpp"
 #include "Systems/Collision.hpp"
 #include "Systems/Enemy.hpp"
@@ -38,7 +38,7 @@ namespace RTypeServer {
             std::shared_ptr<Engine::NetworkManager> networkManager;
             std::shared_ptr<Engine::Mediator> mediator;
 
-            std::shared_ptr<Engine::Systems::PhysicsSystem> physics_system {};
+            std::shared_ptr<Engine::Systems::PhysicsNoEngineSystem> physics_system {};
             std::shared_ptr<Engine::Systems::PlayerControl> player_control_system {};
             std::shared_ptr<Engine::Systems::Collision> collision_system {};
             std::shared_ptr<Engine::Systems::EnemySystem> enemy_system {};

@@ -14,6 +14,8 @@ namespace Engine {
     namespace Components {
         typedef struct Gravity_s {
             Utils::Vec2 force;
+            float density = 1.0f;
+            float friction = 0.3f;
         } Gravity;
     };
 };

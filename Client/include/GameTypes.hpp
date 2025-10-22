@@ -32,7 +32,7 @@
 #include "Utils.hpp"
 #include "AudioPlayer.hpp"
 
-#include "Systems/Physics.hpp"
+#include "Systems/PhysicsNoEngine.hpp"
 #include "Systems/Render.hpp"
 #include "Systems/PlayerControl.hpp"
 #include "Systems/Collision.hpp"
@@ -128,7 +128,7 @@ class GameManager {
 
         bool isEditingUsername;
         size_t cursorPos;
-        std::shared_ptr<Engine::Systems::PhysicsSystem> physics_system {};
+        std::shared_ptr<Engine::Systems::PhysicsNoEngineSystem> physics_system {};
         std::shared_ptr<Engine::Systems::RenderSystem> render_system {};
         std::shared_ptr<Engine::Systems::PlayerControl> player_control_system {};
         std::shared_ptr<Engine::Systems::Collision> collision_system {};
