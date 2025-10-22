@@ -17,6 +17,10 @@ include_directories(src)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
 
+if(NOT DEFINED ENV{CPM_SOURCE_CACHE})
+    set(ENV{CPM_SOURCE_CACHE} ${CMAKE_CURRENT_SOURCE_DIR}/.cpm-cache)
+endif()
+
 CPMAddPackage(
   NAME Boost
   VERSION 1.86.0
@@ -26,10 +30,41 @@ CPMAddPackage(
           "BUILD_SHARED_LIBS OFF" "BOOST_INCLUDE_LIBRARIES container\\\;asio\\\;pfr\\\;type_index"
 )
 
+CPMAddPackage(
+  NAME lua
+  GITHUB_REPOSITORY lua/lua
+  VERSION 5.3.5
+  DOWNLOAD_ONLY YES
+)
+
+if(lua_ADDED)
+  file(GLOB lua_sources ${lua_SOURCE_DIR}/*.c)
+  list(REMOVE_ITEM lua_sources "${lua_SOURCE_DIR}/lua.c" "${lua_SOURCE_DIR}/luac.c")
+  add_library(lua SHARED ${lua_sources})
+  target_include_directories(lua SYSTEM PUBLIC $<BUILD_INTERFACE:${lua_SOURCE_DIR}>)
+endif()
+
+if (NOT SOL_PATCHED)
+  set(SOL_PATCHED TRUE CACHE INTERNAL "Whether to apply patches to Sol (workaround to a year old bug yipee)")
+  CPMAddPackage(
+    NAME sol2
+    GITHUB_REPOSITORY ThePhD/sol2
+    VERSION 3.3.0
+    PATCHES ../fix_for_clang.patch
+  )
+else()
+  CPMAddPackage(
+    NAME sol2
+    GITHUB_REPOSITORY ThePhD/sol2
+    VERSION 3.3.0
+  )
+endif()
+
+
 add_executable(r-type_server ${SOURCES})
 
 target_include_directories(renderer PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries(r-type_server PRIVATE engine Boost::system Boost::asio Boost::pfr Boost::type_index)
+target_link_libraries(r-type_server PRIVATE engine Boost::system Boost::asio Boost::pfr Boost::type_index sol2 lua)
 target_link_libraries(r-type_server PRIVATE ${CMAKE_DL_LIBS})
 target_link_libraries(r-type_server PRIVATE $<$<BOOL:${WIN32}>:ws2_32>)
