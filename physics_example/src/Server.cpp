@@ -177,7 +177,7 @@ void Example::Game::gameLoop()
             fps_timer = 0.0f;
         }
 
-        createBox(static_cast<float>(rand() % 800), 0.0f);
+        createBox(static_cast<float>(rand() % 800), static_cast<float>(rand() % 200));
 
         while (accumulator >= FIXED_DT) {
             physics_system->update(mediator, FIXED_DT);
