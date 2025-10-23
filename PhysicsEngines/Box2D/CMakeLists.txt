@@ -7,12 +7,13 @@ CPMAddPackage(
   NAME box2d
   VERSION 2.4.2
   GITHUB_REPOSITORY erincatto/box2d
-  DOWNLOAD_ONLY True
+  OPTIONS 
+    "BOX2D_BUILD_UNIT_TESTS OFF"
+    "BOX2D_BUILD_TESTBED OFF"
 )
 
 add_library(physicsengine SHARED ${BOX2D_PHYSICSENGINE_SRC})
 target_include_directories(physicsengine PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ../../../../include_common)
-target_include_directories(physicsengine PRIVATE ${box2d_INCLUDE_DIRS})
 target_link_libraries(physicsengine PRIVATE
     box2d
     $<$<BOOL:${WIN32}>:ws2_32>

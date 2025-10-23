@@ -8,8 +8,6 @@
 #ifndef BOX2D_HPP_
 #define BOX2D_HPP_
 
-#include <box2d/b2_body.h>
-#include <box2d/b2_world.h>
 #include <box2d/box2d.h>
 #include <memory>
 #include <unordered_map>
