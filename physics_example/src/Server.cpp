@@ -250,7 +250,7 @@ void Example::Game::createBox(float x, float y)
     mediator->addComponent(entity, player_gravity);
     const Engine::Components::RigidBody projectile_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, projectile_rigidbody);
-    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Vec2(x, y), .rot = 0.0f, .scale = 2.0f};
+    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Vec2(x, y), .rot = static_cast<float>(rand() % 90), .scale = 1.0f};
     mediator->addComponent(entity, projectile_transform);
     const Engine::Components::Sprite projectile_sprite = {.sprite_name = "", .frame_nb = 1};
     mediator->addComponent(entity, projectile_sprite);

@@ -40,6 +40,7 @@ namespace Engine {
                 void setSpriteTextureRect(const std::string& id, int left, int top, int width, int height) override;
                 void setSpriteRotation(const std::string& id, float angle) override;
                 void setSpriteScale(const std::string& id, float scale) override;
+                void setSpriteOrigin(const std::string &id, float x, float y) override;
                 void drawSprite(const std::string& id) override;
                 void removeSprite(const std::string& id) override;
                 void scrollSprite(const std::string &id) override;

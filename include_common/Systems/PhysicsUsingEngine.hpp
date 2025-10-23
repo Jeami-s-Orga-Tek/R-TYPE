@@ -45,8 +45,8 @@ namespace Engine {
                         auto &gravity = mediator->getComponent<Components::Gravity>(entity);
                         
                         if (!rigidbody.has_body_been_created) {
-                            Engine::Utils::Rect rect(transform.pos.x, transform.pos.y, 50, 50);
-                            physics_engine->addRigidBody(entity, rect, true, gravity.density, gravity.friction);
+                            Engine::Utils::Rect rect(transform.pos.x, transform.pos.y, 10, 10);
+                            physics_engine->addRigidBody(entity, rect, transform.rot, true, gravity.density, gravity.friction);
                             rigidbody.has_body_been_created = true;
                         }
 
@@ -55,7 +55,6 @@ namespace Engine {
 
                         transform.pos = pos;
                         transform.rot = angle;
-
                     }
 
                     physics_engine->step(dt);

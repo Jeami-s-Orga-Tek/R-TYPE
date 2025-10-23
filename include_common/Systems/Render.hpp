@@ -65,15 +65,15 @@ namespace Engine {
                         if (!white_texture_created) {
                             renderer->loadTexture("_white_texture", "");
                             white_texture_created = true;
+                            renderer->createSprite(temp_sprite_name, "_white_texture");
                         }
 
-                        renderer->createSprite(temp_sprite_name, "_white_texture");
+                        renderer->setSpriteOrigin(temp_sprite_name, 5, 5);
                         renderer->setSpritePosition(temp_sprite_name, transform.pos.x, transform.pos.y);
                         renderer->setSpriteRotation(temp_sprite_name, transform.rot);
                         renderer->setSpriteScale(temp_sprite_name, transform.scale);
                         renderer->setSpriteTextureRect(temp_sprite_name, 0, 0, 10, 10);
                         renderer->drawSprite(temp_sprite_name);
-                        renderer->removeSprite(temp_sprite_name);
                         return;
                     }
                     

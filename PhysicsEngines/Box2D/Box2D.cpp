@@ -5,10 +5,10 @@
 ** Box2D
 */
 
+#include <memory>
+
 #include "Box2D.hpp"
 #include "Utils.hpp"
-#include <box2d/b2_body.h>
-#include <memory>
 
 Engine::PhysicsEngines::Box2D::Box2D()
 {
@@ -20,11 +20,13 @@ void Engine::PhysicsEngines::Box2D::init(Utils::Vec2 &gravity)
     world = std::make_shared<b2World>(g);
 }
 
-void Engine::PhysicsEngines::Box2D::addRigidBody(Entity entity, Utils::Rect &body, bool has_gravity, float density, float friction)
+void Engine::PhysicsEngines::Box2D::addRigidBody(Entity entity, Utils::Rect &body, float angle, bool has_gravity, float density, float friction)
 {
     if (!world)
         return;
     b2BodyDef bodyDef;
+
+    bodyDef.angle = angle;
 
     if (has_gravity)
         bodyDef.type = b2_dynamicBody;

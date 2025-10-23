@@ -251,6 +251,13 @@ void Engine::Renderers::SFML::setSpriteScale(const std::string& id, float scale)
         it->second.setScale({scale, scale});
 }
 
+void Engine::Renderers::SFML::setSpriteOrigin(const std::string &id, float x, float y)
+{
+	auto it = sprites.find(id);
+	if (it != sprites.end())
+		it->second.setOrigin(x, y);
+}
+
 void Engine::Renderers::SFML::drawSprite(const std::string& id)
 {
 	if (!window)
