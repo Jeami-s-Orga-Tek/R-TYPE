@@ -57,6 +57,14 @@ namespace Engine {
 
                 void drawSprite(std::shared_ptr<Engine::Renderer> renderer, Components::Sprite entity_sprite, Components::Transform transform, float deltaTime = 0.0f) {
                     std::string sprite_name(entity_sprite.sprite_name.data());
+                    
+                    // If sprite name is null or empty, draw a basic white square
+                    if (sprite_name.empty() || sprite_name == "\0") {
+                        Utils::Rect rect = {transform.pos.x, transform.pos.y, 10, 10};
+                        renderer->drawRectangle(rect, 0xFFFFFFFF);
+                        return;
+                    }
+                    
                     auto sprite_find = sprites.find(sprite_name);
                         if (sprite_find == sprites.end()) {
                             std::cerr << sprite_name << std::endl;

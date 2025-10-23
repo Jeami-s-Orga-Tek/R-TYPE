@@ -1,0 +1,53 @@
+/*
+** EPITECH PROJECT, 2025
+** R-TYPE
+** File description:
+** Server
+*/
+
+#ifndef SERVER_HPP_
+#define SERVER_HPP_
+
+#include <memory>
+
+#include "AudioPlayer.hpp"
+#include "Mediator.hpp"
+#include "NetworkManager.hpp"
+#include "Renderer.hpp"
+#include "Systems/DevConsole.hpp"
+#include "Systems/PhysicsUsingEngine.hpp"
+#include "Systems/PlayerControl.hpp"
+#include "Systems/Collision.hpp"
+#include "Systems/Enemy.hpp"
+#include "Systems/Render.hpp"
+#include "Systems/SoundPlayer.hpp"
+
+namespace Example {
+    class Game {
+        public:
+            Game();
+            ~Game();
+    
+            void loadEngineLib();
+            void initEngine();
+            void gameLoop();
+
+            void createGround();
+            void createBox(float x, float y);
+        private:
+            std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
+            std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
+            std::shared_ptr<Engine::NetworkManager> networkManager;
+            std::shared_ptr<Engine::Mediator> mediator;
+
+            std::shared_ptr<Engine::Renderer> renderer;
+            std::shared_ptr<Engine::AudioPlayer> audio_player;
+
+            std::shared_ptr<Engine::Systems::PhysicsUsingEngineSystem> physics_system {};
+            std::shared_ptr<Engine::Systems::DevConsole> dev_console_system {};
+            std::shared_ptr<Engine::Systems::SoundSystem> sound_system {};
+            std::shared_ptr<Engine::Systems::RenderSystem> render_system {};
+    };
+}
+
+#endif /* !SERVER_HPP_ */
