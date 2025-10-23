@@ -182,8 +182,17 @@ void Engine::Renderers::SFML::handleEvents(std::shared_ptr<Engine::NetworkManage
 
 bool Engine::Renderers::SFML::loadTexture(const std::string& id, const std::string& filepath) {
 	sf::Texture texture;
-	if (!texture.loadFromFile(filepath))
-		return (false);
+
+	if (filepath.empty()) {
+		sf::Image whiteImage;
+		whiteImage.create(1, 1, sf::Color::White);
+		if (!texture.loadFromImage(whiteImage))
+			return (false);
+	} else {
+		if (!texture.loadFromFile(filepath))
+			return (false);
+	}
+	
 	texture.setRepeated(true);
 	textures[id] = std::move(texture);
 	return (true);

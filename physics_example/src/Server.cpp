@@ -177,7 +177,8 @@ void Example::Game::gameLoop()
             fps_timer = 0.0f;
         }
 
-        createBox(static_cast<float>(rand() % 800), static_cast<float>(rand() % 200));
+        if (mediator->getEntityCount() < 2000)
+            createBox(static_cast<float>(rand() % 800), static_cast<float>(rand() % 400));
 
         while (accumulator >= FIXED_DT) {
             physics_system->update(mediator, FIXED_DT);
@@ -245,7 +246,7 @@ void Example::Game::createBox(float x, float y)
 
     Engine::Entity entity = mediator->createEntity();
 
-    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(10.0f, 10.0f)};
+    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(static_cast<float>(rand() % 200), static_cast<float>(rand() % 200))};
     mediator->addComponent(entity, player_gravity);
     const Engine::Components::RigidBody projectile_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, projectile_rigidbody);

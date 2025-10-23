@@ -46,7 +46,7 @@ namespace Engine {
                         
                         if (!rigidbody.has_body_been_created) {
                             Engine::Utils::Rect rect(transform.pos.x, transform.pos.y, 50, 50);
-                            physics_engine->addRigidBody(entity, rect, (gravity.force.x != 0.0f && gravity.force.y != 0.0f), gravity.density, gravity.friction);
+                            physics_engine->addRigidBody(entity, rect, true, gravity.density, gravity.friction);
                             rigidbody.has_body_been_created = true;
                         }
 
