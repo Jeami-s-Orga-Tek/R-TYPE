@@ -44,6 +44,7 @@ namespace Engine {
             virtual void setSpriteTextureRect(const std::string &id, int left, int top, int width, int height) = 0;
             virtual void setSpriteRotation(const std::string &id, float angle) = 0;
             virtual void setSpriteScale(const std::string &id, float scale) = 0;
+            virtual void setSpriteOrigin(const std::string &id, float x, float y) = 0;
             virtual void drawSprite(const std::string &id) = 0;
             virtual void removeSprite(const std::string &id) = 0;
             virtual void scrollSprite(const std::string &id) = 0;

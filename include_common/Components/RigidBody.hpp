@@ -15,6 +15,7 @@ namespace Engine {
         typedef struct RigidBody_s {
             Utils::Vec2 velocity;
             Utils::Vec2 acceleration;
+            bool has_body_been_created = false;
         } RigidBody;
     };
 };

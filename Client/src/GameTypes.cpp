@@ -23,7 +23,7 @@
 #include "Mediator.hpp"
 #include "Systems/Collision.hpp"
 #include "Systems/Enemy.hpp"
-#include "Systems/Physics.hpp"
+#include "Systems/PhysicsNoEngine.hpp"
 #include "Systems/Render.hpp"
 #include "Systems/PlayerControl.hpp"
 #include "Utils.hpp"
@@ -677,13 +677,13 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
 {
     networkManager = createNetworkManagerFunc(Engine::NetworkManager::Role::CLIENT, serverIP, port);
 
-    physics_system = networkManager->mediator->registerSystem<Engine::Systems::PhysicsSystem>();
+    physics_system = networkManager->mediator->registerSystem<Engine::Systems::PhysicsNoEngineSystem>();
 
     {
         Engine::Signature signature;
         signature.set(networkManager->mediator->getComponentType<Engine::Components::RigidBody>());
         signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
-        networkManager->mediator->setSystemSignature<Engine::Systems::PhysicsSystem>(signature);
+        networkManager->mediator->setSystemSignature<Engine::Systems::PhysicsNoEngineSystem>(signature);
     }
 
     render_system = networkManager->mediator->registerSystem<Engine::Systems::RenderSystem>();

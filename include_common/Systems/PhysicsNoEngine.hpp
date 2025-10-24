@@ -14,11 +14,10 @@
 #include "Mediator.hpp"
 #include "Components/RigidBody.hpp"
 #include "Components/Transform.hpp"
-#include "Components/Gravity.hpp"
 
 namespace Engine {
     namespace Systems {
-        class PhysicsSystem : public System {
+        class PhysicsNoEngineSystem : public System {
             public:
                 void update(std::shared_ptr<Mediator> mediator, float dt) {
                     for (const auto &entity : entities) {

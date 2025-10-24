@@ -61,10 +61,24 @@ else()
 endif()
 
 
+set(PHYSICSENGINE "Box2D" CACHE STRING "Choose PHYSICSENGINE")
+set(PHYSICSENGINE_TARGET "physicsengine")
+set(PHYSICSENGINE_DIR "../PhysicsEngines/${PHYSICSENGINE}")
+if(NOT TARGET ${PHYSICSENGINE_TARGET})
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PHYSICSENGINE_DIR}/CMakeLists.txt")
+    add_subdirectory(${PHYSICSENGINE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/PhysicsEngines_Box2D)
+    set(PHYSICSENGINE_LIB ${PHYSICSENGINE_TARGET})
+  else()
+    message(FATAL_ERROR "PHYSICSENGINE subdirectory '${CMAKE_CURRENT_SOURCE_DIR}/${PHYSICSENGINE_DIR}' does not exist.")
+  endif()
+else()
+  set(PHYSICSENGINE_LIB ${PHYSICSENGINE_TARGET})
+endif()
+
 add_executable(r-type_server ${SOURCES})
 
 target_include_directories(renderer PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries(r-type_server PRIVATE engine Boost::system Boost::asio Boost::pfr Boost::type_index sol2 lua)
+target_link_libraries(r-type_server PRIVATE engine Boost::system Boost::asio Boost::pfr Boost::type_index sol2 lua ${PHYSICSENGINE_LIB})
 target_link_libraries(r-type_server PRIVATE ${CMAKE_DL_LIBS})
 target_link_libraries(r-type_server PRIVATE $<$<BOOL:${WIN32}>:ws2_32>)

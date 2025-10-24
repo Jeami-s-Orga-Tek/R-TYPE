@@ -10,6 +10,7 @@
 #include <thread>
 
 #include "Server.hpp"
+#include "Components/Gravity.hpp"
 #include "dlfcn_compat.hpp"
 #include "Components/EnemyInfo.hpp"
 #include "Components/Hitbox.hpp"
@@ -64,13 +65,13 @@ void RTypeServer::Server::initEngine()
     mediator->registerComponent<Engine::Components::EnemyInfo>();
     mediator->registerComponent<Engine::Components::Sound>();
 
-    physics_system = mediator->registerSystem<Engine::Systems::PhysicsSystem>();
+    physics_system = mediator->registerSystem<Engine::Systems::PhysicsNoEngineSystem>();
 
     {
         Engine::Signature signature;
         signature.set(networkManager->mediator->getComponentType<Engine::Components::RigidBody>());
         signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
-        networkManager->mediator->setSystemSignature<Engine::Systems::PhysicsSystem>(signature);
+        networkManager->mediator->setSystemSignature<Engine::Systems::PhysicsNoEngineSystem>(signature);
     }
     
     player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
@@ -173,7 +174,7 @@ void RTypeServer::Server::createPlayer()
         throw std::runtime_error("Mediator not initialized :(");
 
     Engine::Signature signature;
-    signature.set(mediator->getComponentType<Engine::Components::Gravity>());
+    // signature.set(mediator->getComponentType<Engine::Components::Gravity>());
     signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
@@ -182,8 +183,8 @@ void RTypeServer::Server::createPlayer()
 
     Engine::Entity entity = mediator->createEntity();
 
-    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(0.0f, 15.0f)};
-    mediator->addComponent(entity, player_gravity);
+    // const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(0.0f, 15.0f)};
+    // mediator->addComponent(entity, player_gravity);
     const Engine::Components::RigidBody player_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, player_rigidbody);
     const Engine::Components::Transform player_transform = {.pos = Engine::Utils::Vec2(static_cast<float>(rand() % 500), static_cast<float>(rand() % 500)), .rot = 0.0f, .scale = 2.0f};
@@ -200,7 +201,7 @@ void RTypeServer::Server::createPlayer()
     mediator->addComponent(entity, player_cooldown);
 
     networkManager->sendEntity(entity, signature);
-    networkManager->sendComponent<Engine::Components::Gravity>(entity, player_gravity);
+    // networkManager->sendComponent<Engine::Components::Gravity>(entity, player_gravity);
     networkManager->sendComponent<Engine::Components::RigidBody>(entity, player_rigidbody);
     networkManager->sendComponent<Engine::Components::Transform>(entity, player_transform);
     networkManager->sendComponent<Engine::Components::Sprite>(entity, player_sprite);

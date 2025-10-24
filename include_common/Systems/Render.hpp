@@ -57,6 +57,26 @@ namespace Engine {
 
                 void drawSprite(std::shared_ptr<Engine::Renderer> renderer, Components::Sprite entity_sprite, Components::Transform transform, float deltaTime = 0.0f) {
                     std::string sprite_name(entity_sprite.sprite_name.data());
+
+                    if (sprite_name.empty() || sprite_name == "\0") {
+                        const std::string temp_sprite_name = "_temp_white_rect_" + std::to_string(reinterpret_cast<uintptr_t>(&transform));
+
+                        static bool white_texture_created = false;
+                        if (!white_texture_created) {
+                            renderer->loadTexture("_white_texture", "");
+                            white_texture_created = true;
+                            renderer->createSprite(temp_sprite_name, "_white_texture");
+                        }
+
+                        renderer->setSpriteOrigin(temp_sprite_name, 5, 5);
+                        renderer->setSpritePosition(temp_sprite_name, transform.pos.x, transform.pos.y);
+                        renderer->setSpriteRotation(temp_sprite_name, transform.rot);
+                        renderer->setSpriteScale(temp_sprite_name, transform.scale);
+                        renderer->setSpriteTextureRect(temp_sprite_name, 0, 0, 10, 10);
+                        renderer->drawSprite(temp_sprite_name);
+                        return;
+                    }
+                    
                     auto sprite_find = sprites.find(sprite_name);
                         if (sprite_find == sprites.end()) {
                             std::cerr << sprite_name << std::endl;
