@@ -921,6 +921,8 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addTexture(renderer, "base_player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
     render_system->addTexture(renderer, "ground_enemy_sprite_sheet", "assets/sprites/r-typesheet7.gif");
     render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
+    // Register explosion sprite sheet
+    render_system->addTexture(renderer, "enemy_explosion_sheet", "assets/sprites/explosionEnemy1.gif");
 
     render_system->addSprite(renderer, "player_1", "players_sprite_sheet", {32, 17}, {0, 0}, 5, 1);
     render_system->addSprite(renderer, "player_2", "players_sprite_sheet", {32, 17}, {0, 17}, 5, 1);
@@ -930,9 +932,11 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addSprite(renderer, "weak_player_projectile", "base_player_sprite_sheet", {16, 4}, {249, 90}, 1, 1);
     render_system->addSprite(renderer, "ground_enemy", "ground_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "space_background", "space_background_texture", {1226, 207}, {0, 0}, 1, 1);
+    render_system->addSprite(renderer, "enemy_explosion", "enemy_explosion_sheet", {32, 32}, {0, 0}, 5, 1);
 
     sound_system->addSound(audio_player, "background_music", "assets/sound/Stage2_sound.mp3");
     sound_system->addSound(audio_player, "projectile_shoot", "assets/sound/01LASER.BD_00000.wav");
+    sound_system->addSound(audio_player, "explosion", "assets/sound/explosion.mp3");
 
     const float TARGET_FPS = static_cast<float>(currentFps);
     const float FIXED_DT = 1.0f / TARGET_FPS;
@@ -979,9 +983,9 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             accumulator -= FIXED_DT;
         }
         
-        render_system->update(renderer, mediator, frameTime);
         sound_system->update(audio_player, mediator);
-        
+        render_system->update(renderer, mediator, frameTime);
+
         renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
 
         dev_console_system->update(networkManager, renderer);

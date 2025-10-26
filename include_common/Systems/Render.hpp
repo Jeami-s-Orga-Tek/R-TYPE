@@ -100,7 +100,7 @@ namespace Engine {
                             );
                         } else {
                             renderer->setSpriteTextureRect(sprite_name,
-                                static_cast<int>(sprite.pos.x * entity_sprite.frame_nb),
+                                static_cast<int>(sprite.pos.x + sprite.size.x * entity_sprite.frame_nb),
                                 static_cast<int>(sprite.pos.y),
                                 static_cast<int>(sprite.size.x),
                                 static_cast<int>(sprite.size.y)
@@ -114,21 +114,43 @@ namespace Engine {
 
                 void update(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator, float deltaTime = 0.016f) {
                     for (const auto &entity : entities) {
-                        const auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
+                        auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
 
                         if (entity_sprite.is_background) {
                             const auto &transform = mediator->getComponent<Components::Transform>(entity);
 
+                            if (std::string(entity_sprite.sprite_name.data()) == "enemy_explosion") {
+                                if (entity_sprite.frame_nb >= 5) {
+                                    mediator->destroyEntity(entity);
+                                    continue;
+                                }
+                            }
+
                             drawSprite(renderer, entity_sprite, transform, deltaTime);
+
+                            if (std::string(entity_sprite.sprite_name.data()) == "enemy_explosion") {
+                                entity_sprite.frame_nb += 1;
+                            }
                         }
                     }
                     for (const auto &entity : entities) {
-                        const auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
-                        
+                        auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
+
                         if (!entity_sprite.is_background) {
                             const auto &transform = mediator->getComponent<Components::Transform>(entity);
 
+                            if (std::string(entity_sprite.sprite_name.data()) == "enemy_explosion") {
+                                if (entity_sprite.frame_nb >= 5) {
+                                    mediator->destroyEntity(entity);
+                                    continue;
+                                }
+                            }
+
                             drawSprite(renderer, entity_sprite, transform, deltaTime);
+
+                            if (std::string(entity_sprite.sprite_name.data()) == "enemy_explosion") {
+                                entity_sprite.frame_nb += 1;
+                            }
                         }
                     }
                 };
