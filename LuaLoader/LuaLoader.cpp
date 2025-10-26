@@ -11,8 +11,6 @@ Engine::LuaLoader::LuaLoader()
 {
 }
 
-
-
 Engine::LuaLoader::~LuaLoader()
 {
 }

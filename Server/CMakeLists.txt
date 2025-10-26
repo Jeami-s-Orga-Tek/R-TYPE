@@ -12,6 +12,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Ofast")
 
 include_directories(../include_common)
 
+add_subdirectory(../LuaLoader ${CMAKE_CURRENT_BINARY_DIR}/LuaLoader)
+include_directories(../LuaLoader)
+
 include_directories(include)
 include_directories(src)
 
@@ -44,21 +47,7 @@ if(lua_ADDED)
   target_include_directories(lua SYSTEM PUBLIC $<BUILD_INTERFACE:${lua_SOURCE_DIR}>)
 endif()
 
-if (NOT SOL_PATCHED)
-  set(SOL_PATCHED TRUE CACHE INTERNAL "Whether to apply patches to Sol (workaround to a year old bug yipee)")
-  CPMAddPackage(
-    NAME sol2
-    GITHUB_REPOSITORY ThePhD/sol2
-    VERSION 3.3.0
-    PATCHES ../fix_for_clang.patch
-  )
-else()
-  CPMAddPackage(
-    NAME sol2
-    GITHUB_REPOSITORY ThePhD/sol2
-    VERSION 3.3.0
-  )
-endif()
+
 
 
 set(PHYSICSENGINE "Box2D" CACHE STRING "Choose PHYSICSENGINE")
@@ -79,6 +68,6 @@ add_executable(r-type_server ${SOURCES})
 
 target_include_directories(renderer PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries(r-type_server PRIVATE engine Boost::system Boost::asio Boost::pfr Boost::type_index sol2 lua ${PHYSICSENGINE_LIB})
+target_link_libraries(r-type_server PRIVATE engine LuaLoader Boost::system Boost::asio Boost::pfr Boost::type_index sol2 lua ${PHYSICSENGINE_LIB})
 target_link_libraries(r-type_server PRIVATE ${CMAKE_DL_LIBS})
 target_link_libraries(r-type_server PRIVATE $<$<BOOL:${WIN32}>:ws2_32>)

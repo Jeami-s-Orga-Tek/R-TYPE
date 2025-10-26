@@ -9,10 +9,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Ofast")
 
 include(../cmake/CPM.cmake)
 
-if(NOT DEFINED ENV{CPM_SOURCE_CACHE})
-    set(ENV{CPM_SOURCE_CACHE} ${CMAKE_CURRENT_SOURCE_DIR}/.cpm-cache)
-endif()
-
 CPMAddPackage(
   NAME Boost
   VERSION 1.86.0
@@ -21,36 +17,6 @@ CPMAddPackage(
   OPTIONS "BOOST_ENABLE_CMAKE ON" "BOOST_SKIP_INSTALL_RULES ON"
           "BUILD_SHARED_LIBS OFF" "BOOST_INCLUDE_LIBRARIES container\\\;asio\\\;pfr\\\;type_index"
 )
-
-CPMAddPackage(
-  NAME lua
-  GITHUB_REPOSITORY lua/lua
-  VERSION 5.3.5
-  DOWNLOAD_ONLY YES
-)
-
-if(lua_ADDED)
-  file(GLOB lua_sources ${lua_SOURCE_DIR}/*.c)
-  list(REMOVE_ITEM lua_sources "${lua_SOURCE_DIR}/lua.c" "${lua_SOURCE_DIR}/luac.c")
-  add_library(lua SHARED ${lua_sources})
-  target_include_directories(lua SYSTEM PUBLIC $<BUILD_INTERFACE:${lua_SOURCE_DIR}>)
-endif()
-
-if (NOT SOL_PATCHED)
-  set(SOL_PATCHED TRUE CACHE INTERNAL "Whether to apply patches to Sol (workaround to a year old bug yipee)")
-  CPMAddPackage(
-    NAME sol2
-    GITHUB_REPOSITORY ThePhD/sol2
-    VERSION 3.3.0
-    PATCHES ../fix_for_clang.patch
-  )
-else()
-  CPMAddPackage(
-    NAME sol2
-    GITHUB_REPOSITORY ThePhD/sol2
-    VERSION 3.3.0
-  )
-endif()
 
 include_directories(../include_common)
 
@@ -67,9 +33,4 @@ target_link_libraries(engine PRIVATE
   Boost::pfr
   Boost::type_index
   pthread
-  sol2
-  lua
 )
-
-# TEMP REMOVE LATER
-# target_link_libraries(engine PRIVATE sfml-graphics sfml-window sfml-system)

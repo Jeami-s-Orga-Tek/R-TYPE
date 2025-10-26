@@ -1,4 +1,26 @@
 cmake_minimum_required(VERSION 3.10)
+include(cmake/CPM.cmake)
+
+if(NOT DEFINED ENV{CPM_SOURCE_CACHE})
+        set(ENV{CPM_SOURCE_CACHE} ${CMAKE_CURRENT_SOURCE_DIR}/.cpm-cache)
+endif()
+
+# bad but no other way to do it
+if(NOT DEFINED SOL_PATCHED OR NOT SOL_PATCHED)
+    set(SOL_PATCHED TRUE CACHE INTERNAL "Whether to apply patches to Sol (workaround to a year old bug yipee)")
+    CPMAddPackage(
+        NAME sol2
+        GITHUB_REPOSITORY ThePhD/sol2
+        VERSION 3.3.0
+        PATCHES fix_for_clang.patch
+    )
+else()
+    CPMAddPackage(
+        NAME sol2
+        GITHUB_REPOSITORY ThePhD/sol2
+        VERSION 3.3.0
+    )
+endif()
 
 project(r-type)
 

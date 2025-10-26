@@ -8,6 +8,10 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Ofast")
 set(SFML_VERSION 2.6.2)
 
 include_directories(../include_common)
+
+add_subdirectory(../LuaLoader ${CMAKE_CURRENT_BINARY_DIR}/LuaLoader)
+include_directories(../LuaLoader)
+
 include_directories(include)
 
 file(GLOB SOURCES src/*.cpp src/Renderers/*.cpp)
@@ -36,7 +40,6 @@ CPMAddPackage(
   GITHUB_REPOSITORY lua/lua
   VERSION 5.3.5
   DOWNLOAD_ONLY YES
-  PATCHES ../fix_for_clang.patch
 )
 
 if(lua_ADDED)
@@ -44,22 +47,6 @@ if(lua_ADDED)
   list(REMOVE_ITEM lua_sources "${lua_SOURCE_DIR}/lua.c" "${lua_SOURCE_DIR}/luac.c")
   add_library(lua SHARED ${lua_sources})
   target_include_directories(lua SYSTEM PUBLIC $<BUILD_INTERFACE:${lua_SOURCE_DIR}>)
-endif()
-
-if (NOT SOL_PATCHED)
-  set(SOL_PATCHED TRUE CACHE INTERNAL "Whether to apply patches to Sol (workaround to a year old bug yipee)")
-  CPMAddPackage(
-    NAME sol2
-    GITHUB_REPOSITORY ThePhD/sol2
-    VERSION 3.3.0
-    PATCHES ../fix_for_clang.patch
-  )
-else()
-  CPMAddPackage(
-    NAME sol2
-    GITHUB_REPOSITORY ThePhD/sol2
-    VERSION 3.3.0
-  )
 endif()
 
 set(RENDERER "SFML" CACHE STRING "Choose renderer")
@@ -102,6 +89,7 @@ link_directories(${CMAKE_BINARY_DIR}/libengine)
 target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 target_link_libraries(r-type_client PRIVATE
   engine
+  LuaLoader
   sfml-graphics
   sfml-window
   sfml-system
