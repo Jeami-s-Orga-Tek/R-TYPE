@@ -1,10 +1,16 @@
 var searchData=
 [
-  ['online_20shoot’em_20up_20game_20engine_20c_2017_0',['R‑TYPE — Online Shoot’em Up + Game Engine (C++17)',['../index.html',1,'']]],
-  ['operator_2a_1',['operator*',['../classEngine_1_1Utils_1_1Vec2.html#a611ba04a5627a6727ae55fe29655db22',1,'Engine::Utils::Vec2::operator*()'],['../classEngine_1_1Utils_1_1Vec2Int.html#a086dcea30c2a19d92a1d83ac81d8a3a6',1,'Engine::Utils::Vec2Int::operator*()'],['../classEngine_1_1Utils_1_1Vec2UInt.html#a2efd3a0e505418bc1d68ba8abc06e8a9',1,'Engine::Utils::Vec2UInt::operator*()'],['../classEngine_1_1Utils_1_1Color.html#adb64c3e7b82e55574925fb481f029144',1,'Engine::Utils::Color::operator*()']]],
-  ['operator_2b_2',['operator+',['../classEngine_1_1Utils_1_1Vec2.html#a60c6282ccbc0d2155cfb7eab49746748',1,'Engine::Utils::Vec2::operator+()'],['../classEngine_1_1Utils_1_1Vec2Int.html#ab9133922541ce121d8fc8cba22519e03',1,'Engine::Utils::Vec2Int::operator+()'],['../classEngine_1_1Utils_1_1Vec2UInt.html#a091c0639b1727bf88255eeffffc6dc1a',1,'Engine::Utils::Vec2UInt::operator+()']]],
-  ['operator_2b_3d_3',['operator+=',['../classEngine_1_1Utils_1_1Vec2.html#a71a7e1b10ee0c71be0472ec36e8609bb',1,'Engine::Utils::Vec2::operator+=()'],['../classEngine_1_1Utils_1_1Vec2Int.html#a044545cb762a8b426804e3af8a91de27',1,'Engine::Utils::Vec2Int::operator+=()'],['../classEngine_1_1Utils_1_1Vec2UInt.html#ad64e67d37c18e283dfd81182a1631594',1,'Engine::Utils::Vec2UInt::operator+=()']]],
-  ['operator_2d_4',['operator-',['../classEngine_1_1Utils_1_1Vec2.html#aa7ae876c27dd841d1f30efca7b43cbb0',1,'Engine::Utils::Vec2::operator-()'],['../classEngine_1_1Utils_1_1Vec2Int.html#a983bcf03b0b483e689013095b86e4be8',1,'Engine::Utils::Vec2Int::operator-()'],['../classEngine_1_1Utils_1_1Vec2UInt.html#a71bb8ae23bfe32e9113d8cc9dc3affb7',1,'Engine::Utils::Vec2UInt::operator-()']]],
-  ['operator_2d_3d_5',['operator-=',['../classEngine_1_1Utils_1_1Vec2.html#a0892e8da650dd587b9f9e94c96bd0ed2',1,'Engine::Utils::Vec2::operator-=()'],['../classEngine_1_1Utils_1_1Vec2Int.html#ad7dcf7078aef56c04ed5301996b4f652',1,'Engine::Utils::Vec2Int::operator-=()'],['../classEngine_1_1Utils_1_1Vec2UInt.html#adacecb912f6da92222519de860e4f168',1,'Engine::Utils::Vec2UInt::operator-=()']]],
-  ['overview_6',['✨ Overview',['../index.html#autotoc_md2',1,'']]]
+  ['name_5flen_0',['name_len',['../structEngine_1_1NetworkManager_1_1HelloBody.html#ae8b552737b6005fc36c8cd994db8bcde',1,'Engine::NetworkManager::HelloBody::name_len'],['../structEngine_1_1NetworkManager_1_1ComponentBody.html#a652481ded74756bfaf52e92851aa2694',1,'Engine::NetworkManager::ComponentBody::name_len']]],
+  ['nebula_1',['NEBULA',['../ParticleSystem_8hpp.html#aded321cd7610a60bfbc018a66067a3d6af0fcd2bde58f4ae8d1dc5dec877ae246',1,'ParticleSystem.hpp']]],
+  ['nebulacolors_2',['nebulaColors',['../classParticleSystem.html#ac719467ea650713a3d8bb66c26daa766',1,'ParticleSystem']]],
+  ['networking_20binary_20udp_3',['Networking (binary UDP)',['../index.html#autotoc_md15',1,'']]],
+  ['networking_20tips_4',['⚙️ Runtime &amp; Networking Tips',['../index.html#autotoc_md22',1,'']]],
+  ['networkmanager_5',['NetworkManager',['../classEngine_1_1NetworkManager.html',1,'Engine::NetworkManager'],['../classEngine_1_1NetworkManager.html#ac372def1dd456bf98a6ddc8e74de0fd8',1,'Engine::NetworkManager::NetworkManager()']]],
+  ['networkmanager_6',['networkManager',['../classRTypeServer_1_1Server.html#a7df12cb6c256513881f82026da32451a',1,'RTypeServer::Server::networkManager'],['../classGameManager.html#ac22df2e47e7901e2466f7f193f1b36b2',1,'GameManager::networkManager']]],
+  ['networkmanager_2ecpp_7',['NetworkManager.cpp',['../NetworkManager_8cpp.html',1,'']]],
+  ['networkmanager_2ehpp_8',['NetworkManager.hpp',['../NetworkManager_8hpp.html',1,'']]],
+  ['next_5fcomponent_5ftype_9',['next_component_type',['../classEngine_1_1ComponentManager.html#aa08c69913ae1803ba70820160b47c0e1',1,'Engine::ComponentManager']]],
+  ['nonce_10',['nonce',['../structEngine_1_1NetworkManager_1_1HelloBody.html#ad70b897d1a81a8a69b86a98198febc7d',1,'Engine::NetworkManager::HelloBody']]],
+  ['normal_11',['NORMAL',['../Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1fa1e23852820b9154316c7c06e2b7ba051',1,'Parameters.hpp']]],
+  ['numberplayertowait_12',['numberPlayerToWait',['../classGameManager.html#aa6958f78b92266d1cb694ad4d84c4d19',1,'GameManager']]]
 ];

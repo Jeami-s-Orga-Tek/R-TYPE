@@ -1,7 +1,0 @@
-<map id="RtypeServer::UdpServer::send_ping" name="RtypeServer::UdpServer::send_ping">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,27,170,69"/>
-<area shape="rect" id="Node000002" href="$namespaceRtypeServer.html#a29d016de4637084d2ec30b53700af223" title=" " alt="" coords="226,5,360,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,34,210,28,210,33,170,39"/>
-<area shape="rect" id="Node000003" href="$classRtypeServer_1_1Protocol.html#ad918184440d6fcb33f231a7173a67399" title=" " alt="" coords="218,56,368,99"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="170,57,203,62,202,67,170,62"/>
-</map>

@@ -1,11 +1,9 @@
 var searchData=
 [
-  ['server_2fsrc_2fmain_2ecpp_0',['main.cpp',['../Server_2src_2main_8cpp.html',1,'']]],
-  ['sfml_2ecpp_1',['SFML.cpp',['../SFML_8cpp.html',1,'']]],
-  ['sfml_2ehpp_2',['SFML.hpp',['../SFML_8hpp.html',1,'']]],
-  ['shootingcooldown_2ehpp_3',['ShootingCooldown.hpp',['../ShootingCooldown_8hpp.html',1,'']]],
-  ['sprite_2ehpp_4',['Sprite.hpp',['../Sprite_8hpp.html',1,'']]],
-  ['system_2ehpp_5',['System.hpp',['../System_8hpp.html',1,'']]],
-  ['systemmanager_2ecpp_6',['SystemManager.cpp',['../SystemManager_8cpp.html',1,'']]],
-  ['systemmanager_2ehpp_7',['SystemManager.hpp',['../SystemManager_8hpp.html',1,'']]]
+  ['readme_2emd_0',['README.md',['../README_8md.html',1,'']]],
+  ['render_2ehpp_1',['Render.hpp',['../Render_8hpp.html',1,'']]],
+  ['renderer_2ehpp_2',['Renderer.hpp',['../Renderer_8hpp.html',1,'']]],
+  ['renderers_2fsfml_2fsfml_2ecpp_3',['SFML.cpp',['../Renderers_2SFML_2SFML_8cpp.html',1,'']]],
+  ['renderers_2fsfml_2fsfml_2ehpp_4',['SFML.hpp',['../Renderers_2SFML_2SFML_8hpp.html',1,'']]],
+  ['rigidbody_2ehpp_5',['RigidBody.hpp',['../RigidBody_8hpp.html',1,'']]]
 ];

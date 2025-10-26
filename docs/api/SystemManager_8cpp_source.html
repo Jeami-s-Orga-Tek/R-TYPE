@@ -133,36 +133,48 @@ $(function(){initNavTree('SystemManager_8cpp_source.html',''); initResizable(tru
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// }</span></div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
 <div class="foldopen" id="foldopen00034" data-start="{" data-end="}">
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classEngine_1_1SystemManager.html#a9a7ad23946ba01cbfeaf747933780cb8">   34</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classEngine_1_1SystemManager.html#a9a7ad23946ba01cbfeaf747933780cb8">Engine::SystemManager::entityDestroyed</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Entity</a> entity)</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pair : <a class="code hl_variable" href="classEngine_1_1SystemManager.html#acb097c5f1e04106ec4a63703eadf6e71">systems</a>) {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keyword">const</span> std::shared_ptr&lt;Engine::System&gt; &amp;system = pair.second;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        system-&gt;entities.erase(entity);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classEngine_1_1SystemManager.html#a6815cc547b3d4313efa8646bd4b969cb">   34</a></span>std::vector&lt;std::string&gt; <a class="code hl_function" href="classEngine_1_1SystemManager.html#a6815cc547b3d4313efa8646bd4b969cb">Engine::SystemManager::getSystemNames</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    std::vector&lt;std::string&gt; names {};</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;pair : <a class="code hl_variable" href="classEngine_1_1SystemManager.html#acb097c5f1e04106ec4a63703eadf6e71">systems</a>) {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        names.push_back(pair.first);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    }</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>}</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">return</span> names;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>}</div>
 </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="foldopen" id="foldopen00042" data-start="{" data-end="}">
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classEngine_1_1SystemManager.html#a0c133e7e66b83789b447c4e99b5231b8">   42</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classEngine_1_1SystemManager.html#a0c133e7e66b83789b447c4e99b5231b8">Engine::SystemManager::entitySignatureChanged</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Entity</a> entity, <a class="code hl_typedef" href="namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5">Signature</a> entity_signature)</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>{</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pair : systems) {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">const</span> std::string &amp;type = pair.first;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classEngine_1_1SystemManager.html#a9a7ad23946ba01cbfeaf747933780cb8">   43</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classEngine_1_1SystemManager.html#a9a7ad23946ba01cbfeaf747933780cb8">Engine::SystemManager::entityDestroyed</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Entity</a> entity)</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>{</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pair : systems) {</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keyword">const</span> std::shared_ptr&lt;Engine::System&gt; &amp;system = pair.second;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5">Engine::Signature</a> &amp;system_signature = signatures[type];</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordflow">if</span> ((entity_signature &amp; system_signature) == system_signature) {</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            system-&gt;entities.insert(entity);</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            system-&gt;entities.erase(entity);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>}</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        system-&gt;entities.erase(entity);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    }</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
 </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classEngine_1_1SystemManager.html#a0c133e7e66b83789b447c4e99b5231b8">   51</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classEngine_1_1SystemManager.html#a0c133e7e66b83789b447c4e99b5231b8">Engine::SystemManager::entitySignatureChanged</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Entity</a> entity, <a class="code hl_typedef" href="namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5">Signature</a> entity_signature)</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>{</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pair : systems) {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">const</span> std::string &amp;type = pair.first;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keyword">const</span> std::shared_ptr&lt;Engine::System&gt; &amp;system = pair.second;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5">Engine::Signature</a> &amp;system_signature = signatures[type];</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordflow">if</span> ((entity_signature &amp; system_signature) == system_signature) {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            system-&gt;entities.insert(entity);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            system-&gt;entities.erase(entity);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        }</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    }</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
+</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
 <div class="ttc" id="aSystemManager_8hpp_html"><div class="ttname"><a href="SystemManager_8hpp.html">SystemManager.hpp</a></div></div>
-<div class="ttc" id="aclassEngine_1_1SystemManager_html_a0c133e7e66b83789b447c4e99b5231b8"><div class="ttname"><a href="classEngine_1_1SystemManager.html#a0c133e7e66b83789b447c4e99b5231b8">Engine::SystemManager::entitySignatureChanged</a></div><div class="ttdeci">void entitySignatureChanged(Entity entity, Signature entity_signature)</div><div class="ttdef"><b>Definition</b> <a href="#l00042">SystemManager.cpp:42</a></div></div>
-<div class="ttc" id="aclassEngine_1_1SystemManager_html_a9a7ad23946ba01cbfeaf747933780cb8"><div class="ttname"><a href="classEngine_1_1SystemManager.html#a9a7ad23946ba01cbfeaf747933780cb8">Engine::SystemManager::entityDestroyed</a></div><div class="ttdeci">void entityDestroyed(Entity entity)</div><div class="ttdef"><b>Definition</b> <a href="#l00034">SystemManager.cpp:34</a></div></div>
-<div class="ttc" id="aclassEngine_1_1SystemManager_html_acb097c5f1e04106ec4a63703eadf6e71"><div class="ttname"><a href="classEngine_1_1SystemManager.html#acb097c5f1e04106ec4a63703eadf6e71">Engine::SystemManager::systems</a></div><div class="ttdeci">std::unordered_map&lt; std::string, std::shared_ptr&lt; System &gt; &gt; systems</div><div class="ttdef"><b>Definition</b> <a href="SystemManager_8hpp_source.html#l00039">SystemManager.hpp:39</a></div></div>
+<div class="ttc" id="aclassEngine_1_1SystemManager_html_a0c133e7e66b83789b447c4e99b5231b8"><div class="ttname"><a href="classEngine_1_1SystemManager.html#a0c133e7e66b83789b447c4e99b5231b8">Engine::SystemManager::entitySignatureChanged</a></div><div class="ttdeci">void entitySignatureChanged(Entity entity, Signature entity_signature)</div><div class="ttdef"><b>Definition</b> <a href="#l00051">SystemManager.cpp:51</a></div></div>
+<div class="ttc" id="aclassEngine_1_1SystemManager_html_a6815cc547b3d4313efa8646bd4b969cb"><div class="ttname"><a href="classEngine_1_1SystemManager.html#a6815cc547b3d4313efa8646bd4b969cb">Engine::SystemManager::getSystemNames</a></div><div class="ttdeci">std::vector&lt; std::string &gt; getSystemNames() const</div><div class="ttdef"><b>Definition</b> <a href="#l00034">SystemManager.cpp:34</a></div></div>
+<div class="ttc" id="aclassEngine_1_1SystemManager_html_a9a7ad23946ba01cbfeaf747933780cb8"><div class="ttname"><a href="classEngine_1_1SystemManager.html#a9a7ad23946ba01cbfeaf747933780cb8">Engine::SystemManager::entityDestroyed</a></div><div class="ttdeci">void entityDestroyed(Entity entity)</div><div class="ttdef"><b>Definition</b> <a href="#l00043">SystemManager.cpp:43</a></div></div>
+<div class="ttc" id="aclassEngine_1_1SystemManager_html_acb097c5f1e04106ec4a63703eadf6e71"><div class="ttname"><a href="classEngine_1_1SystemManager.html#acb097c5f1e04106ec4a63703eadf6e71">Engine::SystemManager::systems</a></div><div class="ttdeci">std::unordered_map&lt; std::string, std::shared_ptr&lt; System &gt; &gt; systems</div><div class="ttdef"><b>Definition</b> <a href="SystemManager_8hpp_source.html#l00042">SystemManager.hpp:42</a></div></div>
 <div class="ttc" id="anamespaceEngine_html_ab48188ee1ed7fa9c2264fa597299d4b5"><div class="ttname"><a href="namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5">Engine::Signature</a></div><div class="ttdeci">std::bitset&lt; MAX_COMPONENTS &gt; Signature</div><div class="ttdef"><b>Definition</b> <a href="Entity_8hpp_source.html#l00022">Entity.hpp:22</a></div></div>
 <div class="ttc" id="anamespaceEngine_html_ac461a3f8921baac5988df8684459f56f"><div class="ttname"><a href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Engine::Entity</a></div><div class="ttdeci">std::uint32_t Entity</div><div class="ttdef"><b>Definition</b> <a href="Entity_8hpp_source.html#l00018">Entity.hpp:18</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

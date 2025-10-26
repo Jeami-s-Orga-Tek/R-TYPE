@@ -1,8 +1,0 @@
-<map id="RtypeServer::RoomManager::roomExists" name="RtypeServer::RoomManager::roomExists">
-<area shape="rect" id="Node000001" title=" " alt="" coords="430,5,617,48"/>
-<area shape="rect" id="Node000002" href="$classRtypeServer_1_1UdpServer.html#a8edbc5c835a5d23856953e06f7877b8d" title=" " alt="" coords="5,5,170,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="414,26,382,25,218,25,170,26,170,21,218,20,382,20,414,21"/>
-<area shape="rect" id="Node000003" href="$classRtypeServer_1_1UdpServer.html#ad6474bca80e8ede6d6bbf8ff3524c05e" title=" " alt="" coords="218,35,382,77"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="415,44,383,48,382,43,415,38"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="202,45,170,41,170,35,203,40"/>
-</map>

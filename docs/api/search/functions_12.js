@@ -1,22 +1,4 @@
 var searchData=
 [
-  ['_7ebutton_0',['~Button',['../classButton.html#ae377287a536a7f86f69ba5ad81aabb05',1,'Button']]],
-  ['_7econtrolsconfig_1',['~ControlsConfig',['../classControlsConfig.html#aca05ad8402e93a8ff44f211c07cfa610',1,'ControlsConfig']]],
-  ['_7eentitymanager_2',['~EntityManager',['../classEngine_1_1EntityManager.html#a21274b1e4a7dca1e08a49be0405c99f0',1,'Engine::EntityManager']]],
-  ['_7eerrorserver_3',['~ErrorServer',['../classErrorServer.html#a625530e1b37b0e43bd46b4af227f4b3c',1,'ErrorServer']]],
-  ['_7egamemanager_4',['~GameManager',['../classGameManager.html#a6803f6a7f46495ac5dac616b3c4cc8a9',1,'GameManager']]],
-  ['_7eicomponentarray_5',['~IComponentArray',['../classEngine_1_1IComponentArray.html#a40257a7a7ea2cb3dd995d1ece2d99727',1,'Engine::IComponentArray']]],
-  ['_7elaunch_6',['~Launch',['../classLaunch.html#a4f8d4b1b4cc63f418c05aa942cedaaf0',1,'Launch']]],
-  ['_7eleaderboard_7',['~Leaderboard',['../classLeaderboard.html#a39b202bf6c74a8a01bb21692fe2986fe',1,'Leaderboard']]],
-  ['_7elobby_8',['~Lobby',['../classLobby.html#a35c0bcd2e39b4059e1203b14a657e9e4',1,'Lobby']]],
-  ['_7elocker_9',['~Locker',['../classLocker.html#ae9572fa9116523c36eff6e1fe480436e',1,'Locker']]],
-  ['_7emenu_10',['~Menu',['../classMenu.html#aec66e8695cecd5e88732d20ffd027921',1,'Menu']]],
-  ['_7enetworkmanager_11',['~NetworkManager',['../classEngine_1_1NetworkManager.html#ad1bab063120d630bcf420382024d4f24',1,'Engine::NetworkManager']]],
-  ['_7eparambutton_12',['~ParamButton',['../classParamButton.html#a41d36222e6c9647f523b410d4ff74ce1',1,'ParamButton']]],
-  ['_7eparameters_13',['~Parameters',['../classParameters.html#ac98709c00479386d18d1759965d7d00d',1,'Parameters']]],
-  ['_7eparticlesystem_14',['~ParticleSystem',['../classParticleSystem.html#af03943bfe7941afbe00a675fa09fd81e',1,'ParticleSystem']]],
-  ['_7eplayer_15',['~Player',['../classPlayer.html#a40d3c47b65e9652c363a8fde41f7bbf5',1,'Player']]],
-  ['_7erenderer_16',['~Renderer',['../classEngine_1_1Renderer.html#ac16f3642b6dcfef48d3f0c346a45ab50',1,'Engine::Renderer']]],
-  ['_7esfml_17',['~SFML',['../classEngine_1_1Renderers_1_1SFML.html#ae8aa2eedbc8c9c09505cc293455aee85',1,'Engine::Renderers::SFML']]],
-  ['_7eusername_18',['~Username',['../classUsername.html#a75bf52b9ac4780170078d31aecf0f889',1,'Username']]]
+  ['what_0',['what',['../classEngine_1_1ComponentArrayError.html#aa44022d6d49709258178854f92136b52',1,'Engine::ComponentArrayError::what()'],['../classEngine_1_1ComponentManagerError.html#a59c05334432dadee1320b03472de4e64',1,'Engine::ComponentManagerError::what()'],['../classEngine_1_1EntityManagerError.html#a5420687e1b040be9280cbc70bf2ac0db',1,'Engine::EntityManagerError::what()'],['../classEngine_1_1SystemManagerError.html#aab412f51bc66d606fa15f1c3037e8c30',1,'Engine::SystemManagerError::what()'],['../classEngine_1_1Systems_1_1SpriteError.html#a07f37e769e7b0e6b2a9898d5891dfa7c',1,'Engine::Systems::SpriteError::what()']]]
 ];

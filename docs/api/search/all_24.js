@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🧭_20project_20architecture_20mermaid_0',['🧭 Project Architecture (Mermaid)',['../index.html#autotoc_md23',1,'']]]
+  ['🧪_20quality_20ci_0',['🧪 Quality &amp; CI',['../index.html#autotoc_md18',1,'']]]
 ];

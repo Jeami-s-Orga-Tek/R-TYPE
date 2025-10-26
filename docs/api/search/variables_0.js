@@ -10,5 +10,6 @@ var searchData=
   ['alpha_7',['alpha',['../structParticle.html#a14af67b37c2acfcbaffcc766b660a5f6',1,'Particle']]],
   ['applybuttonlocker_8',['applyButtonLocker',['../classGameManager.html#ac7e226eb0bbb1f5cc0c252624f606037',1,'GameManager']]],
   ['applyresolutionbutton_9',['applyResolutionButton',['../classGameManager.html#a9177c5fb62fdc8338d45d912f878f078',1,'GameManager']]],
-  ['available_5fentities_10',['available_entities',['../classEngine_1_1EntityManager.html#a7578dc7f407ce6e03e21226fcff62aab',1,'Engine::EntityManager']]]
+  ['audio_5fplayer_10',['audio_player',['../classGameManager.html#ad391b54cacdbef81247ddc001cdb9bf5',1,'GameManager']]],
+  ['available_5fentities_11',['available_entities',['../classEngine_1_1EntityManager.html#a7578dc7f407ce6e03e21226fcff62aab',1,'Engine::EntityManager']]]
 ];

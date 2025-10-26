@@ -137,10 +137,18 @@ Prerequisites (Linux — e.g., Fedora 41)</h2>
 <div class="line"># Boost is fetched automatically for the server via CPM.cmake</div>
 </div><!-- fragment --><p><em>Ubuntu/Debian:</em> </p><div class="fragment"><div class="line">sudo apt-get install cmake ninja-build g++ libsfml-dev</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
+Prerequisites &amp; Build (Windows — Chocolatey)</h2>
+<div class="fragment"><div class="line">choco install cmake python ninja mingw</div>
+<div class="line">git clone https://github.com/Jeami-s-Orga-Tek/R-TYPE.git</div>
+<div class="line">cd R-TYPE</div>
+<div class="line">cmake -S . -B build -G &quot;Ninja&quot; -DCMAKE_BUILD_TYPE=Release</div>
+<div class="line">cmake --build build --config Release --parallel</div>
+<div class="line">cp build\_deps\sfml-src\extlibs\bin\x64\openal32.dll .</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
 Build</h2>
 <p>From the <b>repository root</b>: </p><div class="fragment"><div class="line">./ci/build.sh</div>
 <div class="line"># ➜ produces ./r-type_server and ./r-type_client at the repo root</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
 Run the server</h2>
 <div class="fragment"><div class="line">./r-type_server</div>
 </div><!-- fragment --><ul>
@@ -148,7 +156,7 @@ Run the server</h2>
 <li>Async I/O loop, session handling, ping/heartbeat.</li>
 <li>Files: <code><a class="el" href="Server_2src_2main_8cpp.html">Server/src/main.cpp</a></code>, <code>Server/src/net/UdpServer.*</code>, <code>Server/src/util/Log.hpp</code>.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md9"></a>
 Run the client</h2>
 <div class="fragment"><div class="line">./r-type_client</div>
 </div><!-- fragment --><ul>
@@ -156,7 +164,7 @@ Run the client</h2>
 <li><b>Important:</b> run <b>from the project root</b> so it can access <code>assets/</code>, <code>sound/</code>, <code>sprite/</code>.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md10"></a>
+<h1><a class="anchor" id="autotoc_md11"></a>
 🎮 Controls &amp; Audio</h1>
 <ul>
 <li><b>Movement:</b> <b>← → ↑ ↓ (configurable in Settings)</b></li>
@@ -166,9 +174,9 @@ Run the client</h2>
 <li><b>Fonts:</b> <code>assets/r-type.otf</code>, <code>assets/retro.ttf</code>.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md12"></a>
+<h1><a class="anchor" id="autotoc_md13"></a>
 🧱 Architecture</h1>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 ECS (Entity‑Component‑System)</h2>
 <ul>
 <li><b>Entities:</b> numeric identifiers.</li>
@@ -176,14 +184,14 @@ ECS (Entity‑Component‑System)</h2>
 <li><b>Systems:</b> independent logic (e.g., <code>PlayerControl</code>, <code>Physics</code>, <code>Render</code>).</li>
 <li><b>Mediator/Event bus:</b> decoupled communication between systems.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="autotoc_md15"></a>
 Networking (binary UDP)</h2>
 <ul>
 <li><b>Transport:</b> UDP (binary packets).</li>
 <li><b>Handshake:</b> <code>Hello</code> → <code>Welcome {playerId, roomId, baselineTick}</code>.</li>
 <li><b>Sessions &amp; timeouts:</b> via heartbeat/ping.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Build system</h2>
 <ul>
 <li><b>C++17</b>, <b>CMake ≥ 3.10</b>, <b>Ninja</b>.</li>
@@ -192,14 +200,14 @@ Build system</h2>
 <li><b>Output:</b> <code>CMAKE_RUNTIME_OUTPUT_DIRECTORY = &lt;repo root&gt;</code> → binaries at the top level.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md17"></a>
+<h1><a class="anchor" id="autotoc_md18"></a>
 🧪 Quality &amp; CI</h1>
 <ul>
 <li><b>GitHub Actions CI:</b> Linux/Windows builds, artifacts, formatting checks (see <code>.github/workflows/ci.yml</code>, <code>CI.md</code>).</li>
 <li>Scripts: <code>./ci/build.sh</code>, <code>./ci/test.sh</code>, <code>./ci/check_clang_format.sh</code>.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md19"></a>
+<h1><a class="anchor" id="autotoc_md20"></a>
 📐 Gameplay (prototype)</h1>
 <ul>
 <li><b>Starfield</b> (scrolling space background, time-step).</li>
@@ -208,7 +216,7 @@ Build system</h2>
 <li>Potential extensions: patterns, boss, evolving weapons, “Force,” etc.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md21"></a>
+<h1><a class="anchor" id="autotoc_md22"></a>
 ⚙️ Runtime &amp; Networking Tips</h1>
 <ul>
 <li>Run <b>from the repo root</b> so the client loads resources.</li>
@@ -216,7 +224,7 @@ Build system</h2>
 <li>Remote connection: change IP/port in the UI (or adjust in <code><a class="el" href="GameTypes_8cpp.html">GameTypes.cpp</a></code> if needed).</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md23"></a>
+<h1><a class="anchor" id="autotoc_md24"></a>
 🧭 Project Architecture (Mermaid)</h1>
 <div class="fragment"><div class="line">classDiagram</div>
 <div class="line">direction LR</div>
@@ -336,14 +344,14 @@ Build system</h2>
 <div class="line">    ComponentManager o-- ComponentArrayT</div>
 <div class="line">    UdpServer *-- Protocol</div>
 </div><!-- fragment --> <hr  />
-<h1><a class="anchor" id="autotoc_md25"></a>
+<h1><a class="anchor" id="autotoc_md26"></a>
 🔒 Accessibility &amp; Docs</h1>
 <ul>
 <li><b>Accessibility:</b> color options, full remapping, readability.</li>
 <li><b>Documentation:</b> this <b>README</b>, plus a Mermaid architecture diagram.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md27"></a>
+<h1><a class="anchor" id="autotoc_md28"></a>
 🧩 Troubleshooting (FAQ)</h1>
 <ul>
 <li><b>SFML not found:</b> install <code>SFML-devel</code> (Fedora) / <code>libsfml-dev</code> (Debian/Ubuntu).</li>
@@ -352,10 +360,10 @@ Build system</h2>
 <li><b>“Connection refused”:</b> check the server is listening (correct port, UDP allowed).</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md29"></a>
+<h1><a class="anchor" id="autotoc_md30"></a>
 🤝 Credits &amp; License</h1>
 <ul>
-<li><b>Authors:</b> Tiziano BLANC, Edouard DUPUCH, Olivier DUBO, and Valentin .</li>
+<li><b>Authors:</b> Tiziano BLANC, Edouard DUPUCH, Olivier DUBO, and Valentin ROUSSEAU.</li>
 <li><b>Sprites &amp; inspirations:</b> R‑Type universe. </li>
 </ul>
 </div></div><!-- PageDoc -->

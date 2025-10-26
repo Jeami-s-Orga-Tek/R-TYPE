@@ -1,5 +1,5 @@
 <map id="Engine::Renderer" name="Engine::Renderer">
-<area shape="rect" id="Node000001" title=" " alt="" coords="27,5,147,288"/>
-<area shape="rect" id="Node000002" href="$classEngine_1_1Renderers_1_1SFML.html" title=" " alt="" coords="5,336,169,725"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,303,90,336,85,336,85,303"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="20,5,155,288"/>
+<area shape="rect" id="Node000002" href="$classEngine_1_1Renderers_1_1SFML.html" title=" " alt="" coords="5,336,169,704"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,303,90,337,85,337,85,303"/>
 </map>

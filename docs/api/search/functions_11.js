@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['what_0',['what',['../classEngine_1_1ComponentArrayError.html#aa44022d6d49709258178854f92136b52',1,'Engine::ComponentArrayError::what()'],['../classEngine_1_1ComponentManagerError.html#a59c05334432dadee1320b03472de4e64',1,'Engine::ComponentManagerError::what()'],['../classEngine_1_1EntityManagerError.html#a5420687e1b040be9280cbc70bf2ac0db',1,'Engine::EntityManagerError::what()'],['../classEngine_1_1SystemManagerError.html#aab412f51bc66d606fa15f1c3037e8c30',1,'Engine::SystemManagerError::what()'],['../classEngine_1_1Systems_1_1SpriteError.html#a07f37e769e7b0e6b2a9898d5891dfa7c',1,'Engine::Systems::SpriteError::what()']]]
+  ['vec2_0',['Vec2',['../classEngine_1_1Utils_1_1Vec2.html#a3b2413c88a96d70e2109fceded425293',1,'Engine::Utils::Vec2::Vec2()=default'],['../classEngine_1_1Utils_1_1Vec2.html#a62e631c2d63bf00f82331a296d663ca2',1,'Engine::Utils::Vec2::Vec2(float x, float y)']]],
+  ['vec2int_1',['Vec2Int',['../classEngine_1_1Utils_1_1Vec2Int.html#a5e6a6293b70c0d08c4a8c94d20c367c0',1,'Engine::Utils::Vec2Int::Vec2Int()=default'],['../classEngine_1_1Utils_1_1Vec2Int.html#a94ac66ea65e78253e61a287729514f7d',1,'Engine::Utils::Vec2Int::Vec2Int(int x, int y)']]],
+  ['vec2uint_2',['Vec2UInt',['../classEngine_1_1Utils_1_1Vec2UInt.html#a92725b2f89e1ed0cbe3610acd015f1a5',1,'Engine::Utils::Vec2UInt::Vec2UInt()=default'],['../classEngine_1_1Utils_1_1Vec2UInt.html#a13f95f4a2607325126ce991a9dc733c0',1,'Engine::Utils::Vec2UInt::Vec2UInt(unsigned int x, unsigned int y)']]]
 ];

@@ -137,60 +137,61 @@ $(function(){initNavTree('EntityManager_8cpp_source.html',''); initResizable(tru
 <div class="foldopen" id="foldopen00032" data-start="{" data-end="}">
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classEngine_1_1EntityManager.html#aae19046159dd167a47132548db48e408">   32</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classEngine_1_1EntityManager.html#aae19046159dd167a47132548db48e408">Engine::EntityManager::destroyEntity</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Engine::Entity</a> entity)</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="comment">// if (entity &gt; entity_count)</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="comment">//     throw std::runtime_error(&quot;Trying to delete non-existent entity !!!!&quot;);</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    signatures[entity].reset();</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    available_entities.push(entity);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    entity_count--;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>}</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordflow">if</span> (entity &gt; entity_count)</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="comment">//     throw std::runtime_error(&quot;Trying to delete non-existent entity !!!!&quot;);</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    signatures[entity].reset();</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    available_entities.push(entity);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    entity_count--;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>}</div>
 </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="foldopen" id="foldopen00042" data-start="{" data-end="}">
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classEngine_1_1EntityManager.html#a542c1c5ea6107dd8122e7b3d69e2001a">   42</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classEngine_1_1EntityManager.html#a542c1c5ea6107dd8122e7b3d69e2001a">Engine::EntityManager::setSignature</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Entity</a> entity, <a class="code hl_typedef" href="namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5">Signature</a> signature)</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>{</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="comment">// if (entity &gt; entity_count)</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">//     throw std::runtime_error(&quot;Trying to set sign to non-existent entity !!!!&quot;);</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    signatures[entity] = signature;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classEngine_1_1EntityManager.html#a542c1c5ea6107dd8122e7b3d69e2001a">   43</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classEngine_1_1EntityManager.html#a542c1c5ea6107dd8122e7b3d69e2001a">Engine::EntityManager::setSignature</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Entity</a> entity, <a class="code hl_typedef" href="namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5">Signature</a> signature)</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>{</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">// if (entity &gt; entity_count)</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">//     throw std::runtime_error(&quot;Trying to set sign to non-existent entity !!!!&quot;);</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    signatures[entity] = signature;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
 </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classEngine_1_1EntityManager.html#afe054e1b5e12cf3e533f779ec2f8bde2">   50</a></span><a class="code hl_typedef" href="namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5">Engine::Signature</a> <a class="code hl_function" href="classEngine_1_1EntityManager.html#afe054e1b5e12cf3e533f779ec2f8bde2">Engine::EntityManager::getSignature</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Entity</a> entity)</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>{</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// std::cout &lt;&lt; &quot;sign : &quot; &lt;&lt; entity &lt;&lt; std::endl;</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="comment">// if (entity &gt; entity_count)</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">//     throw std::runtime_error(&quot;Trying to get sign to non-existent entity !!!!&quot;);</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">return</span> (signatures[entity]);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classEngine_1_1EntityManager.html#afe054e1b5e12cf3e533f779ec2f8bde2">   51</a></span><a class="code hl_typedef" href="namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5">Engine::Signature</a> <a class="code hl_function" href="classEngine_1_1EntityManager.html#afe054e1b5e12cf3e533f779ec2f8bde2">Engine::EntityManager::getSignature</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Entity</a> entity)</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>{</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// std::cout &lt;&lt; &quot;sign : &quot; &lt;&lt; entity &lt;&lt; std::endl;</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// if (entity &gt; entity_count)</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">//     throw std::runtime_error(&quot;Trying to get sign to non-existent entity !!!!&quot;);</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordflow">return</span> (signatures[entity]);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}</div>
 </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classEngine_1_1EntityManager.html#a053e70e5608e8d4dd5acefb803201d74">   60</a></span><span class="keywordtype">size_t</span> <a class="code hl_function" href="classEngine_1_1EntityManager.html#a053e70e5608e8d4dd5acefb803201d74">Engine::EntityManager::getEntityCount</a>()</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>{</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordflow">return</span> (entity_count);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="foldopen" id="foldopen00061" data-start="{" data-end="}">
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classEngine_1_1EntityManager.html#a053e70e5608e8d4dd5acefb803201d74">   61</a></span><span class="keywordtype">size_t</span> <a class="code hl_function" href="classEngine_1_1EntityManager.html#a053e70e5608e8d4dd5acefb803201d74">Engine::EntityManager::getEntityCount</a>()</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>{</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">return</span> (entity_count);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
 </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="foldopen" id="foldopen00065" data-start="{" data-end="}">
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classEngine_1_1EntityManager.html#a21274b1e4a7dca1e08a49be0405c99f0">   65</a></span><a class="code hl_function" href="classEngine_1_1EntityManager.html#a21274b1e4a7dca1e08a49be0405c99f0">Engine::EntityManager::~EntityManager</a>()</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>{</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classEngine_1_1EntityManager.html#a21274b1e4a7dca1e08a49be0405c99f0">   66</a></span><a class="code hl_function" href="classEngine_1_1EntityManager.html#a21274b1e4a7dca1e08a49be0405c99f0">Engine::EntityManager::~EntityManager</a>()</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>{</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}</div>
 </div>
 <div class="ttc" id="aEntityManager_8hpp_html"><div class="ttname"><a href="EntityManager_8hpp.html">EntityManager.hpp</a></div></div>
 <div class="ttc" id="aEntity_8hpp_html_a0b7e155f796ed5e7b49b0f44867135ee"><div class="ttname"><a href="Entity_8hpp.html#a0b7e155f796ed5e7b49b0f44867135ee">MAX_ENTITIES</a></div><div class="ttdeci">#define MAX_ENTITIES</div><div class="ttdef"><b>Definition</b> <a href="Entity_8hpp_source.html#l00014">Entity.hpp:14</a></div></div>
 <div class="ttc" id="aclassEngine_1_1EntityManagerError_html"><div class="ttname"><a href="classEngine_1_1EntityManagerError.html">Engine::EntityManagerError</a></div><div class="ttdef"><b>Definition</b> <a href="EntityManager_8hpp_source.html#l00017">EntityManager.hpp:18</a></div></div>
-<div class="ttc" id="aclassEngine_1_1EntityManager_html_a053e70e5608e8d4dd5acefb803201d74"><div class="ttname"><a href="classEngine_1_1EntityManager.html#a053e70e5608e8d4dd5acefb803201d74">Engine::EntityManager::getEntityCount</a></div><div class="ttdeci">size_t getEntityCount()</div><div class="ttdef"><b>Definition</b> <a href="#l00060">EntityManager.cpp:60</a></div></div>
-<div class="ttc" id="aclassEngine_1_1EntityManager_html_a21274b1e4a7dca1e08a49be0405c99f0"><div class="ttname"><a href="classEngine_1_1EntityManager.html#a21274b1e4a7dca1e08a49be0405c99f0">Engine::EntityManager::~EntityManager</a></div><div class="ttdeci">~EntityManager()</div><div class="ttdef"><b>Definition</b> <a href="#l00065">EntityManager.cpp:65</a></div></div>
-<div class="ttc" id="aclassEngine_1_1EntityManager_html_a542c1c5ea6107dd8122e7b3d69e2001a"><div class="ttname"><a href="classEngine_1_1EntityManager.html#a542c1c5ea6107dd8122e7b3d69e2001a">Engine::EntityManager::setSignature</a></div><div class="ttdeci">void setSignature(Entity entity, Signature signature)</div><div class="ttdef"><b>Definition</b> <a href="#l00042">EntityManager.cpp:42</a></div></div>
+<div class="ttc" id="aclassEngine_1_1EntityManager_html_a053e70e5608e8d4dd5acefb803201d74"><div class="ttname"><a href="classEngine_1_1EntityManager.html#a053e70e5608e8d4dd5acefb803201d74">Engine::EntityManager::getEntityCount</a></div><div class="ttdeci">size_t getEntityCount()</div><div class="ttdef"><b>Definition</b> <a href="#l00061">EntityManager.cpp:61</a></div></div>
+<div class="ttc" id="aclassEngine_1_1EntityManager_html_a21274b1e4a7dca1e08a49be0405c99f0"><div class="ttname"><a href="classEngine_1_1EntityManager.html#a21274b1e4a7dca1e08a49be0405c99f0">Engine::EntityManager::~EntityManager</a></div><div class="ttdeci">~EntityManager()</div><div class="ttdef"><b>Definition</b> <a href="#l00066">EntityManager.cpp:66</a></div></div>
+<div class="ttc" id="aclassEngine_1_1EntityManager_html_a542c1c5ea6107dd8122e7b3d69e2001a"><div class="ttname"><a href="classEngine_1_1EntityManager.html#a542c1c5ea6107dd8122e7b3d69e2001a">Engine::EntityManager::setSignature</a></div><div class="ttdeci">void setSignature(Entity entity, Signature signature)</div><div class="ttdef"><b>Definition</b> <a href="#l00043">EntityManager.cpp:43</a></div></div>
 <div class="ttc" id="aclassEngine_1_1EntityManager_html_a7578dc7f407ce6e03e21226fcff62aab"><div class="ttname"><a href="classEngine_1_1EntityManager.html#a7578dc7f407ce6e03e21226fcff62aab">Engine::EntityManager::available_entities</a></div><div class="ttdeci">std::queue&lt; Entity &gt; available_entities</div><div class="ttdef"><b>Definition</b> <a href="EntityManager_8hpp_source.html#l00040">EntityManager.hpp:40</a></div></div>
 <div class="ttc" id="aclassEngine_1_1EntityManager_html_a8223065ec002ce6ca66f1f31521c3e3b"><div class="ttname"><a href="classEngine_1_1EntityManager.html#a8223065ec002ce6ca66f1f31521c3e3b">Engine::EntityManager::createEntity</a></div><div class="ttdeci">Entity createEntity()</div><div class="ttdef"><b>Definition</b> <a href="#l00020">EntityManager.cpp:20</a></div></div>
 <div class="ttc" id="aclassEngine_1_1EntityManager_html_aae19046159dd167a47132548db48e408"><div class="ttname"><a href="classEngine_1_1EntityManager.html#aae19046159dd167a47132548db48e408">Engine::EntityManager::destroyEntity</a></div><div class="ttdeci">void destroyEntity(Entity entity)</div><div class="ttdef"><b>Definition</b> <a href="#l00032">EntityManager.cpp:32</a></div></div>
 <div class="ttc" id="aclassEngine_1_1EntityManager_html_adf85601170f8022319372eb171efd977"><div class="ttname"><a href="classEngine_1_1EntityManager.html#adf85601170f8022319372eb171efd977">Engine::EntityManager::EntityManager</a></div><div class="ttdeci">EntityManager()</div><div class="ttdef"><b>Definition</b> <a href="#l00013">EntityManager.cpp:13</a></div></div>
-<div class="ttc" id="aclassEngine_1_1EntityManager_html_afe054e1b5e12cf3e533f779ec2f8bde2"><div class="ttname"><a href="classEngine_1_1EntityManager.html#afe054e1b5e12cf3e533f779ec2f8bde2">Engine::EntityManager::getSignature</a></div><div class="ttdeci">Signature getSignature(Entity entity)</div><div class="ttdef"><b>Definition</b> <a href="#l00050">EntityManager.cpp:50</a></div></div>
+<div class="ttc" id="aclassEngine_1_1EntityManager_html_afe054e1b5e12cf3e533f779ec2f8bde2"><div class="ttname"><a href="classEngine_1_1EntityManager.html#afe054e1b5e12cf3e533f779ec2f8bde2">Engine::EntityManager::getSignature</a></div><div class="ttdeci">Signature getSignature(Entity entity)</div><div class="ttdef"><b>Definition</b> <a href="#l00051">EntityManager.cpp:51</a></div></div>
 <div class="ttc" id="anamespaceEngine_html_ab48188ee1ed7fa9c2264fa597299d4b5"><div class="ttname"><a href="namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5">Engine::Signature</a></div><div class="ttdeci">std::bitset&lt; MAX_COMPONENTS &gt; Signature</div><div class="ttdef"><b>Definition</b> <a href="Entity_8hpp_source.html#l00022">Entity.hpp:22</a></div></div>
 <div class="ttc" id="anamespaceEngine_html_ac461a3f8921baac5988df8684459f56f"><div class="ttname"><a href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Engine::Entity</a></div><div class="ttdeci">std::uint32_t Entity</div><div class="ttdef"><b>Definition</b> <a href="Entity_8hpp_source.html#l00018">Entity.hpp:18</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

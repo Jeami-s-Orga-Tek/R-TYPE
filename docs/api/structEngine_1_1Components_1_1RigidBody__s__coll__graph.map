@@ -1,5 +1,5 @@
 <map id="Engine::Components::RigidBody_s" name="Engine::Components::RigidBody_s">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,304,140,389"/>
-<area shape="rect" id="Node000002" href="$classEngine_1_1Utils_1_1Vec2.html" title=" " alt="" coords="10,5,135,224"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,224,75,287,70,287,70,224"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,325,169,411"/>
+<area shape="rect" id="Node000002" href="$classEngine_1_1Utils_1_1Vec2.html" title=" " alt="" coords="25,5,150,245"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,245,90,308,85,308,85,245"/>
 </map>
