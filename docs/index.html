@@ -133,9 +133,11 @@
         <a class="btn" href="api/index.html" target="_blank" rel="noopener">API Docs</a>
       </div>
       <div class="kpis">
-        <div class="kpi"><h3>6 681</h3><p>Lines of C/C++</p></div>
-        <div class="kpi"><h3>23</h3><p>.cpp files</p></div>
-        <div class="kpi"><h3>42</h3><p>headers</p></div>
+        <div class="kpi"><h3>8 277</h3><p>Lines of C/C++ (.cpp + .hpp)</p></div>
+        <div class="kpi"><h3>4 789</h3><p>Implementation LOC (.cpp)</p></div>
+        <div class="kpi"><h3>3 488</h3><p>Header LOC (.hpp)</p></div>
+        <div class="kpi"><h3>28</h3><p>.cpp files</p></div>
+        <div class="kpi"><h3>53</h3><p>Headers (.hpp)</p></div>
         <div class="kpi"><h3>60 FPS</h3><p>Menu & gameplay</p></div>
       </div>
     </div>
@@ -188,11 +190,10 @@
         </div>
         <div class="card">
           <h3>Linux quick start</h3>
-          <pre><code>cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j
+          <pre><code>./ci/build.sh
 ./r-type_server &
 ./r-type_client</code></pre>
-          <p class="muted">Binaries are produced at the repository root (<code>CMAKE_RUNTIME_OUTPUT_DIRECTORY</code>).</p>
+          <p class="muted">Le script <code>./ci/build.sh</code> configure et compile (CMake + Ninja, Release) puis dépose les binaires à la racine du dépôt.</p>
         </div>
         <div class="card">
           <h3>Windows (MSVC, WIP)</h3>
@@ -225,24 +226,28 @@ r-type_client.exe</code></pre>
       ParticleSystem.hpp
       Player.hpp
       Username.hpp
-      Renderers/SFML.hpp
+      AudioPlayers/
+        SFML/SFML.hpp
+      Renderers/
+        SFML/SFML.hpp
     src/
-      Button.cpp
-      ControlsConfig.cpp
-      ErrorServer.cpp
-      GameTypes.cpp
-      Launch.cpp
-      Leaderboard.cpp
-      Lobby.cpp
-      Locker.cpp
-      Menu.cpp
-      ParamButton.cpp
-      Parameters.cpp
-      ParticleSystem.cpp
-      Player.cpp
-      Renderers/SFML.cpp
-      Username.cpp
-      main.cpp
+  Button.cpp
+  ControlsConfig.cpp
+  ErrorServer.cpp
+  GameTypes.cpp
+  Launch.cpp
+  Leaderboard.cpp
+  Lobby.cpp
+  Locker.cpp
+  Menu.cpp
+  ParamButton.cpp
+  Parameters.cpp
+  ParticleSystem.cpp
+  Player.cpp
+  AudioPlayers/SFML/SFML.cpp
+  Renderers/SFML/SFML.cpp
+  Username.cpp
+  main.cpp
   include_common/
     Collision.hpp
     ComponentArray.hpp
@@ -294,61 +299,90 @@ r-type_client.exe</code></pre>
       <h2>Architecture</h2>
       <div class="cols">
         <div class="card">
-          <div class="mermaid">
-flowchart LR
-  subgraph Client["Client (SFML)"]
-    Input["Input"] -->|events| ECS_Cl["ECS"]
-    Render["Renderers/SFML"] --> ECS_Cl
-    NetC["NetworkManager (UDP)"] --> ECS_Cl
-  end
-  subgraph Engine["Engine (libengine.so/.dll)"]
-    Mediator["Mediator"]
-    Entities["Entities"]:::dim
-    Components["Components"]:::dim
-    Systems["Systems"]:::dim
-    Mediator -.controls.-> Entities
-    Mediator -.controls.-> Components
-    Mediator -.controls.-> Systems
-  end
-  subgraph Server["Server"]
-    SMain["Main loop"] --> NetS["NetworkManager (UDP)"]
-    Auth["Authoritative rules (WIP)"] -.-> SMain
-  end
-  Client <--> Server
-  ECS_Cl -.uses.-> Engine
-  classDef dim fill:#0e1630,stroke:#1c2745,color:#cbd5e1;
-          </div>
-        </div>
-        <div class="card">
-          <h3>Messaging sketch</h3>
+          <h3>Handshake, Heartbeat & Replication</h3>
           <div class="mermaid">
 sequenceDiagram
-  participant C as Client
-  participant S as Server
-  rect rgb(16, 68, 151)
-    Note over C,S: Connect
-    C->>+S: HELLO
-    S-->>-C: WELCOME (id)
-  end
-  rect rgb(21, 128, 61)
-    Note over C,S: Lobby
-    C->>+S: JOIN(mode)
-    S-->>C: LOBBY_STATE
-    C->>S: READY
-    S-->>-C: GAME_START
-  end
-  rect rgb(194, 65, 12)
-    Note over C,S: Game Loop (16ms)
-    C->>+S: INPUT(keys)
-    S-->>-C: WORLD_STATE(entities)
-  end
-  rect rgb(107, 33, 168)
-    Note over C,S: Disconnect
-    C->>+S: BYE
-    S-->>-C: ACK
-  end
+autonumber
+participant Client
+participant Server
+participant Physics as "Physics engine"
+
+Client->>Server: HELLO
+Server-->>Client: WELCOME
+
+loop Heartbeat
+  Client->>Server: PING
+  Server-->>Client: PONG
+end
+
+Client->>Server: INPUT (tick n)
+Server->>Server: Update ECS systems (PlayerControl, Physics, Collision, Enemy)
+alt Using external engine
+  Server->>Physics: PhysicsUsingEngineSystem
+  Physics-->>Server: Positions, velocities
+else No engine
+  Server->>Server: PhysicsNoEngineSystem
+end
+
+Server-->>Client: ENTITY updates
+Server-->>Client: COMPONENT updates
+Server-->>Client: DESTROY events
           </div>
-          <p class="muted">Both sides use the same <code>NetworkManager</code> abstraction (Boost.Asio UDP).</p>
+          <p class="muted">Le client entame la connexion par un <strong>HELLO/WELCOME</strong>, maintient une boucle <strong>PING/PONG</strong> pour le heartbeat puis transmet les entrées horodatées. Le serveur traite l&rsquo;ECS, délègue éventuellement la physique à un plugin et réplique les entités, composants et destructions.</p>
+        </div>
+        <div class="card">
+          <h3>Panorama Client/Serveur/Physique</h3>
+          <div class="mermaid">
+flowchart LR
+
+  subgraph CLIENT[Client SFML]
+    ui[UI screens - Launch -> Menu -> Lobby -> Parameters]
+    controls[Controls config input remap]
+    netc[NetworkManager CLIENT]
+    medc[Mediator ECS core]
+    clientsys[Client systems - Render SoundPlayer DevConsole]
+    renderer[Renderer SFML]
+    audio[Audio player SFML]
+    clientcomp[Components - Transform Sprite Sound]
+
+    ui --> medc
+    controls --> netc
+    medc --> clientsys
+    medc --> clientcomp
+    clientsys --> renderer
+    clientsys --> audio
+    medc --> netc
+    netc --> medc
+  end
+
+  subgraph SERVER[Server Authoritative UDP]
+    gameserver[Game server]
+    nets[NetworkManager SERVER]
+    meds[Mediator ECS core]
+    serversys[Server systems - PlayerControl Physics Collision Enemy]
+    servercomp[Components - Transform RigidBody Gravity Hitbox PlayerInfo EnemyInfo ShootingCooldown Sprite Sound]
+
+    gameserver --> nets
+    nets --> meds
+    meds --> serversys
+    meds --> servercomp
+    meds --> nets
+  end
+
+  subgraph PHYSICS[Physics engine plugin]
+    iface[Interface PhysicsEngine]
+    nophys[PhysicsNoEngine default]
+    box2d[Box2D plugin optional]
+  end
+
+  netc -- UDP INPUT PING --> nets
+  nets -- UDP ENTITY COMPONENT DESTROY --> netc
+
+  serversys -- PhysicsNoEngineSystem --> nophys
+  serversys -- PhysicsUsingEngineSystem --> iface
+  iface --> box2d
+          </div>
+          <p class="muted">Ce schéma situe les modules: l&rsquo;UI SFML et les systèmes client partagent le même cœur ECS que le serveur. Le serveur reste autoritaire sur les composants critiques et peut brancher une implémentation de physique externe via l&rsquo;interface <code>PhysicsEngine</code>.</p>
         </div>
       </div>
     </section>
@@ -356,9 +390,13 @@ sequenceDiagram
     <section id="gallery">
       <h2>Gallery</h2>
       <div class="carousel">
-        <figure class="shot"><img src="assets/sprites/trophy.png" alt="Trophy icon"><figcaption class="cap">In-game trophy asset</figcaption></figure>
+        <figure class="shot"><img src="assets/screen1.png" alt="Boot screen with insert coin prompt"><figcaption class="cap">Boot splash &ldquo;INSERT COIN&rdquo;.</figcaption></figure>
+        <figure class="shot"><img src="assets/screen2.png" alt="Lobby screen with UI buttons"><figcaption class="cap">Lobby UI with starfield background.</figcaption></figure>
+        <figure class="shot"><img src="assets/screen3.png" alt="Score selection screen"><figcaption class="cap">Score selection &amp; quick actions.</figcaption></figure>
+        <figure class="shot"><img src="assets/screen4.png" alt="Parameters menu"><figcaption class="cap">Parameters panel (video &amp; audio).</figcaption></figure>
+        <figure class="shot"><img src="assets/sprites/trophy.png" alt="Trophy icon"><figcaption class="cap">Misc sprite asset (trophy).</figcaption></figure>
       </div>
-      <p class="muted">More screenshots coming as features land.</p>
+      <p class="muted">Galerie extraite du client SFML en cours de développement.</p>
     </section>
 
     <section id="roadmap">
