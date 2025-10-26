@@ -44,7 +44,8 @@ var NAVTREE =
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", "functions_vars" ],
         [ "Enumerations", "functions_enum.html", null ],
-        [ "Enumerator", "functions_eval.html", null ]
+        [ "Enumerator", "functions_eval.html", null ],
+        [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -61,12 +62,13 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"Button_8cpp.html",
-"classControlsConfig.html#a92bcc46259a29f22b14e76b64bf1d39c",
-"classEngine_1_1NetworkManager.html#a8d48e705ea4d08a5c2ba600b0de3d837",
-"classEngine_1_1Utils_1_1Color.html#af504a15db3f3c42643629e92d2a314ab",
-"classParamButton.html#a3e103014316be12021ac80edf7c8594b",
-"namespaceEngine.html#ae9534b1f5d4ffb600087726e3e56f3c5afc3ca10632f0c7aa3aaea07a234377db"
+"AudioPlayer_8hpp.html",
+"SystemManager_8cpp.html",
+"classEngine_1_1Mediator.html#a4c5575030ac143d2de948edd15b2e64c",
+"classEngine_1_1Renderers_1_1SFML.html#a9c40776a15f72fc01a52f32184fc323f",
+"classEngine_1_1Utils_1_1Vec2UInt.html#a4a6e5200c10350e14258d5caf88c02dc",
+"classParticleSystem.html#a19c9832490b8c9b47ea11629b677663c",
+"namespaceEngine_1_1Components.html#ad83e79a7f3b45e0f87633c1f80f7f414"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

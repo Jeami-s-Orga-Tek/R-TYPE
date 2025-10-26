@@ -109,7 +109,7 @@ $(function(){initNavTree('classGameManager.html',''); initResizable(true); });
 <div class="dynheader">
 Collaboration diagram for GameManager:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager__coll__graph.svg" width="1602" height="2934"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager__coll__graph.svg" width="1602" height="2955"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -270,8 +270,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a61882a204db68f25e62fd3bf02a0c9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd1594875e0e47aebcc69dfe751e4074" id="r_abd1594875e0e47aebcc69dfe751e4074"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abd1594875e0e47aebcc69dfe751e4074">cursorPos</a></td></tr>
 <tr class="separator:abd1594875e0e47aebcc69dfe751e4074"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0edcaff7515e22be78f46e26895593be" id="r_a0edcaff7515e22be78f46e26895593be"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classEngine_1_1Systems_1_1PhysicsSystem.html">Engine::Systems::PhysicsSystem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0edcaff7515e22be78f46e26895593be">physics_system</a> {}</td></tr>
-<tr class="separator:a0edcaff7515e22be78f46e26895593be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abea8a1f9a7efd18efaf98144123c9fab" id="r_abea8a1f9a7efd18efaf98144123c9fab"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classEngine_1_1Systems_1_1PhysicsNoEngineSystem.html">Engine::Systems::PhysicsNoEngineSystem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abea8a1f9a7efd18efaf98144123c9fab">physics_system</a> {}</td></tr>
+<tr class="separator:abea8a1f9a7efd18efaf98144123c9fab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74fe9ee8b06c06a61ef9b12739987deb" id="r_a74fe9ee8b06c06a61ef9b12739987deb"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classEngine_1_1Systems_1_1RenderSystem.html">Engine::Systems::RenderSystem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74fe9ee8b06c06a61ef9b12739987deb">render_system</a> {}</td></tr>
 <tr class="separator:a74fe9ee8b06c06a61ef9b12739987deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a788226be6d5da615d6871ad7504a0d8f" id="r_a788226be6d5da615d6871ad7504a0d8f"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classEngine_1_1Systems_1_1PlayerControl.html">Engine::Systems::PlayerControl</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a788226be6d5da615d6871ad7504a0d8f">player_control_system</a> {}</td></tr>
@@ -280,6 +280,10 @@ Private Attributes</h2></td></tr>
 <tr class="separator:afde06a89a24e00099fd079e9a646f110"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ea311d618f116c5c3aff98f7b9a777e" id="r_a3ea311d618f116c5c3aff98f7b9a777e"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classEngine_1_1Systems_1_1EnemySystem.html">Engine::Systems::EnemySystem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ea311d618f116c5c3aff98f7b9a777e">enemy_system</a> {}</td></tr>
 <tr class="separator:a3ea311d618f116c5c3aff98f7b9a777e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07faebe3b2f6eb22523719e45e362c79" id="r_a07faebe3b2f6eb22523719e45e362c79"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classEngine_1_1Systems_1_1SoundSystem.html">Engine::Systems::SoundSystem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07faebe3b2f6eb22523719e45e362c79">sound_system</a> {}</td></tr>
+<tr class="separator:a07faebe3b2f6eb22523719e45e362c79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a3c2619507f4da558d5f454f6008053" id="r_a1a3c2619507f4da558d5f454f6008053"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classEngine_1_1Systems_1_1DevConsole.html">Engine::Systems::DevConsole</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a3c2619507f4da558d5f454f6008053">dev_console_system</a> {}</td></tr>
+<tr class="separator:a1a3c2619507f4da558d5f454f6008053"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0785d32e9da4636e25850b7809b77caa" id="r_a0785d32e9da4636e25850b7809b77caa"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classEngine_1_1NetworkManager.html">Engine::NetworkManager</a> &gt;(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0785d32e9da4636e25850b7809b77caa">createNetworkManagerFunc</a> )(<a class="el" href="classEngine_1_1NetworkManager.html#a5474dacdbc312e2fb4afd85e61097dc6">Engine::NetworkManager::Role</a>, const std::string &amp;, uint16_t)</td></tr>
 <tr class="separator:a0785d32e9da4636e25850b7809b77caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e50ff687ed4a1e1697c019a85d7ac99" id="r_a9e50ff687ed4a1e1697c019a85d7ac99"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classEngine_1_1Mediator.html">Engine::Mediator</a> &gt;(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e50ff687ed4a1e1697c019a85d7ac99">createMediatorFunc</a> )()</td></tr>
@@ -288,10 +292,12 @@ Private Attributes</h2></td></tr>
 <tr class="separator:ac22df2e47e7901e2466f7f193f1b36b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7794ef76973a5fd815bb737cafd57be1" id="r_a7794ef76973a5fd815bb737cafd57be1"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classEngine_1_1Renderer.html">Engine::Renderer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7794ef76973a5fd815bb737cafd57be1">renderer</a></td></tr>
 <tr class="separator:a7794ef76973a5fd815bb737cafd57be1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad391b54cacdbef81247ddc001cdb9bf5" id="r_ad391b54cacdbef81247ddc001cdb9bf5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classEngine_1_1AudioPlayer.html">Engine::AudioPlayer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad391b54cacdbef81247ddc001cdb9bf5">audio_player</a></td></tr>
+<tr class="separator:ad391b54cacdbef81247ddc001cdb9bf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00063">63</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00067">67</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae60f9a9c5dc48f158537ed98d2b6dbfe" name="ae60f9a9c5dc48f158537ed98d2b6dbfe"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae60f9a9c5dc48f158537ed98d2b6dbfe">&#9670;&#160;</a></span>GameManager()</h2>
@@ -308,13 +314,13 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00026">26</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00031">31</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00087">applyButtonLocker</a>, <a class="el" href="GameTypes_8hpp_source.html#l00081">applyResolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00076">backButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00080">colorBlindModeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00082">controlsButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00067">controlsConfig</a>, <a class="el" href="GameTypes_8hpp_source.html#l00134">createMediatorFunc</a>, <a class="el" href="GameTypes_8hpp_source.html#l00133">createNetworkManagerFunc</a>, <a class="el" href="GameTypes_8hpp_source.html#l00078">displayModeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00090">duoButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00069">errorServer</a>, <a class="el" href="GameTypes_8hpp_source.html#l00107">font</a>, <a class="el" href="GameTypes_8hpp_source.html#l00072">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00073">fps60Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00106">fpsDisplay</a>, <a class="el" href="GameTypes_8hpp_source.html#l00079">graphicsQualityButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00109">insertCoinText</a>, <a class="el" href="GameTypes_8hpp_source.html#l00065">launch</a>, <a class="el" href="GameTypes_8hpp_source.html#l00103">leaderboard</a>, <a class="el" href="Leaderboard_8hpp_source.html#l00028">Leaderboard::leaderboardRectangle</a>, <a class="el" href="GameTypes_8hpp_source.html#l00085">leftButtonSelection</a>, <a class="el" href="Username_8cpp_source.html#l00032">Username::loadFile()</a>, <a class="el" href="ControlsConfig_8cpp_source.html#l00023">ControlsConfig::loadResources()</a>, <a class="el" href="ErrorServer_8cpp_source.html#l00015">ErrorServer::loadResources()</a>, <a class="el" href="Launch_8cpp_source.html#l00015">Launch::loadResources()</a>, <a class="el" href="Leaderboard_8cpp_source.html#l00015">Leaderboard::loadResources()</a>, <a class="el" href="Parameters_8cpp_source.html#l00020">Parameters::loadResources()</a>, <a class="el" href="Player_8cpp_source.html#l00015">Player::loadResources()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00084">lockerButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00093">modeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00096">numberPlayerToWait</a>, <a class="el" href="GameTypes_8hpp_source.html#l00071">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00066">parameters</a>, <a class="el" href="GameTypes_8hpp_source.html#l00112">particleSystem</a>, <a class="el" href="GameTypes_8hpp_source.html#l00094">playButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">player</a>, <a class="el" href="GameTypes_8hpp_source.html#l00077">resolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00086">rightButtonSelection</a>, <a class="el" href="Button_8hpp_source.html#l00030">Button::setCharacterSize()</a>, <a class="el" href="ParticleSystem_8cpp_source.html#l00307">ParticleSystem::setParameters()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00050">ParamButton::setupVolumeBar()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00089">soloButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00092">squadButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00105">statusText</a>, <a class="el" href="GameTypes_8hpp_source.html#l00091">trioButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00101">trophy</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">username</a>, <a class="el" href="GameTypes_8hpp_source.html#l00118">UsernameGame</a>, <a class="el" href="Utils_8hpp_source.html#l00118">Engine::Utils::Vec2UInt::x</a>, and <a class="el" href="Utils_8hpp_source.html#l00119">Engine::Utils::Vec2UInt::y</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00091">applyButtonLocker</a>, <a class="el" href="GameTypes_8hpp_source.html#l00085">applyResolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00080">backButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00084">colorBlindModeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00086">controlsButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00071">controlsConfig</a>, <a class="el" href="GameTypes_8hpp_source.html#l00140">createMediatorFunc</a>, <a class="el" href="GameTypes_8hpp_source.html#l00139">createNetworkManagerFunc</a>, <a class="el" href="GameTypes_8hpp_source.html#l00082">displayModeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00094">duoButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00073">errorServer</a>, <a class="el" href="GameTypes_8hpp_source.html#l00111">font</a>, <a class="el" href="GameTypes_8hpp_source.html#l00076">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00077">fps60Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00110">fpsDisplay</a>, <a class="el" href="DLLoader_8hpp_source.html#l00029">Engine::DLLoader::getFunction()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00083">graphicsQualityButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00113">insertCoinText</a>, <a class="el" href="GameTypes_8hpp_source.html#l00069">launch</a>, <a class="el" href="GameTypes_8hpp_source.html#l00107">leaderboard</a>, <a class="el" href="Leaderboard_8hpp_source.html#l00028">Leaderboard::leaderboardRectangle</a>, <a class="el" href="GameTypes_8hpp_source.html#l00089">leftButtonSelection</a>, <a class="el" href="Username_8cpp_source.html#l00032">Username::loadFile()</a>, <a class="el" href="ControlsConfig_8cpp_source.html#l00023">ControlsConfig::loadResources()</a>, <a class="el" href="ErrorServer_8cpp_source.html#l00015">ErrorServer::loadResources()</a>, <a class="el" href="Launch_8cpp_source.html#l00015">Launch::loadResources()</a>, <a class="el" href="Leaderboard_8cpp_source.html#l00015">Leaderboard::loadResources()</a>, <a class="el" href="Parameters_8cpp_source.html#l00020">Parameters::loadResources()</a>, <a class="el" href="Player_8cpp_source.html#l00015">Player::loadResources()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00088">lockerButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00097">modeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00100">numberPlayerToWait</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">parameters</a>, <a class="el" href="GameTypes_8hpp_source.html#l00116">particleSystem</a>, <a class="el" href="GameTypes_8hpp_source.html#l00098">playButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00074">player</a>, <a class="el" href="GameTypes_8hpp_source.html#l00081">resolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00090">rightButtonSelection</a>, <a class="el" href="Button_8hpp_source.html#l00030">Button::setCharacterSize()</a>, <a class="el" href="ParticleSystem_8cpp_source.html#l00307">ParticleSystem::setParameters()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00050">ParamButton::setupVolumeBar()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00093">soloButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00096">squadButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00109">statusText</a>, <a class="el" href="GameTypes_8hpp_source.html#l00095">trioButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00105">trophy</a>, <a class="el" href="GameTypes_8hpp_source.html#l00079">username</a>, <a class="el" href="GameTypes_8hpp_source.html#l00122">UsernameGame</a>, <a class="el" href="Utils_8hpp_source.html#l00149">Engine::Utils::Vec2UInt::x</a>, and <a class="el" href="Utils_8hpp_source.html#l00150">Engine::Utils::Vec2UInt::y</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager_ae60f9a9c5dc48f158537ed98d2b6dbfe_cgraph.svg" width="983" height="494"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager_ae60f9a9c5dc48f158537ed98d2b6dbfe_cgraph.svg" width="983" height="544"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -368,9 +374,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00158">158</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00165">165</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00097">waitingPlayersCounter</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00101">waitingPlayersCounter</a>.</p>
 
 </div>
 </div>
@@ -389,11 +395,11 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00875">875</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00869">869</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00123">currentFps</a>, <a class="el" href="Parameters_8hpp_source.html#l00055">Parameters::getCurrentDisplayMode()</a>, <a class="el" href="Parameters_8hpp_source.html#l00054">Parameters::getCurrentResolution()</a>, <a class="el" href="Parameters_8cpp_source.html#l00227">Parameters::getResolutionSize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00066">parameters</a>, <a class="el" href="Parameters_8hpp.html#a59b40c5838e0a3d2bfbfa64c85d7ca27adaa43822b2c6abbb5d4eaf867ff6e4a4">WINDOWED</a>, <a class="el" href="Utils_8hpp_source.html#l00118">Engine::Utils::Vec2UInt::x</a>, and <a class="el" href="Utils_8hpp_source.html#l00119">Engine::Utils::Vec2UInt::y</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00127">currentFps</a>, <a class="el" href="Parameters_8hpp_source.html#l00055">Parameters::getCurrentDisplayMode()</a>, <a class="el" href="Parameters_8hpp_source.html#l00054">Parameters::getCurrentResolution()</a>, <a class="el" href="Parameters_8cpp_source.html#l00227">Parameters::getResolutionSize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">parameters</a>, <a class="el" href="Parameters_8hpp.html#a59b40c5838e0a3d2bfbfa64c85d7ca27adaa43822b2c6abbb5d4eaf867ff6e4a4">WINDOWED</a>, <a class="el" href="Utils_8hpp_source.html#l00149">Engine::Utils::Vec2UInt::x</a>, and <a class="el" href="Utils_8hpp_source.html#l00150">Engine::Utils::Vec2UInt::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -434,15 +440,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00693">693</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00676">676</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="classEngine_1_1NetworkManager.html#a5474dacdbc312e2fb4afd85e61097dc6aef10c650df47bffd6399e5e78da2a9b1">Engine::NetworkManager::CLIENT</a>, <a class="el" href="GameTypes_8hpp_source.html#l00130">collision_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00133">createNetworkManagerFunc</a>, <a class="el" href="GameTypes_8hpp_source.html#l00131">enemy_system</a>, <a class="el" href="Enemy_8hpp_source.html#l00025">Engine::Systems::EnemySystem::init()</a>, <a class="el" href="PlayerControl_8hpp_source.html#l00030">Engine::Systems::PlayerControl::init()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00135">networkManager</a>, <a class="el" href="GameTypes_8hpp_source.html#l00127">physics_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00129">player_control_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00128">render_system</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00118">UsernameGame</a>.</p>
+<p class="reference">References <a class="el" href="classEngine_1_1NetworkManager.html#a5474dacdbc312e2fb4afd85e61097dc6aef10c650df47bffd6399e5e78da2a9b1">Engine::NetworkManager::CLIENT</a>, <a class="el" href="GameTypes_8hpp_source.html#l00134">collision_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00139">createNetworkManagerFunc</a>, <a class="el" href="GameTypes_8hpp_source.html#l00137">dev_console_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00135">enemy_system</a>, <a class="el" href="DevConsole_8hpp_source.html#l00040">Engine::Systems::DevConsole::init()</a>, <a class="el" href="Enemy_8hpp_source.html#l00025">Engine::Systems::EnemySystem::init()</a>, <a class="el" href="PlayerControl_8hpp_source.html#l00031">Engine::Systems::PlayerControl::init()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00141">networkManager</a>, <a class="el" href="GameTypes_8hpp_source.html#l00131">physics_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00133">player_control_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00132">render_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00136">sound_system</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00122">UsernameGame</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager_accd6989268bea90e6d9ec2800b3b6a8f_cgraph.svg" width="1014" height="120"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager_accd6989268bea90e6d9ec2800b3b6a8f_cgraph.svg" width="1014" height="187"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -484,11 +490,11 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00846">846</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00840">840</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1fa15ea84217d420f4c9cf3c72b1d0ee357">DEUTERANOPIA</a>, <a class="el" href="Parameters_8hpp_source.html#l00057">Parameters::getCurrentColorBlindMode()</a>, <a class="el" href="Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1fa34c385204e696f87e03164a8a5e657cc">MONOCHROME</a>, <a class="el" href="Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1fa1e23852820b9154316c7c06e2b7ba051">NORMAL</a>, <a class="el" href="GameTypes_8hpp_source.html#l00066">parameters</a>, <a class="el" href="Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1fa3d779c7b9db72d2597275565059d6aba">PROTANOPIA</a>, <a class="el" href="Parameters_8cpp_source.html#l00255">Parameters::setColorBlindMode()</a>, and <a class="el" href="Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1faad64710142cd4ff5a749c63b9a3a53b8">TRITANOPIA</a>.</p>
+<p class="reference">References <a class="el" href="Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1fa15ea84217d420f4c9cf3c72b1d0ee357">DEUTERANOPIA</a>, <a class="el" href="Parameters_8hpp_source.html#l00057">Parameters::getCurrentColorBlindMode()</a>, <a class="el" href="Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1fa34c385204e696f87e03164a8a5e657cc">MONOCHROME</a>, <a class="el" href="Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1fa1e23852820b9154316c7c06e2b7ba051">NORMAL</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">parameters</a>, <a class="el" href="Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1fa3d779c7b9db72d2597275565059d6aba">PROTANOPIA</a>, <a class="el" href="Parameters_8cpp_source.html#l00255">Parameters::setColorBlindMode()</a>, and <a class="el" href="Parameters_8hpp.html#a7e15f9c8e49d31776ea0e5d0b0480d1faad64710142cd4ff5a749c63b9a3a53b8">TRITANOPIA</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -517,11 +523,11 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00775">775</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00769">769</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00123">currentFps</a>, <a class="el" href="Parameters_8hpp.html#a59b40c5838e0a3d2bfbfa64c85d7ca27ab89c3d897b196ffff1537331bc659a97">FULLSCREEN</a>, <a class="el" href="Parameters_8hpp_source.html#l00055">Parameters::getCurrentDisplayMode()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00066">parameters</a>, <a class="el" href="Parameters_8cpp_source.html#l00243">Parameters::setDisplayMode()</a>, <a class="el" href="Parameters_8hpp.html#a59b40c5838e0a3d2bfbfa64c85d7ca27adaa43822b2c6abbb5d4eaf867ff6e4a4">WINDOWED</a>, <a class="el" href="Utils_8hpp_source.html#l00118">Engine::Utils::Vec2UInt::x</a>, and <a class="el" href="Utils_8hpp_source.html#l00119">Engine::Utils::Vec2UInt::y</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00127">currentFps</a>, <a class="el" href="Parameters_8hpp.html#a59b40c5838e0a3d2bfbfa64c85d7ca27ab89c3d897b196ffff1537331bc659a97">FULLSCREEN</a>, <a class="el" href="Parameters_8hpp_source.html#l00055">Parameters::getCurrentDisplayMode()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">parameters</a>, <a class="el" href="Parameters_8cpp_source.html#l00243">Parameters::setDisplayMode()</a>, <a class="el" href="Parameters_8hpp.html#a59b40c5838e0a3d2bfbfa64c85d7ca27adaa43822b2c6abbb5d4eaf867ff6e4a4">WINDOWED</a>, <a class="el" href="Utils_8hpp_source.html#l00149">Engine::Utils::Vec2UInt::x</a>, and <a class="el" href="Utils_8hpp_source.html#l00150">Engine::Utils::Vec2UInt::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -550,11 +556,11 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00806">806</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00800">800</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="Parameters_8hpp_source.html#l00056">Parameters::getCurrentGraphicsQuality()</a>, <a class="el" href="Parameters_8hpp.html#a7b7f8d54ff7466f9cd09ea36614f00dfab89de3b4b81c4facfac906edf29aec8c">HIGH</a>, <a class="el" href="Parameters_8hpp.html#a7b7f8d54ff7466f9cd09ea36614f00dfa41bc94cbd8eebea13ce0491b2ac11b88">LOW</a>, <a class="el" href="Parameters_8hpp.html#a7b7f8d54ff7466f9cd09ea36614f00dfac87f3be66ffc3c0d4249f1c2cc5f3cce">MEDIUM</a>, <a class="el" href="GameTypes_8hpp_source.html#l00066">parameters</a>, <a class="el" href="GameTypes_8hpp_source.html#l00112">particleSystem</a>, <a class="el" href="Parameters_8cpp_source.html#l00249">Parameters::setGraphicsQuality()</a>, <a class="el" href="ParticleSystem_8cpp_source.html#l00298">ParticleSystem::setMaxParticles()</a>, and <a class="el" href="Parameters_8hpp.html#a7b7f8d54ff7466f9cd09ea36614f00dfaf8b6b495ae37b7f4baa34a5c54bd2f6c">ULTRA</a>.</p>
+<p class="reference">References <a class="el" href="Parameters_8hpp_source.html#l00056">Parameters::getCurrentGraphicsQuality()</a>, <a class="el" href="Parameters_8hpp.html#a7b7f8d54ff7466f9cd09ea36614f00dfab89de3b4b81c4facfac906edf29aec8c">HIGH</a>, <a class="el" href="Parameters_8hpp.html#a7b7f8d54ff7466f9cd09ea36614f00dfa41bc94cbd8eebea13ce0491b2ac11b88">LOW</a>, <a class="el" href="Parameters_8hpp.html#a7b7f8d54ff7466f9cd09ea36614f00dfac87f3be66ffc3c0d4249f1c2cc5f3cce">MEDIUM</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">parameters</a>, <a class="el" href="GameTypes_8hpp_source.html#l00116">particleSystem</a>, <a class="el" href="Parameters_8cpp_source.html#l00249">Parameters::setGraphicsQuality()</a>, <a class="el" href="ParticleSystem_8cpp_source.html#l00298">ParticleSystem::setMaxParticles()</a>, and <a class="el" href="Parameters_8hpp.html#a7b7f8d54ff7466f9cd09ea36614f00dfaf8b6b495ae37b7f4baa34a5c54bd2f6c">ULTRA</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -583,11 +589,11 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00752">752</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00746">746</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="Parameters_8hpp_source.html#l00054">Parameters::getCurrentResolution()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00066">parameters</a>, <a class="el" href="Parameters_8hpp.html#a8ece09a5e741dd114391f80170674244aa181d2f232de4d70a5615e7d273bb56d">RES_1280x720</a>, <a class="el" href="Parameters_8hpp.html#a8ece09a5e741dd114391f80170674244a7d71499d30f48705d444a747144f6624">RES_1920x1080</a>, <a class="el" href="Parameters_8hpp.html#a8ece09a5e741dd114391f80170674244a47ccee5dce1907c3a7121c7034b74363">RES_800x600</a>, and <a class="el" href="Parameters_8cpp_source.html#l00237">Parameters::setResolution()</a>.</p>
+<p class="reference">References <a class="el" href="Parameters_8hpp_source.html#l00054">Parameters::getCurrentResolution()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">parameters</a>, <a class="el" href="Parameters_8hpp.html#a8ece09a5e741dd114391f80170674244aa181d2f232de4d70a5615e7d273bb56d">RES_1280x720</a>, <a class="el" href="Parameters_8hpp.html#a8ece09a5e741dd114391f80170674244a7d71499d30f48705d444a747144f6624">RES_1920x1080</a>, <a class="el" href="Parameters_8hpp.html#a8ece09a5e741dd114391f80170674244a47ccee5dce1907c3a7121c7034b74363">RES_800x600</a>, and <a class="el" href="Parameters_8cpp_source.html#l00237">Parameters::setResolution()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -616,11 +622,16 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00895">895</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00889">889</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00130">collision_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00131">enemy_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00135">networkManager</a>, <a class="el" href="GameTypes_8hpp_source.html#l00127">physics_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00129">player_control_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00128">render_system</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00137">renderer</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00144">audio_player</a>, <a class="el" href="GameTypes_8hpp_source.html#l00134">collision_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00127">currentFps</a>, <a class="el" href="GameTypes_8hpp_source.html#l00137">dev_console_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00135">enemy_system</a>, <a class="el" href="DLLoader_8hpp_source.html#l00029">Engine::DLLoader::getFunction()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00141">networkManager</a>, <a class="el" href="GameTypes_8hpp_source.html#l00131">physics_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00133">player_control_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00132">render_system</a>, <a class="el" href="GameTypes_8hpp_source.html#l00143">renderer</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00136">sound_system</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager_a5315da76c5b8b7338ec77022547ad03f_cgraph.svg" width="442" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -652,9 +663,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00163">163</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00170">170</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00123">currentFps</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00127">currentFps</a>.</p>
 
 </div>
 </div>
@@ -681,9 +692,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00162">162</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00169">169</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00115">currentState</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00119">currentState</a>.</p>
 
 </div>
 </div>
@@ -710,11 +721,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00160">160</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00167">167</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00097">waitingPlayersCounter</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00101">waitingPlayersCounter</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -738,15 +749,15 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00206">206</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00189">189</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00076">backButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8ae56516ff34a16dd1ff3515d65371b54f">CONTROLS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00067">controlsConfig</a>, <a class="el" href="GameTypes_8hpp_source.html#l00115">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00126">cursorPos</a>, <a class="el" href="GameTypes_8hpp_source.html#l00069">errorServer</a>, <a class="el" href="GameTypes_8hpp_source.html#l00107">font</a>, <a class="el" href="GameTypes_8hpp_source.html#l00072">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00073">fps60Button</a>, <a class="el" href="Username_8hpp_source.html#l00033">Username::getSize()</a>, <a class="el" href="ControlsConfig_8cpp_source.html#l00099">ControlsConfig::handleEvent()</a>, <a class="el" href="ErrorServer_8cpp_source.html#l00042">ErrorServer::handleEvent()</a>, <a class="el" href="Launch_8cpp_source.html#l00042">Launch::handleEvent()</a>, <a class="el" href="Lobby_8cpp_source.html#l00042">Lobby::handleEvent()</a>, <a class="el" href="Player_8cpp_source.html#l00047">Player::handleEvent()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00438">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00120">isDraggingVolume</a>, <a class="el" href="GameTypes_8hpp_source.html#l00125">isEditingUsername</a>, <a class="el" href="GameTypes_8hpp_source.html#l00065">launch</a>, <a class="el" href="GameTypes_8hpp_source.html#l00068">lobby</a>, <a class="el" href="GameTypes_8hpp_source.html#l00071">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">player</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a5dfd352dd6b7a5d118237fcf1e19fcc1">QUIT</a>, <a class="el" href="Button_8cpp_source.html#l00041">Button::setHovered()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00041">ParamButton::setHovered()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">username</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00118">UsernameGame</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00080">backButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8ae56516ff34a16dd1ff3515d65371b54f">CONTROLS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00071">controlsConfig</a>, <a class="el" href="GameTypes_8hpp_source.html#l00119">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00130">cursorPos</a>, <a class="el" href="GameTypes_8hpp_source.html#l00073">errorServer</a>, <a class="el" href="GameTypes_8hpp_source.html#l00111">font</a>, <a class="el" href="GameTypes_8hpp_source.html#l00076">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00077">fps60Button</a>, <a class="el" href="Username_8hpp_source.html#l00033">Username::getSize()</a>, <a class="el" href="ControlsConfig_8cpp_source.html#l00099">ControlsConfig::handleEvent()</a>, <a class="el" href="ErrorServer_8cpp_source.html#l00042">ErrorServer::handleEvent()</a>, <a class="el" href="Launch_8cpp_source.html#l00042">Launch::handleEvent()</a>, <a class="el" href="Lobby_8cpp_source.html#l00042">Lobby::handleEvent()</a>, <a class="el" href="Player_8cpp_source.html#l00047">Player::handleEvent()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00421">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00124">isDraggingVolume</a>, <a class="el" href="GameTypes_8hpp_source.html#l00129">isEditingUsername</a>, <a class="el" href="GameTypes_8hpp_source.html#l00069">launch</a>, <a class="el" href="GameTypes_8hpp_source.html#l00072">lobby</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00074">player</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a5dfd352dd6b7a5d118237fcf1e19fcc1">QUIT</a>, <a class="el" href="Button_8cpp_source.html#l00041">Button::setHovered()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00041">ParamButton::setHovered()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00079">username</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00122">UsernameGame</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_2src_2main_8cpp_source.html#l00014">main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_2src_2main_8cpp_source.html#l00015">main()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager_a6cea7fca5fecdd4f8a32912d4bfc233f_cgraph.svg" width="1584" height="1555"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager_a6cea7fca5fecdd4f8a32912d4bfc233f_cgraph.svg" width="1584" height="1531"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -783,11 +794,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00438">438</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00421">421</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00115">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00126">cursorPos</a>, <a class="el" href="GameTypes_8hpp_source.html#l00125">isEditingUsername</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a5dfd352dd6b7a5d118237fcf1e19fcc1">QUIT</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aed6f7aca7887a927b9ed3d62aa347a86">SETTINGS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00105">statusText</a>, <a class="el" href="GameTypes_8cpp_source.html#l00681">updateStatusTextPosition()</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00118">UsernameGame</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00119">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00130">cursorPos</a>, <a class="el" href="GameTypes_8hpp_source.html#l00129">isEditingUsername</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a5dfd352dd6b7a5d118237fcf1e19fcc1">QUIT</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aed6f7aca7887a927b9ed3d62aa347a86">SETTINGS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00109">statusText</a>, <a class="el" href="GameTypes_8cpp_source.html#l00664">updateStatusTextPosition()</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00122">UsernameGame</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -828,15 +839,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00466">466</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00449">449</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00087">applyButtonLocker</a>, <a class="el" href="GameTypes_8cpp_source.html#l00875">applyCurrentResolution()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00081">applyResolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00076">backButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00080">colorBlindModeButton</a>, <a class="el" href="GameTypes_8hpp.html#aeee15ce451435cc7f2fdb211337d0694ab57e2519e26151feacdbe52076bc39ec">CONNECT</a>, <a class="el" href="GameTypes_8cpp_source.html#l00693">connectToServer()</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8ae56516ff34a16dd1ff3515d65371b54f">CONTROLS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00082">controlsButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00123">currentFps</a>, <a class="el" href="GameTypes_8hpp_source.html#l00115">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00126">cursorPos</a>, <a class="el" href="GameTypes_8cpp_source.html#l00846">cycleColorBlindMode()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00775">cycleDisplayMode()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00806">cycleGraphicsQuality()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00752">cycleResolution()</a>, <a class="el" href="GameTypes_8hpp.html#aeee15ce451435cc7f2fdb211337d0694add7cd0eb57db08d4f98abc48e5593462">DISCONNECT</a>, <a class="el" href="GameTypes_8hpp_source.html#l00078">displayModeButton</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589dea8a8880f73f97e0f2e8cadf3616cd2ee8">DUO</a>, <a class="el" href="GameTypes_8hpp_source.html#l00090">duoButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a7a410d7adaa520087d6c551428155ee1">ERRORSERVER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00072">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00073">fps60Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00099">gameMode</a>, <a class="el" href="GameTypes_8hpp_source.html#l00160">getWaitingPlayersCount()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00079">graphicsQualityButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00121">isChooseMode</a>, <a class="el" href="Button_8cpp_source.html#l00036">Button::isClicked()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00036">ParamButton::isClicked()</a>, <a class="el" href="Username_8cpp_source.html#l00054">Username::isClicked()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00116">isConnected</a>, <a class="el" href="GameTypes_8hpp_source.html#l00120">isDraggingVolume</a>, <a class="el" href="GameTypes_8hpp_source.html#l00125">isEditingUsername</a>, <a class="el" href="ParamButton_8cpp_source.html#l00076">ParamButton::isVolumeBarClicked()</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a49c08d83927c163a001f9a8908c2fa03">LAUNCH</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a36893cf13ef7097ce11667ea14e832a0">LEADERBOARD</a>, <a class="el" href="GameTypes_8hpp_source.html#l00103">leaderboard</a>, <a class="el" href="GameTypes_8hpp_source.html#l00085">leftButtonSelection</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a531109fbee70c7b3d1196aff910e52a2">LOBBY</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aa8118695c1e43a416c74f6b7a044cc71">LOCKER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00084">lockerButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp_source.html#l00093">modeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00096">numberPlayerToWait</a>, <a class="el" href="GameTypes_8hpp_source.html#l00071">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00094">playButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">player</a>, <a class="el" href="GameTypes_8hpp_source.html#l00077">resolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00086">rightButtonSelection</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aed6f7aca7887a927b9ed3d62aa347a86">SETTINGS</a>, <a class="el" href="ParamButton_8cpp_source.html#l00083">ParamButton::setVolumeFromMouse()</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589deaca17c443abc74bd2419fbc922fc0c32e">SOLO</a>, <a class="el" href="GameTypes_8hpp_source.html#l00089">soloButton</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589dead067467de1ab6162ba06731ac4f7de7b">SQUAD</a>, <a class="el" href="GameTypes_8hpp_source.html#l00092">squadButton</a>, <a class="el" href="Player_8hpp_source.html#l00029">Player::starshipRect</a>, <a class="el" href="Player_8hpp_source.html#l00030">Player::starshipSprite</a>, <a class="el" href="GameTypes_8hpp_source.html#l00105">statusText</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589deaf2e6318a84f1fbebafe44ec1a345458a">TRIO</a>, <a class="el" href="GameTypes_8hpp_source.html#l00091">trioButton</a>, <a class="el" href="GameTypes_8cpp_source.html#l00681">updateStatusTextPosition()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">username</a>, <a class="el" href="GameTypes_8hpp_source.html#l00118">UsernameGame</a>, and <a class="el" href="Utils_8hpp_source.html#l00084">Engine::Utils::Vec2Int::x</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00091">applyButtonLocker</a>, <a class="el" href="GameTypes_8cpp_source.html#l00869">applyCurrentResolution()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00085">applyResolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00080">backButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00084">colorBlindModeButton</a>, <a class="el" href="GameTypes_8hpp.html#aeee15ce451435cc7f2fdb211337d0694ab57e2519e26151feacdbe52076bc39ec">CONNECT</a>, <a class="el" href="GameTypes_8cpp_source.html#l00676">connectToServer()</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8ae56516ff34a16dd1ff3515d65371b54f">CONTROLS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00086">controlsButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00127">currentFps</a>, <a class="el" href="GameTypes_8hpp_source.html#l00119">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00130">cursorPos</a>, <a class="el" href="GameTypes_8cpp_source.html#l00840">cycleColorBlindMode()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00769">cycleDisplayMode()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00800">cycleGraphicsQuality()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00746">cycleResolution()</a>, <a class="el" href="GameTypes_8hpp.html#aeee15ce451435cc7f2fdb211337d0694add7cd0eb57db08d4f98abc48e5593462">DISCONNECT</a>, <a class="el" href="GameTypes_8hpp_source.html#l00082">displayModeButton</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589dea8a8880f73f97e0f2e8cadf3616cd2ee8">DUO</a>, <a class="el" href="GameTypes_8hpp_source.html#l00094">duoButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a7a410d7adaa520087d6c551428155ee1">ERRORSERVER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00076">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00077">fps60Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00103">gameMode</a>, <a class="el" href="GameTypes_8hpp_source.html#l00167">getWaitingPlayersCount()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00083">graphicsQualityButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00125">isChooseMode</a>, <a class="el" href="Button_8cpp_source.html#l00036">Button::isClicked()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00036">ParamButton::isClicked()</a>, <a class="el" href="Username_8cpp_source.html#l00054">Username::isClicked()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00120">isConnected</a>, <a class="el" href="GameTypes_8hpp_source.html#l00124">isDraggingVolume</a>, <a class="el" href="GameTypes_8hpp_source.html#l00129">isEditingUsername</a>, <a class="el" href="ParamButton_8cpp_source.html#l00076">ParamButton::isVolumeBarClicked()</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a49c08d83927c163a001f9a8908c2fa03">LAUNCH</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a36893cf13ef7097ce11667ea14e832a0">LEADERBOARD</a>, <a class="el" href="GameTypes_8hpp_source.html#l00107">leaderboard</a>, <a class="el" href="GameTypes_8hpp_source.html#l00089">leftButtonSelection</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a531109fbee70c7b3d1196aff910e52a2">LOBBY</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aa8118695c1e43a416c74f6b7a044cc71">LOCKER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00088">lockerButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp_source.html#l00097">modeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00100">numberPlayerToWait</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00098">playButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00074">player</a>, <a class="el" href="GameTypes_8hpp_source.html#l00081">resolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00090">rightButtonSelection</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aed6f7aca7887a927b9ed3d62aa347a86">SETTINGS</a>, <a class="el" href="ParamButton_8cpp_source.html#l00083">ParamButton::setVolumeFromMouse()</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589deaca17c443abc74bd2419fbc922fc0c32e">SOLO</a>, <a class="el" href="GameTypes_8hpp_source.html#l00093">soloButton</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589dead067467de1ab6162ba06731ac4f7de7b">SQUAD</a>, <a class="el" href="GameTypes_8hpp_source.html#l00096">squadButton</a>, <a class="el" href="Player_8hpp_source.html#l00029">Player::starshipRect</a>, <a class="el" href="Player_8hpp_source.html#l00030">Player::starshipSprite</a>, <a class="el" href="GameTypes_8hpp_source.html#l00109">statusText</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589deaf2e6318a84f1fbebafe44ec1a345458a">TRIO</a>, <a class="el" href="GameTypes_8hpp_source.html#l00095">trioButton</a>, <a class="el" href="GameTypes_8cpp_source.html#l00664">updateStatusTextPosition()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00079">username</a>, <a class="el" href="GameTypes_8hpp_source.html#l00122">UsernameGame</a>, and <a class="el" href="Utils_8hpp_source.html#l00105">Engine::Utils::Vec2Int::x</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager_aeed1dd73db1c39b2e39d30d9d37c1f6c_cgraph.svg" width="1311" height="1078"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager_aeed1dd73db1c39b2e39d30d9d37c1f6c_cgraph.svg" width="1311" height="1190"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -869,11 +880,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00606">606</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00589">589</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00087">applyButtonLocker</a>, <a class="el" href="GameTypes_8hpp_source.html#l00076">backButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8ae56516ff34a16dd1ff3515d65371b54f">CONTROLS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00115">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00090">duoButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a7a410d7adaa520087d6c551428155ee1">ERRORSERVER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00072">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00073">fps60Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00121">isChooseMode</a>, <a class="el" href="Button_8cpp_source.html#l00036">Button::isClicked()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00036">ParamButton::isClicked()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00120">isDraggingVolume</a>, <a class="el" href="GameTypes_8hpp_source.html#l00103">leaderboard</a>, <a class="el" href="GameTypes_8hpp_source.html#l00085">leftButtonSelection</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a531109fbee70c7b3d1196aff910e52a2">LOBBY</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aa8118695c1e43a416c74f6b7a044cc71">LOCKER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00084">lockerButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp_source.html#l00093">modeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00071">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00094">playButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00086">rightButtonSelection</a>, <a class="el" href="Button_8cpp_source.html#l00041">Button::setHovered()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00041">ParamButton::setHovered()</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aed6f7aca7887a927b9ed3d62aa347a86">SETTINGS</a>, <a class="el" href="ParamButton_8cpp_source.html#l00083">ParamButton::setVolumeFromMouse()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00089">soloButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00092">squadButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00091">trioButton</a>, and <a class="el" href="Utils_8hpp_source.html#l00084">Engine::Utils::Vec2Int::x</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00091">applyButtonLocker</a>, <a class="el" href="GameTypes_8hpp_source.html#l00080">backButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8ae56516ff34a16dd1ff3515d65371b54f">CONTROLS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00119">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00094">duoButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a7a410d7adaa520087d6c551428155ee1">ERRORSERVER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00076">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00077">fps60Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00125">isChooseMode</a>, <a class="el" href="Button_8cpp_source.html#l00036">Button::isClicked()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00036">ParamButton::isClicked()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00124">isDraggingVolume</a>, <a class="el" href="GameTypes_8hpp_source.html#l00107">leaderboard</a>, <a class="el" href="GameTypes_8hpp_source.html#l00089">leftButtonSelection</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a531109fbee70c7b3d1196aff910e52a2">LOBBY</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aa8118695c1e43a416c74f6b7a044cc71">LOCKER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00088">lockerButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp_source.html#l00097">modeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00098">playButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00090">rightButtonSelection</a>, <a class="el" href="Button_8cpp_source.html#l00041">Button::setHovered()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00041">ParamButton::setHovered()</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aed6f7aca7887a927b9ed3d62aa347a86">SETTINGS</a>, <a class="el" href="ParamButton_8cpp_source.html#l00083">ParamButton::setVolumeFromMouse()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00093">soloButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00096">squadButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00095">trioButton</a>, and <a class="el" href="Utils_8hpp_source.html#l00105">Engine::Utils::Vec2Int::x</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -910,11 +921,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00644">644</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00627">627</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00081">applyResolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00080">colorBlindModeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00115">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00078">displayModeButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a7a410d7adaa520087d6c551428155ee1">ERRORSERVER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00069">errorServer</a>, <a class="el" href="GameTypes_8hpp_source.html#l00079">graphicsQualityButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a49c08d83927c163a001f9a8908c2fa03">LAUNCH</a>, <a class="el" href="GameTypes_8hpp_source.html#l00065">launch</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a531109fbee70c7b3d1196aff910e52a2">LOBBY</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp_source.html#l00071">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00112">particleSystem</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">player</a>, <a class="el" href="GameTypes_8hpp_source.html#l00077">resolutionButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aed6f7aca7887a927b9ed3d62aa347a86">SETTINGS</a>, <a class="el" href="ParamButton_8cpp_source.html#l00050">ParamButton::setupVolumeBar()</a>, <a class="el" href="Button_8cpp_source.html#l00073">Button::updatePositionAndSize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00681">updateStatusTextPosition()</a>, <a class="el" href="ErrorServer_8cpp_source.html#l00061">ErrorServer::updateWindowSize()</a>, <a class="el" href="Launch_8cpp_source.html#l00061">Launch::updateWindowSize()</a>, <a class="el" href="ParticleSystem_8cpp_source.html#l00092">ParticleSystem::updateWindowSize()</a>, <a class="el" href="Player_8cpp_source.html#l00093">Player::updateWindowSize()</a>, <a class="el" href="Utils_8hpp_source.html#l00118">Engine::Utils::Vec2UInt::x</a>, and <a class="el" href="Utils_8hpp_source.html#l00119">Engine::Utils::Vec2UInt::y</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00085">applyResolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00084">colorBlindModeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00119">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00082">displayModeButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a7a410d7adaa520087d6c551428155ee1">ERRORSERVER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00073">errorServer</a>, <a class="el" href="GameTypes_8hpp_source.html#l00083">graphicsQualityButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a49c08d83927c163a001f9a8908c2fa03">LAUNCH</a>, <a class="el" href="GameTypes_8hpp_source.html#l00069">launch</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a531109fbee70c7b3d1196aff910e52a2">LOBBY</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00116">particleSystem</a>, <a class="el" href="GameTypes_8hpp_source.html#l00074">player</a>, <a class="el" href="GameTypes_8hpp_source.html#l00081">resolutionButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aed6f7aca7887a927b9ed3d62aa347a86">SETTINGS</a>, <a class="el" href="ParamButton_8cpp_source.html#l00050">ParamButton::setupVolumeBar()</a>, <a class="el" href="Button_8cpp_source.html#l00073">Button::updatePositionAndSize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00664">updateStatusTextPosition()</a>, <a class="el" href="ErrorServer_8cpp_source.html#l00061">ErrorServer::updateWindowSize()</a>, <a class="el" href="Launch_8cpp_source.html#l00061">Launch::updateWindowSize()</a>, <a class="el" href="ParticleSystem_8cpp_source.html#l00092">ParticleSystem::updateWindowSize()</a>, <a class="el" href="Player_8cpp_source.html#l00093">Player::updateWindowSize()</a>, <a class="el" href="Utils_8hpp_source.html#l00149">Engine::Utils::Vec2UInt::x</a>, and <a class="el" href="Utils_8hpp_source.html#l00150">Engine::Utils::Vec2UInt::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00875">applyCurrentResolution()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00869">applyCurrentResolution()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -989,9 +1000,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00159">159</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00166">166</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00097">waitingPlayersCounter</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00101">waitingPlayersCounter</a>.</p>
 
 </div>
 </div>
@@ -1010,15 +1021,15 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00324">324</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00307">307</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00087">applyButtonLocker</a>, <a class="el" href="GameTypes_8hpp_source.html#l00081">applyResolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00076">backButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00080">colorBlindModeButton</a>, <a class="el" href="GameTypes_8hpp.html#aeee15ce451435cc7f2fdb211337d0694ab57e2519e26151feacdbe52076bc39ec">CONNECT</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8ae56516ff34a16dd1ff3515d65371b54f">CONTROLS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00082">controlsButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00067">controlsConfig</a>, <a class="el" href="GameTypes_8hpp_source.html#l00115">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00126">cursorPos</a>, <a class="el" href="GameTypes_8hpp.html#aeee15ce451435cc7f2fdb211337d0694add7cd0eb57db08d4f98abc48e5593462">DISCONNECT</a>, <a class="el" href="GameTypes_8hpp_source.html#l00078">displayModeButton</a>, <a class="el" href="Button_8cpp_source.html#l00030">Button::draw()</a>, <a class="el" href="ControlsConfig_8cpp_source.html#l00077">ControlsConfig::draw()</a>, <a class="el" href="ErrorServer_8cpp_source.html#l00037">ErrorServer::draw()</a>, <a class="el" href="Launch_8cpp_source.html#l00037">Launch::draw()</a>, <a class="el" href="Leaderboard_8cpp_source.html#l00106">Leaderboard::draw()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00030">ParamButton::draw()</a>, <a class="el" href="Parameters_8cpp_source.html#l00048">Parameters::draw()</a>, <a class="el" href="Player_8cpp_source.html#l00042">Player::draw()</a>, <a class="el" href="Username_8cpp_source.html#l00048">Username::draw()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00062">ParamButton::drawVolumeBar()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00090">duoButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a7a410d7adaa520087d6c551428155ee1">ERRORSERVER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00069">errorServer</a>, <a class="el" href="GameTypes_8hpp_source.html#l00107">font</a>, <a class="el" href="GameTypes_8hpp_source.html#l00072">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00073">fps60Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00106">fpsDisplay</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a4504e1ed59cd9732b8a844e5424e6f13">GAME</a>, <a class="el" href="GameTypes_8cpp_source.html#l00895">gameDemo()</a>, <a class="el" href="Username_8hpp_source.html#l00034">Username::getLabel()</a>, <a class="el" href="Player_8hpp_source.html#l00026">Player::getPosition()</a>, <a class="el" href="Player_8hpp_source.html#l00027">Player::getSize()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00079">graphicsQualityButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00109">insertCoinText</a>, <a class="el" href="GameTypes_8hpp_source.html#l00121">isChooseMode</a>, <a class="el" href="GameTypes_8hpp_source.html#l00116">isConnected</a>, <a class="el" href="GameTypes_8hpp_source.html#l00125">isEditingUsername</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a49c08d83927c163a001f9a8908c2fa03">LAUNCH</a>, <a class="el" href="GameTypes_8hpp_source.html#l00065">launch</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a36893cf13ef7097ce11667ea14e832a0">LEADERBOARD</a>, <a class="el" href="GameTypes_8hpp_source.html#l00103">leaderboard</a>, <a class="el" href="GameTypes_8hpp_source.html#l00085">leftButtonSelection</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a531109fbee70c7b3d1196aff910e52a2">LOBBY</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aa8118695c1e43a416c74f6b7a044cc71">LOCKER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00084">lockerButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp_source.html#l00093">modeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00096">numberPlayerToWait</a>, <a class="el" href="GameTypes_8hpp_source.html#l00071">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00066">parameters</a>, <a class="el" href="GameTypes_8hpp_source.html#l00112">particleSystem</a>, <a class="el" href="GameTypes_8hpp_source.html#l00094">playButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">player</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a5dfd352dd6b7a5d118237fcf1e19fcc1">QUIT</a>, <a class="el" href="ParticleSystem_8cpp_source.html#l00085">ParticleSystem::render()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00077">resolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00086">rightButtonSelection</a>, <a class="el" href="Username_8hpp_source.html#l00032">Username::setCharacterSize()</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aed6f7aca7887a927b9ed3d62aa347a86">SETTINGS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00089">soloButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00092">squadButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00105">statusText</a>, <a class="el" href="GameTypes_8hpp_source.html#l00091">trioButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00101">trophy</a>, <a class="el" href="ParamButton_8cpp_source.html#l00122">ParamButton::updatePositionAndSize()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">username</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00118">UsernameGame</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00091">applyButtonLocker</a>, <a class="el" href="GameTypes_8hpp_source.html#l00085">applyResolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00080">backButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00084">colorBlindModeButton</a>, <a class="el" href="GameTypes_8hpp.html#aeee15ce451435cc7f2fdb211337d0694ab57e2519e26151feacdbe52076bc39ec">CONNECT</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8ae56516ff34a16dd1ff3515d65371b54f">CONTROLS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00086">controlsButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00071">controlsConfig</a>, <a class="el" href="GameTypes_8hpp_source.html#l00119">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00130">cursorPos</a>, <a class="el" href="GameTypes_8hpp.html#aeee15ce451435cc7f2fdb211337d0694add7cd0eb57db08d4f98abc48e5593462">DISCONNECT</a>, <a class="el" href="GameTypes_8hpp_source.html#l00082">displayModeButton</a>, <a class="el" href="Button_8cpp_source.html#l00030">Button::draw()</a>, <a class="el" href="ControlsConfig_8cpp_source.html#l00077">ControlsConfig::draw()</a>, <a class="el" href="ErrorServer_8cpp_source.html#l00037">ErrorServer::draw()</a>, <a class="el" href="Launch_8cpp_source.html#l00037">Launch::draw()</a>, <a class="el" href="Leaderboard_8cpp_source.html#l00106">Leaderboard::draw()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00030">ParamButton::draw()</a>, <a class="el" href="Parameters_8cpp_source.html#l00048">Parameters::draw()</a>, <a class="el" href="Player_8cpp_source.html#l00042">Player::draw()</a>, <a class="el" href="Username_8cpp_source.html#l00048">Username::draw()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00062">ParamButton::drawVolumeBar()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00094">duoButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a7a410d7adaa520087d6c551428155ee1">ERRORSERVER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00073">errorServer</a>, <a class="el" href="GameTypes_8hpp_source.html#l00111">font</a>, <a class="el" href="GameTypes_8hpp_source.html#l00076">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00077">fps60Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00110">fpsDisplay</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a4504e1ed59cd9732b8a844e5424e6f13">GAME</a>, <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>, <a class="el" href="Username_8hpp_source.html#l00034">Username::getLabel()</a>, <a class="el" href="Player_8hpp_source.html#l00026">Player::getPosition()</a>, <a class="el" href="Player_8hpp_source.html#l00027">Player::getSize()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00083">graphicsQualityButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00113">insertCoinText</a>, <a class="el" href="GameTypes_8hpp_source.html#l00125">isChooseMode</a>, <a class="el" href="GameTypes_8hpp_source.html#l00120">isConnected</a>, <a class="el" href="GameTypes_8hpp_source.html#l00129">isEditingUsername</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a49c08d83927c163a001f9a8908c2fa03">LAUNCH</a>, <a class="el" href="GameTypes_8hpp_source.html#l00069">launch</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a36893cf13ef7097ce11667ea14e832a0">LEADERBOARD</a>, <a class="el" href="GameTypes_8hpp_source.html#l00107">leaderboard</a>, <a class="el" href="GameTypes_8hpp_source.html#l00089">leftButtonSelection</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a531109fbee70c7b3d1196aff910e52a2">LOBBY</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aa8118695c1e43a416c74f6b7a044cc71">LOCKER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00088">lockerButton</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp_source.html#l00097">modeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00100">numberPlayerToWait</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">parameters</a>, <a class="el" href="GameTypes_8hpp_source.html#l00116">particleSystem</a>, <a class="el" href="GameTypes_8hpp_source.html#l00098">playButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00074">player</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a5dfd352dd6b7a5d118237fcf1e19fcc1">QUIT</a>, <a class="el" href="ParticleSystem_8cpp_source.html#l00085">ParticleSystem::render()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00081">resolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00090">rightButtonSelection</a>, <a class="el" href="Username_8hpp_source.html#l00032">Username::setCharacterSize()</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aed6f7aca7887a927b9ed3d62aa347a86">SETTINGS</a>, <a class="el" href="GameTypes_8hpp_source.html#l00093">soloButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00096">squadButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00109">statusText</a>, <a class="el" href="GameTypes_8hpp_source.html#l00095">trioButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00105">trophy</a>, <a class="el" href="ParamButton_8cpp_source.html#l00122">ParamButton::updatePositionAndSize()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00079">username</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00122">UsernameGame</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_2src_2main_8cpp_source.html#l00014">main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_2src_2main_8cpp_source.html#l00015">main()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager_a932e6df46aa4d397f8f5d61f3c137bbd_cgraph.svg" width="887" height="864"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classGameManager_a932e6df46aa4d397f8f5d61f3c137bbd_cgraph.svg" width="891" height="864"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -1043,11 +1054,11 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00433">433</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00416">416</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00115">currentState</a>, and <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a5dfd352dd6b7a5d118237fcf1e19fcc1">QUIT</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00119">currentState</a>, and <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a5dfd352dd6b7a5d118237fcf1e19fcc1">QUIT</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_2src_2main_8cpp_source.html#l00014">main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_2src_2main_8cpp_source.html#l00015">main()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1071,11 +1082,11 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00296">296</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00279">279</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00123">currentFps</a>, <a class="el" href="GameTypes_8hpp_source.html#l00115">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00113">deltaClock</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589dea8a8880f73f97e0f2e8cadf3616cd2ee8">DUO</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a7a410d7adaa520087d6c551428155ee1">ERRORSERVER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00069">errorServer</a>, <a class="el" href="GameTypes_8hpp_source.html#l00106">fpsDisplay</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a4504e1ed59cd9732b8a844e5424e6f13">GAME</a>, <a class="el" href="GameTypes_8hpp_source.html#l00099">gameMode</a>, <a class="el" href="GameTypes_8hpp_source.html#l00110">insertCoinClock</a>, <a class="el" href="GameTypes_8hpp_source.html#l00109">insertCoinText</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a49c08d83927c163a001f9a8908c2fa03">LAUNCH</a>, <a class="el" href="GameTypes_8hpp_source.html#l00065">launch</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a531109fbee70c7b3d1196aff910e52a2">LOBBY</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aa8118695c1e43a416c74f6b7a044cc71">LOCKER</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp_source.html#l00112">particleSystem</a>, <a class="el" href="GameTypes_8hpp_source.html#l00070">player</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589deaca17c443abc74bd2419fbc922fc0c32e">SOLO</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589dead067467de1ab6162ba06731ac4f7de7b">SQUAD</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589deaf2e6318a84f1fbebafe44ec1a345458a">TRIO</a>, <a class="el" href="ErrorServer_8cpp_source.html#l00057">ErrorServer::update()</a>, <a class="el" href="Launch_8cpp_source.html#l00057">Launch::update()</a>, <a class="el" href="ParticleSystem_8cpp_source.html#l00055">ParticleSystem::update()</a>, <a class="el" href="Player_8cpp_source.html#l00062">Player::update()</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00097">waitingPlayersCounter</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00127">currentFps</a>, <a class="el" href="GameTypes_8hpp_source.html#l00119">currentState</a>, <a class="el" href="GameTypes_8hpp_source.html#l00117">deltaClock</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589dea8a8880f73f97e0f2e8cadf3616cd2ee8">DUO</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a7a410d7adaa520087d6c551428155ee1">ERRORSERVER</a>, <a class="el" href="GameTypes_8hpp_source.html#l00073">errorServer</a>, <a class="el" href="GameTypes_8hpp_source.html#l00110">fpsDisplay</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a4504e1ed59cd9732b8a844e5424e6f13">GAME</a>, <a class="el" href="GameTypes_8hpp_source.html#l00103">gameMode</a>, <a class="el" href="GameTypes_8hpp_source.html#l00114">insertCoinClock</a>, <a class="el" href="GameTypes_8hpp_source.html#l00113">insertCoinText</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a49c08d83927c163a001f9a8908c2fa03">LAUNCH</a>, <a class="el" href="GameTypes_8hpp_source.html#l00069">launch</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a531109fbee70c7b3d1196aff910e52a2">LOBBY</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8aa8118695c1e43a416c74f6b7a044cc71">LOCKER</a>, <a class="el" href="GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8a3ed53fbeb1eab0443561b68ca0c0b5cf">MENU</a>, <a class="el" href="GameTypes_8hpp_source.html#l00116">particleSystem</a>, <a class="el" href="GameTypes_8hpp_source.html#l00074">player</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589deaca17c443abc74bd2419fbc922fc0c32e">SOLO</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589dead067467de1ab6162ba06731ac4f7de7b">SQUAD</a>, <a class="el" href="GameTypes_8hpp.html#aaf5ef5a17b53e9997c837b07015589deaf2e6318a84f1fbebafe44ec1a345458a">TRIO</a>, <a class="el" href="ErrorServer_8cpp_source.html#l00057">ErrorServer::update()</a>, <a class="el" href="Launch_8cpp_source.html#l00057">Launch::update()</a>, <a class="el" href="ParticleSystem_8cpp_source.html#l00055">ParticleSystem::update()</a>, <a class="el" href="Player_8cpp_source.html#l00062">Player::update()</a>, and <a class="el" href="GameTypes_8hpp_source.html#l00101">waitingPlayersCounter</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_2src_2main_8cpp_source.html#l00014">main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_2src_2main_8cpp_source.html#l00015">main()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1104,11 +1115,11 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00157">157</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00140">140</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00087">applyButtonLocker</a>, <a class="el" href="GameTypes_8hpp_source.html#l00081">applyResolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00076">backButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00080">colorBlindModeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00082">controlsButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00078">displayModeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00090">duoButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00072">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00073">fps60Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00079">graphicsQualityButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00109">insertCoinText</a>, <a class="el" href="GameTypes_8hpp_source.html#l00103">leaderboard</a>, <a class="el" href="Leaderboard_8hpp_source.html#l00028">Leaderboard::leaderboardRectangle</a>, <a class="el" href="GameTypes_8hpp_source.html#l00085">leftButtonSelection</a>, <a class="el" href="GameTypes_8hpp_source.html#l00084">lockerButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00093">modeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00096">numberPlayerToWait</a>, <a class="el" href="GameTypes_8hpp_source.html#l00071">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00094">playButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00077">resolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00086">rightButtonSelection</a>, <a class="el" href="GameTypes_8hpp_source.html#l00089">soloButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00092">squadButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00091">trioButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00101">trophy</a>, <a class="el" href="Button_8cpp_source.html#l00073">Button::updatePositionAndSize()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00122">ParamButton::updatePositionAndSize()</a>, <a class="el" href="Username_8cpp_source.html#l00092">Username::updatePositionAndSize()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">username</a>, <a class="el" href="Utils_8hpp_source.html#l00118">Engine::Utils::Vec2UInt::x</a>, and <a class="el" href="Utils_8hpp_source.html#l00119">Engine::Utils::Vec2UInt::y</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00091">applyButtonLocker</a>, <a class="el" href="GameTypes_8hpp_source.html#l00085">applyResolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00080">backButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00084">colorBlindModeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00086">controlsButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00082">displayModeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00094">duoButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00076">fps30Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00077">fps60Button</a>, <a class="el" href="GameTypes_8hpp_source.html#l00083">graphicsQualityButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00113">insertCoinText</a>, <a class="el" href="GameTypes_8hpp_source.html#l00107">leaderboard</a>, <a class="el" href="Leaderboard_8hpp_source.html#l00028">Leaderboard::leaderboardRectangle</a>, <a class="el" href="GameTypes_8hpp_source.html#l00089">leftButtonSelection</a>, <a class="el" href="GameTypes_8hpp_source.html#l00088">lockerButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00097">modeButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00100">numberPlayerToWait</a>, <a class="el" href="GameTypes_8hpp_source.html#l00075">paramButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00098">playButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00081">resolutionButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00090">rightButtonSelection</a>, <a class="el" href="GameTypes_8hpp_source.html#l00093">soloButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00096">squadButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00095">trioButton</a>, <a class="el" href="GameTypes_8hpp_source.html#l00105">trophy</a>, <a class="el" href="Button_8cpp_source.html#l00073">Button::updatePositionAndSize()</a>, <a class="el" href="ParamButton_8cpp_source.html#l00122">ParamButton::updatePositionAndSize()</a>, <a class="el" href="Username_8cpp_source.html#l00092">Username::updatePositionAndSize()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00079">username</a>, <a class="el" href="Utils_8hpp_source.html#l00149">Engine::Utils::Vec2UInt::x</a>, and <a class="el" href="Utils_8hpp_source.html#l00150">Engine::Utils::Vec2UInt::y</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1145,11 +1156,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00681">681</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8cpp_source.html#l00664">664</a> of file <a class="el" href="GameTypes_8cpp_source.html">GameTypes.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00105">statusText</a>.</p>
+<p class="reference">References <a class="el" href="GameTypes_8hpp_source.html#l00109">statusText</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00438">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00421">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1179,9 +1190,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00087">87</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00091">91</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -1205,9 +1216,35 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00081">81</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00085">85</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
+
+</div>
+</div>
+<a id="ad391b54cacdbef81247ddc001cdb9bf5" name="ad391b54cacdbef81247ddc001cdb9bf5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad391b54cacdbef81247ddc001cdb9bf5">&#9670;&#160;</a></span>audio_player</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classEngine_1_1AudioPlayer.html">Engine::AudioPlayer</a>&gt; GameManager::audio_player</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00144">144</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>.</p>
 
 </div>
 </div>
@@ -1231,9 +1268,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00076">76</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00080">80</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -1257,9 +1294,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00130">130</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00134">134</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00693">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00895">gameDemo()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00676">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>.</p>
 
 </div>
 </div>
@@ -1283,9 +1320,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00080">80</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00084">84</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -1309,9 +1346,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00082">82</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00086">86</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -1335,9 +1372,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00067">67</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00071">71</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>.</p>
 
 </div>
 </div>
@@ -1361,9 +1398,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00131">131</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00137">137</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>.</p>
 
 </div>
 </div>
@@ -1387,9 +1424,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00131">131</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00137">137</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00693">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00676">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>.</p>
 
 </div>
 </div>
@@ -1413,9 +1450,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00123">123</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00127">127</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00875">applyCurrentResolution()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00775">cycleDisplayMode()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00163">getCurrentFps()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00869">applyCurrentResolution()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00769">cycleDisplayMode()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00170">getCurrentFps()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>.</p>
 
 </div>
 </div>
@@ -1439,9 +1476,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00115">115</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00119">119</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8hpp_source.html#l00162">getCurrentState()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00438">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00433">shouldClose()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8hpp_source.html#l00169">getCurrentState()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00421">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00416">shouldClose()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>.</p>
 
 </div>
 </div>
@@ -1465,9 +1502,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00126">126</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00130">130</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00438">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00421">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>.</p>
 
 </div>
 </div>
@@ -1491,9 +1528,35 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00113">113</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00117">117</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>.</p>
+
+</div>
+</div>
+<a id="a1a3c2619507f4da558d5f454f6008053" name="a1a3c2619507f4da558d5f454f6008053"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a3c2619507f4da558d5f454f6008053">&#9670;&#160;</a></span>dev_console_system</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classEngine_1_1Systems_1_1DevConsole.html">Engine::Systems::DevConsole</a>&gt; GameManager::dev_console_system {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00137">137</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00676">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>.</p>
 
 </div>
 </div>
@@ -1517,9 +1580,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00078">78</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00082">82</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -1543,9 +1606,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00090">90</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00094">94</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -1569,9 +1632,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00131">131</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00135">135</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00693">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00895">gameDemo()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00676">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>.</p>
 
 </div>
 </div>
@@ -1595,9 +1658,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00069">69</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00073">73</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>.</p>
 
 </div>
 </div>
@@ -1621,9 +1684,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00107">107</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00111">111</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>.</p>
 
 </div>
 </div>
@@ -1647,9 +1710,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00072">72</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00076">76</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -1673,9 +1736,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00073">73</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00077">77</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -1699,9 +1762,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00106">106</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00110">110</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>.</p>
 
 </div>
 </div>
@@ -1725,9 +1788,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00099">99</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00103">103</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>.</p>
 
 </div>
 </div>
@@ -1751,9 +1814,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00079">79</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00083">83</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -1777,9 +1840,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00110">110</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00114">114</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>.</p>
 
 </div>
 </div>
@@ -1803,9 +1866,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00109">109</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00113">113</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -1829,9 +1892,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00121">121</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00125">125</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>.</p>
 
 </div>
 </div>
@@ -1855,7 +1918,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00122">122</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00126">126</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
 </div>
 </div>
@@ -1879,9 +1942,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00116">116</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00120">120</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>.</p>
 
 </div>
 </div>
@@ -1905,9 +1968,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00120">120</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00124">124</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>.</p>
 
 </div>
 </div>
@@ -1931,9 +1994,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00125">125</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00129">129</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00438">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00421">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>.</p>
 
 </div>
 </div>
@@ -1957,9 +2020,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00065">65</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00069">69</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>.</p>
 
 </div>
 </div>
@@ -1983,9 +2046,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00103">103</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00107">107</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2009,9 +2072,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00085">85</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00089">89</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2035,9 +2098,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00068">68</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00072">72</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>.</p>
 
 </div>
 </div>
@@ -2061,9 +2124,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00084">84</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00088">88</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2087,9 +2150,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00093">93</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00097">97</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2113,9 +2176,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00135">135</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00141">141</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00693">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00895">gameDemo()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00676">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>.</p>
 
 </div>
 </div>
@@ -2139,9 +2202,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00096">96</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00100">100</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2165,9 +2228,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00071">71</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00075">75</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2191,9 +2254,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00066">66</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00070">70</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00875">applyCurrentResolution()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00846">cycleColorBlindMode()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00775">cycleDisplayMode()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00806">cycleGraphicsQuality()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00752">cycleResolution()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00869">applyCurrentResolution()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00840">cycleColorBlindMode()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00769">cycleDisplayMode()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00800">cycleGraphicsQuality()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00746">cycleResolution()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>.</p>
 
 </div>
 </div>
@@ -2217,14 +2280,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00112">112</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00116">116</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00806">cycleGraphicsQuality()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00800">cycleGraphicsQuality()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>.</p>
 
 </div>
 </div>
-<a id="a0edcaff7515e22be78f46e26895593be" name="a0edcaff7515e22be78f46e26895593be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0edcaff7515e22be78f46e26895593be">&#9670;&#160;</a></span>physics_system</h2>
+<a id="abea8a1f9a7efd18efaf98144123c9fab" name="abea8a1f9a7efd18efaf98144123c9fab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abea8a1f9a7efd18efaf98144123c9fab">&#9670;&#160;</a></span>physics_system</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2233,7 +2296,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="classEngine_1_1Systems_1_1PhysicsSystem.html">Engine::Systems::PhysicsSystem</a>&gt; GameManager::physics_system {}</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classEngine_1_1Systems_1_1PhysicsNoEngineSystem.html">Engine::Systems::PhysicsNoEngineSystem</a>&gt; GameManager::physics_system {}</td>
         </tr>
       </table>
   </td>
@@ -2243,9 +2306,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00127">127</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00131">131</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00693">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00895">gameDemo()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00676">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>.</p>
 
 </div>
 </div>
@@ -2269,9 +2332,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00094">94</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00098">98</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2295,9 +2358,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00070">70</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00074">74</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>.</p>
 
 </div>
 </div>
@@ -2321,9 +2384,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00129">129</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00133">133</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00693">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00895">gameDemo()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00676">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>.</p>
 
 </div>
 </div>
@@ -2347,9 +2410,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00128">128</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00132">132</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00693">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00895">gameDemo()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00676">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>.</p>
 
 </div>
 </div>
@@ -2373,9 +2436,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00137">137</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00143">143</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00895">gameDemo()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>.</p>
 
 </div>
 </div>
@@ -2399,9 +2462,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00077">77</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00081">81</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00644">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00627">handleWindowResize()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2425,9 +2488,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00086">86</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00090">90</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2451,9 +2514,35 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00089">89</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00093">93</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
+
+</div>
+</div>
+<a id="a07faebe3b2f6eb22523719e45e362c79" name="a07faebe3b2f6eb22523719e45e362c79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07faebe3b2f6eb22523719e45e362c79">&#9670;&#160;</a></span>sound_system</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classEngine_1_1Systems_1_1SoundSystem.html">Engine::Systems::SoundSystem</a>&gt; GameManager::sound_system {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00136">136</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00676">connectToServer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00889">gameDemo()</a>.</p>
 
 </div>
 </div>
@@ -2477,9 +2566,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00092">92</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00096">96</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2503,9 +2592,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00105">105</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00109">109</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00438">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00681">updateStatusTextPosition()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00421">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00664">updateStatusTextPosition()</a>.</p>
 
 </div>
 </div>
@@ -2529,9 +2618,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00091">91</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00095">95</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00606">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00589">handleMouseMove()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2555,9 +2644,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00101">101</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00105">105</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2581,9 +2670,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00075">75</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00079">79</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00157">updatePositions()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00140">updatePositions()</a>.</p>
 
 </div>
 </div>
@@ -2607,9 +2696,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00118">118</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00122">122</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00693">connectToServer()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00026">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00206">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00438">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00466">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00324">render()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8cpp_source.html#l00676">connectToServer()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00031">GameManager()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00189">handleEvents()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00421">handleKeyPress()</a>, <a class="el" href="GameTypes_8cpp_source.html#l00449">handleMouseClick()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00307">render()</a>.</p>
 
 </div>
 </div>
@@ -2633,9 +2722,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00097">97</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="GameTypes_8hpp_source.html#l00101">101</a> of file <a class="el" href="GameTypes_8hpp_source.html">GameTypes.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="GameTypes_8hpp_source.html#l00158">addWaitingPlayer()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00160">getWaitingPlayersCount()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00159">removeWaitingPlayer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00296">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="GameTypes_8hpp_source.html#l00165">addWaitingPlayer()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00167">getWaitingPlayersCount()</a>, <a class="el" href="GameTypes_8hpp_source.html#l00166">removeWaitingPlayer()</a>, and <a class="el" href="GameTypes_8cpp_source.html#l00279">update()</a>.</p>
 
 </div>
 </div>

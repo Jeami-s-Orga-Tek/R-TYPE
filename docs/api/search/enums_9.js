@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['serverstate_0',['ServerState',['../GameTypes_8hpp.html#aeee15ce451435cc7f2fdb211337d0694',1,'GameTypes.hpp']]],
-  ['state_1',['State',['../GameTypes_8hpp.html#a5d74787dedbc4e11c1ab15bf487e61f8',1,'GameTypes.hpp']]]
+  ['resolutionmode_0',['ResolutionMode',['../Parameters_8hpp.html#a8ece09a5e741dd114391f80170674244',1,'Parameters.hpp']]],
+  ['role_1',['Role',['../classEngine_1_1NetworkManager.html#a5474dacdbc312e2fb4afd85e61097dc6',1,'Engine::NetworkManager']]]
 ];

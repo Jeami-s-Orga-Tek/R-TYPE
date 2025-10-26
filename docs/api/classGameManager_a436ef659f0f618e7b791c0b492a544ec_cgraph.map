@@ -1,9 +1,0 @@
-<map id="GameManager::onRoomList" name="GameManager::onRoomList">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,56,190,83"/>
-<area shape="rect" id="Node000002" href="$classGameManager.html#af597fa0982e7be211f1400f929fabeaf" title=" " alt="" coords="238,5,423,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,53,250,33,252,38,163,58"/>
-<area shape="rect" id="Node000003" href="$GameTypes_8hpp.html#ae3c1e425aceb99f3cab2037f4b24ab1c" title=" " alt="" coords="251,56,410,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="190,67,235,67,235,72,190,72"/>
-<area shape="rect" id="Node000004" href="$classGameManager.html#aa4a2d722a376c7c2025a6172d39e5f16" title=" " alt="" coords="246,107,415,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="163,81,252,100,250,105,162,86"/>
-</map>

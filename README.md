@@ -142,121 +142,153 @@ From the **repository root**:
 ```mermaid
 classDiagram
 direction LR
-    class EntityTypedef {
-	    +using Entity = uint32_t
-	    +using ComponentType = uint16_t
-	    +using Signature = bitset~64~
-    }
+class EntityTypedef {
+    +using Entity : uint32_t
+    +using ComponentType : uint16_t
+    +using Signature : bitset~64~
+}
 
-    class EntityManager {
-	    --
-	    -available_entities : queue
-	    -signatures : array
-	    -entity_count : Entity
-	    +createEntity() Entity
-	    +destroyEntity(e: Entity) void
-	    +setSignature(e: Entity, s: Signature) void
-	    +getSignature(e: Entity) Signature
-    }
+class EntityManager {
+    -available_entities : queue
+    -signatures : array
+    -entity_count : Entity
+    +createEntity() Entity
+    +destroyEntity(e: Entity) void
+    +setSignature(e: Entity, s: Signature) void
+    +getSignature(e: Entity) Signature
+}
 
-    class ComponentArrayT {
-	    +insertEntity(e: Entity, c: T) void
-	    +removeEntity(e: Entity) void
-	    +getComponent(e: Entity) T
-	    +entityDestroyed(e: Entity) void
-    }
+class ComponentArrayT~T~ {
+    +insertEntity(e: Entity, c: T) void
+    +removeEntity(e: Entity) void
+    +getComponent(e: Entity) T
+    +entityDestroyed(e: Entity) void
+}
 
-    class ComponentManager {
-	    --
-	    -component_types : unordered_map
-	    -component_arrays : unordered_map~
-	    +registerComponentT() void
-	    +addComponentT(e: Entity, c: T) void
-	    +removeComponentT(e: Entity) void
-	    +getComponentT(e: Entity) T
-	    +getComponentTypeT() ComponentType
-	    +entityDestroyed(e: Entity) void
-    }
+class ComponentManager {
+    -component_types : unordered_map
+    -component_arrays : unordered_map
+    +registerComponentT~T~() void
+    +addComponentT~T~(e: Entity, c: T) void
+    +removeComponentT~T~(e: Entity) void
+    +getComponentT~T~(e: Entity) T
+    +getComponentTypeT~T~() ComponentType
+    +entityDestroyed(e: Entity) void
+}
 
-    class SystemManager {
-	    +registerSystemT() System
-	    +setSignatureT(s: Signature) void
-	    +entityDestroyed(e: Entity) void
-	    +entitySignatureChanged(e: Entity, s: Signature) void
-    }
+class SystemManager {
+    +registerSystemT~T~() void
+    +setSignatureT~T~(s: Signature) void
+    +entityDestroyed(e: Entity) void
+    +entitySignatureChanged(e: Entity, s: Signature) void
+}
 
-    class Event {
-	    +setParamT(id: uint32_t, value: T) void
-	    +getParamT(id: uint32_t) T
-    }
+class Event {
+    +setParamT~T~(id: uint32_t, value: T) void
+    +getParamT~T~(id: uint32_t) T
+}
 
-    class EventManager {
-	    +addListener(id: uint32_t, fn) void
-	    +sendEvent(e: Event) void
-	    +sendEventById(id: uint32_t) void
-    }
+class EventManager {
+    +addListener(id: uint32_t, fn) void
+    +sendEvent(e: Event) void
+    +sendEventById(id: uint32_t) void
+}
 
-    class Mediator {
-	    --
-	    -entityManager : EntityManager
-	    -componentManager : ComponentManager
-	    -systemManager : SystemManager
-	    -eventManager : EventManager
-	    +init() void
-	    +createEntity() Entity
-	    +destroyEntity(e: Entity) void
-	    +addComponentT(e: Entity, c: T) void
-	    +getComponentT(e: Entity) T
-	    +getComponentTypeT() ComponentType
-	    +setSignature(e: Entity, s: Signature) void
-	    +registerSystemT() System
-	    +setSystemSignatureT(s: Signature) void
-	    +addEventListener(id: uint32_t, fn) void
-	    +sendEvent(e: Event) void
-	    +sendEventById(id: uint32_t) void
-    }
+class Mediator {
+    -entityManager : EntityManager
+    -componentManager : ComponentManager
+    -systemManager : SystemManager
+    -eventManager : EventManager
+    +init() void
+    +createEntity() Entity
+    +destroyEntity(e: Entity) void
+    +addComponentT~T~(e: Entity, c: T) void
+    +getComponentT~T~(e: Entity) T
+    +getComponentTypeT~T~() ComponentType
+    +setSignature(e: Entity, s: Signature) void
+    +registerSystemT~T~() void
+    +setSystemSignatureT~T~(s: Signature) void
+    +addEventListener(id: uint32_t, fn) void
+    +sendEvent(e: Event) void
+    +sendEventById(id: uint32_t) void
+}
 
-    class Protocol {
-	    +append_u8(out, v) void
-	    +append_u16be(out, v) void
-	    +append_u32be(out, v) void
-	    +append_i16be(out, v) void
-	    +read_u8(data, off, size) uint8
-	    +read_u16be(data, off, size) uint16
-	    +read_u32be(data, off, size) uint32
-	    +read_i16be(data, off, size) int16
-	    +writeHelloBody(out, HelloBody) void
-	    +readHelloBody(data, size, off) HelloBody
-	    +writeWelcomeBody(out, WelcomeBody) void
-	    +readWelcomeBody(data, size, off) WelcomeBody
-    }
+class Transform {
+}
 
-    class UdpServer {
-	    --
-	    -socket
-	    -remote
-	    -rxBuf[1500]
-	    -timer
-	    -nextPlayerId : uint32
-	    -sessions : unordered_map
-	    -protocol : Protocol
-	    +start_receive() void
-	    +handle_receive() void
-	    +send_pong(to) void
-	    +send_welcome(to, playerId) void
-	    +send_ping(to) void
-	    +start_heartbeat() void
-    }
+class RigidBody {
+}
 
-	<<type>> EntityTypedef
-	<<template>> ComponentArrayT
+class Hitbox {
+}
 
-    Mediator *-- EntityManager
-    Mediator *-- ComponentManager
-    Mediator *-- SystemManager
-    Mediator *-- EventManager
-    ComponentManager o-- ComponentArrayT
-    UdpServer *-- Protocol
+class Sprite {
+}
+
+class Sound {
+}
+
+class PhysicsEngine {
+    +step(dt: float) void
+    +addBody(e: Entity, rb: RigidBody) void
+    +removeBody(e: Entity) void
+}
+
+class PhysicsUsingEngineSystem {
+}
+
+class PhysicsNoEngineSystem {
+}
+
+class Protocol {
+    +append_u8(out, v) void
+    +append_u16be(out, v) void
+    +append_u32be(out, v) void
+    +read_u8(data, off, size) uint8
+    +read_u16be(data, off, size) uint16
+    +read_u32be(data, off, size) uint32
+    +writeHelloBody(out, HelloBody) void
+    +readHelloBody(data, size, off) HelloBody
+    +writeWelcomeBody(out, WelcomeBody) void
+    +readWelcomeBody(data, size, off) WelcomeBody
+}
+
+class UdpServer {
+    -socket
+    -remote
+    -rxBuf[1500]
+    -timer
+    -nextPlayerId : uint32
+    -sessions : unordered_map
+    -protocol : Protocol
+    +start_receive() void
+    +handle_receive() void
+    +send_pong(to) void
+    +send_welcome(to, playerId) void
+    +send_ping(to) void
+    +start_heartbeat() void
+}
+
+<<type>> EntityTypedef
+<<template>> ComponentArrayT
+<<interface>> PhysicsEngine
+
+Mediator *-- EntityManager
+Mediator *-- ComponentManager
+Mediator *-- SystemManager
+Mediator *-- EventManager
+ComponentManager o-- ComponentArrayT
+ComponentManager o-- Transform
+ComponentManager o-- RigidBody
+ComponentManager o-- Hitbox
+ComponentManager o-- Sprite
+ComponentManager o-- Sound
+SystemManager o-- PhysicsUsingEngineSystem
+SystemManager o-- PhysicsNoEngineSystem
+PhysicsUsingEngineSystem ..> PhysicsEngine : uses
+PhysicsNoEngineSystem ..> RigidBody : integrates
+UdpServer *-- Protocol
+Mediator o-- UdpServer : events/messages
 ```
 ---
 

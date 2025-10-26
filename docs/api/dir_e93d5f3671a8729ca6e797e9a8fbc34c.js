@@ -1,6 +1,5 @@
 var dir_e93d5f3671a8729ca6e797e9a8fbc34c =
 [
-    [ "Renderers", "dir_7c08541611c3c4df8c148485f6ef8ce7.html", "dir_7c08541611c3c4df8c148485f6ef8ce7" ],
     [ "Button.hpp", "Button_8hpp.html", "Button_8hpp" ],
     [ "ControlsConfig.hpp", "ControlsConfig_8hpp.html", "ControlsConfig_8hpp" ],
     [ "ErrorServer.hpp", "ErrorServer_8hpp.html", "ErrorServer_8hpp" ],

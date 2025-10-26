@@ -1,9 +1,0 @@
-<map id="NetworkClient::joinRoom" name="NetworkClient::joinRoom">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,64,173,91"/>
-<area shape="rect" id="Node000002" href="$classNetworkClient.html#ad307cf1f5e6ff844ef8c1e106df510f5" title=" " alt="" coords="221,5,402,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,61,243,34,244,39,143,66"/>
-<area shape="rect" id="Node000003" href="$classRtypeServer_1_1Protocol.html#ad918184440d6fcb33f231a7173a67399" title=" " alt="" coords="236,56,386,99"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,75,221,75,221,80,173,80"/>
-<area shape="rect" id="Node000004" href="$classRtypeServer_1_1Protocol.html#a7b708a725e8758fb84179f4401d6022a" title=" " alt="" coords="236,123,386,165"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="137,89,224,115,223,120,136,94"/>
-</map>

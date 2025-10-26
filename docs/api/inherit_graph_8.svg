@@ -11,10 +11,10 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="structEngine_1_1Components_1_1RigidBody__s.html" target="_top" xlink:title=" ">
+<g id="a_Node000000"><a xlink:href="structEngine_1_1Components_1_1PlayerInfo__s.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="107.5,-32 0,-32 0,0 107.5,0 107.5,-32"/>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">Engine::Components</text>
-<text text-anchor="middle" x="53.75" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">::RigidBody_s</text>
+<text text-anchor="middle" x="53.75" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">::PlayerInfo_s</text>
 </a>
 </g>
 </g>

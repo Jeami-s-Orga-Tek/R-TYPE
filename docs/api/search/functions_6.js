@@ -7,6 +7,7 @@ var searchData=
   ['handlekeypress_4',['handleKeyPress',['../classGameManager.html#af89fb192252f1f73f97aa531723fa535',1,'GameManager']]],
   ['handlemouseclick_5',['handleMouseClick',['../classGameManager.html#aeed1dd73db1c39b2e39d30d9d37c1f6c',1,'GameManager']]],
   ['handlemousemove_6',['handleMouseMove',['../classGameManager.html#a5b552a66a8a65fe45e825cf49a736ab8',1,'GameManager']]],
-  ['handlewindowresize_7',['handleWindowResize',['../classGameManager.html#a0a220f16a3e2d31baa08c03bec5c88b6',1,'GameManager']]],
-  ['hascomponent_8',['hasComponent',['../classEngine_1_1Mediator.html#afe0151a11114e9c7bac11113a34534a6',1,'Engine::Mediator']]]
+  ['handletimeouts_7',['handleTimeouts',['../classEngine_1_1NetworkManager.html#a05be8acf26a5b4020d84beaa4993bc40',1,'Engine::NetworkManager']]],
+  ['handlewindowresize_8',['handleWindowResize',['../classGameManager.html#a0a220f16a3e2d31baa08c03bec5c88b6',1,'GameManager']]],
+  ['hascomponent_9',['hasComponent',['../classEngine_1_1Mediator.html#afe0151a11114e9c7bac11113a34534a6',1,'Engine::Mediator']]]
 ];

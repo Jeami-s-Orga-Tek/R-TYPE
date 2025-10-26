@@ -1,5 +1,26 @@
 var searchData=
 [
-  ['—_20e_20g_20fedora_2041_0',['Prerequisites (Linux — e.g., Fedora 41)',['../index.html#autotoc_md5',1,'']]],
-  ['—_20online_20shoot’em_20up_20game_20engine_20c_2017_1',['R‑TYPE — Online Shoot’em Up + Game Engine (C++17)',['../index.html',1,'']]]
+  ['_7eaudioplayer_0',['~AudioPlayer',['../classEngine_1_1AudioPlayer.html#a85dfe8a98223eed5b16b59f8cc3aa833',1,'Engine::AudioPlayer']]],
+  ['_7ebutton_1',['~Button',['../classButton.html#ae377287a536a7f86f69ba5ad81aabb05',1,'Button']]],
+  ['_7econtrolsconfig_2',['~ControlsConfig',['../classControlsConfig.html#aca05ad8402e93a8ff44f211c07cfa610',1,'ControlsConfig']]],
+  ['_7edlloader_3',['~DLLoader',['../classEngine_1_1DLLoader.html#a3fc6815c381bfcc7fd722f0570ccbb5e',1,'Engine::DLLoader']]],
+  ['_7eentitymanager_4',['~EntityManager',['../classEngine_1_1EntityManager.html#a21274b1e4a7dca1e08a49be0405c99f0',1,'Engine::EntityManager']]],
+  ['_7eerrorserver_5',['~ErrorServer',['../classErrorServer.html#a625530e1b37b0e43bd46b4af227f4b3c',1,'ErrorServer']]],
+  ['_7egamemanager_6',['~GameManager',['../classGameManager.html#a6803f6a7f46495ac5dac616b3c4cc8a9',1,'GameManager']]],
+  ['_7eicomponentarray_7',['~IComponentArray',['../classEngine_1_1IComponentArray.html#a40257a7a7ea2cb3dd995d1ece2d99727',1,'Engine::IComponentArray']]],
+  ['_7elaunch_8',['~Launch',['../classLaunch.html#a4f8d4b1b4cc63f418c05aa942cedaaf0',1,'Launch']]],
+  ['_7eleaderboard_9',['~Leaderboard',['../classLeaderboard.html#a39b202bf6c74a8a01bb21692fe2986fe',1,'Leaderboard']]],
+  ['_7elobby_10',['~Lobby',['../classLobby.html#a35c0bcd2e39b4059e1203b14a657e9e4',1,'Lobby']]],
+  ['_7elocker_11',['~Locker',['../classLocker.html#ae9572fa9116523c36eff6e1fe480436e',1,'Locker']]],
+  ['_7emenu_12',['~Menu',['../classMenu.html#aec66e8695cecd5e88732d20ffd027921',1,'Menu']]],
+  ['_7enetworkmanager_13',['~NetworkManager',['../classEngine_1_1NetworkManager.html#ad1bab063120d630bcf420382024d4f24',1,'Engine::NetworkManager']]],
+  ['_7eparambutton_14',['~ParamButton',['../classParamButton.html#a41d36222e6c9647f523b410d4ff74ce1',1,'ParamButton']]],
+  ['_7eparameters_15',['~Parameters',['../classParameters.html#ac98709c00479386d18d1759965d7d00d',1,'Parameters']]],
+  ['_7eparticlesystem_16',['~ParticleSystem',['../classParticleSystem.html#af03943bfe7941afbe00a675fa09fd81e',1,'ParticleSystem']]],
+  ['_7ephysicsengine_17',['~PhysicsEngine',['../classEngine_1_1PhysicsEngine.html#a46395371b2e1b5aa8f9e1c616c074425',1,'Engine::PhysicsEngine']]],
+  ['_7eplayer_18',['~Player',['../classPlayer.html#a40d3c47b65e9652c363a8fde41f7bbf5',1,'Player']]],
+  ['_7erenderer_19',['~Renderer',['../classEngine_1_1Renderer.html#ac16f3642b6dcfef48d3f0c346a45ab50',1,'Engine::Renderer']]],
+  ['_7eserver_20',['~Server',['../classRTypeServer_1_1Server.html#a449a38b9335ee6d1168b2f7ff7478a2d',1,'RTypeServer::Server']]],
+  ['_7esfml_21',['~SFML',['../classEngine_1_1AudioPlayers_1_1SFML.html#ad2ebcbd0be4a34e655a76628e6555260',1,'Engine::AudioPlayers::SFML::~SFML()'],['../classEngine_1_1Renderers_1_1SFML.html#ae8aa2eedbc8c9c09505cc293455aee85',1,'Engine::Renderers::SFML::~SFML()']]],
+  ['_7eusername_22',['~Username',['../classUsername.html#a75bf52b9ac4780170078d31aecf0f889',1,'Username']]]
 ];

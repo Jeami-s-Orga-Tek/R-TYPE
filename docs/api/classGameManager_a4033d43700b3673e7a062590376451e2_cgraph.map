@@ -1,7 +1,0 @@
-<map id="GameManager::onRoomJoined" name="GameManager::onRoomJoined">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,207,57"/>
-<area shape="rect" id="Node000002" href="$GameTypes_8hpp.html#ae3c1e425aceb99f3cab2037f4b24ab1c" title=" " alt="" coords="280,5,440,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,31,265,25,265,31,208,37"/>
-<area shape="rect" id="Node000003" href="$classGameManager.html#a23ec271d95d996128b158d3e5e3fe333" title=" " alt="" coords="255,56,465,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,51,240,55,239,60,207,57"/>
-</map>

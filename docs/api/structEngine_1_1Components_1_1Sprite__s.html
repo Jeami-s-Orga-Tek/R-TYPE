@@ -107,19 +107,23 @@ $(function(){initNavTree('structEngine_1_1Components_1_1Sprite__s.html',''); ini
 <div class="dynheader">
 Collaboration diagram for Engine::Components::Sprite_s:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structEngine_1_1Components_1_1Sprite__s__coll__graph.svg" width="146" height="118"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="structEngine_1_1Components_1_1Sprite__s__coll__graph.svg" width="146" height="160"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a0983a972739aafd8f70e0ab575b4ef2b" id="r_a0983a972739aafd8f70e0ab575b4ef2b"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0983a972739aafd8f70e0ab575b4ef2b">sprite_name</a> [255]</td></tr>
-<tr class="separator:a0983a972739aafd8f70e0ab575b4ef2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f04e1b8aa2e2e982e6faa51cfbc88a3" id="r_a2f04e1b8aa2e2e982e6faa51cfbc88a3"><td class="memItemLeft" align="right" valign="top">std::array&lt; char, 255 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f04e1b8aa2e2e982e6faa51cfbc88a3">sprite_name</a></td></tr>
+<tr class="separator:a2f04e1b8aa2e2e982e6faa51cfbc88a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7857769a22da408eff4c3bfc3ccae5e2" id="r_a7857769a22da408eff4c3bfc3ccae5e2"><td class="memItemLeft" align="right" valign="top">std::uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7857769a22da408eff4c3bfc3ccae5e2">frame_nb</a></td></tr>
 <tr class="separator:a7857769a22da408eff4c3bfc3ccae5e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a912e2ad1b064143c7f439f06bf55f439" id="r_a912e2ad1b064143c7f439f06bf55f439"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a912e2ad1b064143c7f439f06bf55f439">scrolling</a> = false</td></tr>
+<tr class="separator:a912e2ad1b064143c7f439f06bf55f439"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7149a7a9dcd0292801fec868cb56d2c7" id="r_a7149a7a9dcd0292801fec868cb56d2c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7149a7a9dcd0292801fec868cb56d2c7">is_background</a> = false</td></tr>
+<tr class="separator:a7149a7a9dcd0292801fec868cb56d2c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Sprite_8hpp_source.html#l00019">19</a> of file <a class="el" href="Sprite_8hpp_source.html">Sprite.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Sprite_8hpp_source.html#l00020">20</a> of file <a class="el" href="Sprite_8hpp_source.html">Sprite.hpp</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a7857769a22da408eff4c3bfc3ccae5e2" name="a7857769a22da408eff4c3bfc3ccae5e2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7857769a22da408eff4c3bfc3ccae5e2">&#9670;&#160;</a></span>frame_nb</h2>
@@ -133,27 +137,61 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Sprite_8hpp_source.html#l00021">21</a> of file <a class="el" href="Sprite_8hpp_source.html">Sprite.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Sprite_8hpp_source.html#l00023">23</a> of file <a class="el" href="Sprite_8hpp_source.html">Sprite.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="NetworkManager_8cpp_source.html#l00368">Engine::NetworkManager::createPlayer()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Server_8cpp_source.html#l00169">RTypeServer::Server::createPlayer()</a>, and <a class="el" href="Render_8hpp_source.html#l00058">Engine::Systems::RenderSystem::drawSprite()</a>.</p>
 
 </div>
 </div>
-<a id="a0983a972739aafd8f70e0ab575b4ef2b" name="a0983a972739aafd8f70e0ab575b4ef2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0983a972739aafd8f70e0ab575b4ef2b">&#9670;&#160;</a></span>sprite_name</h2>
+<a id="a7149a7a9dcd0292801fec868cb56d2c7" name="a7149a7a9dcd0292801fec868cb56d2c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7149a7a9dcd0292801fec868cb56d2c7">&#9670;&#160;</a></span>is_background</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char Engine::Components::Sprite_s::sprite_name[255]</td>
+          <td class="memname">bool Engine::Components::Sprite_s::is_background = false</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Sprite_8hpp_source.html#l00020">20</a> of file <a class="el" href="Sprite_8hpp_source.html">Sprite.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Sprite_8hpp_source.html#l00025">25</a> of file <a class="el" href="Sprite_8hpp_source.html">Sprite.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="NetworkManager_8cpp_source.html#l00368">Engine::NetworkManager::createPlayer()</a>.</p>
+</div>
+</div>
+<a id="a912e2ad1b064143c7f439f06bf55f439" name="a912e2ad1b064143c7f439f06bf55f439"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a912e2ad1b064143c7f439f06bf55f439">&#9670;&#160;</a></span>scrolling</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Engine::Components::Sprite_s::scrolling = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Sprite_8hpp_source.html#l00024">24</a> of file <a class="el" href="Sprite_8hpp_source.html">Sprite.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Render_8hpp_source.html#l00058">Engine::Systems::RenderSystem::drawSprite()</a>.</p>
+
+</div>
+</div>
+<a id="a2f04e1b8aa2e2e982e6faa51cfbc88a3" name="a2f04e1b8aa2e2e982e6faa51cfbc88a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f04e1b8aa2e2e982e6faa51cfbc88a3">&#9670;&#160;</a></span>sprite_name</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt;char, 255&gt; Engine::Components::Sprite_s::sprite_name</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Sprite_8hpp_source.html#l00022">22</a> of file <a class="el" href="Sprite_8hpp_source.html">Sprite.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Server_8cpp_source.html#l00169">RTypeServer::Server::createPlayer()</a>, and <a class="el" href="Render_8hpp_source.html#l00058">Engine::Systems::RenderSystem::drawSprite()</a>.</p>
 
 </div>
 </div>

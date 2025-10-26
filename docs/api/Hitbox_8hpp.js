@@ -7,5 +7,7 @@ var Hitbox_8hpp =
       [ "PLAYER_PROJECTILE", "Hitbox_8hpp.html#a67e3a7648c03951d04f5d099ba56d457a96bd3249e8cb0cc370b391f98deaee5c", null ],
       [ "ENEMY", "Hitbox_8hpp.html#a67e3a7648c03951d04f5d099ba56d457a92b09d1635332c90ae8508618a174244", null ],
       [ "ENEMY_PROJECTILE", "Hitbox_8hpp.html#a67e3a7648c03951d04f5d099ba56d457aa667410e37549db028fa7e81e814aaf3", null ]
-    ] ]
+    ] ],
+    [ "operator<<", "Hitbox_8hpp.html#a0f2acea127541bcf9f629d6b09e66bbe", null ],
+    [ "toString", "Hitbox_8hpp.html#a11a432fb68a691c4ffcbd177b5992fc7", null ]
 ];

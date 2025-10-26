@@ -141,12 +141,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af1c22c206bb8bdd5ac603ab7edb4d27a" id="r_af1c22c206bb8bdd5ac603ab7edb4d27a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:af1c22c206bb8bdd5ac603ab7edb4d27a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceEngine.html#aade0eb98b8a7dc80f516aa26064dbd50">ComponentType</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#af1c22c206bb8bdd5ac603ab7edb4d27a">getComponentType</a> ()</td></tr>
 <tr class="separator:af1c22c206bb8bdd5ac603ab7edb4d27a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a841c4eb4b45ea22f5546fbba572d5ebf" id="r_a841c4eb4b45ea22f5546fbba572d5ebf"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a841c4eb4b45ea22f5546fbba572d5ebf">getComponentsNames</a> () const</td></tr>
+<tr class="separator:a841c4eb4b45ea22f5546fbba572d5ebf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0da16638053bec8b2b2902fb1c39f740" id="r_a0da16638053bec8b2b2902fb1c39f740"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a0da16638053bec8b2b2902fb1c39f740"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0da16638053bec8b2b2902fb1c39f740">registerSystem</a> ()</td></tr>
 <tr class="separator:a0da16638053bec8b2b2902fb1c39f740"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a3cb258f1a61c35cfbc44b0fe4e0190" id="r_a4a3cb258f1a61c35cfbc44b0fe4e0190"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a4a3cb258f1a61c35cfbc44b0fe4e0190"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a4a3cb258f1a61c35cfbc44b0fe4e0190">setSystemSignature</a> (<a class="el" href="namespaceEngine.html#ab48188ee1ed7fa9c2264fa597299d4b5">Signature</a> signature)</td></tr>
 <tr class="separator:a4a3cb258f1a61c35cfbc44b0fe4e0190"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c5575030ac143d2de948edd15b2e64c" id="r_a4c5575030ac143d2de948edd15b2e64c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c5575030ac143d2de948edd15b2e64c">getSystemNames</a> () const</td></tr>
+<tr class="separator:a4c5575030ac143d2de948edd15b2e64c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dc2c589db5a34fee5717235f9dbd3c1" id="r_a5dc2c589db5a34fee5717235f9dbd3c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5dc2c589db5a34fee5717235f9dbd3c1">addEventListener</a> (<a class="el" href="namespaceEngine.html#a3c3b1b42a70f283204ca617031c34e56">EventId</a> eventId, std::function&lt; void(<a class="el" href="classEngine_1_1Event.html">Event</a> &amp;)&gt; const &amp;listener)</td></tr>
 <tr class="separator:a5dc2c589db5a34fee5717235f9dbd3c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade703942b663e78c16e95f7710f971b6" id="r_ade703942b663e78c16e95f7710f971b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade703942b663e78c16e95f7710f971b6">sendEvent</a> (<a class="el" href="namespaceEngine.html#a3c3b1b42a70f283204ca617031c34e56">EventId</a> eventId)</td></tr>
@@ -193,9 +197,9 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00055">55</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00057">57</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="NetworkManager_8hpp_source.html#l00175">Engine::NetworkManager::registerComponent()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="NetworkManager_8hpp_source.html#l00162">Engine::NetworkManager::registerComponent()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -223,7 +227,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00087">87</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00097">97</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
 
 </div>
 </div>
@@ -282,7 +286,26 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00086">86</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00088">88</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a841c4eb4b45ea22f5546fbba572d5ebf" name="a841c4eb4b45ea22f5546fbba572d5ebf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a841c4eb4b45ea22f5546fbba572d5ebf">&#9670;&#160;</a></span>getComponentsNames()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt; Engine::Mediator::getComponentsNames </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00092">92</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
 
 </div>
 </div>
@@ -322,7 +345,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00092">92</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00094">94</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
 
 </div>
 </div>
@@ -341,7 +364,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00099">99</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00109">109</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
 
 </div>
 </div>
@@ -360,7 +383,26 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00104">104</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00114">114</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a4c5575030ac143d2de948edd15b2e64c" name="a4c5575030ac143d2de948edd15b2e64c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c5575030ac143d2de948edd15b2e64c">&#9670;&#160;</a></span>getSystemNames()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt; Engine::Mediator::getSystemNames </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00087">87</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
 
 </div>
 </div>
@@ -381,7 +423,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00075">75</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00077">77</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
 
 </div>
 </div>
@@ -402,7 +444,7 @@ template&lt;typename T &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00010">10</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="Mediator_8hpp_source.html#l00042">componentManager</a>, <a class="el" href="Mediator_8hpp_source.html#l00041">entityManager</a>, <a class="el" href="Mediator_8hpp_source.html#l00044">eventManager</a>, and <a class="el" href="Mediator_8hpp_source.html#l00043">systemManager</a>.</p>
+<p class="reference">References <a class="el" href="Mediator_8hpp_source.html#l00044">componentManager</a>, <a class="el" href="Mediator_8hpp_source.html#l00043">entityManager</a>, <a class="el" href="Mediator_8hpp_source.html#l00046">eventManager</a>, and <a class="el" href="Mediator_8hpp_source.html#l00045">systemManager</a>.</p>
 
 </div>
 </div>
@@ -423,9 +465,9 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00049">49</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00051">51</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
 
-<p class="reference">References <a class="el" href="Mediator_8hpp_source.html#l00042">componentManager</a>.</p>
+<p class="reference">References <a class="el" href="Mediator_8hpp_source.html#l00044">componentManager</a>.</p>
 
 </div>
 </div>
@@ -446,7 +488,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00098">98</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00100">100</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
 
 </div>
 </div>
@@ -467,7 +509,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00065">65</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00067">67</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
 
 </div>
 </div>
@@ -486,7 +528,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00091">91</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00101">101</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
 
 </div>
 </div>
@@ -505,7 +547,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00095">95</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8cpp_source.html#l00105">105</a> of file <a class="el" href="Mediator_8cpp_source.html">Mediator.cpp</a>.</p>
 
 </div>
 </div>
@@ -526,7 +568,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00104">104</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00106">106</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
 
 </div>
 </div>
@@ -551,9 +593,9 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00042">42</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00044">44</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Mediator_8cpp_source.html#l00010">init()</a>, and <a class="el" href="Mediator_8hpp_source.html#l00049">registerComponent()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Mediator_8cpp_source.html#l00010">init()</a>, and <a class="el" href="Mediator_8hpp_source.html#l00051">registerComponent()</a>.</p>
 
 </div>
 </div>
@@ -577,7 +619,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00041">41</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00043">43</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="Mediator_8cpp_source.html#l00010">init()</a>.</p>
 
@@ -603,7 +645,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00044">44</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00046">46</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="Mediator_8cpp_source.html#l00010">init()</a>.</p>
 
@@ -629,7 +671,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00043">43</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Mediator_8hpp_source.html#l00045">45</a> of file <a class="el" href="Mediator_8hpp_source.html">Mediator.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="Mediator_8cpp_source.html#l00010">init()</a>.</p>
 

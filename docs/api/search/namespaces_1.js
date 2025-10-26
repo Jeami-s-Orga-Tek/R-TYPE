@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rtypeserver_0',['RtypeServer',['../namespaceRtypeServer.html',1,'']]]
+  ['rtypeserver_0',['RTypeServer',['../namespaceRTypeServer.html',1,'']]]
 ];

@@ -7,6 +7,8 @@ var classEngine_1_1Utils_1_1Vec2 =
     [ "operator+=", "classEngine_1_1Utils_1_1Vec2.html#a71a7e1b10ee0c71be0472ec36e8609bb", null ],
     [ "operator-", "classEngine_1_1Utils_1_1Vec2.html#aa7ae876c27dd841d1f30efca7b43cbb0", null ],
     [ "operator-=", "classEngine_1_1Utils_1_1Vec2.html#a0892e8da650dd587b9f9e94c96bd0ed2", null ],
+    [ "toString", "classEngine_1_1Utils_1_1Vec2.html#a2a49dbdd767ca9013d939a2899fc2443", null ],
+    [ "operator<<", "classEngine_1_1Utils_1_1Vec2.html#a4117849cf03ae9a26913d3fcd080487f", null ],
     [ "x", "classEngine_1_1Utils_1_1Vec2.html#ac3c2e8e21aa65f6ee1b21cc27260367e", null ],
     [ "y", "classEngine_1_1Utils_1_1Vec2.html#a387dd055855d07b7ea4b5c9cf34b5a5c", null ]
 ];

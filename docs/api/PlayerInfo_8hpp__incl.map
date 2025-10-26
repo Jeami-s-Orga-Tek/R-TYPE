@@ -1,7 +1,13 @@
 <map id="PlayerInfo.hpp" name="PlayerInfo.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,111,32"/>
-<area shape="rect" id="Node000002" href="$Utils_8hpp.html" title=" " alt="" coords="21,80,95,107"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,33,61,64,55,64,55,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="28,155,88,181"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="61,107,61,139,55,139,55,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="107,5,212,32"/>
+<area shape="rect" id="Node000002" href="$Utils_8hpp.html" title=" " alt="" coords="123,80,196,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,33,162,64,157,64,157,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,155,66,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="139,110,71,149,69,144,137,105"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="90,155,144,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="154,109,134,143,130,140,150,106"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="168,155,236,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="169,106,189,140,185,143,165,109"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="261,155,311,181"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="183,105,252,144,250,149,180,110"/>
 </map>

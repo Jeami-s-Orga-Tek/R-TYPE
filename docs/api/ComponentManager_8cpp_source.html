@@ -165,17 +165,29 @@ $(function(){initNavTree('ComponentManager_8cpp_source.html',''); initResizable(
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">// }</span></div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
 <div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classEngine_1_1ComponentManager.html#a6dd8a8f21dea1631338b061180305684">   66</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classEngine_1_1ComponentManager.html#a6dd8a8f21dea1631338b061180305684">Engine::ComponentManager::entityDestroyed</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Entity</a> entity)</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>{</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;pair : <a class="code hl_variable" href="classEngine_1_1ComponentManager.html#a0cded27172e427c912877ab72e3c44bf">component_arrays</a>) {</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keyword">const</span> <span class="keyword">auto</span> &amp;component = pair.second;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        component-&gt;entityDestroyed(entity);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classEngine_1_1ComponentManager.html#a2ba6afe39ee2b6094e47232aa5ee23eb">   66</a></span>std::vector&lt;std::string&gt; <a class="code hl_function" href="classEngine_1_1ComponentManager.html#a2ba6afe39ee2b6094e47232aa5ee23eb">Engine::ComponentManager::getComponentsNames</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    std::vector&lt;std::string&gt; names {};</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;pair : <a class="code hl_variable" href="classEngine_1_1ComponentManager.html#ab6a652be5941b0f41ae702f3995c7be5">component_types</a>) {</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        names.push_back(pair.first);</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    }</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>}</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordflow">return</span> names;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}</div>
+</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="foldopen" id="foldopen00075" data-start="{" data-end="}">
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classEngine_1_1ComponentManager.html#a6dd8a8f21dea1631338b061180305684">   75</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classEngine_1_1ComponentManager.html#a6dd8a8f21dea1631338b061180305684">Engine::ComponentManager::entityDestroyed</a>(<a class="code hl_typedef" href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Entity</a> entity)</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>{</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;pair : component_arrays) {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keyword">const</span> <span class="keyword">auto</span> &amp;component = pair.second;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        component-&gt;entityDestroyed(entity);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    }</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>}</div>
 </div>
 <div class="ttc" id="aComponentManager_8hpp_html"><div class="ttname"><a href="ComponentManager_8hpp.html">ComponentManager.hpp</a></div></div>
-<div class="ttc" id="aclassEngine_1_1ComponentManager_html_a0cded27172e427c912877ab72e3c44bf"><div class="ttname"><a href="classEngine_1_1ComponentManager.html#a0cded27172e427c912877ab72e3c44bf">Engine::ComponentManager::component_arrays</a></div><div class="ttdeci">std::unordered_map&lt; std::string, std::shared_ptr&lt; IComponentArray &gt; &gt; component_arrays</div><div class="ttdef"><b>Definition</b> <a href="ComponentManager_8hpp_source.html#l00043">ComponentManager.hpp:43</a></div></div>
-<div class="ttc" id="aclassEngine_1_1ComponentManager_html_a6dd8a8f21dea1631338b061180305684"><div class="ttname"><a href="classEngine_1_1ComponentManager.html#a6dd8a8f21dea1631338b061180305684">Engine::ComponentManager::entityDestroyed</a></div><div class="ttdeci">void entityDestroyed(Entity entity)</div><div class="ttdef"><b>Definition</b> <a href="#l00066">ComponentManager.cpp:66</a></div></div>
+<div class="ttc" id="aclassEngine_1_1ComponentManager_html_a2ba6afe39ee2b6094e47232aa5ee23eb"><div class="ttname"><a href="classEngine_1_1ComponentManager.html#a2ba6afe39ee2b6094e47232aa5ee23eb">Engine::ComponentManager::getComponentsNames</a></div><div class="ttdeci">std::vector&lt; std::string &gt; getComponentsNames() const</div><div class="ttdef"><b>Definition</b> <a href="#l00066">ComponentManager.cpp:66</a></div></div>
+<div class="ttc" id="aclassEngine_1_1ComponentManager_html_a6dd8a8f21dea1631338b061180305684"><div class="ttname"><a href="classEngine_1_1ComponentManager.html#a6dd8a8f21dea1631338b061180305684">Engine::ComponentManager::entityDestroyed</a></div><div class="ttdeci">void entityDestroyed(Entity entity)</div><div class="ttdef"><b>Definition</b> <a href="#l00075">ComponentManager.cpp:75</a></div></div>
+<div class="ttc" id="aclassEngine_1_1ComponentManager_html_ab6a652be5941b0f41ae702f3995c7be5"><div class="ttname"><a href="classEngine_1_1ComponentManager.html#ab6a652be5941b0f41ae702f3995c7be5">Engine::ComponentManager::component_types</a></div><div class="ttdeci">std::unordered_map&lt; std::string, ComponentType &gt; component_types</div><div class="ttdef"><b>Definition</b> <a href="ComponentManager_8hpp_source.html#l00044">ComponentManager.hpp:44</a></div></div>
 <div class="ttc" id="anamespaceEngine_html_ac461a3f8921baac5988df8684459f56f"><div class="ttname"><a href="namespaceEngine.html#ac461a3f8921baac5988df8684459f56f">Engine::Entity</a></div><div class="ttdeci">std::uint32_t Entity</div><div class="ttdef"><b>Definition</b> <a href="Entity_8hpp_source.html#l00018">Entity.hpp:18</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
