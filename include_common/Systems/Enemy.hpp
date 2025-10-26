@@ -9,17 +9,45 @@
 #define ENEMY_HPP_
 
 #include <memory>
+#include <cstdio>
+#include <cmath>
 
 #include "Components/EnemyInfo.hpp"
 #include "Components/Hitbox.hpp"
 #include "Components/RigidBody.hpp"
 #include "Components/Transform.hpp"
+#include "Components/Sprite.hpp"
+#include "Components/Sound.hpp"
 #include "Event.hpp"
 #include "System.hpp"
 #include "NetworkManager.hpp"
+#include "Mediator.hpp"
 
 namespace Engine {
     namespace Systems {
+
+        static inline void playExplosion(std::shared_ptr<Engine::Mediator> mediator, float x, float y) {
+            Engine::Entity e = mediator->createEntity();
+
+            Engine::Components::Transform tr{};
+            tr.pos = {x, y};
+            tr.rot = 0.0f;
+            tr.scale = 2.0f;
+            mediator->addComponent(e, tr);
+
+            Engine::Components::Sprite sp{};
+            std::snprintf(sp.sprite_name.data(), sp.sprite_name.size(), "%s", "enemy_explosion");
+            sp.frame_nb = 0;
+            sp.scrolling = false;
+            sp.is_background = false;
+            mediator->addComponent(e, sp);
+
+            Engine::Components::Sound sd{};
+            std::snprintf(sd.sound_name.data(), sd.sound_name.size(), "%s", "explosion");
+            sd.looping = false;
+            mediator->addComponent(e, sd);
+        }
+
         class EnemySystem : public System {
             public:
                 void init(std::shared_ptr<Engine::NetworkManager> networkManager) {
@@ -51,27 +79,20 @@ namespace Engine {
                         return;
                     }
                     
-                    // std::cout << "damag enenemy" << std::endl;
                     auto &enemyComp = networkManager->mediator->getComponent<Components::EnemyInfo>(enemy);
-                    // std::cout << "damag enenemy 2" << std::endl;
                     auto &hitbox = networkManager->mediator->getComponent<Components::Hitbox>(projectile);
-                    // std::cout << "damag enenemy 3" << std::endl;
-                    
+
                     enemyComp.health -= hitbox.damage;
 
                     if (enemyComp.health <= 0) {
-                        // std::cout << "YOU SHOULD DELETE THE ENTITY ! NOW !!!" << std::endl;
-                        // Event destroyEvent(static_cast<EventId>(EventsIds::ENEMY_DESTROYED));
-                        // destroyEvent.setParam(0, enemy);
-                        // destroyEvent.setParam(1, enemyComp.scoreValue);
-                        // networkManager->mediator->sendEvent(destroyEvent);
-
-                        // if (networkManager->getRole() == NetworkManager::Role::SERVER)
-                            networkManager->mediator->destroyEntity(enemy);
+                        if (networkManager->mediator->hasComponent<Components::Transform>(enemy)) {
+                            const auto &tr = networkManager->mediator->getComponent<Components::Transform>(enemy);
+                            playExplosion(networkManager->mediator, tr.pos.x, tr.pos.y);
+                        }
+                        networkManager->mediator->destroyEntity(enemy);
                     }
                     
-                    // if (networkManager->getRole() == NetworkManager::Role::SERVER)
-                        networkManager->mediator->destroyEntity(projectile);
+                    networkManager->mediator->destroyEntity(projectile);
                 }
                 
                 void updateEnemyAI(std::shared_ptr<Engine::NetworkManager> networkManager, Entity enemy, float dt) {
@@ -85,7 +106,7 @@ namespace Engine {
                             break;
                         case ENEMY_TYPES::SINE_WAVE:
                             rigidbody.velocity.x = -enemyComp.speed;
-                            rigidbody.velocity.y = sin(transform.pos.x * 0.1f) * 200.0f;
+                            rigidbody.velocity.y = std::sin(transform.pos.x * 0.1f) * 200.0f;
                             break;
                     }
                 }
