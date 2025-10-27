@@ -138,6 +138,78 @@ GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
     particleSystem.setParameters(&parameters);
 }
 
+void GameManager::startLevelWipe(uint32_t newLevel)
+{
+    levelWipeTarget = newLevel;
+    levelWipeMidApplied = false;
+    levelWipePreloadMusicId = "background_music_next_" + std::to_string(newLevel);
+    levelWipePreloadTextureId = "bg_preload_tex_" + std::to_string(newLevel);
+    levelWipePreloadSpriteId = "bg_preload_sprite_" + std::to_string(newLevel);
+
+    std::string music_path;
+    switch (newLevel) {
+        case 1: music_path = "assets/sound/Start_sound.mp3"; break;
+        case 2: music_path = "assets/sound/Stage2_sound.mp3"; break;
+        case 3: music_path = "assets/sound/Stage3_sound.mp3"; break;
+        case 4: music_path = "assets/sound/Win_level_sound.mp3"; break;
+        default: music_path = "assets/sound/Stage3_sound.mp3"; break;
+    }
+    if (sound_system && audio_player) {
+        sound_system->addSound(audio_player, levelWipePreloadMusicId, music_path);
+    }
+    if (render_system && renderer) {
+        if (newLevel == 2) {
+            const std::string bg_path = "assets/sprites/stage2_background.png";
+            render_system->addTexture(renderer, levelWipePreloadTextureId, bg_path);
+            render_system->addSprite(renderer, levelWipePreloadSpriteId, levelWipePreloadTextureId, {1226, 207}, {0, 0}, 1, 1);
+        } else {
+            const std::string bg_path = "assets/sprites/space_background.gif";
+            render_system->addTexture(renderer, levelWipePreloadTextureId, bg_path);
+            render_system->addSprite(renderer, levelWipePreloadSpriteId, levelWipePreloadTextureId, {1226, 207}, {0, 0}, 1, 1);
+        }
+    }
+    levelWipeStart = std::chrono::high_resolution_clock::now();
+    levelWipeActive = true;
+}
+
+void GameManager::applyLevelMusic(uint32_t level)
+{
+    if (audio_player) {
+        audio_player->stopAudio("background_music");
+    }
+    if (sound_system && audio_player && !levelWipePreloadMusicId.empty()) {
+        audio_player->playAudio(levelWipePreloadMusicId, true);
+    } else {
+        std::string music_path;
+        switch (level) {
+            case 1: music_path = "assets/sound/Start_sound.mp3"; break;
+            case 2: music_path = "assets/sound/Stage2_sound.mp3"; break;
+            case 3: music_path = "assets/sound/Stage3_sound.mp3"; break;
+            case 4: music_path = "assets/sound/Win_level_sound.mp3"; break;
+            default: music_path = "assets/sound/Stage3_sound.mp3"; break;
+        }
+        if (sound_system && audio_player) {
+            sound_system->addSound(audio_player, "background_music", music_path);
+            audio_player->playAudio("background_music", true);
+        }
+    }
+}
+
+void GameManager::applyBackgroundSwap(uint32_t level)
+{
+    if (!(render_system && renderer)) return;
+    const std::string spriteIdToUse = !levelWipePreloadSpriteId.empty() ? levelWipePreloadSpriteId : (level == 2 ? "stage2_background" : "space_background");
+    for (const auto &ent : render_system->entities) {
+        if (!networkManager->mediator->hasComponent<Engine::Components::Sprite>(ent))
+            continue;
+        auto &sp = networkManager->mediator->getComponent<Engine::Components::Sprite>(ent);
+        if (sp.is_background) {
+            std::strncpy(sp.sprite_name.data(), spriteIdToUse.c_str(), sp.sprite_name.size() - 1);
+            sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
+        }
+    }
+}
+
 void GameManager::updatePositions(Engine::Utils::Vec2UInt windowSize)
 {
     const int mid_window_x = static_cast<int>(windowSize.x / 2);
@@ -985,7 +1057,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         
         sound_system->update(audio_player, mediator);
         render_system->update(renderer, mediator, frameTime);
-        bool found = false;
+    bool found = false;
         for (uint32_t e = 0; e < MAX_ENTITIES; ++e) {
             if (!mediator->hasComponent<Engine::Components::PlayerInfo>(e))
                 continue;
@@ -993,55 +1065,13 @@ void GameManager::gameDemo(sf::RenderWindow &window)
                 continue;
             const auto &linfo = mediator->getComponent<Engine::Components::LevelInfo>(e);
             if (this->currentLevel != linfo.level) {
-                std::cout << "[HUD] Level updated to " << linfo.level << " from entity " << e << std::endl;
-                std::string music_path;
-                switch (linfo.level) {
-                    case 1: music_path = "assets/sound/Start_sound.mp3"; break;
-                    case 2: music_path = "assets/sound/Stage2_sound.mp3"; break;
-                    case 3: music_path = "assets/sound/Stage3_sound.mp3"; break;
-                    case 4: music_path = "assets/sound/Win_level_sound.mp3"; break;
-                    default: music_path = "assets/sound/Stage3_sound.mp3"; break;
-                }
-                if (audio_player) {
-                    audio_player->stopAudio("background_music");
-                    audio_player->unloadAudio("background_music");
-                }
-                if (sound_system && audio_player) {
-                    sound_system->addSound(audio_player, "background_music", music_path);
-                    audio_player->playAudio("background_music", true);
-                }
-                if (render_system && renderer) {
-                    if (linfo.level == 2) {
-                        const std::string texId = "stage2_background_texture";
-                        const std::string spriteId = "stage2_background";
-                        const std::string bg_path = "assets/sprites/stage2_background.png";
-                        render_system->addTexture(renderer, texId, bg_path);
-                        render_system->addSprite(renderer, spriteId, texId, {1226, 207}, {0, 0}, 1, 1);
-                        for (const auto &ent : render_system->entities) {
-                            if (!mediator->hasComponent<Engine::Components::Sprite>(ent))
-                                continue;
-                            auto &sp = mediator->getComponent<Engine::Components::Sprite>(ent);
-                            if (sp.is_background) {
-                                std::strncpy(sp.sprite_name.data(), spriteId.c_str(), sp.sprite_name.size() - 1);
-                                sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
-                            }
-                        }
-                    } else {
-                        render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
-                        for (const auto &ent : render_system->entities) {
-                            if (!mediator->hasComponent<Engine::Components::Sprite>(ent))
-                                continue;
-                            auto &sp = mediator->getComponent<Engine::Components::Sprite>(ent);
-                            if (sp.is_background) {
-                                const std::string spriteId = "space_background";
-                                std::strncpy(sp.sprite_name.data(), spriteId.c_str(), sp.sprite_name.size() - 1);
-                                sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
-                            }
-                        }
-                    }
+                if (!levelWipeActive) {
+                    std::cout << "[HUD] Starting level wipe to " << linfo.level << " from entity " << e << std::endl;
+                    startLevelWipe(linfo.level);
+                } else {
+                    std::cout << "[HUD] Level change requested while wipe active, ignoring: " << linfo.level << std::endl;
                 }
             }
-            this->currentLevel = linfo.level;
             found = true;
             break;
         }
@@ -1051,58 +1081,56 @@ void GameManager::gameDemo(sf::RenderWindow &window)
                     continue;
                 const auto &linfo = mediator->getComponent<Engine::Components::LevelInfo>(e);
                 if (this->currentLevel != linfo.level) {
-                    std::cout << "[HUD] Level updated (fallback) to " << linfo.level << " from entity " << e << std::endl;
-                    std::string music_path;
-                    switch (linfo.level) {
-                        case 1: music_path = "assets/sound/Start_sound.mp3"; break;
-                        case 2: music_path = "assets/sound/Stage2_sound.mp3"; break;
-                        case 3: music_path = "assets/sound/Stage3_sound.mp3"; break;
-                        case 4: music_path = "assets/sound/Win_level_sound.mp3"; break;
-                        default: music_path = "assets/sound/Stage3_sound.mp3"; break;
-                    }
-                    if (audio_player) {
-                        audio_player->stopAudio("background_music");
-                        audio_player->unloadAudio("background_music");
-                    }
-                    if (sound_system && audio_player) {
-                        sound_system->addSound(audio_player, "background_music", music_path);
-                        audio_player->playAudio("background_music", true);
-                    }
-                    if (render_system && renderer) {
-                        if (linfo.level == 2) {
-                            const std::string texId = "stage2_background_texture";
-                            const std::string spriteId = "stage2_background";
-                            const std::string bg_path = "assets/sprites/stage2_background.png";
-                            render_system->addTexture(renderer, texId, bg_path);
-                            render_system->addSprite(renderer, spriteId, texId, {1226, 207}, {0, 0}, 1, 1);
-                            for (const auto &ent : render_system->entities) {
-                                if (!mediator->hasComponent<Engine::Components::Sprite>(ent))
-                                    continue;
-                                auto &sp = mediator->getComponent<Engine::Components::Sprite>(ent);
-                                if (sp.is_background) {
-                                    std::strncpy(sp.sprite_name.data(), spriteId.c_str(), sp.sprite_name.size() - 1);
-                                    sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
-                                }
-                            }
-                        } else {
-                            render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
-                            for (const auto &ent : render_system->entities) {
-                                if (!mediator->hasComponent<Engine::Components::Sprite>(ent))
-                                    continue;
-                                auto &sp = mediator->getComponent<Engine::Components::Sprite>(ent);
-                                if (sp.is_background) {
-                                    const std::string spriteId = "space_background";
-                                    std::strncpy(sp.sprite_name.data(), spriteId.c_str(), sp.sprite_name.size() - 1);
-                                    sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
-                                }
-                            }
-                        }
+                    if (!levelWipeActive) {
+                        std::cout << "[HUD] Starting level wipe (fallback) to " << linfo.level << " from entity " << e << std::endl;
+                        startLevelWipe(linfo.level);
+                    } else {
+                        std::cout << "[HUD] Level change requested while wipe active (fallback), ignoring: " << linfo.level << std::endl;
                     }
                 }
-                this->currentLevel = linfo.level;
                 break;
             }
         }
+        if (levelWipeActive && renderer) {
+            auto now = std::chrono::high_resolution_clock::now();
+            float elapsed = std::chrono::duration<float>(now - levelWipeStart).count();
+            float total = levelWipeDuration;
+            float hold = levelWipeHoldDuration;
+            float pre = (total - hold) / 2.0f;
+            float post = pre;
+            float winW = static_cast<float>(renderer->getWindowWidth());
+            float winH = static_cast<float>(renderer->getWindowHeight());
+            float coverFrac = 0.0f;
+            if (elapsed < 0.0f) elapsed = 0.0f;
+            if (elapsed < pre) {
+                coverFrac = (elapsed / pre);
+            } else if (elapsed < pre + hold) {
+                coverFrac = 1.0f;
+                if (!levelWipeMidApplied) {
+                    applyBackgroundSwap(levelWipeTarget);
+                    applyLevelMusic(levelWipeTarget);
+                    levelWipeMidApplied = true;
+                    this->currentLevel = levelWipeTarget;
+                }
+            } else if (elapsed < pre + hold + post) {
+                float after = elapsed - pre - hold;
+                coverFrac = 1.0f - (after / post);
+            } else {
+                coverFrac = 0.0f;
+            }
+            if (coverFrac < 0.0f) coverFrac = 0.0f;
+            if (coverFrac > 1.0f) coverFrac = 1.0f;
+            float coverW = coverFrac * winW;
+            Engine::Utils::Rect rect(0.0f, 0.0f, coverW, winH);
+            renderer->drawRectangle(rect, levelWipeColor);
+            if (elapsed >= total) {
+                levelWipeActive = false;
+                levelWipePreloadMusicId.clear();
+                levelWipePreloadTextureId.clear();
+                levelWipePreloadSpriteId.clear();
+            }
+        }
+
         if (renderer) {
             const unsigned int fontSize = 20;
             const float padding = 10.0f;

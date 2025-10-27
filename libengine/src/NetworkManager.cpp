@@ -396,7 +396,20 @@ void Engine::NetworkManager::receiveComponent()
     std::cout << "Type Name: " << type_name << std::endl;
     std::cout << "Component Data Length: " << component_body.component_len << std::endl;
 
-    componentRegistry.addComponentByType(type_name, entity_id, component_data, *mediator);
+    if (entity_id >= MAX_ENTITIES) {
+        std::cerr << "[NetworkManager] Received component for out-of-range entity id: " << entity_id << std::endl;
+        return;
+    }
+    if (!mediator) {
+        std::cerr << "[NetworkManager] No mediator available to add component" << std::endl;
+        return;
+    }
+    try {
+        componentRegistry.addComponentByType(type_name, entity_id, component_data, *mediator);
+    } catch (const std::exception &ex) {
+        std::cerr << "[NetworkManager] Failed to add component of type '" << type_name << "' for entity " << entity_id << ": " << ex.what() << std::endl;
+        return;
+    }
 }
 
 Engine::NetworkManager::~NetworkManager()
