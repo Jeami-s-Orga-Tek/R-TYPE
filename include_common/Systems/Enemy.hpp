@@ -19,6 +19,7 @@
 #include "Components/Sprite.hpp"
 #include "Components/Sound.hpp"
 #include "Components/Animation.hpp"
+#include "Entity.hpp"
 #include "Event.hpp"
 #include "System.hpp"
 #include "NetworkManager.hpp"
@@ -27,26 +28,31 @@
 namespace Engine {
     namespace Systems {
 
-        static inline void playExplosion(std::shared_ptr<Engine::Mediator> mediator, float x, float y) {
-            Engine::Entity e = mediator->createEntity();
+        static inline void playExplosion(std::shared_ptr<Engine::NetworkManager> networkManager, float x, float y) {
+            Engine::Entity e = networkManager->mediator->createEntity();
+
+            Engine::Signature signature;
+            signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+            signature.set(networkManager->mediator->getComponentType<Engine::Components::Sprite>());
+            signature.set(networkManager->mediator->getComponentType<Engine::Components::Animation>());
 
             Engine::Components::Transform tr{};
             tr.pos = {x, y};
             tr.rot = 0.0f;
             tr.scale = 2.0f;
-            mediator->addComponent(e, tr);
+            networkManager->mediator->addComponent(e, tr);
 
             Engine::Components::Sprite sp{};
             std::snprintf(sp.sprite_name.data(), sp.sprite_name.size(), "%s", "enemy_explosion");
             sp.frame_nb = 0;
             sp.scrolling = false;
             sp.is_background = false;
-            mediator->addComponent(e, sp);
+            networkManager->mediator->addComponent(e, sp);
 
             Engine::Components::Sound sd{};
             std::snprintf(sd.sound_name.data(), sd.sound_name.size(), "%s", "explosion");
             sd.looping = false;
-            mediator->addComponent(e, sd);
+            networkManager->mediator->addComponent(e, sd);
             
             Engine::Components::Animation an {
                 .total_frames = 5,
@@ -56,7 +62,12 @@ namespace Engine {
                 .destroy_at_end = true,
                 .looping = false
             };
-            mediator->addComponent(e, an);
+            networkManager->mediator->addComponent(e, an);
+
+            networkManager->sendEntity(e, signature);
+            networkManager->sendComponent(e, tr);
+            networkManager->sendComponent(e, sd);
+            networkManager->sendComponent(e, an);
         }
 
         class EnemySystem : public System {
@@ -97,8 +108,10 @@ namespace Engine {
 
                     if (enemyComp.health <= 0) {
                         if (networkManager->mediator->hasComponent<Components::Transform>(enemy)) {
-                            const auto &tr = networkManager->mediator->getComponent<Components::Transform>(enemy);
-                            playExplosion(networkManager->mediator, tr.pos.x, tr.pos.y);
+                            if (networkManager->getRole() == NetworkManager::Role::SERVER) {
+                                const auto &tr = networkManager->mediator->getComponent<Components::Transform>(enemy);
+                                playExplosion(networkManager, tr.pos.x, tr.pos.y);
+                            }
                         }
                         networkManager->mediator->destroyEntity(enemy);
                     }

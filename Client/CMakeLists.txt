@@ -14,9 +14,6 @@ file(GLOB SOURCES src/*.cpp src/Renderers/*.cpp)
 
 include(../cmake/CPM.cmake)
 
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -fsanitize=address,leak -fno-omit-frame-pointer")
-# set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -g3 -fsanitize=address,leak -fno-omit-frame-pointer")
-
 CPMAddPackage("gh:sfml/sfml#2.6.2")
 CPMAddPackage(
   NAME Boost
@@ -62,6 +59,9 @@ else()
 endif()
 
 add_executable(r-type_client ${SOURCES})
+
+# target_compile_options(r-type_client PRIVATE -g3 -fsanitize=address,leak -fno-omit-frame-pointer)
+# target_link_options(r-type_client PRIVATE -g3 -fsanitize=address,leak -fno-omit-frame-pointer)
 
 link_directories(${CMAKE_BINARY_DIR}/libengine)
 target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
