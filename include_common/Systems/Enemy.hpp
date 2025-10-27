@@ -89,6 +89,12 @@ namespace Engine {
                             const auto &tr = networkManager->mediator->getComponent<Components::Transform>(enemy);
                             playExplosion(networkManager->mediator, tr.pos.x, tr.pos.y);
                         }
+                        {
+                            Event destroyedEvent(static_cast<Engine::EventId>(EventsIds::ENEMY_DESTROYED));
+                            destroyedEvent.setParam(0, enemy);
+                            destroyedEvent.setParam(1, enemyComp.scoreValue);
+                            networkManager->mediator->sendEvent(destroyedEvent);
+                        }
                         networkManager->mediator->destroyEntity(enemy);
                     }
                     

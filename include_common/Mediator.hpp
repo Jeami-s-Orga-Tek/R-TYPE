@@ -66,7 +66,7 @@ void Engine::Mediator::addComponent(Entity entity, T component)
 template <typename T>
 void Engine::Mediator::removeComponent(Entity entity)
 {
-    componentManager->removeComponent<T>();
+    componentManager->removeComponent<T>(entity);
     Engine::Signature signature = entityManager->getSignature(entity);
     signature.set(componentManager->getComponentType<T>(), false);
     entityManager->setSignature(entity, signature);
@@ -76,12 +76,7 @@ void Engine::Mediator::removeComponent(Entity entity)
 template <typename T>
 bool Engine::Mediator::hasComponent(Entity entity)
 {
-    try {
-        componentManager->getComponent<T>(entity);
-        return (true);
-    } catch (const std::exception &) {
-        return (false);
-    }
+    return (componentManager->hasComponent<T>(entity));
 }
 
 template <typename T>

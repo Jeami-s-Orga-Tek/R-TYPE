@@ -16,6 +16,7 @@
 #include "Components/Hitbox.hpp"
 #include "Components/RigidBody.hpp"
 #include "Components/Sound.hpp"
+#include "Components/LevelInfo.hpp"
 #include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
 #include "Entity.hpp"
@@ -64,6 +65,7 @@ void RTypeServer::Server::initEngine()
     mediator->registerComponent<Engine::Components::Hitbox>();
     mediator->registerComponent<Engine::Components::EnemyInfo>();
     mediator->registerComponent<Engine::Components::Sound>();
+    mediator->registerComponent<Engine::Components::LevelInfo>();
 
     physics_system = mediator->registerSystem<Engine::Systems::PhysicsNoEngineSystem>();
 
@@ -97,6 +99,9 @@ void RTypeServer::Server::initEngine()
 
     enemy_system = mediator->registerSystem<Engine::Systems::EnemySystem>();
     enemy_system->init(networkManager);
+
+    mediator->addEventListener(static_cast<Engine::EventId>(Engine::EventsIds::ENEMY_DESTROYED),
+        [this](Engine::Event &event) { this->handleEnemyDestroyed(event); });
 
     {
         Engine::Signature signature;
@@ -207,6 +212,12 @@ void RTypeServer::Server::createPlayer()
     networkManager->sendComponent<Engine::Components::Sprite>(entity, player_sprite);
     networkManager->sendComponent<Engine::Components::PlayerInfo>(entity, player_info);
     networkManager->sendComponent<Engine::Components::ShootingCooldown>(entity, player_cooldown);
+    try {
+        Engine::Components::LevelInfo level_info = { .level = static_cast<uint32_t>(current_level) };
+        networkManager->sendComponent<Engine::Components::LevelInfo>(entity, level_info);
+    } catch (const std::exception &e) {
+        std::cerr << "Failed to send initial LevelInfo to player " << entity << ": " << e.what() << std::endl;
+    }
 }
 
 void RTypeServer::Server::createPlayerProjectile(float x, float y)
@@ -309,4 +320,34 @@ void RTypeServer::Server::createBackground()
 
 RTypeServer::Server::~Server()
 {
+}
+
+void RTypeServer::Server::handleEnemyDestroyed(Engine::Event &event)
+{
+    try {
+        Engine::Entity enemy = event.getParam<Engine::Entity>(0);
+        int score = event.getParam<int>(1);
+
+        (void)enemy;
+
+        enemies_killed += 1;
+        std::cout << "Enemy destroyed. Kills: " << enemies_killed << " / " << enemies_to_next_level << std::endl;
+
+        if (enemies_killed >= enemies_to_next_level) {
+            current_level += 1;
+            enemies_killed = 0;
+            enemies_to_next_level += 5;
+            std::cout << "Level up! New level: " << current_level << " - next threshold: " << enemies_to_next_level << std::endl;
+            try {
+                Engine::Components::LevelInfo level_info = { .level = static_cast<uint32_t>(current_level) };
+                for (const auto &player_entity : player_control_system->entities) {
+                    networkManager->sendComponent<Engine::Components::LevelInfo>(player_entity, level_info);
+                }
+            } catch (const std::exception &e) {
+                std::cerr << "Failed to broadcast level change: " << e.what() << std::endl;
+            }
+        }
+    } catch (const std::bad_any_cast &e) {
+        std::cerr << "Failed to parse ENEMY_DESTROYED event params: " << e.what() << std::endl;
+    }
 }

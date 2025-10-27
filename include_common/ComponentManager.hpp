@@ -37,6 +37,7 @@ namespace Engine {
             template <typename T> void addComponent(Entity entity, T component);
             template <typename T> void removeComponent(Entity entity);
             template <typename T> T &getComponent(Entity entity);
+            template <typename T> bool hasComponent(Entity entity);
             std::vector<std::string> getComponentsNames() const;
             void entityDestroyed(Entity entity);
 
@@ -99,6 +100,12 @@ template <typename T>
 T &Engine::ComponentManager::getComponent(Engine::Entity entity)
 {
     return (getComponentArray<T>()->getComponent(entity));
+}
+
+template <typename T>
+bool Engine::ComponentManager::hasComponent(Engine::Entity entity)
+{
+    return (getComponentArray<T>()->hasEntity(entity));
 }
 
 #endif /* !COMPONENTMANAGER_HPP_ */

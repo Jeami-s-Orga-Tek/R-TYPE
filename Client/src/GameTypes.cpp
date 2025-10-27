@@ -27,6 +27,7 @@
 #include "Systems/Render.hpp"
 #include "Systems/PlayerControl.hpp"
 #include "Utils.hpp"
+#include "Components/LevelInfo.hpp"
 
 GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
     : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
@@ -985,8 +986,43 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         
         sound_system->update(audio_player, mediator);
         render_system->update(renderer, mediator, frameTime);
+        bool found = false;
+        for (uint32_t e = 0; e < MAX_ENTITIES; ++e) {
+            if (!mediator->hasComponent<Engine::Components::PlayerInfo>(e))
+                continue;
+            if (!mediator->hasComponent<Engine::Components::LevelInfo>(e))
+                continue;
+            const auto &linfo = mediator->getComponent<Engine::Components::LevelInfo>(e);
+            if (this->currentLevel != linfo.level) {
+                std::cout << "[HUD] Level updated to " << linfo.level << " from entity " << e << std::endl;
+            }
+            this->currentLevel = linfo.level;
+            found = true;
+            break;
+        }
+        if (!found) {
+            for (uint32_t e = 0; e < MAX_ENTITIES; ++e) {
+                if (!mediator->hasComponent<Engine::Components::LevelInfo>(e))
+                    continue;
+                const auto &linfo = mediator->getComponent<Engine::Components::LevelInfo>(e);
+                if (this->currentLevel != linfo.level) {
+                    std::cout << "[HUD] Level updated (fallback) to " << linfo.level << " from entity " << e << std::endl;
+                }
+                this->currentLevel = linfo.level;
+                break;
+            }
+        }
+        if (renderer) {
+            const unsigned int fontSize = 20;
+            const float padding = 10.0f;
+            float winW = static_cast<float>(renderer->getWindowWidth());
+            float winH = static_cast<float>(renderer->getWindowHeight());
+            float levelX = std::max(0.0f, winW - 250.0f - padding);
+            float levelY = std::max(0.0f, winH - 40.0f - padding);
+            renderer->drawText("basic", std::string("Level : ") + std::to_string(this->currentLevel), levelX, levelY, fontSize, 0xFFFF00FF);
 
-        renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
+            renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 25.0f, 20, 0x00FF00FF);
+        }
 
         dev_console_system->update(networkManager, renderer);
         renderer->displayWindow();

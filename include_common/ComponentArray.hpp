@@ -41,6 +41,7 @@ namespace Engine {
             void insertEntity(Entity entity, T component);
             void removeEntity(Entity entity);
             T &getComponent(Entity entity);
+            bool hasEntity(Entity entity);
             void entityDestroyed(Entity entity) override;
         private:
             std::array<T, MAX_ENTITIES> components {};
@@ -97,6 +98,12 @@ T &Engine::ComponentArray<T>::getComponent(Engine::Entity entity)
         throw std::runtime_error("Trying to get component not in component array !!!!!!");
 
     return (components[entity_to_index_map[entity]]);
+}
+
+template <typename T>
+bool Engine::ComponentArray<T>::hasEntity(Engine::Entity entity)
+{
+    return (entity_to_index_map.find(entity) != entity_to_index_map.end());
 }
 
 template <typename T>
