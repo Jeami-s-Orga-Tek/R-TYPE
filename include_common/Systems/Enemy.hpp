@@ -72,6 +72,26 @@ namespace Engine {
                         damageEnemy(networkManager, entityA, entityB);
                     else if (layerA == HITBOX_LAYERS::PLAYER_PROJECTILE && layerB == HITBOX_LAYERS::ENEMY)
                         damageEnemy(networkManager, entityB, entityA);
+                    else if (layerA == HITBOX_LAYERS::PLAYER && layerB == HITBOX_LAYERS::ENEMY) {
+                        std::cout << "[INFO] Player touched by ENEMY (entities: " << entityA << ", " << entityB << ")\n";
+                        if (networkManager->mediator->hasComponent<Components::Transform>(entityB)) {
+                            const auto &tr = networkManager->mediator->getComponent<Components::Transform>(entityB);
+                            playExplosion(networkManager->mediator, tr.pos.x, tr.pos.y);
+                        }
+                        networkManager->mediator->destroyEntity(entityB);
+                    } else if (layerA == HITBOX_LAYERS::ENEMY && layerB == HITBOX_LAYERS::PLAYER) {
+                        std::cout << "[INFO] Player touched by ENEMY (entities: " << entityA << ", " << entityB << ")\n";
+                        if (networkManager->mediator->hasComponent<Components::Transform>(entityA)) {
+                            const auto &tr = networkManager->mediator->getComponent<Components::Transform>(entityA);
+                            playExplosion(networkManager->mediator, tr.pos.x, tr.pos.y);
+                        }
+                        networkManager->mediator->destroyEntity(entityA);
+                    }
+                    else if (layerA == HITBOX_LAYERS::PLAYER && layerB == HITBOX_LAYERS::ENEMY_PROJECTILE) {
+                        std::cout << "[INFO] Player touched by ENEMY PROJECTILE (entities: " << entityA << ", " << entityB << ")\n";
+                    } else if (layerA == HITBOX_LAYERS::ENEMY_PROJECTILE && layerB == HITBOX_LAYERS::PLAYER) {
+                        std::cout << "[INFO] Player touched by ENEMY PROJECTILE (entities: " << entityA << ", " << entityB << ")\n";
+                    }
                 }
                 
                 void damageEnemy(std::shared_ptr<Engine::NetworkManager> networkManager, Entity enemy, Entity projectile) {
@@ -96,9 +116,16 @@ namespace Engine {
                 }
                 
                 void updateEnemyAI(std::shared_ptr<Engine::NetworkManager> networkManager, Entity enemy, float dt) {
-                    auto &enemyComp = networkManager->mediator->getComponent<Components::EnemyInfo>(enemy);
-                    auto &transform = networkManager->mediator->getComponent<Components::Transform>(enemy);
-                    auto &rigidbody = networkManager->mediator->getComponent<Components::RigidBody>(enemy);
+                    auto med = networkManager->mediator;
+                    if (!med->hasComponent<Components::EnemyInfo>(enemy) ||
+                        !med->hasComponent<Components::Transform>(enemy) ||
+                        !med->hasComponent<Components::RigidBody>(enemy)) {
+                        return;
+                    }
+
+                    auto &enemyComp = med->getComponent<Components::EnemyInfo>(enemy);
+                    auto &transform = med->getComponent<Components::Transform>(enemy);
+                    auto &rigidbody = med->getComponent<Components::RigidBody>(enemy);
 
                     switch (static_cast<ENEMY_TYPES>(enemyComp.type)) {
                         case ENEMY_TYPES::SIMPLE:

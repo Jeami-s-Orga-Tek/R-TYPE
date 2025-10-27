@@ -926,7 +926,6 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addTexture(renderer, "base_player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
     render_system->addTexture(renderer, "ground_enemy_sprite_sheet", "assets/sprites/r-typesheet7.gif");
     render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
-    // Register explosion sprite sheet
     render_system->addTexture(renderer, "enemy_explosion_sheet", "assets/sprites/explosionEnemy1.gif");
 
     render_system->addSprite(renderer, "player_1", "players_sprite_sheet", {32, 17}, {0, 0}, 5, 1);
@@ -958,6 +957,8 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     renderer->loadFont("dev", "assets/dev.ttf");
     renderer->loadFont("basic", "assets/r-type.otf");
 
+    registerLivesCollisionListener();
+
     while (renderer->isWindowOpen()) {
         frame_start_time = std::chrono::high_resolution_clock::now();
         
@@ -985,13 +986,16 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             physics_system->update(mediator, FIXED_DT);
             collision_system->update(networkManager);
             enemy_system->update(networkManager, FIXED_DT);
+            checkPlayerEnemyOverlap();
+
             accumulator -= FIXED_DT;
         }
         
         sound_system->update(audio_player, mediator);
         render_system->update(renderer, mediator, frameTime);
 
-        renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
+        renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0x00FF00FF);
+        renderer->drawText("basic", "Lives: " + std::to_string(uiLives), 10.0f, 30.0f, 24, 0xFFFFFFFF);
 
         dev_console_system->update(networkManager, renderer);
         renderer->displayWindow();
@@ -1005,3 +1009,18 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         }
     }
 }
+
+void GameManager::registerLivesCollisionListener() {
+    CollisionHelpers::registerLivesCollisionListener(networkManager->mediator, uiLives, uiLivesListenerRegistered);
+}
+
+void GameManager::checkPlayerEnemyOverlap() {
+    CollisionHelpers::checkPlayerEnemyOverlap(
+        networkManager->mediator,
+        player_control_system.get(),
+        enemy_system.get(),
+        uiLives,
+        playerHitClock
+    );
+}
+

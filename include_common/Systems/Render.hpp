@@ -114,6 +114,10 @@ namespace Engine {
 
                 void update(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator, float deltaTime = 0.016f) {
                     for (const auto &entity : entities) {
+                        if (!mediator->hasComponent<Components::Sprite>(entity) ||
+                            !mediator->hasComponent<Components::Transform>(entity)) {
+                            continue;
+                        }
                         auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
 
                         if (entity_sprite.is_background) {
@@ -134,6 +138,10 @@ namespace Engine {
                         }
                     }
                     for (const auto &entity : entities) {
+                        if (!mediator->hasComponent<Components::Sprite>(entity) ||
+                            !mediator->hasComponent<Components::Transform>(entity)) {
+                            continue;
+                        }
                         auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
 
                         if (!entity_sprite.is_background) {

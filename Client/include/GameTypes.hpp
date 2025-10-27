@@ -38,6 +38,11 @@
 #include "Systems/Collision.hpp"
 #include "Systems/Enemy.hpp"
 
+// Add component headers for robust collision checks in the listener
+#include "Components/PlayerInfo.hpp"
+#include "Components/EnemyInfo.hpp"
+#include "Collision.hpp"
+
 enum class State {
     LAUNCH,
     MENU,
@@ -176,6 +181,12 @@ class GameManager {
         void handleWindowResize(sf::Event& event);
         void updateStatusTextPosition(bool isParametersMode = false);
         bool connectToServer(const std::string& serverIP, unsigned short port);
+
+        int uiLives = 3;
+        bool uiLivesListenerRegistered = false;
+        void registerLivesCollisionListener();
+        void checkPlayerEnemyOverlap();
+        sf::Clock playerHitClock;
 };
 
 #endif /* !GAMETYPES_HPP_ */
