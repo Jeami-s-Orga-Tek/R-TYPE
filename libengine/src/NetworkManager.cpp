@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "NetworkManager.hpp"
+#include "Components/Animation.hpp"
 #include "Components/EnemyInfo.hpp"
 #include "Components/Gravity.hpp"
 #include "Components/Hitbox.hpp"
@@ -42,6 +43,7 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     registerComponent<Engine::Components::Hitbox>();
     registerComponent<Engine::Components::EnemyInfo>();
     registerComponent<Engine::Components::Sound>();
+    registerComponent<Engine::Components::Animation>();
     
     if (role == Role::SERVER) {
         socket.open(boost::asio::ip::udp::v4());

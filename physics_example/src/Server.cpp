@@ -10,6 +10,7 @@
 #include <thread>
 
 #include "Server.hpp"
+#include "Components/Animation.hpp"
 #include "Components/Gravity.hpp"
 #include "dlfcn_compat.hpp"
 #include "Components/EnemyInfo.hpp"
@@ -59,6 +60,7 @@ void Example::Game::initEngine()
     mediator->registerComponent<Engine::Components::Hitbox>();
     mediator->registerComponent<Engine::Components::EnemyInfo>();
     mediator->registerComponent<Engine::Components::Sound>();
+    mediator->registerComponent<Engine::Components::Animation>();
 
     physics_system = mediator->registerSystem<Engine::Systems::PhysicsUsingEngineSystem>();
     physics_system->init();

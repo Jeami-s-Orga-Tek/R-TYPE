@@ -10,6 +10,7 @@
 #include <thread>
 
 #include "Server.hpp"
+#include "Components/Animation.hpp"
 #include "Components/Gravity.hpp"
 #include "dlfcn_compat.hpp"
 #include "Components/EnemyInfo.hpp"
@@ -64,6 +65,7 @@ void RTypeServer::Server::initEngine()
     mediator->registerComponent<Engine::Components::Hitbox>();
     mediator->registerComponent<Engine::Components::EnemyInfo>();
     mediator->registerComponent<Engine::Components::Sound>();
+    mediator->registerComponent<Engine::Components::Animation>();
 
     physics_system = mediator->registerSystem<Engine::Systems::PhysicsNoEngineSystem>();
 
@@ -105,6 +107,15 @@ void RTypeServer::Server::initEngine()
         signature.set(networkManager->mediator->getComponentType<Engine::Components::Hitbox>());
         signature.set(networkManager->mediator->getComponentType<Engine::Components::EnemyInfo>());
         networkManager->mediator->setSystemSignature<Engine::Systems::EnemySystem>(signature);
+    }
+
+    animate_system = networkManager->mediator->registerSystem<Engine::Systems::Animate>();
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Sprite>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Animation>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::Animate>(signature);
     }
 }
 
@@ -152,6 +163,7 @@ void RTypeServer::Server::gameLoop()
             physics_system->update(mediator, FIXED_DT);
             enemy_system->update(networkManager, FIXED_DT);
             collision_system->update(networkManager);
+            animate_system->update(mediator, FIXED_DT);
 
             networkManager->handleTimeouts();
 

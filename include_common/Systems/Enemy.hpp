@@ -18,6 +18,7 @@
 #include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
 #include "Components/Sound.hpp"
+#include "Components/Animation.hpp"
 #include "Event.hpp"
 #include "System.hpp"
 #include "NetworkManager.hpp"
@@ -46,6 +47,16 @@ namespace Engine {
             std::snprintf(sd.sound_name.data(), sd.sound_name.size(), "%s", "explosion");
             sd.looping = false;
             mediator->addComponent(e, sd);
+            
+            Engine::Components::Animation an {
+                .total_frames = 5,
+                .pause = 0.15f,
+                .pause_timer = 0.0f,
+                .is_playing = true,
+                .destroy_at_end = true,
+                .looping = false
+            };
+            mediator->addComponent(e, an);
         }
 
         class EnemySystem : public System {

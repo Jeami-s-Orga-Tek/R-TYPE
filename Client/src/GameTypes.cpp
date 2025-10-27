@@ -13,9 +13,12 @@
 #include <fstream>
 
 #include "AudioPlayer.hpp"
+#include "Components/Animation.hpp"
 #include "Components/Sound.hpp"
+#include "Components/Sprite.hpp"
 #include "Entity.hpp"
 #include "Renderer.hpp"
+#include "Systems/Animate.hpp"
 #include "Systems/DevConsole.hpp"
 #include "Systems/SoundPlayer.hpp"
 #include "DLLoader.hpp"
@@ -737,6 +740,15 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
     dev_console_system = networkManager->mediator->registerSystem<Engine::Systems::DevConsole>();
     dev_console_system->init(networkManager->mediator);
 
+    animate_system = networkManager->mediator->registerSystem<Engine::Systems::Animate>();
+
+    {
+        Engine::Signature signature;
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Sprite>());
+        signature.set(networkManager->mediator->getComponentType<Engine::Components::Animation>());
+        networkManager->mediator->setSystemSignature<Engine::Systems::Animate>(signature);
+    }
+
     // TEMP
     networkManager->sendHello(UsernameGame, 12345);
 
@@ -980,6 +992,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             physics_system->update(mediator, FIXED_DT);
             collision_system->update(networkManager);
             enemy_system->update(networkManager, FIXED_DT);
+            animate_system->update(mediator, FIXED_DT);
             accumulator -= FIXED_DT;
         }
         

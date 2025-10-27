@@ -119,18 +119,7 @@ namespace Engine {
                         if (entity_sprite.is_background) {
                             const auto &transform = mediator->getComponent<Components::Transform>(entity);
 
-                            if (std::string(entity_sprite.sprite_name.data()) == "enemy_explosion") {
-                                if (entity_sprite.frame_nb >= 5) {
-                                    mediator->destroyEntity(entity);
-                                    continue;
-                                }
-                            }
-
                             drawSprite(renderer, entity_sprite, transform, deltaTime);
-
-                            if (std::string(entity_sprite.sprite_name.data()) == "enemy_explosion") {
-                                entity_sprite.frame_nb += 1;
-                            }
                         }
                     }
                     for (const auto &entity : entities) {
@@ -139,18 +128,7 @@ namespace Engine {
                         if (!entity_sprite.is_background) {
                             const auto &transform = mediator->getComponent<Components::Transform>(entity);
 
-                            if (std::string(entity_sprite.sprite_name.data()) == "enemy_explosion") {
-                                if (entity_sprite.frame_nb >= 5) {
-                                    mediator->destroyEntity(entity);
-                                    continue;
-                                }
-                            }
-
                             drawSprite(renderer, entity_sprite, transform, deltaTime);
-
-                            if (std::string(entity_sprite.sprite_name.data()) == "enemy_explosion") {
-                                entity_sprite.frame_nb += 1;
-                            }
                         }
                     }
                 };

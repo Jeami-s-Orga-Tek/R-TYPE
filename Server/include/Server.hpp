@@ -16,6 +16,7 @@
 #include "Systems/PlayerControl.hpp"
 #include "Systems/Collision.hpp"
 #include "Systems/Enemy.hpp"
+#include "Systems/Animate.hpp"
 
 namespace RTypeServer {
     class Server {
@@ -42,6 +43,7 @@ namespace RTypeServer {
             std::shared_ptr<Engine::Systems::PlayerControl> player_control_system {};
             std::shared_ptr<Engine::Systems::Collision> collision_system {};
             std::shared_ptr<Engine::Systems::EnemySystem> enemy_system {};
+            std::shared_ptr<Engine::Systems::Animate> animate_system {};
 
             int player_nb = 4;
     };

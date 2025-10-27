@@ -37,6 +37,7 @@
 #include "Systems/PlayerControl.hpp"
 #include "Systems/Collision.hpp"
 #include "Systems/Enemy.hpp"
+#include "Systems/Animate.hpp"
 
 enum class State {
     LAUNCH,
@@ -135,6 +136,7 @@ class GameManager {
         std::shared_ptr<Engine::Systems::EnemySystem> enemy_system {};
         std::shared_ptr<Engine::Systems::SoundSystem> sound_system {};
         std::shared_ptr<Engine::Systems::DevConsole> dev_console_system {};
+        std::shared_ptr<Engine::Systems::Animate> animate_system {};
 
         std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
         std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
