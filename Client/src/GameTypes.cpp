@@ -1010,6 +1010,36 @@ void GameManager::gameDemo(sf::RenderWindow &window)
                     sound_system->addSound(audio_player, "background_music", music_path);
                     audio_player->playAudio("background_music", true);
                 }
+                if (render_system && renderer) {
+                    if (linfo.level == 2) {
+                        const std::string texId = "stage2_background_texture";
+                        const std::string spriteId = "stage2_background";
+                        const std::string bg_path = "assets/sprites/stage2_background.png";
+                        render_system->addTexture(renderer, texId, bg_path);
+                        render_system->addSprite(renderer, spriteId, texId, {1226, 207}, {0, 0}, 1, 1);
+                        for (const auto &ent : render_system->entities) {
+                            if (!mediator->hasComponent<Engine::Components::Sprite>(ent))
+                                continue;
+                            auto &sp = mediator->getComponent<Engine::Components::Sprite>(ent);
+                            if (sp.is_background) {
+                                std::strncpy(sp.sprite_name.data(), spriteId.c_str(), sp.sprite_name.size() - 1);
+                                sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
+                            }
+                        }
+                    } else {
+                        render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
+                        for (const auto &ent : render_system->entities) {
+                            if (!mediator->hasComponent<Engine::Components::Sprite>(ent))
+                                continue;
+                            auto &sp = mediator->getComponent<Engine::Components::Sprite>(ent);
+                            if (sp.is_background) {
+                                const std::string spriteId = "space_background";
+                                std::strncpy(sp.sprite_name.data(), spriteId.c_str(), sp.sprite_name.size() - 1);
+                                sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
+                            }
+                        }
+                    }
+                }
             }
             this->currentLevel = linfo.level;
             found = true;
@@ -1037,6 +1067,36 @@ void GameManager::gameDemo(sf::RenderWindow &window)
                     if (sound_system && audio_player) {
                         sound_system->addSound(audio_player, "background_music", music_path);
                         audio_player->playAudio("background_music", true);
+                    }
+                    if (render_system && renderer) {
+                        if (linfo.level == 2) {
+                            const std::string texId = "stage2_background_texture";
+                            const std::string spriteId = "stage2_background";
+                            const std::string bg_path = "assets/sprites/stage2_background.png";
+                            render_system->addTexture(renderer, texId, bg_path);
+                            render_system->addSprite(renderer, spriteId, texId, {1226, 207}, {0, 0}, 1, 1);
+                            for (const auto &ent : render_system->entities) {
+                                if (!mediator->hasComponent<Engine::Components::Sprite>(ent))
+                                    continue;
+                                auto &sp = mediator->getComponent<Engine::Components::Sprite>(ent);
+                                if (sp.is_background) {
+                                    std::strncpy(sp.sprite_name.data(), spriteId.c_str(), sp.sprite_name.size() - 1);
+                                    sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
+                                }
+                            }
+                        } else {
+                            render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
+                            for (const auto &ent : render_system->entities) {
+                                if (!mediator->hasComponent<Engine::Components::Sprite>(ent))
+                                    continue;
+                                auto &sp = mediator->getComponent<Engine::Components::Sprite>(ent);
+                                if (sp.is_background) {
+                                    const std::string spriteId = "space_background";
+                                    std::strncpy(sp.sprite_name.data(), spriteId.c_str(), sp.sprite_name.size() - 1);
+                                    sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
+                                }
+                            }
+                        }
                     }
                 }
                 this->currentLevel = linfo.level;
