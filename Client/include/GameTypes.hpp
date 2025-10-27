@@ -142,6 +142,7 @@ class GameManager {
 
         std::shared_ptr<Engine::Renderer> renderer;
         std::shared_ptr<Engine::AudioPlayer> audio_player;
+        uint32_t currentLevel = 1;
     public:
         GameManager(Engine::Utils::Vec2UInt windowSize);
 

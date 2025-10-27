@@ -25,6 +25,7 @@
 #include "Components/Sound.hpp"
 #include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
+#include "Components/LevelInfo.hpp"
 #include "Entity.hpp"
 
 Engine::NetworkManager::NetworkManager(Role role, const std::string &address, uint16_t port)
@@ -42,6 +43,7 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     registerComponent<Engine::Components::Hitbox>();
     registerComponent<Engine::Components::EnemyInfo>();
     registerComponent<Engine::Components::Sound>();
+    registerComponent<Engine::Components::LevelInfo>();
     
     if (role == Role::SERVER) {
         socket.open(boost::asio::ip::udp::v4());
