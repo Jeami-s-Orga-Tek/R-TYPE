@@ -5,14 +5,11 @@ set(SFML_RENDERER_SRC
 
 add_library(renderer SHARED ${SFML_RENDERER_SRC})
 target_include_directories(renderer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ../../../../include_common)
-target_include_directories(renderer PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(renderer PRIVATE
     sfml-graphics
     sfml-window
     sfml-system
     sfml-audio
-    Boost::system
-    Boost::asio
     $<$<BOOL:${WIN32}>:ws2_32>
     engine
 )

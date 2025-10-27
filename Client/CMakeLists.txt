@@ -8,11 +8,22 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Ofast")
 set(SFML_VERSION 2.6.2)
 
 include_directories(../include_common)
+
+add_subdirectory(../LuaLoader ${CMAKE_CURRENT_BINARY_DIR}/LuaLoader)
+include_directories(../LuaLoader)
+
 include_directories(include)
 
 file(GLOB SOURCES src/*.cpp src/Renderers/*.cpp)
 
 include(../cmake/CPM.cmake)
+
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -fsanitize=address,leak -fno-omit-frame-pointer")
+# set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -g3 -fsanitize=address,leak -fno-omit-frame-pointer")
+
+if(NOT DEFINED ENV{CPM_SOURCE_CACHE})
+    set(ENV{CPM_SOURCE_CACHE} ${CMAKE_CURRENT_SOURCE_DIR}/.cpm-cache)
+endif()
 
 CPMAddPackage("gh:sfml/sfml#2.6.2")
 CPMAddPackage(
@@ -23,6 +34,20 @@ CPMAddPackage(
   OPTIONS "BOOST_ENABLE_CMAKE ON" "BOOST_SKIP_INSTALL_RULES ON"
           "BUILD_SHARED_LIBS OFF" "BOOST_INCLUDE_LIBRARIES container\\\;asio\\\;pfr\\\;type_index"
 )
+
+CPMAddPackage(
+  NAME lua
+  GITHUB_REPOSITORY lua/lua
+  VERSION 5.3.5
+  DOWNLOAD_ONLY YES
+)
+
+if(lua_ADDED)
+  file(GLOB lua_sources ${lua_SOURCE_DIR}/*.c)
+  list(REMOVE_ITEM lua_sources "${lua_SOURCE_DIR}/lua.c" "${lua_SOURCE_DIR}/luac.c")
+  add_library(lua SHARED ${lua_sources})
+  target_include_directories(lua SYSTEM PUBLIC $<BUILD_INTERFACE:${lua_SOURCE_DIR}>)
+endif()
 
 set(RENDERER "SFML" CACHE STRING "Choose renderer")
 set(RENDERER_TARGET "renderer")
@@ -67,6 +92,7 @@ link_directories(${CMAKE_BINARY_DIR}/libengine)
 target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 target_link_libraries(r-type_client PRIVATE
   engine
+  LuaLoader
   sfml-graphics
   sfml-window
   sfml-system
@@ -77,6 +103,8 @@ target_link_libraries(r-type_client PRIVATE
   Boost::pfr
   Boost::type_index
   pthread
+  sol2
+  lua
   ${RENDERER_LIB}
   ${AUDIOPLAYER_LIB}
   ${PHYSICSENGINE_LIB}

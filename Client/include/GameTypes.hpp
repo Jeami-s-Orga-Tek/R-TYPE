@@ -14,6 +14,7 @@
 #include <memory>
 
 #include "Button.hpp"
+#include "LuaLoader.hpp"
 #include "Parameters.hpp"
 #include "ParamButton.hpp"
 #include "ParticleSystem.hpp"
@@ -144,6 +145,8 @@ class GameManager {
 
         std::shared_ptr<Engine::Renderer> renderer;
         std::shared_ptr<Engine::AudioPlayer> audio_player;
+
+        Engine::LuaLoader luaLoader;
     public:
         GameManager(Engine::Utils::Vec2UInt windowSize);
 

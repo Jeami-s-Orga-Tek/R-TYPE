@@ -12,10 +12,17 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Ofast")
 
 include_directories(../include_common)
 
+add_subdirectory(../LuaLoader ${CMAKE_CURRENT_BINARY_DIR}/LuaLoader)
+include_directories(../LuaLoader)
+
 include_directories(include)
 include_directories(src)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
+
+if(NOT DEFINED ENV{CPM_SOURCE_CACHE})
+    set(ENV{CPM_SOURCE_CACHE} ${CMAKE_CURRENT_SOURCE_DIR}/.cpm-cache)
+endif()
 
 CPMAddPackage(
   NAME Boost
@@ -25,6 +32,23 @@ CPMAddPackage(
   OPTIONS "BOOST_ENABLE_CMAKE ON" "BOOST_SKIP_INSTALL_RULES ON"
           "BUILD_SHARED_LIBS OFF" "BOOST_INCLUDE_LIBRARIES container\\\;asio\\\;pfr\\\;type_index"
 )
+
+CPMAddPackage(
+  NAME lua
+  GITHUB_REPOSITORY lua/lua
+  VERSION 5.3.5
+  DOWNLOAD_ONLY YES
+)
+
+if(lua_ADDED)
+  file(GLOB lua_sources ${lua_SOURCE_DIR}/*.c)
+  list(REMOVE_ITEM lua_sources "${lua_SOURCE_DIR}/lua.c" "${lua_SOURCE_DIR}/luac.c")
+  add_library(lua SHARED ${lua_sources})
+  target_include_directories(lua SYSTEM PUBLIC $<BUILD_INTERFACE:${lua_SOURCE_DIR}>)
+endif()
+
+
+
 
 set(PHYSICSENGINE "Box2D" CACHE STRING "Choose PHYSICSENGINE")
 set(PHYSICSENGINE_TARGET "physicsengine")
@@ -44,6 +68,6 @@ add_executable(r-type_server ${SOURCES})
 
 target_include_directories(renderer PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries(r-type_server PRIVATE engine Boost::system Boost::asio Boost::pfr Boost::type_index ${PHYSICSENGINE_LIB})
+target_link_libraries(r-type_server PRIVATE engine LuaLoader Boost::system Boost::asio Boost::pfr Boost::type_index sol2 lua ${PHYSICSENGINE_LIB})
 target_link_libraries(r-type_server PRIVATE ${CMAKE_DL_LIBS})
 target_link_libraries(r-type_server PRIVATE $<$<BOOL:${WIN32}>:ws2_32>)

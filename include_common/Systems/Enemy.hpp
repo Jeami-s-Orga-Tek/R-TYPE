@@ -66,8 +66,11 @@ namespace Engine {
 
             networkManager->sendEntity(e, signature);
             networkManager->sendComponent(e, tr);
+            networkManager->sendComponent(e, sp);
             networkManager->sendComponent(e, sd);
             networkManager->sendComponent(e, an);
+
+            std::cout << "created the expolode" << std::endl;
         }
 
         class EnemySystem : public System {

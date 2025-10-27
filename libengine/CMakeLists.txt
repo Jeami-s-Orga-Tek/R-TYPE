@@ -34,6 +34,3 @@ target_link_libraries(engine PRIVATE
   Boost::type_index
   pthread
 )
-
-# TEMP REMOVE LATER
-# target_link_libraries(engine PRIVATE sfml-graphics sfml-window sfml-system)
