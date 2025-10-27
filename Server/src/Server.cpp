@@ -340,7 +340,9 @@ void RTypeServer::Server::handleEnemyDestroyed(Engine::Event &event)
             std::cout << "Level up! New level: " << current_level << " - next threshold: " << enemies_to_next_level << std::endl;
             try {
                 Engine::Components::LevelInfo level_info = { .level = static_cast<uint32_t>(current_level) };
+                std::cout << "[SERVER] Broadcasting level " << current_level << " to players:" << std::endl;
                 for (const auto &player_entity : player_control_system->entities) {
+                    std::cout << "  -> player entity " << player_entity << std::endl;
                     networkManager->sendComponent<Engine::Components::LevelInfo>(player_entity, level_info);
                 }
             } catch (const std::exception &e) {

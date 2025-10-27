@@ -922,7 +922,6 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addTexture(renderer, "base_player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
     render_system->addTexture(renderer, "ground_enemy_sprite_sheet", "assets/sprites/r-typesheet7.gif");
     render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
-    // Register explosion sprite sheet
     render_system->addTexture(renderer, "enemy_explosion_sheet", "assets/sprites/explosionEnemy1.gif");
 
     render_system->addSprite(renderer, "player_1", "players_sprite_sheet", {32, 17}, {0, 0}, 5, 1);
@@ -935,7 +934,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addSprite(renderer, "space_background", "space_background_texture", {1226, 207}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "enemy_explosion", "enemy_explosion_sheet", {32, 32}, {0, 0}, 5, 1);
 
-    sound_system->addSound(audio_player, "background_music", "assets/sound/Stage2_sound.mp3");
+    sound_system->addSound(audio_player, "background_music", "assets/sound/Start_sound.mp3");
     sound_system->addSound(audio_player, "projectile_shoot", "assets/sound/01LASER.BD_00000.wav");
     sound_system->addSound(audio_player, "explosion", "assets/sound/explosion.mp3");
 
@@ -995,6 +994,22 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             const auto &linfo = mediator->getComponent<Engine::Components::LevelInfo>(e);
             if (this->currentLevel != linfo.level) {
                 std::cout << "[HUD] Level updated to " << linfo.level << " from entity " << e << std::endl;
+                std::string music_path;
+                switch (linfo.level) {
+                    case 1: music_path = "assets/sound/Start_sound.mp3"; break;
+                    case 2: music_path = "assets/sound/Stage2_sound.mp3"; break;
+                    case 3: music_path = "assets/sound/Stage3_sound.mp3"; break;
+                    case 4: music_path = "assets/sound/Win_level_sound.mp3"; break;
+                    default: music_path = "assets/sound/Stage3_sound.mp3"; break;
+                }
+                if (audio_player) {
+                    audio_player->stopAudio("background_music");
+                    audio_player->unloadAudio("background_music");
+                }
+                if (sound_system && audio_player) {
+                    sound_system->addSound(audio_player, "background_music", music_path);
+                    audio_player->playAudio("background_music", true);
+                }
             }
             this->currentLevel = linfo.level;
             found = true;
@@ -1007,6 +1022,22 @@ void GameManager::gameDemo(sf::RenderWindow &window)
                 const auto &linfo = mediator->getComponent<Engine::Components::LevelInfo>(e);
                 if (this->currentLevel != linfo.level) {
                     std::cout << "[HUD] Level updated (fallback) to " << linfo.level << " from entity " << e << std::endl;
+                    std::string music_path;
+                    switch (linfo.level) {
+                        case 1: music_path = "assets/sound/Start_sound.mp3"; break;
+                        case 2: music_path = "assets/sound/Stage2_sound.mp3"; break;
+                        case 3: music_path = "assets/sound/Stage3_sound.mp3"; break;
+                        case 4: music_path = "assets/sound/Win_level_sound.mp3"; break;
+                        default: music_path = "assets/sound/Stage3_sound.mp3"; break;
+                    }
+                    if (audio_player) {
+                        audio_player->stopAudio("background_music");
+                        audio_player->unloadAudio("background_music");
+                    }
+                    if (sound_system && audio_player) {
+                        sound_system->addSound(audio_player, "background_music", music_path);
+                        audio_player->playAudio("background_music", true);
+                    }
                 }
                 this->currentLevel = linfo.level;
                 break;
