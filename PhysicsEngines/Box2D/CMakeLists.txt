@@ -15,6 +15,10 @@ CPMAddPackage(
 add_library(physicsengine SHARED ${BOX2D_PHYSICSENGINE_SRC})
 target_include_directories(physicsengine PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ../../../../include_common)
 target_link_libraries(physicsengine PRIVATE
-    box2d
-    $<$<BOOL:${WIN32}>:ws2_32>
+  box2d
+  $<$<BOOL:${WIN32}>:ws2_32>
+  Boost::system
+  Boost::asio
+  Boost::pfr
+  Boost::type_index
 )

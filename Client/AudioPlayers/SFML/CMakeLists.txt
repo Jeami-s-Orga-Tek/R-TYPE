@@ -10,6 +10,10 @@ target_link_libraries(audioplayer PRIVATE
     sfml-window
     sfml-system
     sfml-audio
+    Boost::system
+    Boost::asio
+    Boost::pfr
+    Boost::type_index
     $<$<BOOL:${WIN32}>:ws2_32>
     engine
 )

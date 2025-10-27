@@ -43,6 +43,8 @@ target_link_libraries(LuaLoader PUBLIC
     Boost::asio
     Boost::pfr
     Boost::type_index
+    $<$<BOOL:${WIN32}>:ws2_32>
+    engine
 )
 
 set_target_properties(LuaLoader PROPERTIES
