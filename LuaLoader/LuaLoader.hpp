@@ -27,6 +27,9 @@
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
 #include "Entity.hpp"
+#include "PhysicsEngine.hpp"
+#include "Renderer.hpp"
+#include "AudioPlayer.hpp"
 
 namespace Engine {
     class LuaLoader {
@@ -36,6 +39,9 @@ namespace Engine {
 
             void setMediator(std::shared_ptr<Engine::Mediator> mediator);
             void setNetworkManager(std::shared_ptr<Engine::NetworkManager> networkManager);
+            void setPhysicsEngine(std::shared_ptr<Engine::PhysicsEngine> physicsEngine);
+            void setRenderer(std::shared_ptr<Engine::Renderer> renderer);
+            void setAudioPlayer(std::shared_ptr<Engine::AudioPlayer> audioPlayer);
             
             template <typename T> void registerComponent();
             template <typename T> void registerComponentECS();
@@ -47,11 +53,17 @@ namespace Engine {
             sol::state lua {};
             std::shared_ptr<Engine::Mediator> mediator;
             std::shared_ptr<Engine::NetworkManager> networkManager;
+            std::shared_ptr<Engine::PhysicsEngine> physicsEngine;
+            std::shared_ptr<Engine::Renderer> renderer;
+            std::shared_ptr<Engine::AudioPlayer> audioPlayer;
 
             template <typename T, std::size_t ...I> void registerFields(sol::state &lua, const std::string &name, std::index_sequence<I...>);
             void bindECS();
             void bindUtils();
             void bindEvents();
+            void bindPhysics();
+            void bindRenderer();
+            void bindAudio();
     };
 };
 

@@ -14,6 +14,9 @@
 #include "NetworkManager.hpp"
 #include "Utils.hpp"
 #include "Event.hpp"
+#include "PhysicsEngine.hpp"
+#include "Renderer.hpp"
+#include "AudioPlayer.hpp"
 #include "Components/Transform.hpp"
 #include "Components/Hitbox.hpp"
 #include "Components/RigidBody.hpp"
@@ -101,6 +104,24 @@ void Engine::LuaLoader::setNetworkManager(std::shared_ptr<Engine::NetworkManager
     }
 }
 
+void Engine::LuaLoader::setPhysicsEngine(std::shared_ptr<Engine::PhysicsEngine> physicsEngine)
+{
+    this->physicsEngine = physicsEngine;
+    bindPhysics();
+}
+
+void Engine::LuaLoader::setRenderer(std::shared_ptr<Engine::Renderer> renderer)
+{
+    this->renderer = renderer;
+    bindRenderer();
+}
+
+void Engine::LuaLoader::setAudioPlayer(std::shared_ptr<Engine::AudioPlayer> audioPlayer)
+{
+    this->audioPlayer = audioPlayer;
+    bindAudio();
+}
+
 void Engine::LuaLoader::bindECS()
 {
     if (!mediator)
@@ -123,7 +144,7 @@ void Engine::LuaLoader::bindECS()
         return mediator->getEntityCount();
     };
 
-    ecs_table["getComponent"] = [this](Engine::Entity entity, const std::string& componentType) -> sol::object {
+    ecs_table["getComponent"] = [this](Engine::Entity entity, const std::string &componentType) -> sol::object {
         std::cerr << "Warning: Generic getComponent called for " << componentType << " - use specific get" << componentType << " function instead" << std::endl;
         return (sol::nil);
     };
@@ -139,7 +160,7 @@ void Engine::LuaLoader::bindECS()
         }
         sol::table registeredTypes = ecs_table["_componentTypes"];
         
-        for (auto& pair : componentTypes) {
+        for (auto &pair : componentTypes) {
             if (pair.second.is<std::string>()) {
                 std::string typeName = pair.second.as<std::string>();
 
@@ -182,7 +203,7 @@ void Engine::LuaLoader::bindECS()
                 continue;
             }
 
-            if ((entity_signature & required_signature) == required_signature) {
+            if ((entity_signature  &required_signature) == required_signature) {
                 result.push_back(entity);
             }
         }
@@ -196,7 +217,7 @@ void Engine::LuaLoader::bindECS()
         return (signature);
     };
 
-    ecs_table["addComponentToSignature"] = [](sol::table signature, const std::string& componentType) {
+    ecs_table["addComponentToSignature"] = [](sol::table signature, const std::string &componentType) {
         sol::table componentTypes = signature["componentTypes"];
         componentTypes[componentType] = true;
     };
@@ -221,51 +242,51 @@ void Engine::LuaLoader::bindEvents()
     
     event_type["getType"] = &Engine::Event::getType;
     
-    event_type["setParamInt"] = [](Engine::Event& event, Engine::EventId id, int value) {
+    event_type["setParamInt"] = [](Engine::Event &event, Engine::EventId id, int value) {
         event.setParam(id, value);
     };
     
-    event_type["setParamFloat"] = [](Engine::Event& event, Engine::EventId id, float value) {
+    event_type["setParamFloat"] = [](Engine::Event &event, Engine::EventId id, float value) {
         event.setParam(id, value);
     };
     
-    event_type["setParamEntity"] = [](Engine::Event& event, Engine::EventId id, Engine::Entity value) {
+    event_type["setParamEntity"] = [](Engine::Event &event, Engine::EventId id, Engine::Entity value) {
         event.setParam(id, value);
     };
     
-    event_type["setParamHitboxLayer"] = [](Engine::Event& event, Engine::EventId id, int layerValue) {
+    event_type["setParamHitboxLayer"] = [](Engine::Event &event, Engine::EventId id, int layerValue) {
         event.setParam(id, static_cast<HITBOX_LAYERS>(layerValue));
     };
     
-    event_type["setParamIntById"] = [](Engine::Event& event, int id, int value) {
+    event_type["setParamIntById"] = [](Engine::Event &event, int id, int value) {
         event.setParam(static_cast<Engine::EventId>(id), value);
     };
     
-    event_type["setParamEntityById"] = [](Engine::Event& event, int id, Engine::Entity value) {
+    event_type["setParamEntityById"] = [](Engine::Event &event, int id, Engine::Entity value) {
         event.setParam(static_cast<Engine::EventId>(id), value);
     };
     
-    event_type["setParamHitboxLayerById"] = [](Engine::Event& event, int id, int layerValue) {
+    event_type["setParamHitboxLayerById"] = [](Engine::Event &event, int id, int layerValue) {
         event.setParam(static_cast<Engine::EventId>(id), static_cast<HITBOX_LAYERS>(layerValue));
     };
     
-    event_type["getParamInt"] = [](Engine::Event& event, Engine::EventId id) -> int {
+    event_type["getParamInt"] = [](Engine::Event &event, Engine::EventId id) -> int {
         return event.getParam<int>(id);
     };
     
-    event_type["getParamFloat"] = [](Engine::Event& event, Engine::EventId id) -> float {
+    event_type["getParamFloat"] = [](Engine::Event &event, Engine::EventId id) -> float {
         return event.getParam<float>(id);
     };
     
-    event_type["getParamEntity"] = [](Engine::Event& event, Engine::EventId id) -> Engine::Entity {
+    event_type["getParamEntity"] = [](Engine::Event &event, Engine::EventId id) -> Engine::Entity {
         return event.getParam<Engine::Entity>(id);
     };
     
-    event_type["getParamIntById"] = [](Engine::Event& event, int id) -> int {
+    event_type["getParamIntById"] = [](Engine::Event &event, int id) -> int {
         return event.getParam<int>(static_cast<Engine::EventId>(id));
     };
     
-    event_type["getParamEntityById"] = [](Engine::Event& event, int id) -> Engine::Entity {
+    event_type["getParamEntityById"] = [](Engine::Event &event, int id) -> Engine::Entity {
         return event.getParam<Engine::Entity>(static_cast<Engine::EventId>(id));
     };
 
@@ -295,7 +316,7 @@ void Engine::LuaLoader::bindEvents()
     if (lua["ECS"].valid()) {
         sol::table ecs_table = lua["ECS"];
 
-        ecs_table["sendEvent"] = [this](Engine::Event& event) {
+        ecs_table["sendEvent"] = [this](Engine::Event &event) {
             if (!this->mediator) {
                 std::cerr << "Error: Mediator not available for sendEvent" << std::endl;
                 return;
@@ -319,10 +340,10 @@ void Engine::LuaLoader::bindEvents()
                 return;
             }
             
-            auto callback = [luaCallback](Engine::Event& event) {
+            auto callback = [luaCallback](Engine::Event &event) {
                 try {
                     luaCallback(event);
-                } catch (const sol::error& e) {
+                } catch (const sol::error &e) {
                     std::cerr << "Error in Lua event callback: " << e.what() << std::endl;
                 }
             };
@@ -431,21 +452,21 @@ void Engine::LuaLoader::bindUtils()
     rect_type["toString"] = &Engine::Utils::Rect::toString;
 
     rect_type["contains"] = sol::overload(
-        [](const Engine::Utils::Rect& rect, float x, float y) {
+        [](const Engine::Utils::Rect &rect, float x, float y) {
             return rect.contains(x, y);
         },
-        [](const Engine::Utils::Rect& rect, const Engine::Utils::Vec2& point) {
+        [](const Engine::Utils::Rect &rect, const Engine::Utils::Vec2 &point) {
             return rect.contains(point);
         }
     );
     
     rect_type["intersects"] = &Engine::Utils::Rect::intersects;
 
-    rect_type["getCenter"] = [](const Engine::Utils::Rect& rect) -> Engine::Utils::Vec2 {
+    rect_type["getCenter"] = [](const Engine::Utils::Rect &rect) -> Engine::Utils::Vec2 {
         return Engine::Utils::Vec2(rect.x + rect.width / 2.0f, rect.y + rect.height / 2.0f);
     };
     
-    rect_type["getArea"] = [](const Engine::Utils::Rect& rect) -> float {
+    rect_type["getArea"] = [](const Engine::Utils::Rect &rect) -> float {
         return rect.width * rect.height;
     };
     
@@ -484,6 +505,314 @@ void Engine::LuaLoader::executeLuaFunction(const std::string &functionName)
     } catch (const sol::error &e) {
         std::cerr << "Lua function execution error for '" << functionName << "': " << e.what() << std::endl;
     }
+}
+
+void Engine::LuaLoader::bindPhysics()
+{
+    if (!physicsEngine) {
+        std::cout << "Warning: PhysicsEngine not set, skipping physics binding" << std::endl;
+        return;
+    }
+
+    std::cout << "Binding PhysicsEngine to Lua..." << std::endl;
+
+    lua["Physics"] = lua.create_table();
+    sol::table physics_table = lua["Physics"];
+
+    physics_table["init"] = [this](float gravityX, float gravityY) {
+        if (!this->physicsEngine) {
+            std::cerr << "Error: PhysicsEngine not available for init" << std::endl;
+            return;
+        }
+        Engine::Utils::Vec2 gravity(gravityX, gravityY);
+        this->physicsEngine->init(gravity);
+    };
+
+    physics_table["step"] = [this](float deltaTime) {
+        if (!this->physicsEngine) {
+            std::cerr << "Error: PhysicsEngine not available for step" << std::endl;
+            return;
+        }
+        this->physicsEngine->step(deltaTime);
+    };
+
+    physics_table["addRigidBody"] = [this](Engine::Entity entity, float x, float y, float width, float height, float angle, bool hasGravity, float density, float friction) {
+        if (!this->physicsEngine) {
+            std::cerr << "Error: PhysicsEngine not available for addRigidBody" << std::endl;
+            return;
+        }
+        Engine::Utils::Rect body(x, y, width, height);
+        this->physicsEngine->addRigidBody(entity, body, angle, hasGravity, density, friction);
+    };
+
+    physics_table["getRigidBodyPos"] = [this](Engine::Entity entity) -> sol::table {
+        if (!this->physicsEngine) {
+            std::cerr << "Error: PhysicsEngine not available for getRigidBodyPos" << std::endl;
+            return lua.create_table();
+        }
+        Engine::Utils::Vec2 pos = this->physicsEngine->getRigidBodyPos(entity);
+        sol::table result = lua.create_table();
+        result["x"] = pos.x;
+        result["y"] = pos.y;
+        return result;
+    };
+
+    physics_table["getRigidBodyAngle"] = [this](Engine::Entity entity) -> float {
+        if (!this->physicsEngine) {
+            std::cerr << "Error: PhysicsEngine not available for getRigidBodyAngle" << std::endl;
+            return 0.0f;
+        }
+        return this->physicsEngine->getRigidBodyAngle(entity);
+    };
+
+    std::cout << "PhysicsEngine bound to Lua" << std::endl;
+}
+
+void Engine::LuaLoader::bindRenderer()
+{
+    if (!renderer) {
+        std::cout << "Warning: Renderer not set, skipping renderer binding" << std::endl;
+        return;
+    }
+
+    std::cout << "Binding Renderer to Lua..." << std::endl;
+
+    lua["Renderer"] = lua.create_table();
+    sol::table renderer_table = lua["Renderer"];
+
+    renderer_table["createWindow"] = [this](int width, int height, const std::string &title) -> bool {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for createWindow" << std::endl;
+            return false;
+        }
+        return this->renderer->createWindow(width, height, title);
+    };
+
+    renderer_table["getWindowHeight"] = [this]() -> unsigned int {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for getWindowHeight" << std::endl;
+            return 0;
+        }
+        return this->renderer->getWindowHeight();
+    };
+
+    renderer_table["getWindowWidth"] = [this]() -> unsigned int {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for getWindowWidth" << std::endl;
+            return 0;
+        }
+        return this->renderer->getWindowWidth();
+    };
+
+    renderer_table["clearWindow"] = [this]() {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for clearWindow" << std::endl;
+            return;
+        }
+        this->renderer->clearWindow();
+    };
+
+    renderer_table["displayWindow"] = [this]() {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for displayWindow" << std::endl;
+            return;
+        }
+        this->renderer->displayWindow();
+    };
+
+    renderer_table["closeWindow"] = [this]() {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for closeWindow" << std::endl;
+            return;
+        }
+        this->renderer->closeWindow();
+    };
+
+    renderer_table["isWindowOpen"] = [this]() -> bool {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for isWindowOpen" << std::endl;
+            return false;
+        }
+        return this->renderer->isWindowOpen();
+    };
+
+    renderer_table["loadFont"] = [this](const std::string &id, const std::string &filepath) -> bool {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for loadFont" << std::endl;
+            return false;
+        }
+        return this->renderer->loadFont(id, filepath);
+    };
+
+    renderer_table["unloadFont"] = [this](const std::string &id) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for unloadFont" << std::endl;
+            return;
+        }
+        this->renderer->unloadFont(id);
+    };
+
+    renderer_table["drawText"] = [this](const std::string &fontId, const std::string &text, float x, float y, unsigned int size, unsigned int color) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for drawText" << std::endl;
+            return;
+        }
+        this->renderer->drawText(fontId, text, x, y, size, color);
+    };
+
+    renderer_table["loadTexture"] = [this](const std::string &id, const std::string &filepath) -> bool {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for loadTexture" << std::endl;
+            return false;
+        }
+        return this->renderer->loadTexture(id, filepath);
+    };
+
+    renderer_table["unloadTexture"] = [this](const std::string &id) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for unloadTexture" << std::endl;
+            return;
+        }
+        this->renderer->unloadTexture(id);
+    };
+
+    renderer_table["createSprite"] = [this](const std::string &id, const std::string &textureId) -> bool {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for createSprite" << std::endl;
+            return false;
+        }
+        return this->renderer->createSprite(id, textureId);
+    };
+
+    renderer_table["setSpritePosition"] = [this](const std::string &id, float x, float y) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for setSpritePosition" << std::endl;
+            return;
+        }
+        this->renderer->setSpritePosition(id, x, y);
+    };
+
+    renderer_table["setSpriteTexture"] = [this](const std::string &id, const std::string &textureId) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for setSpriteTexture" << std::endl;
+            return;
+        }
+        this->renderer->setSpriteTexture(id, textureId);
+    };
+
+    renderer_table["setSpriteTextureRect"] = [this](const std::string &id, int left, int top, int width, int height) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for setSpriteTextureRect" << std::endl;
+            return;
+        }
+        this->renderer->setSpriteTextureRect(id, left, top, width, height);
+    };
+
+    renderer_table["setSpriteRotation"] = [this](const std::string &id, float angle) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for setSpriteRotation" << std::endl;
+            return;
+        }
+        this->renderer->setSpriteRotation(id, angle);
+    };
+
+    renderer_table["setSpriteScale"] = [this](const std::string &id, float scale) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for setSpriteScale" << std::endl;
+            return;
+        }
+        this->renderer->setSpriteScale(id, scale);
+    };
+
+    renderer_table["setSpriteOrigin"] = [this](const std::string &id, float x, float y) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for setSpriteOrigin" << std::endl;
+            return;
+        }
+        this->renderer->setSpriteOrigin(id, x, y);
+    };
+
+    renderer_table["drawSprite"] = [this](const std::string &id) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for drawSprite" << std::endl;
+            return;
+        }
+        this->renderer->drawSprite(id);
+    };
+
+    renderer_table["removeSprite"] = [this](const std::string &id) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for removeSprite" << std::endl;
+            return;
+        }
+        this->renderer->removeSprite(id);
+    };
+
+    renderer_table["scrollSprite"] = [this](const std::string &id) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for scrollSprite" << std::endl;
+            return;
+        }
+        this->renderer->scrollSprite(id);
+    };
+
+    renderer_table["drawRectangle"] = [this](float x, float y, float width, float height, unsigned int color) {
+        if (!this->renderer) {
+            std::cerr << "Error: Renderer not available for drawRectangle" << std::endl;
+            return;
+        }
+        Engine::Utils::Rect rect(x, y, width, height);
+        this->renderer->drawRectangle(rect, color);
+    };
+
+    std::cout << "Renderer bound to Lua" << std::endl;
+}
+
+void Engine::LuaLoader::bindAudio()
+{
+    if (!audioPlayer) {
+        std::cout << "Warning: AudioPlayer not set, skipping audio binding" << std::endl;
+        return;
+    }
+
+    std::cout << "Binding AudioPlayer to Lua..." << std::endl;
+
+    lua["Audio"] = lua.create_table();
+    sol::table audio_table = lua["Audio"];
+
+    audio_table["loadAudio"] = [this](const std::string &id, const std::string &filepath) -> bool {
+        if (!this->audioPlayer) {
+            std::cerr << "Error: AudioPlayer not available for loadAudio" << std::endl;
+            return false;
+        }
+        return this->audioPlayer->loadAudio(id, filepath);
+    };
+
+    audio_table["playAudio"] = [this](const std::string &id, bool loop) {
+        if (!this->audioPlayer) {
+            std::cerr << "Error: AudioPlayer not available for playAudio" << std::endl;
+            return;
+        }
+        this->audioPlayer->playAudio(id, loop);
+    };
+
+    audio_table["stopAudio"] = [this](const std::string &id) {
+        if (!this->audioPlayer) {
+            std::cerr << "Error: AudioPlayer not available for stopAudio" << std::endl;
+            return;
+        }
+        this->audioPlayer->stopAudio(id);
+    };
+
+    audio_table["unloadAudio"] = [this](const std::string &id) {
+        if (!this->audioPlayer) {
+            std::cerr << "Error: AudioPlayer not available for unloadAudio" << std::endl;
+            return;
+        }
+        this->audioPlayer->unloadAudio(id);
+    };
+
+    std::cout << "AudioPlayer bound to Lua" << std::endl;
 }
 
 Engine::LuaLoader::~LuaLoader()
