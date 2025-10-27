@@ -360,6 +360,7 @@ void GameManager::render(sf::RenderWindow& window) {
         username.draw(window);
         player.draw(window);
     } else if (currentState == State::LEADERBOARD) {
+        backButton.draw(window);
         trophy.draw(window);
     } else if (currentState == State::GAME) {
         // window.close();
@@ -552,9 +553,11 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             paramButton.setVolumeFromMouse(mousePos.x);
         }
     } else if (currentState == State::CONTROLS) {
-        if (backButton.isClicked(mousePos)) {
+        if (backButton.isClicked(mousePos))
             currentState = State::SETTINGS;
-        }
+    } else if (currentState == State::LEADERBOARD) {
+        if (backButton.isClicked(mousePos))
+            currentState = State::MENU;
     } else if (currentState == State::LOCKER) {
         if (applyButtonLocker.isClicked(mousePos)) {
             currentState = State::MENU;
@@ -610,6 +613,8 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
         if (isDraggingVolume) {
             paramButton.setVolumeFromMouse(mousePos.x);
         }
+    } else if (currentState == State::LEADERBOARD) {
+        backButton.setHovered(backButton.isClicked(mousePos));
     } else if (currentState == State::LOCKER) {
         paramButton.setHovered(paramButton.isClicked(mousePos));
         applyButtonLocker.setHovered(applyButtonLocker.isClicked(mousePos));
