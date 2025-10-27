@@ -357,9 +357,9 @@ void Engine::NetworkManager::receiveEntity()
     Entity entity_id = entity_body.entity_id;
     Signature signature(entity_body.signature);
 
-    std::cout << "ENTITY RECEIVED:" << std::endl;
-    std::cout << "Entity ID: " << entity_id << std::endl;
-    std::cout << "Signature: " << signature << std::endl;
+    // std::cout << "ENTITY RECEIVED:" << std::endl;
+    // std::cout << "Entity ID: " << entity_id << std::endl;
+    // std::cout << "Signature: " << signature << std::endl;
 
     mediator->createEntity();
 }
@@ -389,10 +389,10 @@ void Engine::NetworkManager::receiveComponent()
     std::string type_name(reinterpret_cast<char *>(recv_buffer.data() + sizeof(PacketHeader) + sizeof(ComponentBody)), name_len);
     const void *component_data = recv_buffer.data() + sizeof(PacketHeader) + sizeof(ComponentBody) + name_len;
 
-    std::cout << "COMPONENT RECEIVED:" << std::endl;
-    std::cout << "Entity ID: " << entity_id << std::endl;
-    std::cout << "Type Name: " << type_name << std::endl;
-    std::cout << "Component Data Length: " << component_body.component_len << std::endl;
+    // std::cout << "COMPONENT RECEIVED:" << std::endl;
+    // std::cout << "Entity ID: " << entity_id << std::endl;
+    // std::cout << "Type Name: " << type_name << std::endl;
+    // std::cout << "Component Data Length: " << component_body.component_len << std::endl;
 
     componentRegistry.addComponentByType(type_name, entity_id, component_data, *mediator);
 }

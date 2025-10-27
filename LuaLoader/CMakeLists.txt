@@ -27,7 +27,7 @@ if(NOT TARGET LuaLoader)
     endif()
 
     set_target_properties(LuaLoader PROPERTIES
-        CXX_STANDARD 17
+        CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
     )
 endif()
@@ -46,6 +46,6 @@ target_link_libraries(LuaLoader PUBLIC
 )
 
 set_target_properties(LuaLoader PROPERTIES
-    CXX_STANDARD 17
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
 )

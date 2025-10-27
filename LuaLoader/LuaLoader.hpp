@@ -14,6 +14,7 @@
 #include <iostream>
 #include <tuple>
 #include <utility>
+#include <memory>
 
 #include <boost/pfr.hpp>
 #include <boost/type_index.hpp>
@@ -23,19 +24,34 @@
 #define SOL_ALL_SAFETIES_ON 1
 #include <sol/sol.hpp>
 
+#include "Mediator.hpp"
+#include "NetworkManager.hpp"
+#include "Entity.hpp"
+
 namespace Engine {
     class LuaLoader {
         public:
             LuaLoader();
             ~LuaLoader();
 
+            void setMediator(std::shared_ptr<Engine::Mediator> mediator);
+            void setNetworkManager(std::shared_ptr<Engine::NetworkManager> networkManager);
+            
             template <typename T> void registerComponent();
+            template <typename T> void registerComponentECS();
+            
             void executeScript(const std::string &scriptPath);
             void executeScriptString(const std::string &script);
+            void executeLuaFunction(const std::string &functionName);
         private:
             sol::state lua {};
+            std::shared_ptr<Engine::Mediator> mediator;
+            std::shared_ptr<Engine::NetworkManager> networkManager;
 
             template <typename T, std::size_t ...I> void registerFields(sol::state &lua, const std::string &name, std::index_sequence<I...>);
+            void bindECS();
+            void bindUtils();
+            void bindEvents();
     };
 };
 
@@ -86,6 +102,73 @@ void Engine::LuaLoader::registerComponent()
     boost::replace_all(name, "::", "_");
     std::cout << "Registering component with Lua name: '" << name << "'" << std::endl;
     registerFields<T>(lua, name, std::make_index_sequence<fields_nb>{});
+}
+
+template <typename T>
+void Engine::LuaLoader::registerComponentECS()
+{
+    if (!mediator) {
+        std::cerr << "Warning: Cannot register ECS component access without mediator!" << std::endl;
+        return;
+    }
+
+    registerComponent<T>();
+    
+    std::string typeName = boost::typeindex::type_id<T>().pretty_name();
+    
+    boost::replace_all(typeName, "Engine::Components::", "");
+    boost::replace_all(typeName, "Engine_Components_", "");
+    boost::replace_all(typeName, "_s", "");
+    
+    sol::table ecs_table = lua["ECS"];
+    
+    std::string getName = "get" + typeName;
+    std::string addName = "add" + typeName;
+    std::string hasName = "has" + typeName;
+    std::string removeName = "remove" + typeName;
+    std::string sendName = "send" + typeName;
+
+    ecs_table[getName] = [this](Engine::Entity entity) -> T& {
+        return mediator->getComponent<T>(entity);
+    };
+    
+    ecs_table[addName] = [this](Engine::Entity entity, const T& component) {
+        mediator->addComponent(entity, component);
+    };
+    
+    ecs_table[hasName] = [this](Engine::Entity entity) -> bool {
+        return mediator->hasComponent<T>(entity);
+    };
+
+    ecs_table[sendName] = [this, typeName](Engine::Entity entity) {
+        if (!this->networkManager) {
+            std::cerr << "Error: NetworkManager not available for " << typeName << std::endl;
+            return;
+        }
+        
+        try {
+            auto& component = mediator->getComponent<T>(entity);
+            this->networkManager->sendComponent(entity, component);
+        } catch (const std::exception& e) {
+            std::cerr << "Error sending " << typeName << " component: " << e.what() << std::endl;
+        }
+    };
+
+    if (!ecs_table["sendComponent"].valid()) {
+        ecs_table["sendComponent"] = [](Engine::Entity, const std::string& componentType) {
+            std::cerr << "Warning: Use specific send" << componentType << " function instead of generic sendComponent" << std::endl;
+        };
+    }
+
+    if (!ecs_table["_componentTypes"].valid()) {
+        ecs_table["_componentTypes"] = lua.create_table();
+    }
+    sol::table componentTypes = ecs_table["_componentTypes"];
+    componentTypes[typeName] = [this]() -> Engine::ComponentType {
+        return mediator->getComponentType<T>();
+    };
+    
+    std::cout << "Registered ECS access for component: " << typeName << " (get" << typeName << ", add" << typeName << ", has" << typeName << ", send" << typeName << ")" << std::endl;
 }
 
 #endif /* !LUALOADER_HPP_ */

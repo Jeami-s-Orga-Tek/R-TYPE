@@ -677,6 +677,20 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
 {
     networkManager = createNetworkManagerFunc(Engine::NetworkManager::Role::CLIENT, serverIP, port);
 
+    luaLoader.setMediator(networkManager->mediator);
+    luaLoader.setNetworkManager(networkManager);
+    luaLoader.registerComponentECS<Engine::Components::Sprite>();
+    luaLoader.registerComponentECS<Engine::Components::Transform>();
+    luaLoader.registerComponentECS<Engine::Components::RigidBody>();
+    luaLoader.registerComponentECS<Engine::Components::Gravity>();
+    luaLoader.registerComponentECS<Engine::Components::PlayerInfo>();
+    luaLoader.registerComponentECS<Engine::Components::ShootingCooldown>();
+    luaLoader.registerComponentECS<Engine::Components::Hitbox>();
+    luaLoader.registerComponentECS<Engine::Components::EnemyInfo>();
+    luaLoader.registerComponentECS<Engine::Components::Sound>();
+
+    luaLoader.executeScript("lua_collision_system.lua");
+
     physics_system = networkManager->mediator->registerSystem<Engine::Systems::PhysicsNoEngineSystem>();
 
     {
@@ -705,14 +719,14 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
         networkManager->mediator->setSystemSignature<Engine::Systems::PlayerControl>(signature);
     }
 
-    collision_system = networkManager->mediator->registerSystem<Engine::Systems::Collision>();
+    // collision_system = networkManager->mediator->registerSystem<Engine::Systems::Collision>();
 
-    {
-        Engine::Signature signature;
-        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
-        signature.set(networkManager->mediator->getComponentType<Engine::Components::Hitbox>());
-        networkManager->mediator->setSystemSignature<Engine::Systems::Collision>(signature);
-    }
+    // {
+    //     Engine::Signature signature;
+    //     signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
+    //     signature.set(networkManager->mediator->getComponentType<Engine::Components::Hitbox>());
+    //     networkManager->mediator->setSystemSignature<Engine::Systems::Collision>(signature);
+    // }
 
     enemy_system = networkManager->mediator->registerSystem<Engine::Systems::EnemySystem>();
     enemy_system->init(networkManager);
@@ -974,7 +988,9 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         while (accumulator >= FIXED_DT) {
             player_control_system->update(networkManager, FIXED_DT);
             physics_system->update(mediator, FIXED_DT);
-            collision_system->update(networkManager);
+            // collision_system->update(networkManager);
+            luaLoader.executeLuaFunction("updateCollisionSystem");
+
             enemy_system->update(networkManager, FIXED_DT);
             accumulator -= FIXED_DT;
         }

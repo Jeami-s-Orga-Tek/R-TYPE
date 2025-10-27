@@ -65,6 +65,20 @@ void RTypeServer::Server::initEngine()
     mediator->registerComponent<Engine::Components::EnemyInfo>();
     mediator->registerComponent<Engine::Components::Sound>();
 
+    luaLoader.setMediator(mediator);
+    luaLoader.setNetworkManager(networkManager);
+    luaLoader.registerComponentECS<Engine::Components::Sprite>();
+    luaLoader.registerComponentECS<Engine::Components::Transform>();
+    luaLoader.registerComponentECS<Engine::Components::RigidBody>();
+    luaLoader.registerComponentECS<Engine::Components::Gravity>();
+    luaLoader.registerComponentECS<Engine::Components::PlayerInfo>();
+    luaLoader.registerComponentECS<Engine::Components::ShootingCooldown>();
+    luaLoader.registerComponentECS<Engine::Components::Hitbox>();
+    luaLoader.registerComponentECS<Engine::Components::EnemyInfo>();
+    luaLoader.registerComponentECS<Engine::Components::Sound>();
+
+    luaLoader.executeScript("lua_collision_system.lua");
+    
     physics_system = mediator->registerSystem<Engine::Systems::PhysicsNoEngineSystem>();
 
     {
@@ -86,14 +100,7 @@ void RTypeServer::Server::initEngine()
         networkManager->mediator->setSystemSignature<Engine::Systems::PlayerControl>(signature);
     }
 
-    collision_system = mediator->registerSystem<Engine::Systems::Collision>();
-
-    {
-        Engine::Signature signature;
-        signature.set(networkManager->mediator->getComponentType<Engine::Components::Transform>());
-        signature.set(networkManager->mediator->getComponentType<Engine::Components::Hitbox>());
-        networkManager->mediator->setSystemSignature<Engine::Systems::Collision>(signature);
-    }
+    // collision_system = mediator->registerSystem<Engine::Systems::Collision>();
 
     enemy_system = mediator->registerSystem<Engine::Systems::EnemySystem>();
     enemy_system->init(networkManager);
@@ -151,7 +158,8 @@ void RTypeServer::Server::gameLoop()
             player_control_system->update(networkManager, FIXED_DT);
             physics_system->update(mediator, FIXED_DT);
             enemy_system->update(networkManager, FIXED_DT);
-            collision_system->update(networkManager);
+
+            luaLoader.executeLuaFunction("updateCollisionSystem");
 
             networkManager->handleTimeouts();
 
