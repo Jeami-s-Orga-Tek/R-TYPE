@@ -25,7 +25,8 @@ namespace Engine {
                         auto &transform = mediator->getComponent<Components::Transform>(entity);
                         // auto const &gravity = mediator->getComponent<Components::Gravity>(entity);
 
-                        transform.pos += rigidbody.velocity * dt;
+                        transform.pos.x += rigidbody.velocity.x * dt;
+                        transform.pos.y += rigidbody.velocity.y * dt;
 
                         // rigidbody.velocity += gravity.force * dt;
                     }

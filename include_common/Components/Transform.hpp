@@ -13,7 +13,8 @@
 namespace Engine {
     namespace Components {
         typedef struct Transform_s {
-            Utils::Vec2 pos;
+            // Utils::Vec2 pos;
+            Utils::Rect pos;
             float rot;
             float scale;
         } Transform;

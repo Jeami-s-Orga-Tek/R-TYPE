@@ -16,6 +16,7 @@ namespace Engine {
             Utils::Vec2 force;
             float density = 1.0f;
             float friction = 0.3f;
+            float restitution = 0.3f;
         } Gravity;
     };
 };

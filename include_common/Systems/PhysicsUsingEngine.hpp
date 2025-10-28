@@ -11,6 +11,7 @@
 #include <memory>
 
 #include "Components/Gravity.hpp"
+#include "Components/Sprite.hpp"
 #include "PhysicsEngine.hpp"
 #include "System.hpp"
 #include "Mediator.hpp"
@@ -45,15 +46,16 @@ namespace Engine {
                         auto &gravity = mediator->getComponent<Components::Gravity>(entity);
                         
                         if (!rigidbody.has_body_been_created) {
-                            Engine::Utils::Rect rect(transform.pos.x, transform.pos.y, 10, 10);
-                            physics_engine->addRigidBody(entity, rect, transform.rot, true, gravity.density, gravity.friction);
+                            Engine::Utils::Rect rect(transform.pos.x, transform.pos.y, transform.pos.width, transform.pos.height);
+                            physics_engine->addRigidBody(entity, rect, transform.rot, (gravity.force.x != 0.0f && gravity.force.y != 0.0f), gravity.density, gravity.friction, gravity.restitution);
                             rigidbody.has_body_been_created = true;
                         }
 
                         Engine::Utils::Vec2 pos = physics_engine->getRigidBodyPos(entity);
                         float angle = physics_engine->getRigidBodyAngle(entity);
 
-                        transform.pos = pos;
+                        transform.pos.x = pos.x;
+                        transform.pos.y = pos.y;
                         transform.rot = angle;
                     }
 

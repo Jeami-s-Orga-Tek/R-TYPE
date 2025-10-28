@@ -12,6 +12,7 @@
 #include "Server.hpp"
 #include "Components/Animation.hpp"
 #include "Components/Gravity.hpp"
+#include "Utils.hpp"
 #include "dlfcn_compat.hpp"
 #include "Components/EnemyInfo.hpp"
 #include "Components/Hitbox.hpp"
@@ -211,7 +212,7 @@ void RTypeServer::Server::createPlayer()
     // mediator->addComponent(entity, player_gravity);
     const Engine::Components::RigidBody player_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, player_rigidbody);
-    const Engine::Components::Transform player_transform = {.pos = Engine::Utils::Vec2(static_cast<float>(rand() % 500), static_cast<float>(rand() % 500)), .rot = 0.0f, .scale = 2.0f};
+    const Engine::Components::Transform player_transform = {.pos = Engine::Utils::Rect(static_cast<float>(rand() % 500), static_cast<float>(rand() % 500), 33.0f, 16.0f), .rot = 0.0f, .scale = 2.0f};
     mediator->addComponent(entity, player_transform);
     const std::string player_sprite_name = std::string("player_") + std::to_string((entity % 5) + 1);
     Engine::Components::Sprite player_sprite = {};
@@ -251,7 +252,7 @@ void RTypeServer::Server::createPlayerProjectile(float x, float y)
 
     const Engine::Components::RigidBody projectile_rigidbody = {.velocity = Engine::Utils::Vec2(200.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, projectile_rigidbody);
-    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Vec2(x, y), .rot = 0.0f, .scale = 2.0f};
+    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Rect(x, y, 33.0f, 16.0f), .rot = 0.0f, .scale = 2.0f};
     mediator->addComponent(entity, projectile_transform);
     const Engine::Components::Sprite projectile_sprite = {.sprite_name = "weak_player_projectile", .frame_nb = 1};
     mediator->addComponent(entity, projectile_sprite);
@@ -287,7 +288,7 @@ void RTypeServer::Server::createEnemy(float x, float y, ENEMY_TYPES enemy_type)
 
     const Engine::Components::RigidBody enemy_rigidbody = {.velocity = Engine::Utils::Vec2(10.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, enemy_rigidbody);
-    const Engine::Components::Transform enemy_transform = {.pos = Engine::Utils::Vec2(x, y), .rot = 0.0f, .scale = 2.0f};
+    const Engine::Components::Transform enemy_transform = {.pos = Engine::Utils::Rect(x, y, 33.0f, 16.0f), .rot = 0.0f, .scale = 2.0f};
     mediator->addComponent(entity, enemy_transform);
     const Engine::Components::Sprite enemy_sprite = {.sprite_name = "ground_enemy", .frame_nb = 1};
     mediator->addComponent(entity, enemy_sprite);
@@ -318,7 +319,7 @@ void RTypeServer::Server::createBackground()
 
     Engine::Entity entity = mediator->createEntity();
 
-    const Engine::Components::Transform background_transform = {.pos = Engine::Utils::Vec2(0, 0), .rot = 0.0f, .scale = 3.0f};
+    const Engine::Components::Transform background_transform = {.pos = Engine::Utils::Rect(0, 0, 1200.0f, 900.0f), .rot = 0.0f, .scale = 3.0f};
     mediator->addComponent(entity, background_transform);
     const Engine::Components::Sprite background_sprite = {.sprite_name = "space_background", .frame_nb = 1, .scrolling = true, .is_background = true};
     mediator->addComponent(entity, background_sprite);

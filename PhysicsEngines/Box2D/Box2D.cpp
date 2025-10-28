@@ -20,7 +20,7 @@ void Engine::PhysicsEngines::Box2D::init(Utils::Vec2 &gravity)
     world = std::make_shared<b2World>(g);
 }
 
-void Engine::PhysicsEngines::Box2D::addRigidBody(Entity entity, Utils::Rect &body, float angle, bool has_gravity, float density, float friction)
+void Engine::PhysicsEngines::Box2D::addRigidBody(Entity entity, Utils::Rect &body, float angle, bool has_gravity, float density, float friction, float restitution)
 {
     if (!world)
         return;
@@ -33,7 +33,7 @@ void Engine::PhysicsEngines::Box2D::addRigidBody(Entity entity, Utils::Rect &bod
     else
         bodyDef.type = b2_staticBody;
 
-    bodyDef.position.Set(body.x, body.y);
+    bodyDef.position.Set(body.x + body.width / 2, body.y + body.height / 2);
 
     std::shared_ptr<b2Body> b2body(world->CreateBody(&bodyDef), [this](b2Body *body) {
         if (world && body)
@@ -50,6 +50,7 @@ void Engine::PhysicsEngines::Box2D::addRigidBody(Entity entity, Utils::Rect &bod
     fixtureDef.shape = &boxShape;
     fixtureDef.density = density;
     fixtureDef.friction = friction;
+    fixtureDef.restitution = restitution;
 
     b2body->CreateFixture(&fixtureDef);
 

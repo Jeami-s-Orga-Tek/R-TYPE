@@ -68,11 +68,11 @@ namespace Engine {
                             renderer->createSprite(temp_sprite_name, "_white_texture");
                         }
 
-                        renderer->setSpriteOrigin(temp_sprite_name, 5, 5);
+                        renderer->setSpriteOrigin(temp_sprite_name, transform.pos.width / 2, transform.pos.height / 2);
                         renderer->setSpritePosition(temp_sprite_name, transform.pos.x, transform.pos.y);
                         renderer->setSpriteRotation(temp_sprite_name, transform.rot);
                         renderer->setSpriteScale(temp_sprite_name, transform.scale);
-                        renderer->setSpriteTextureRect(temp_sprite_name, 0, 0, 10, 10);
+                        renderer->setSpriteTextureRect(temp_sprite_name, 0, 0, transform.pos.width, transform.pos.height);
                         renderer->drawSprite(temp_sprite_name);
                         return;
                     }

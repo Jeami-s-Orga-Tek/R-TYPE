@@ -12,6 +12,7 @@
 #include "Server.hpp"
 #include "Components/Animation.hpp"
 #include "Components/Gravity.hpp"
+#include "Utils.hpp"
 #include "dlfcn_compat.hpp"
 #include "Components/EnemyInfo.hpp"
 #include "Components/Hitbox.hpp"
@@ -161,6 +162,8 @@ void Example::Game::gameLoop()
     float accumulator = 0.0f;
     auto previous_time = std::chrono::high_resolution_clock::now();
 
+    createGround();
+
     while (renderer->isWindowOpen()) {
         auto frame_start = std::chrono::high_resolution_clock::now();
         auto current_time = frame_start;
@@ -221,7 +224,7 @@ void Example::Game::createGround()
     mediator->addComponent(entity, player_gravity);
     const Engine::Components::RigidBody player_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, player_rigidbody);
-    const Engine::Components::Transform player_transform = {.pos = Engine::Utils::Vec2(0.0f, 500.0f), .rot = 0.0f, .scale = 2.0f};
+    const Engine::Components::Transform player_transform = {.pos = Engine::Utils::Rect(400.0f, 550.0f, 50.0f, 10.0f), .rot = 0.0f, .scale = 1.0f};
     mediator->addComponent(entity, player_transform);
     const Engine::Components::Sprite player_sprite = {.sprite_name = "", .frame_nb = 1};;
     mediator->addComponent(entity, player_sprite);
@@ -248,11 +251,11 @@ void Example::Game::createBox(float x, float y)
 
     Engine::Entity entity = mediator->createEntity();
 
-    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(static_cast<float>(rand() % 200), static_cast<float>(rand() % 200))};
+    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(static_cast<float>(rand() % 200) + 0.01f, static_cast<float>(rand() % 200) + 0.01f), .restitution = 1.0f};
     mediator->addComponent(entity, player_gravity);
     const Engine::Components::RigidBody projectile_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, projectile_rigidbody);
-    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Vec2(x, y), .rot = static_cast<float>(rand() % 90), .scale = 1.0f};
+    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Rect(x, y, 20.0f, 20.0f), .rot = static_cast<float>(rand() % 90), .scale = 1.0f};
     mediator->addComponent(entity, projectile_transform);
     const Engine::Components::Sprite projectile_sprite = {.sprite_name = "", .frame_nb = 1};
     mediator->addComponent(entity, projectile_sprite);

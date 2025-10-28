@@ -37,7 +37,7 @@ namespace Engine {
             signature.set(networkManager->mediator->getComponentType<Engine::Components::Animation>());
 
             Engine::Components::Transform tr{};
-            tr.pos = {x, y};
+            tr.pos = {x, y, 0.0f, 0.0f};
             tr.rot = 0.0f;
             tr.scale = 2.0f;
             networkManager->mediator->addComponent(e, tr);

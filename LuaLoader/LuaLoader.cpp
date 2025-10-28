@@ -588,13 +588,13 @@ void Engine::LuaLoader::bindPhysics()
         this->physicsEngine->step(deltaTime);
     };
 
-    physics_table["addRigidBody"] = [this](Engine::Entity entity, float x, float y, float width, float height, float angle, bool hasGravity, float density, float friction) {
+    physics_table["addRigidBody"] = [this](Engine::Entity entity, float x, float y, float width, float height, float angle, bool hasGravity, float density, float friction, float restitution) {
         if (!this->physicsEngine) {
             std::cerr << "Error: PhysicsEngine not available for addRigidBody" << std::endl;
             return;
         }
         Engine::Utils::Rect body(x, y, width, height);
-        this->physicsEngine->addRigidBody(entity, body, angle, hasGravity, density, friction);
+        this->physicsEngine->addRigidBody(entity, body, angle, hasGravity, density, friction, restitution);
     };
 
     physics_table["getRigidBodyPos"] = [this](Engine::Entity entity) -> sol::table {
