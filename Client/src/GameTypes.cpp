@@ -999,6 +999,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addTexture(renderer, "base_player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
     render_system->addTexture(renderer, "ground_enemy_sprite_sheet", "assets/sprites/r-typesheet7.gif");
     render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
+    render_system->addTexture(renderer, "stage2_background_texture", "assets/sprites/stage2_background.png");
     render_system->addTexture(renderer, "enemy_explosion_sheet", "assets/sprites/explosionEnemy1.gif");
 
     render_system->addSprite(renderer, "player_1", "players_sprite_sheet", {32, 17}, {0, 0}, 5, 1);
@@ -1009,6 +1010,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addSprite(renderer, "weak_player_projectile", "base_player_sprite_sheet", {16, 4}, {249, 90}, 1, 1);
     render_system->addSprite(renderer, "ground_enemy", "ground_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "space_background", "space_background_texture", {1226, 207}, {0, 0}, 1, 1);
+    render_system->addSprite(renderer, "stage2_background", "stage2_background_texture", {1226, 207}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "enemy_explosion", "enemy_explosion_sheet", {32, 32}, {0, 0}, 5, 1);
 
     sound_system->addSound(audio_player, "background_music", "assets/sound/Start_sound.mp3");

@@ -33,7 +33,13 @@ namespace Engine {
         void addComponentByType(const std::string &type_name, Engine::Entity entity, const void *data, Engine::Mediator &mediator) {
             auto it = registry_.find(type_name);
             if (it != registry_.end()) {
-                it->second(entity, data, mediator);
+                try {
+                    it->second(entity, data, mediator);
+                } catch (const std::exception &ex) {
+                    std::cerr << "[ComponentRegistry] Exception while adding component '" << type_name << "' to entity " << entity << ": " << ex.what() << std::endl;
+                    std::cerr << "[ComponentRegistry] Mediator entity count: " << mediator.getEntityCount() << std::endl;
+                    throw;
+                }
             } else {
                 throw std::runtime_error("Unknown component type: " + type_name);
             }

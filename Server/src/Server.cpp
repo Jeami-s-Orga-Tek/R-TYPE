@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <stdexcept>
 #include <thread>
+#include <cstring>
+#include <string>
 
 #include "Server.hpp"
 #include "Components/Gravity.hpp"
@@ -393,6 +395,40 @@ void RTypeServer::Server::handleEnemyDestroyed(Engine::Event &event)
                     spawnEnemiesForLevel(current_level);
                 } catch (const std::exception &ex) {
                     std::cerr << "Failed to spawn enemies for level " << current_level << ": " << ex.what() << std::endl;
+                }
+                try {
+                    for (uint32_t e = 0; e < MAX_ENTITIES; ++e) {
+                        if (!mediator->hasComponent<Engine::Components::Sprite>(e))
+                            continue;
+                        auto &sp = mediator->getComponent<Engine::Components::Sprite>(e);
+                        if (!sp.is_background)
+                            continue;
+                        std::string sprite_name;
+                        switch (current_level) {
+                            case 2: sprite_name = "stage2_background"; break;
+                            case 3: sprite_name = "stage3_background"; break;
+                            case 4: sprite_name = "win_level_background"; break;
+                            default: sprite_name = "space_background"; break;
+                        }
+                        std::strncpy(sp.sprite_name.data(), sprite_name.c_str(), sp.sprite_name.size() - 1);
+                        sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
+
+                        networkManager->sendComponent<Engine::Components::Sprite>(e, sp);
+
+                        if (mediator->hasComponent<Engine::Components::Sound>(e)) {
+                            auto snd = mediator->getComponent<Engine::Components::Sound>(e);
+                            std::string music_id = "background_music_next_" + std::to_string(current_level);
+                            std::strncpy(snd.sound_name.data(), music_id.c_str(), snd.sound_name.size() - 1);
+                            snd.sound_name[snd.sound_name.size() - 1] = '\0';
+                            snd.looping = true;
+                            snd.has_played = false;
+
+                            mediator->addComponent(e, snd);
+                            networkManager->sendComponent<Engine::Components::Sound>(e, snd);
+                        }
+                    }
+                } catch (const std::exception &ex) {
+                    std::cerr << "Failed to update background components on level change: " << ex.what() << std::endl;
                 }
             } catch (const std::exception &e) {
                 std::cerr << "Failed to broadcast level change: " << e.what() << std::endl;

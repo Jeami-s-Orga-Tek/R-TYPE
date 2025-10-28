@@ -363,7 +363,13 @@ void Engine::NetworkManager::receiveEntity()
     std::cout << "Entity ID: " << entity_id << std::endl;
     std::cout << "Signature: " << signature << std::endl;
 
-    mediator->createEntity();
+    try {
+        while (mediator->getEntityCount() <= entity_id) {
+            mediator->createEntity();
+        }
+    } catch (const std::exception &ex) {
+        std::cerr << "[NetworkManager] Failed to create entity " << entity_id << " : " << ex.what() << std::endl;
+    }
 }
 
 void Engine::NetworkManager::receiveDestroyEntity()
@@ -405,7 +411,16 @@ void Engine::NetworkManager::receiveComponent()
         return;
     }
     try {
+        while (mediator->getEntityCount() <= entity_id) {
+            mediator->createEntity();
+        }
+    } catch (const std::exception &ex) {
+        std::cerr << "[NetworkManager] Failed to create missing entities for component: " << ex.what() << std::endl;
+        return;
+    }
+    try {
         componentRegistry.addComponentByType(type_name, entity_id, component_data, *mediator);
+        std::cout << "[NetworkManager] Component of type '" << type_name << "' applied to entity " << entity_id << std::endl;
     } catch (const std::exception &ex) {
         std::cerr << "[NetworkManager] Failed to add component of type '" << type_name << "' for entity " << entity_id << ": " << ex.what() << std::endl;
         return;
