@@ -52,6 +52,7 @@ namespace RTypeServer {
             int enemies_to_next_level = 10;
 
             void handleEnemyDestroyed(Engine::Event &event);
+            void spawnEnemiesForLevel(int level);
     };
 }
 

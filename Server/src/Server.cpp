@@ -28,6 +28,40 @@ RTypeServer::Server::Server()
 {
 }
 
+void RTypeServer::Server::spawnEnemiesForLevel(int level)
+{
+    if (!networkManager || !mediator)
+        return;
+    if (level == 2) {
+        for (int i = 0; i < 6; ++i) {
+            float x = 1000.0f + i * 80.0f;
+            float y = 50.0f + (i % 5) * 70.0f;
+            createEnemy(x, y, ENEMY_TYPES::SIMPLE);
+        }
+    } else if (level == 3) {
+        for (int i = 0; i < 8; ++i) {
+            float x = 1100.0f + i * 90.0f;
+            float y = 40.0f + (i % 6) * 60.0f;
+            ENEMY_TYPES t = (i % 2 == 0) ? ENEMY_TYPES::SIMPLE : ENEMY_TYPES::SINE_WAVE;
+            createEnemy(x, y, t);
+        }
+    } else if (level >= 4) {
+        int count = 6 + (level - 3) * 2;
+        for (int i = 0; i < count; ++i) {
+            float x = 1000.0f + (i % 10) * 70.0f + (i / 10) * 50.0f;
+            float y = 30.0f + (i % 8) * 50.0f;
+            ENEMY_TYPES t = (i % 3 == 0) ? ENEMY_TYPES::SINE_WAVE : ENEMY_TYPES::SIMPLE;
+            createEnemy(x, y, t);
+        }
+    } else {
+        for (int i = 0; i < 4; ++i) {
+            float x = 1000.0f + i * 120.0f;
+            float y = 60.0f + i * 80.0f;
+            createEnemy(x, y, ENEMY_TYPES::SIMPLE);
+        }
+    }
+}
+
 void RTypeServer::Server::loadEngineLib()
 {
     #if defined(_WIN32)
@@ -344,6 +378,21 @@ void RTypeServer::Server::handleEnemyDestroyed(Engine::Event &event)
                 for (const auto &player_entity : player_control_system->entities) {
                     std::cout << "  -> player entity " << player_entity << std::endl;
                     networkManager->sendComponent<Engine::Components::LevelInfo>(player_entity, level_info);
+                }
+                std::vector<Engine::Entity> current_enemies;
+                for (auto e : enemy_system->entities) {
+                    current_enemies.push_back(e);
+                }
+                for (auto e : current_enemies) {
+                    if (!mediator->hasComponent<Engine::Components::EnemyInfo>(e))
+                        continue;
+                    networkManager->sendDestroyEntity(e);
+                    mediator->destroyEntity(e);
+                }
+                try {
+                    spawnEnemiesForLevel(current_level);
+                } catch (const std::exception &ex) {
+                    std::cerr << "Failed to spawn enemies for level " << current_level << ": " << ex.what() << std::endl;
                 }
             } catch (const std::exception &e) {
                 std::cerr << "Failed to broadcast level change: " << e.what() << std::endl;

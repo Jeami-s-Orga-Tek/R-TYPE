@@ -95,9 +95,10 @@ namespace Engine {
                             destroyedEvent.setParam(1, enemyComp.scoreValue);
                             networkManager->mediator->sendEvent(destroyedEvent);
                         }
+                        networkManager->sendDestroyEntity(enemy);
                         networkManager->mediator->destroyEntity(enemy);
                     }
-                    
+                    networkManager->sendDestroyEntity(projectile);
                     networkManager->mediator->destroyEntity(projectile);
                 }
                 
