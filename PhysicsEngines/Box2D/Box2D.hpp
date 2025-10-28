@@ -28,6 +28,7 @@ namespace Engine {
                 void addRigidBody(Entity entity, Utils::Rect &body, float angle, bool has_gravity, float density, float friction, float restitution);
                 Utils::Vec2 getRigidBodyPos(Entity entity);
                 float getRigidBodyAngle(Entity entity);
+                void setRigidBodyPosAngle(Entity entity, const Utils::Vec2 &pos, float angle);
                     static std::shared_ptr<Box2D> createPhysicsEngine();
             private:
                 std::shared_ptr<b2World> world;

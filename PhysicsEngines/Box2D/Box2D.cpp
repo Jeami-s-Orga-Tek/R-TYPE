@@ -33,7 +33,8 @@ void Engine::PhysicsEngines::Box2D::addRigidBody(Entity entity, Utils::Rect &bod
     else
         bodyDef.type = b2_staticBody;
 
-    bodyDef.position.Set(body.x + body.width / 2, body.y + body.height / 2);
+    // bodyDef.position.Set(body.x + body.width / 2, body.y + body.height / 2);
+    bodyDef.position.Set(body.x, body.y);
 
     std::shared_ptr<b2Body> b2body(world->CreateBody(&bodyDef), [this](b2Body *body) {
         if (world && body)
@@ -74,6 +75,13 @@ float Engine::PhysicsEngines::Box2D::getRigidBodyAngle(Entity entity)
     return it->second->GetAngle();
 }
 
+void Engine::PhysicsEngines::Box2D::setRigidBodyPosAngle(Entity entity, const Utils::Vec2 &pos, float angle)
+{
+    auto it = rigidbody_map.find(entity);
+    if (it == rigidbody_map.end() || !it->second)
+        return;
+    it->second->SetTransform(b2Vec2(pos.x, pos.y), angle);
+}
 
 void Engine::PhysicsEngines::Box2D::step(const float dt)
 {

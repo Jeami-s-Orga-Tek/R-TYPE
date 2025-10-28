@@ -24,6 +24,7 @@ namespace Engine {
             virtual void addRigidBody(Entity entity, Utils::Rect &body, float angle, bool has_gravity, float density, float friction, float restitution) = 0;
             virtual Utils::Vec2 getRigidBodyPos(Entity entity) = 0;
             virtual float getRigidBodyAngle(Entity entity) = 0;
+            virtual void setRigidBodyPosAngle(Entity entity, const Utils::Vec2 &pos, float angle) = 0;
     };
 };
 

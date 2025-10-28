@@ -16,11 +16,9 @@
 #include "Renderer.hpp"
 #include "Systems/DevConsole.hpp"
 #include "Systems/PhysicsUsingEngine.hpp"
-#include "Systems/PlayerControl.hpp"
-#include "Systems/Collision.hpp"
-#include "Systems/Enemy.hpp"
 #include "Systems/Render.hpp"
 #include "Systems/SoundPlayer.hpp"
+#include "Systems/PaddleControl.hpp"
 
 namespace Example {
     class Game {
@@ -33,6 +31,7 @@ namespace Example {
             void gameLoop();
 
             void createGround();
+            void createWalls();
             void createBox(float x, float y);
         private:
             std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
@@ -47,6 +46,7 @@ namespace Example {
             std::shared_ptr<Engine::Systems::DevConsole> dev_console_system {};
             std::shared_ptr<Engine::Systems::SoundSystem> sound_system {};
             std::shared_ptr<Engine::Systems::RenderSystem> render_system {};
+            std::shared_ptr<Engine::Systems::PaddleControl> paddle_control_system {};
     };
 }
 

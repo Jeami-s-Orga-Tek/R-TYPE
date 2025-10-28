@@ -12,6 +12,7 @@
 
 #include "Components/Gravity.hpp"
 #include "Components/Sprite.hpp"
+#include "Entity.hpp"
 #include "PhysicsEngine.hpp"
 #include "System.hpp"
 #include "Mediator.hpp"
@@ -24,7 +25,7 @@ namespace Engine {
     namespace Systems {
         class PhysicsUsingEngineSystem : public System {
             public:
-                void init() {
+                void init(std::shared_ptr<Mediator> mediator) {
                     #if defined(_WIN32)
                     const std::string physics_engine_lib_name = "libphysicsengine.dll";
                     #else
@@ -37,6 +38,14 @@ namespace Engine {
 
                     Utils::Vec2 gravity{0.0f, 9.81f};
                     physics_engine->init(gravity);
+
+                    mediator->addEventListener(static_cast<EventId>(EventsIds::ENEMY_DESTROYED), [this](Event &event) {
+                        // std::cout << "moving paddle" << std::endl;
+                        auto entity = event.getParam<Entity>(0);
+                        auto pos = event.getParam<Utils::Rect>(1);
+                        auto angle = event.getParam<float>(2);
+                        physics_engine->setRigidBodyPosAngle(entity, {pos.x, pos.y}, angle);
+                    });
                 };
 
                 void update(std::shared_ptr<Mediator> mediator, float dt) {
@@ -46,7 +55,7 @@ namespace Engine {
                         auto &gravity = mediator->getComponent<Components::Gravity>(entity);
                         
                         if (!rigidbody.has_body_been_created) {
-                            Engine::Utils::Rect rect(transform.pos.x, transform.pos.y, transform.pos.width, transform.pos.height);
+                            Engine::Utils::Rect rect(transform.pos.x + transform.pos.width / 2, transform.pos.y + transform.pos.height / 2, transform.pos.width, transform.pos.height);
                             physics_engine->addRigidBody(entity, rect, transform.rot, (gravity.force.x != 0.0f && gravity.force.y != 0.0f), gravity.density, gravity.friction, gravity.restitution);
                             rigidbody.has_body_been_created = true;
                         }
