@@ -80,7 +80,8 @@ void RTypeServer::Server::initEngine()
     luaLoader.registerComponentECS<Engine::Components::Sound>();
     luaLoader.registerComponentECS<Engine::Components::Animation>();
 
-    luaLoader.executeScript("lua_collision_system.lua");
+    // luaLoader.executeScript("lua_collision_system.lua");
+    luaLoader.loadFolder("lua_scripts");
     
     physics_system = mediator->registerSystem<Engine::Systems::PhysicsNoEngineSystem>();
 
@@ -172,7 +173,9 @@ void RTypeServer::Server::gameLoop()
             enemy_system->update(networkManager, FIXED_DT);
             animate_system->update(mediator, FIXED_DT);
 
-            luaLoader.executeLuaFunction("updateCollisionSystem");
+            for (const auto &scriptName : luaLoader.getLoadedScriptNames()) {
+                luaLoader.executeLuaFunctionInScript(scriptName, "update");
+            }
 
             networkManager->handleTimeouts();
 

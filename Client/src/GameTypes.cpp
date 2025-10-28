@@ -693,7 +693,8 @@ bool GameManager::connectToServer(const std::string& serverIP, unsigned short po
     luaLoader.registerComponentECS<Engine::Components::Sound>();
     luaLoader.registerComponentECS<Engine::Components::Animation>();
 
-    luaLoader.executeScript("lua_collision_system.lua");
+    // luaLoader.executeScript("lua_collision_system.lua");
+    luaLoader.loadFolder("lua_scripts");
 
     physics_system = networkManager->mediator->registerSystem<Engine::Systems::PhysicsNoEngineSystem>();
 
@@ -1006,7 +1007,11 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             player_control_system->update(networkManager, FIXED_DT);
             physics_system->update(mediator, FIXED_DT);
             enemy_system->update(networkManager, FIXED_DT);
-            luaLoader.executeLuaFunction("updateCollisionSystem");
+            
+            for (const auto &scriptName : luaLoader.getLoadedScriptNames()) {
+                luaLoader.executeLuaFunctionInScript(scriptName, "update");
+            }
+
             animate_system->update(mediator, FIXED_DT);
             accumulator -= FIXED_DT;
         }

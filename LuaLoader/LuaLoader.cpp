@@ -482,8 +482,21 @@ void Engine::LuaLoader::bindUtils()
 void Engine::LuaLoader::executeScript(const std::string &scriptPath)
 {
     try {
-        lua.script_file(scriptPath);
-        std::cout << "Successfully executed Lua script: " << scriptPath << std::endl;
+        std::string scriptName = scriptPath;
+        auto lastSlash = scriptName.find_last_of("/\\");
+        if (lastSlash != std::string::npos)
+            scriptName = scriptName.substr(lastSlash + 1);
+        auto dot = scriptName.find_last_of('.');
+        if (dot != std::string::npos)
+            scriptName = scriptName.substr(0, dot);
+
+        sol::environment env(lua, sol::create, lua.globals());
+        lua.script_file(scriptPath, env);
+        lua[scriptName] = env;
+
+        if (std::find(loadedScriptNames.begin(), loadedScriptNames.end(), scriptName) == loadedScriptNames.end())
+            loadedScriptNames.push_back(scriptName);
+        std::cout << "Successfully executed Lua script: " << scriptPath << " as '" << scriptName << "'" << std::endl;
     } catch (const sol::error &e) {
         std::cerr << "Lua script error in " << scriptPath << ": " << e.what() << std::endl;
     }
@@ -513,6 +526,39 @@ void Engine::LuaLoader::executeLuaFunction(const std::string &functionName)
     }
 }
 
+void Engine::LuaLoader::loadFolder(const std::string &folder)
+{
+    try {
+        for (const auto &entry : std::filesystem::directory_iterator(folder)) {
+            if (entry.is_regular_file() && entry.path().extension() == ".lua") {
+                std::cout << "Loading Lua script: " << entry.path().string() << std::endl;
+                executeScript(entry.path().string());
+            }
+        }
+    } catch (const std::exception &e) {
+        std::cerr << "error '" << e.what() << std::endl;
+    }
+}
+
+const std::vector<std::string> &Engine::LuaLoader::getLoadedScriptNames() const
+{
+    return (loadedScriptNames);
+}
+
+void Engine::LuaLoader::executeLuaFunctionInScript(const std::string &scriptName, const std::string &functionName) {
+    if (!lua[scriptName].valid())
+        return;
+    sol::environment env = lua[scriptName];
+    sol::object funcObj = env[functionName];
+    if (funcObj.valid() && funcObj.get_type() == sol::type::function) {
+        sol::function func = funcObj;
+        try {
+            func();
+        } catch (const sol::error &e) {
+            std::cerr << "LuaLoader: Error calling '" << functionName << "' in script '" << scriptName << "': " << e.what() << std::endl;
+        }
+    }
+}
 void Engine::LuaLoader::bindPhysics()
 {
     if (!physicsEngine) {

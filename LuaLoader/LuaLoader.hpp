@@ -15,6 +15,7 @@
 #include <tuple>
 #include <utility>
 #include <memory>
+#include <filesystem>
 
 #include <boost/pfr.hpp>
 #include <boost/type_index.hpp>
@@ -42,15 +43,21 @@ namespace Engine {
             void setPhysicsEngine(std::shared_ptr<Engine::PhysicsEngine> physicsEngine);
             void setRenderer(std::shared_ptr<Engine::Renderer> renderer);
             void setAudioPlayer(std::shared_ptr<Engine::AudioPlayer> audioPlayer);
-            
+
             template <typename T> void registerComponent();
             template <typename T> void registerComponentECS();
-            
+
             void executeScript(const std::string &scriptPath);
             void executeScriptString(const std::string &script);
             void executeLuaFunction(const std::string &functionName);
+            void loadFolder(const std::string &folder);
+            const std::vector<std::string> &getLoadedScriptNames() const;
+            void executeLuaFunctionInScript(const std::string &scriptName, const std::string &functionName);
+
         private:
             sol::state lua {};
+            std::vector<std::string> loadedScriptNames;
+
             std::shared_ptr<Engine::Mediator> mediator;
             std::shared_ptr<Engine::NetworkManager> networkManager;
             std::shared_ptr<Engine::PhysicsEngine> physicsEngine;
@@ -140,11 +147,11 @@ void Engine::LuaLoader::registerComponentECS()
     std::string removeName = "remove" + typeName;
     std::string sendName = "send" + typeName;
 
-    ecs_table[getName] = [this](Engine::Entity entity) -> T& {
+    ecs_table[getName] = [this](Engine::Entity entity) -> T &{
         return mediator->getComponent<T>(entity);
     };
     
-    ecs_table[addName] = [this](Engine::Entity entity, const T& component) {
+    ecs_table[addName] = [this](Engine::Entity entity, const T &component) {
         mediator->addComponent(entity, component);
     };
     
@@ -159,15 +166,15 @@ void Engine::LuaLoader::registerComponentECS()
         }
         
         try {
-            auto& component = mediator->getComponent<T>(entity);
+            auto &component = mediator->getComponent<T>(entity);
             this->networkManager->sendComponent(entity, component);
-        } catch (const std::exception& e) {
+        } catch (const std::exception &e) {
             std::cerr << "Error sending " << typeName << " component: " << e.what() << std::endl;
         }
     };
 
     if (!ecs_table["sendComponent"].valid()) {
-        ecs_table["sendComponent"] = [](Engine::Entity, const std::string& componentType) {
+        ecs_table["sendComponent"] = [](Engine::Entity, const std::string &componentType) {
             std::cerr << "Warning: Use specific send" << componentType << " function instead of generic sendComponent" << std::endl;
         };
     }
