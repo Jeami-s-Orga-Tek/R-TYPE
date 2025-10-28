@@ -21,4 +21,5 @@ target_link_libraries(physicsengine PRIVATE
   Boost::asio
   Boost::pfr
   Boost::type_index
+  engine
 )

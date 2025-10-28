@@ -13,6 +13,7 @@
 #include "Components/Animation.hpp"
 #include "Components/Gravity.hpp"
 #include "Components/PlayerInfo.hpp"
+#include "Systems/BrickBreaking.hpp"
 #include "Systems/PaddleControl.hpp"
 #include "Utils.hpp"
 #include "dlfcn_compat.hpp"
@@ -105,6 +106,9 @@ void Example::Game::initEngine()
         mediator->setSystemSignature<Engine::Systems::PaddleControl>(signature);
     }
 
+    brick_breaking_system = mediator->registerSystem<Engine::Systems::BrickBreaking>();
+    brick_breaking_system->init(networkManager);
+
     // player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
     // player_control_system->init(mediator, [this](float x, float y) { this->createPlayerProjectile(x, y); });
 
@@ -117,14 +121,14 @@ void Example::Game::initEngine()
     //     mediator->setSystemSignature<Engine::Systems::PlayerControl>(signature);
     // }
 
-    // collision_system = mediator->registerSystem<Engine::Systems::Collision>();
+    collision_system = mediator->registerSystem<Engine::Systems::Collision>();
 
-    // {
-    //     Engine::Signature signature;
-    //     signature.set(mediator->getComponentType<Engine::Components::Transform>());
-    //     signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
-    //     mediator->setSystemSignature<Engine::Systems::Collision>(signature);
-    // }
+    {
+        Engine::Signature signature;
+        signature.set(mediator->getComponentType<Engine::Components::Transform>());
+        signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
+        mediator->setSystemSignature<Engine::Systems::Collision>(signature);
+    }
 
     // enemy_system = mediator->registerSystem<Engine::Systems::EnemySystem>();
     // enemy_system->init(networkManager);
@@ -176,6 +180,10 @@ void Example::Game::gameLoop()
 
     createWalls();
     createGround();
+    for (int i = 0; i < 5; i++)
+        createBox(static_cast<float>(rand() % 800), static_cast<float>(rand() % 400));
+    for (int i = 0; i < 15; i++)
+        createBrick(static_cast<float>(rand() % 800), static_cast<float>(rand() % 400));
 
     while (renderer->isWindowOpen()) {
         auto frame_start = std::chrono::high_resolution_clock::now();
@@ -195,11 +203,9 @@ void Example::Game::gameLoop()
             fps_timer = 0.0f;
         }
 
-        if (mediator->getEntityCount() < 2000)
-            createBox(static_cast<float>(rand() % 800), static_cast<float>(rand() % 400));
-
         while (accumulator >= FIXED_DT) {
             physics_system->update(mediator, FIXED_DT);
+            // collision_system->update(networkManager);
             paddle_control_system->update(networkManager, FIXED_DT);
 
             accumulator -= FIXED_DT;
@@ -257,6 +263,19 @@ void Example::Game::createWalls()
         const Engine::Components::Sprite player_sprite = {.sprite_name = "", .frame_nb = 1};;
         mediator->addComponent(entity, player_sprite);
     }
+
+    {
+        Engine::Entity entity = mediator->createEntity();
+    
+        const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(0.0f, 0.0f)};
+        mediator->addComponent(entity, player_gravity);
+        const Engine::Components::RigidBody player_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
+        mediator->addComponent(entity, player_rigidbody);
+        const Engine::Components::Transform player_transform = {.pos = Engine::Utils::Rect(-100.0f, -10.0f, 1000.0f, 1.0f), .rot = 0.0f, .scale = 1.0f};
+        mediator->addComponent(entity, player_transform);
+        const Engine::Components::Sprite player_sprite = {.sprite_name = "", .frame_nb = 1};;
+        mediator->addComponent(entity, player_sprite);
+    }
 }
 
 void Example::Game::createGround()
@@ -273,7 +292,7 @@ void Example::Game::createGround()
 
     Engine::Entity entity = mediator->createEntity();
 
-    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(0.0f, 0.0f)};
+    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(0.0f, 0.0f), .restitution = 10.0f};
     mediator->addComponent(entity, player_gravity);
     const Engine::Components::RigidBody player_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, player_rigidbody);
@@ -303,10 +322,11 @@ void Example::Game::createBox(float x, float y)
     signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
 
     Engine::Entity entity = mediator->createEntity();
 
-    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(static_cast<float>(rand() % 200) + 0.01f, static_cast<float>(rand() % 200) + 0.01f), .restitution = 1.0f};
+    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(static_cast<float>(rand() % 200) + 0.01f, static_cast<float>(rand() % 200) + 0.01f), .density = 10.0f, .restitution = 1.0f};
     mediator->addComponent(entity, player_gravity);
     const Engine::Components::RigidBody projectile_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, projectile_rigidbody);
@@ -314,6 +334,41 @@ void Example::Game::createBox(float x, float y)
     mediator->addComponent(entity, projectile_transform);
     const Engine::Components::Sprite projectile_sprite = {.sprite_name = "", .frame_nb = 1};
     mediator->addComponent(entity, projectile_sprite);
+    const Engine::Components::Hitbox projectile_hb = {.bounds = Engine::Utils::Rect(x, y, 20.0f, 20.0f), .layer = HITBOX_LAYERS::PLAYER_PROJECTILE};
+    mediator->addComponent(entity, projectile_hb);
+    
+    // sendEntity(entity, signature);
+    // sendComponent(entity, projectile_rigidbody);
+    // sendComponent(entity, projectile_transform);
+    // sendComponent(entity, projectile_sprite);
+    // sendComponent(entity, projectile_hitbox);
+    // sendComponent(entity, projectile_sound);
+}
+
+void Example::Game::createBrick(float x, float y)
+{
+    if (!mediator)
+        throw std::runtime_error("Mediator not initialized :(");
+
+    Engine::Signature signature;
+    signature.set(mediator->getComponentType<Engine::Components::Gravity>());
+    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
+    signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
+
+    Engine::Entity entity = mediator->createEntity();
+
+    const Engine::Components::Gravity player_gravity = {.force = Engine::Utils::Vec2(0.0f, 0.0f), .restitution = 1.0f};
+    mediator->addComponent(entity, player_gravity);
+    const Engine::Components::RigidBody projectile_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
+    mediator->addComponent(entity, projectile_rigidbody);
+    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Rect(x, y, 50.0f, 20.0f), .rot = 0.0f, .scale = 1.0f};
+    mediator->addComponent(entity, projectile_transform);
+    const Engine::Components::Sprite projectile_sprite = {.sprite_name = "", .frame_nb = 1};
+    mediator->addComponent(entity, projectile_sprite);
+    const Engine::Components::Hitbox projectile_hb = {.bounds = Engine::Utils::Rect(x, y, 50.0f, 20.0f), .layer = HITBOX_LAYERS::ENEMY};
+    mediator->addComponent(entity, projectile_hb);
     
     // sendEntity(entity, signature);
     // sendComponent(entity, projectile_rigidbody);

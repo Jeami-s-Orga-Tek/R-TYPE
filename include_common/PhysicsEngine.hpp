@@ -8,6 +8,8 @@
 #ifndef PHYSICSENGINE_HPP_
 #define PHYSICSENGINE_HPP_
 
+#include <memory>
+
 #include "Entity.hpp"
 #include "Utils.hpp"
 #include "Mediator.hpp"
@@ -25,6 +27,9 @@ namespace Engine {
             virtual Utils::Vec2 getRigidBodyPos(Entity entity) = 0;
             virtual float getRigidBodyAngle(Entity entity) = 0;
             virtual void setRigidBodyPosAngle(Entity entity, const Utils::Vec2 &pos, float angle) = 0;
+            virtual void removeRigidBody(Entity entity) = 0;
+
+            virtual void setMediator(std::shared_ptr<Mediator> mediator) = 0;
     };
 };
 

@@ -39,12 +39,19 @@ namespace Engine {
                     Utils::Vec2 gravity{0.0f, 9.81f};
                     physics_engine->init(gravity);
 
+                    physics_engine->setMediator(mediator);
+
                     mediator->addEventListener(static_cast<EventId>(EventsIds::ENEMY_DESTROYED), [this](Event &event) {
                         // std::cout << "moving paddle" << std::endl;
                         auto entity = event.getParam<Entity>(0);
                         auto pos = event.getParam<Utils::Rect>(1);
                         auto angle = event.getParam<float>(2);
                         physics_engine->setRigidBodyPosAngle(entity, {pos.x, pos.y}, angle);
+                    });
+                    mediator->addEventListener(static_cast<EventId>(EventsIds::PLAYER_HIT), [this](Event &event) {
+                        // std::cout << "deleet" << std::endl;
+                        auto entity = event.getParam<Entity>(0);
+                        physics_engine->removeRigidBody(entity);
                     });
                 };
 

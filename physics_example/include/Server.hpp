@@ -14,11 +14,13 @@
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
 #include "Renderer.hpp"
+#include "Systems/Collision.hpp"
 #include "Systems/DevConsole.hpp"
 #include "Systems/PhysicsUsingEngine.hpp"
 #include "Systems/Render.hpp"
 #include "Systems/SoundPlayer.hpp"
 #include "Systems/PaddleControl.hpp"
+#include "Systems/BrickBreaking.hpp"
 
 namespace Example {
     class Game {
@@ -33,6 +35,7 @@ namespace Example {
             void createGround();
             void createWalls();
             void createBox(float x, float y);
+            void createBrick(float x, float y);
         private:
             std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
             std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
@@ -47,6 +50,8 @@ namespace Example {
             std::shared_ptr<Engine::Systems::SoundSystem> sound_system {};
             std::shared_ptr<Engine::Systems::RenderSystem> render_system {};
             std::shared_ptr<Engine::Systems::PaddleControl> paddle_control_system {};
+            std::shared_ptr<Engine::Systems::Collision> collision_system {};
+            std::shared_ptr<Engine::Systems::BrickBreaking> brick_breaking_system {};
     };
 }
 
