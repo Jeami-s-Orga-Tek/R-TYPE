@@ -174,11 +174,15 @@ void GameManager::startLevelWipe(uint32_t newLevel)
 
 void GameManager::applyLevelMusic(uint32_t level)
 {
-    if (audio_player) {
-        audio_player->stopAudio("background_music");
+    if (audio_player && !currentPlayingMusicId.empty()) {
+        if (currentPlayingMusicId != levelWipePreloadMusicId) {
+            audio_player->stopAudio(currentPlayingMusicId);
+            audio_player->unloadAudio(currentPlayingMusicId);
+        }
     }
     if (sound_system && audio_player && !levelWipePreloadMusicId.empty()) {
         audio_player->playAudio(levelWipePreloadMusicId, true);
+        currentPlayingMusicId = levelWipePreloadMusicId;
     } else {
         std::string music_path;
         switch (level) {
@@ -191,6 +195,7 @@ void GameManager::applyLevelMusic(uint32_t level)
         if (sound_system && audio_player) {
             sound_system->addSound(audio_player, "background_music", music_path);
             audio_player->playAudio("background_music", true);
+            currentPlayingMusicId = "background_music";
         }
     }
 }
@@ -1009,6 +1014,10 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     sound_system->addSound(audio_player, "background_music", "assets/sound/Start_sound.mp3");
     sound_system->addSound(audio_player, "projectile_shoot", "assets/sound/01LASER.BD_00000.wav");
     sound_system->addSound(audio_player, "explosion", "assets/sound/explosion.mp3");
+    if (audio_player) {
+        audio_player->playAudio("background_music", true);
+        currentPlayingMusicId = "background_music";
+    }
 
     const float TARGET_FPS = static_cast<float>(currentFps);
     const float FIXED_DT = 1.0f / TARGET_FPS;

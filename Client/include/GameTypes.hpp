@@ -153,6 +153,7 @@ class GameManager {
     unsigned int levelWipeColor = 0x000000FF;
     std::string levelWipePreloadTextureId;
     std::string levelWipePreloadSpriteId;
+    std::string currentPlayingMusicId;
     std::string levelWipePreloadMusicId;
     public:
         GameManager(Engine::Utils::Vec2UInt windowSize);
