@@ -316,7 +316,12 @@ void RTypeServer::Server::createEnemy(float x, float y, ENEMY_TYPES enemy_type)
     mediator->addComponent(entity, enemy_sprite);
     const Engine::Components::Hitbox enemy_hitbox = {.bounds = Engine::Utils::Rect(x, y, 66, 66), .active = true, .layer = HITBOX_LAYERS::ENEMY, .damage = 10};
     mediator->addComponent(entity, enemy_hitbox);
-    const Engine::Components::EnemyInfo enemy_enemyinfo = {.health = 20, .maxHealth = 20, .type = static_cast<int>(enemy_type), .scoreValue = 100, .speed = 50.0f, .isActive = true};
+    float base_speed = 50.0f;
+    if (enemy_type == ENEMY_TYPES::SINE_WAVE) base_speed = 60.0f;
+    float speed = base_speed + static_cast<float>(std::max(0, current_level - 1)) * 10.0f;
+    const Engine::Components::EnemyInfo enemy_enemyinfo = {.health = 20, .maxHealth = 20, .type = static_cast<int>(enemy_type), .scoreValue = 100, .speed = speed, .isActive = true};
+
+    std::cout << "[SERVER] Creating enemy " << entity << " type=" << static_cast<int>(enemy_type) << " speed=" << speed << " (level=" << current_level << ")\n";
     mediator->addComponent(entity, enemy_enemyinfo);
 
     networkManager->sendEntity(entity, signature);
