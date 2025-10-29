@@ -36,6 +36,7 @@ namespace Example {
             void createWalls();
             void createBox(float x, float y);
             void createBrick(float x, float y);
+            void createDeathFloor();
         private:
             std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
             std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
@@ -52,6 +53,9 @@ namespace Example {
             std::shared_ptr<Engine::Systems::PaddleControl> paddle_control_system {};
             std::shared_ptr<Engine::Systems::Collision> collision_system {};
             std::shared_ptr<Engine::Systems::BrickBreaking> brick_breaking_system {};
+
+            uint score = 0;
+            bool gameOverDisplayed = false;
     };
 }
 

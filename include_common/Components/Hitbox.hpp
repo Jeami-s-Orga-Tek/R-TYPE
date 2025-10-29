@@ -15,6 +15,7 @@ enum class HITBOX_LAYERS {
     PLAYER_PROJECTILE,
     ENEMY,
     ENEMY_PROJECTILE,
+    DEATH_FLOOR,
 };
 
 inline const char *toString(HITBOX_LAYERS h) {
@@ -23,6 +24,7 @@ inline const char *toString(HITBOX_LAYERS h) {
         case HITBOX_LAYERS::PLAYER_PROJECTILE: return "PLAYER_PROJECTILE";
         case HITBOX_LAYERS::ENEMY: return "ENEMY";
         case HITBOX_LAYERS::ENEMY_PROJECTILE: return "ENEMY_PROJECTILE";
+        case HITBOX_LAYERS::DEATH_FLOOR: return "DEATH_FLOOR";
         default: return "UNKNOWN";
     }
 }

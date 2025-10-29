@@ -20,11 +20,24 @@ namespace Engine {
     namespace Systems {
         class BrickBreaking : public Engine::System {
             public:
-                void init(std::shared_ptr<Engine::NetworkManager> networkManager) {
+                public:
+                void init(std::shared_ptr<Engine::NetworkManager> networkManager, uint &score) {
+                    scoreRef = &score;
+                    ballCount = 5;
+                    gameOver = false;
+                    
                     networkManager->mediator->addEventListener(static_cast<EventId>(EventsIds::COLLISION), 
                         [this, networkManager](Event &event) { handleCollision(networkManager, event); });
                 }
+                
+                bool isGameOver() const { return gameOver; }
+                uint getBallCount() const { return ballCount; }
+                
             private:
+                uint* scoreRef = nullptr;
+                uint ballCount = 0;
+                bool gameOver = false;
+                
                 void handleCollision(std::shared_ptr<Engine::NetworkManager> networkManager, Event &event) {
                     Entity entityA = event.getParam<Entity>(0);
                     Entity entityB = event.getParam<Entity>(1);
@@ -33,14 +46,29 @@ namespace Engine {
 
                     if (layerA == HITBOX_LAYERS::ENEMY && layerB == HITBOX_LAYERS::PLAYER_PROJECTILE) {
                         networkManager->mediator->destroyEntity(entityA);
+                        if (scoreRef)
+                            (*scoreRef) += 10;
                         Event ev(static_cast<Engine::EventId>(Engine::EventsIds::PLAYER_HIT));
                         ev.setParam(0, entityA);
                         networkManager->mediator->sendEvent(ev);
                     } else if (layerA == HITBOX_LAYERS::PLAYER_PROJECTILE && layerB == HITBOX_LAYERS::ENEMY) {
                         networkManager->mediator->destroyEntity(entityB);
+                        if (scoreRef)
+                            (*scoreRef) += 10;
                         Event ev(static_cast<Engine::EventId>(Engine::EventsIds::PLAYER_HIT));
                         ev.setParam(0, entityB);
                         networkManager->mediator->sendEvent(ev);
+                    } else if ((layerA == HITBOX_LAYERS::PLAYER_PROJECTILE && layerB == HITBOX_LAYERS::DEATH_FLOOR) || (layerA == HITBOX_LAYERS::DEATH_FLOOR && layerB == HITBOX_LAYERS::PLAYER_PROJECTILE)) {
+                        Entity ballEntity = (layerA == HITBOX_LAYERS::PLAYER_PROJECTILE) ? entityA : entityB;
+                        networkManager->mediator->destroyEntity(ballEntity);
+                        Event ev(static_cast<Engine::EventId>(Engine::EventsIds::PLAYER_HIT));
+                        ev.setParam(0, ballEntity);
+                        networkManager->mediator->sendEvent(ev);
+                        
+                        ballCount--;
+                        if (ballCount <= 0) {
+                            gameOver = true;
+                        }
                     }
                 }
         };

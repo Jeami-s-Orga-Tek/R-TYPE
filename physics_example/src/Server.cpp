@@ -107,7 +107,7 @@ void Example::Game::initEngine()
     }
 
     brick_breaking_system = mediator->registerSystem<Engine::Systems::BrickBreaking>();
-    brick_breaking_system->init(networkManager);
+    brick_breaking_system->init(networkManager, score);
 
     // player_control_system = mediator->registerSystem<Engine::Systems::PlayerControl>();
     // player_control_system->init(mediator, [this](float x, float y) { this->createPlayerProjectile(x, y); });
@@ -167,6 +167,9 @@ void Example::Game::gameLoop()
 
     renderer->createWindow(800, 600, "R du TYPE");
 
+    renderer->loadFont("dev", "assets/dev.ttf");
+    renderer->loadFont("basic", "assets/r-type.otf");
+
     const float FIXED_DT = 1.0f / 60.0f;
     const auto FRAME_DURATION = std::chrono::duration_cast<std::chrono::microseconds>(
         std::chrono::duration<float>(FIXED_DT));
@@ -180,10 +183,26 @@ void Example::Game::gameLoop()
 
     createWalls();
     createGround();
+    createDeathFloor();
     for (int i = 0; i < 5; i++)
-        createBox(static_cast<float>(rand() % 800), static_cast<float>(rand() % 400));
-    for (int i = 0; i < 15; i++)
-        createBrick(static_cast<float>(rand() % 800), static_cast<float>(rand() % 400));
+        createBox(static_cast<float>(rand() % 800), 300 + static_cast<float>(rand() % 200));
+
+    const int rows = 5;
+    const int cols = 10;
+    const float brick_width = 60.0f;
+    const float brick_height = 20.0f;
+    const float x_offset = 40.0f;
+    const float y_offset = 40.0f;
+    const float x_spacing = 10.0f;
+    const float y_spacing = 8.0f;
+
+    for (int row = 0; row < rows; ++row) {
+        for (int col = 0; col < cols; ++col) {
+            float x = x_offset + col * (brick_width + x_spacing);
+            float y = y_offset + row * (brick_height + y_spacing);
+            createBrick(x, y);
+        }
+    }
 
     while (renderer->isWindowOpen()) {
         auto frame_start = std::chrono::high_resolution_clock::now();
@@ -205,7 +224,6 @@ void Example::Game::gameLoop()
 
         while (accumulator >= FIXED_DT) {
             physics_system->update(mediator, FIXED_DT);
-            // collision_system->update(networkManager);
             paddle_control_system->update(networkManager, FIXED_DT);
 
             accumulator -= FIXED_DT;
@@ -213,8 +231,19 @@ void Example::Game::gameLoop()
 
         render_system->update(renderer, mediator, frame_time);
         sound_system->update(audio_player, mediator);
-        
-        renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
+
+        if (brick_breaking_system->isGameOver() && !gameOverDisplayed) {
+            renderer->drawText("basic", "GAME OVER", 300.0f, 250.0f, 40, 0xFF0000FF);
+            renderer->drawText("basic", "Final Score: " + std::to_string(score), 280.0f, 300.0f, 24, 0xFFFFFFFF);
+            renderer->drawText("basic", "Press ESC to exit", 290.0f, 350.0f, 18, 0xFFFFFFFF);
+            gameOverDisplayed = true;
+        } else if (!brick_breaking_system->isGameOver()) {
+            renderer->drawText("basic", "Score: " + std::to_string(score), 10.0f, 10.0f, 20, 0x00FF00FF);
+            renderer->drawText("basic", "Balls: " + std::to_string(brick_breaking_system->getBallCount()), 10.0f, 40.0f, 20, 0x00FF00FF);
+        } else {
+            renderer->drawText("basic", "GAME OVER", 300.0f, 250.0f, 40, 0xFF0000FF);
+            renderer->drawText("basic", "Final Score: " + std::to_string(score), 280.0f, 300.0f, 24, 0xFFFFFFFF);
+        }
 
         dev_console_system->update(networkManager, renderer);
         renderer->displayWindow();
@@ -376,6 +405,25 @@ void Example::Game::createBrick(float x, float y)
     // sendComponent(entity, projectile_sprite);
     // sendComponent(entity, projectile_hitbox);
     // sendComponent(entity, projectile_sound);
+}
+
+void Example::Game::createDeathFloor()
+{
+    if (!mediator)
+        throw std::runtime_error("Mediator not initialized :(");
+
+    Engine::Entity entity = mediator->createEntity();
+
+    const Engine::Components::Gravity death_floor_gravity = {.force = Engine::Utils::Vec2(0.0f, 0.0f)};
+    mediator->addComponent(entity, death_floor_gravity);
+    const Engine::Components::RigidBody death_floor_rigidbody = {.velocity = Engine::Utils::Vec2(0.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
+    mediator->addComponent(entity, death_floor_rigidbody);
+    const Engine::Components::Transform death_floor_transform = {.pos = Engine::Utils::Rect(-100.0f, 650.0f, 1000.0f, 50.0f), .rot = 0.0f, .scale = 1.0f};
+    mediator->addComponent(entity, death_floor_transform);
+    const Engine::Components::Sprite death_floor_sprite = {.sprite_name = "", .frame_nb = 1};
+    mediator->addComponent(entity, death_floor_sprite);
+    const Engine::Components::Hitbox death_floor_hb = {.bounds = Engine::Utils::Rect(-100.0f, 650.0f, 1000.0f, 50.0f), .layer = HITBOX_LAYERS::DEATH_FLOOR};
+    mediator->addComponent(entity, death_floor_hb);
 }
 
 Example::Game::~Game()
