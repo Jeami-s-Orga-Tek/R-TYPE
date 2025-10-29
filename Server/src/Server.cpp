@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <stdexcept>
 #include <thread>
+#include <cstring>
+#include <string>
 
 #include "Server.hpp"
 #include "Components/Animation.hpp"
@@ -18,6 +20,8 @@
 #include "Components/Hitbox.hpp"
 #include "Components/RigidBody.hpp"
 #include "Components/Sound.hpp"
+#include "Components/LevelInfo.hpp"
+#include "Components/GameState.hpp"
 #include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
 #include "Entity.hpp"
@@ -27,6 +31,40 @@
 
 RTypeServer::Server::Server()
 {
+}
+
+void RTypeServer::Server::spawnEnemiesForLevel(int level)
+{
+    if (!networkManager || !mediator)
+        return;
+    if (level == 2) {
+        for (int i = 0; i < 6; ++i) {
+            float x = 1000.0f + i * 80.0f;
+            float y = 50.0f + (i % 5) * 70.0f;
+            createEnemy(x, y, ENEMY_TYPES::SIMPLE);
+        }
+    } else if (level == 3) {
+        for (int i = 0; i < 8; ++i) {
+            float x = 1100.0f + i * 90.0f;
+            float y = 40.0f + (i % 6) * 60.0f;
+            ENEMY_TYPES t = (i % 2 == 0) ? ENEMY_TYPES::SIMPLE : ENEMY_TYPES::SINE_WAVE;
+            createEnemy(x, y, t);
+        }
+    } else if (level >= 4) {
+        int count = 6 + (level - 3) * 2;
+        for (int i = 0; i < count; ++i) {
+            float x = 1000.0f + (i % 10) * 70.0f + (i / 10) * 50.0f;
+            float y = 30.0f + (i % 8) * 50.0f;
+            ENEMY_TYPES t = (i % 3 == 0) ? ENEMY_TYPES::SINE_WAVE : ENEMY_TYPES::SIMPLE;
+            createEnemy(x, y, t);
+        }
+    } else {
+        for (int i = 0; i < 4; ++i) {
+            float x = 1000.0f + i * 120.0f;
+            float y = 60.0f + i * 80.0f;
+            createEnemy(x, y, ENEMY_TYPES::SIMPLE);
+        }
+    }
 }
 
 void RTypeServer::Server::loadEngineLib()
@@ -67,6 +105,8 @@ void RTypeServer::Server::initEngine()
     mediator->registerComponent<Engine::Components::EnemyInfo>();
     mediator->registerComponent<Engine::Components::Sound>();
     mediator->registerComponent<Engine::Components::Animation>();
+    mediator->registerComponent<Engine::Components::LevelInfo>();
+    mediator->registerComponent<Engine::Components::GameState>();
 
     luaLoader.setMediator(mediator);
     luaLoader.setNetworkManager(networkManager);
@@ -109,6 +149,9 @@ void RTypeServer::Server::initEngine()
 
     enemy_system = mediator->registerSystem<Engine::Systems::EnemySystem>();
     enemy_system->init(networkManager);
+
+    mediator->addEventListener(static_cast<Engine::EventId>(Engine::EventsIds::ENEMY_DESTROYED),
+        [this](Engine::Event &event) { this->handleEnemyDestroyed(event); });
 
     {
         Engine::Signature signature;
@@ -165,17 +208,19 @@ void RTypeServer::Server::gameLoop()
                 have_players_spawned = true;
             }
 
-            if (have_players_spawned && rand() % 100 == 0) {
-                createEnemy(1000, rand() % 400, static_cast<ENEMY_TYPES>(rand() % 2));
-            }
+            if (!game_over) {
+                if (have_players_spawned && rand() % 100 == 0) {
+                    createEnemy(1000, rand() % 400, static_cast<ENEMY_TYPES>(rand() % 2));
+                }
 
-            player_control_system->update(networkManager, FIXED_DT);
-            physics_system->update(mediator, FIXED_DT);
-            enemy_system->update(networkManager, FIXED_DT);
-            animate_system->update(mediator, FIXED_DT);
+                player_control_system->update(networkManager, FIXED_DT);
+                physics_system->update(mediator, FIXED_DT);
+                enemy_system->update(networkManager, FIXED_DT);
+                animate_system->update(mediator, FIXED_DT);
 
-            for (const auto &scriptName : luaLoader.getLoadedScriptNames()) {
-                luaLoader.executeLuaFunctionInScript(scriptName, "update");
+                for (const auto &scriptName : luaLoader.getLoadedScriptNames()) {
+                    luaLoader.executeLuaFunctionInScript(scriptName, "update");
+                }
             }
 
             networkManager->handleTimeouts();
@@ -232,6 +277,12 @@ void RTypeServer::Server::createPlayer()
     networkManager->sendComponent<Engine::Components::Sprite>(entity, player_sprite);
     networkManager->sendComponent<Engine::Components::PlayerInfo>(entity, player_info);
     networkManager->sendComponent<Engine::Components::ShootingCooldown>(entity, player_cooldown);
+    try {
+        Engine::Components::LevelInfo level_info = { .level = static_cast<uint32_t>(current_level) };
+        networkManager->sendComponent<Engine::Components::LevelInfo>(entity, level_info);
+    } catch (const std::exception &e) {
+        std::cerr << "Failed to send initial LevelInfo to player " << entity << ": " << e.what() << std::endl;
+    }
 }
 
 void RTypeServer::Server::createPlayerProjectile(float x, float y)
@@ -240,6 +291,10 @@ void RTypeServer::Server::createPlayerProjectile(float x, float y)
         throw std::runtime_error("Network manager not initialized :(");
     if (!mediator)
         throw std::runtime_error("Mediator not initialized :(");
+
+    if (game_over) {
+        return;
+    }
 
     Engine::Signature signature;
     signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
@@ -294,7 +349,12 @@ void RTypeServer::Server::createEnemy(float x, float y, ENEMY_TYPES enemy_type)
     mediator->addComponent(entity, enemy_sprite);
     const Engine::Components::Hitbox enemy_hitbox = {.bounds = Engine::Utils::Rect(x, y, 66, 66), .active = true, .layer = HITBOX_LAYERS::ENEMY, .damage = 10};
     mediator->addComponent(entity, enemy_hitbox);
-    const Engine::Components::EnemyInfo enemy_enemyinfo = {.health = 20, .maxHealth = 20, .type = static_cast<int>(enemy_type), .scoreValue = 100, .speed = 50.0f, .isActive = true};
+    float base_speed = 50.0f;
+    if (enemy_type == ENEMY_TYPES::SINE_WAVE) base_speed = 60.0f;
+    float speed = base_speed + static_cast<float>(std::max(0, current_level - 1)) * 10.0f;
+    const Engine::Components::EnemyInfo enemy_enemyinfo = {.health = 20, .maxHealth = 20, .type = static_cast<int>(enemy_type), .scoreValue = 100, .speed = speed, .isActive = true};
+
+    std::cout << "[SERVER] Creating enemy " << entity << " type=" << static_cast<int>(enemy_type) << " speed=" << speed << " (level=" << current_level << ")\n";
     mediator->addComponent(entity, enemy_enemyinfo);
 
     networkManager->sendEntity(entity, signature);
@@ -334,4 +394,143 @@ void RTypeServer::Server::createBackground()
 
 RTypeServer::Server::~Server()
 {
+}
+
+void RTypeServer::Server::handleEnemyDestroyed(Engine::Event &event)
+{
+    try {
+        Engine::Entity enemy = event.getParam<Engine::Entity>(0);
+        int score = event.getParam<int>(1);
+
+        (void)enemy;
+
+        enemies_killed += 1;
+        std::cout << "Enemy destroyed. Kills: " << enemies_killed << " / " << enemies_to_next_level << std::endl;
+
+        if (enemies_killed >= enemies_to_next_level) {
+            current_level += 1;
+            enemies_killed = 0;
+            enemies_to_next_level += 5;
+            std::cout << "Level up! New level: " << current_level << " - next threshold: " << enemies_to_next_level << std::endl;
+            try {
+                Engine::Components::LevelInfo level_info = { .level = static_cast<uint32_t>(current_level) };
+                std::cout << "[SERVER] Broadcasting level " << current_level << " to players:" << std::endl;
+                for (const auto &player_entity : player_control_system->entities) {
+                    std::cout << "  -> player entity " << player_entity << std::endl;
+                    networkManager->sendComponent<Engine::Components::LevelInfo>(player_entity, level_info);
+                }
+                std::vector<Engine::Entity> current_enemies;
+                for (auto e : enemy_system->entities) {
+                    current_enemies.push_back(e);
+                }
+                for (auto e : current_enemies) {
+                    if (!mediator->hasComponent<Engine::Components::EnemyInfo>(e))
+                        continue;
+                    networkManager->sendDestroyEntity(e);
+                    mediator->destroyEntity(e);
+                }
+                if (current_level > 5) {
+                    std::cout << "Final level reached. Triggering victory state." << std::endl;
+                    game_over = true;
+                    Engine::Components::GameState gs = { .state = static_cast<uint8_t>(Engine::Components::GameStateEnum::GAME_VICTORY) };
+                    for (const auto &player_entity : player_control_system->entities) {
+                        networkManager->sendComponent<Engine::Components::GameState>(player_entity, gs);
+                    }
+                    try {
+                        std::vector<Engine::Entity> current_enemies2;
+                        for (auto e : enemy_system->entities) current_enemies2.push_back(e);
+                        for (auto e : current_enemies2) {
+                            if (!mediator->hasComponent<Engine::Components::EnemyInfo>(e)) continue;
+                            networkManager->sendDestroyEntity(e);
+                            mediator->destroyEntity(e);
+                        }
+                    } catch (const std::exception &ex) {
+                        std::cerr << "Error destroying enemies on victory: " << ex.what() << std::endl;
+                    }
+                    try {
+                        for (uint32_t e = 0; e < MAX_ENTITIES; ++e) {
+                            if (!mediator->hasComponent<Engine::Components::Hitbox>(e)) continue;
+                            const auto &hb = mediator->getComponent<Engine::Components::Hitbox>(e);
+                            if (hb.layer == HITBOX_LAYERS::PLAYER_PROJECTILE || hb.layer == HITBOX_LAYERS::ENEMY_PROJECTILE) {
+                                networkManager->sendDestroyEntity(e);
+                                mediator->destroyEntity(e);
+                            }
+                        }
+                    } catch (const std::exception &ex) {
+                        std::cerr << "Error destroying projectiles on victory: " << ex.what() << std::endl;
+                    }
+
+                    try {
+                        for (uint32_t e = 0; e < MAX_ENTITIES; ++e) {
+                            if (!mediator->hasComponent<Engine::Components::Sprite>(e)) continue;
+                            auto &sp = mediator->getComponent<Engine::Components::Sprite>(e);
+                            if (!sp.is_background) continue;
+                            std::string sprite_name = "black_background";
+                            std::strncpy(sp.sprite_name.data(), sprite_name.c_str(), sp.sprite_name.size() - 1);
+                            sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
+                            networkManager->sendComponent<Engine::Components::Sprite>(e, sp);
+
+                            if (mediator->hasComponent<Engine::Components::Sound>(e)) {
+                                auto snd = mediator->getComponent<Engine::Components::Sound>(e);
+                                std::string music_id = "victory_music";
+                                std::strncpy(snd.sound_name.data(), music_id.c_str(), snd.sound_name.size() - 1);
+                                snd.sound_name[snd.sound_name.size() - 1] = '\0';
+                                snd.looping = false;
+                                snd.has_played = false;
+                                mediator->addComponent(e, snd);
+                                networkManager->sendComponent<Engine::Components::Sound>(e, snd);
+                            }
+                        }
+                    } catch (const std::exception &ex) {
+                        std::cerr << "Failed to update background/sound components on victory: " << ex.what() << std::endl;
+                    }
+
+                } else {
+                    try {
+                        spawnEnemiesForLevel(current_level);
+                    } catch (const std::exception &ex) {
+                        std::cerr << "Failed to spawn enemies for level " << current_level << ": " << ex.what() << std::endl;
+                    }
+                }
+                try {
+                    for (uint32_t e = 0; e < MAX_ENTITIES; ++e) {
+                        if (!mediator->hasComponent<Engine::Components::Sprite>(e))
+                            continue;
+                        auto &sp = mediator->getComponent<Engine::Components::Sprite>(e);
+                        if (!sp.is_background)
+                            continue;
+                        std::string sprite_name;
+                        switch (current_level) {
+                            case 2: sprite_name = "stage2_background"; break;
+                            case 3: sprite_name = "stage3_background"; break;
+                            case 4: sprite_name = "win_level_background"; break;
+                            default: sprite_name = "space_background"; break;
+                        }
+                        std::strncpy(sp.sprite_name.data(), sprite_name.c_str(), sp.sprite_name.size() - 1);
+                        sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
+
+                        networkManager->sendComponent<Engine::Components::Sprite>(e, sp);
+
+                        if (mediator->hasComponent<Engine::Components::Sound>(e)) {
+                            auto snd = mediator->getComponent<Engine::Components::Sound>(e);
+                            std::string music_id = "background_music_next_" + std::to_string(current_level);
+                            std::strncpy(snd.sound_name.data(), music_id.c_str(), snd.sound_name.size() - 1);
+                            snd.sound_name[snd.sound_name.size() - 1] = '\0';
+                            snd.looping = true;
+                            snd.has_played = false;
+
+                            mediator->addComponent(e, snd);
+                            networkManager->sendComponent<Engine::Components::Sound>(e, snd);
+                        }
+                    }
+                } catch (const std::exception &ex) {
+                    std::cerr << "Failed to update background components on level change: " << ex.what() << std::endl;
+                }
+            } catch (const std::exception &e) {
+                std::cerr << "Failed to broadcast level change: " << e.what() << std::endl;
+            }
+        }
+    } catch (const std::bad_any_cast &e) {
+        std::cerr << "Failed to parse ENEMY_DESTROYED event params: " << e.what() << std::endl;
+    }
 }

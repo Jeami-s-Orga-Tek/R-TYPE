@@ -39,6 +39,7 @@
 #include "Systems/Collision.hpp"
 #include "Systems/Enemy.hpp"
 #include "Systems/Animate.hpp"
+#include <chrono>
 
 enum class State {
     LAUNCH,
@@ -147,6 +148,18 @@ class GameManager {
         std::shared_ptr<Engine::AudioPlayer> audio_player;
 
         Engine::LuaLoader luaLoader;
+        uint32_t currentLevel = 1;
+    bool levelWipeActive = false;
+    std::chrono::high_resolution_clock::time_point levelWipeStart;
+    float levelWipeDuration = 2.0f;
+    float levelWipeHoldDuration = 0.6f;
+    uint32_t levelWipeTarget = 1;
+    bool levelWipeMidApplied = false;
+    unsigned int levelWipeColor = 0x000000FF;
+    std::string levelWipePreloadTextureId;
+    std::string levelWipePreloadSpriteId;
+    std::string currentPlayingMusicId;
+    std::string levelWipePreloadMusicId;
     public:
         GameManager(Engine::Utils::Vec2UInt windowSize);
 
@@ -162,6 +175,9 @@ class GameManager {
         void cycleGraphicsQuality();
         void cycleColorBlindMode();
         void applyCurrentResolution(sf::RenderWindow& window);
+    void startLevelWipe(uint32_t newLevel);
+    void applyLevelMusic(uint32_t level);
+    void applyBackgroundSwap(uint32_t level);
 
         void createMediator();
         void initMediator();

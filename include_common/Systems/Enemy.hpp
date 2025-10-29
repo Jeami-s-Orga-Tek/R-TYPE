@@ -116,9 +116,16 @@ namespace Engine {
                                 playExplosion(networkManager, tr.pos.x, tr.pos.y);
                             }
                         }
+                        {
+                            Event destroyedEvent(static_cast<Engine::EventId>(EventsIds::ENEMY_DESTROYED));
+                            destroyedEvent.setParam(0, enemy);
+                            destroyedEvent.setParam(1, enemyComp.scoreValue);
+                            networkManager->mediator->sendEvent(destroyedEvent);
+                        }
+                        // networkManager->sendDestroyEntity(enemy);
                         networkManager->mediator->destroyEntity(enemy);
                     }
-                    
+                    // networkManager->sendDestroyEntity(projectile);
                     networkManager->mediator->destroyEntity(projectile);
                 }
                 

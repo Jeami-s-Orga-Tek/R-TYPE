@@ -30,6 +30,8 @@
 #include "Systems/Render.hpp"
 #include "Systems/PlayerControl.hpp"
 #include "Utils.hpp"
+#include "Components/LevelInfo.hpp"
+#include "Components/GameState.hpp"
 
 GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
     : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
@@ -138,6 +140,83 @@ GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
 
     paramButton.setupVolumeBar(sf::Vector2f(windowSize.x - 220, windowSize.y - 80), 200.f);
     particleSystem.setParameters(&parameters);
+}
+
+void GameManager::startLevelWipe(uint32_t newLevel)
+{
+    levelWipeTarget = newLevel;
+    levelWipeMidApplied = false;
+    levelWipePreloadMusicId = "background_music_next_" + std::to_string(newLevel);
+    levelWipePreloadTextureId = "bg_preload_tex_" + std::to_string(newLevel);
+    levelWipePreloadSpriteId = "bg_preload_sprite_" + std::to_string(newLevel);
+
+    std::string music_path;
+    switch (newLevel) {
+        case 1: music_path = "assets/sound/Start_sound.mp3"; break;
+        case 2: music_path = "assets/sound/Stage2_sound.mp3"; break;
+        case 3: music_path = "assets/sound/Stage3_sound.mp3"; break;
+        case 4: music_path = "assets/sound/Win_level_sound.mp3"; break;
+        default: music_path = "assets/sound/Stage3_sound.mp3"; break;
+    }
+    if (sound_system && audio_player) {
+        sound_system->addSound(audio_player, levelWipePreloadMusicId, music_path);
+    }
+    if (render_system && renderer) {
+        if (newLevel == 2) {
+            const std::string bg_path = "assets/sprites/stage2_background.png";
+            render_system->addTexture(renderer, levelWipePreloadTextureId, bg_path);
+            render_system->addSprite(renderer, levelWipePreloadSpriteId, levelWipePreloadTextureId, {1226, 207}, {0, 0}, 1, 1);
+        } else {
+            const std::string bg_path = "assets/sprites/space_background.gif";
+            render_system->addTexture(renderer, levelWipePreloadTextureId, bg_path);
+            render_system->addSprite(renderer, levelWipePreloadSpriteId, levelWipePreloadTextureId, {1226, 207}, {0, 0}, 1, 1);
+        }
+    }
+    levelWipeStart = std::chrono::high_resolution_clock::now();
+    levelWipeActive = true;
+}
+
+void GameManager::applyLevelMusic(uint32_t level)
+{
+    if (audio_player && !currentPlayingMusicId.empty()) {
+        if (currentPlayingMusicId != levelWipePreloadMusicId) {
+            audio_player->stopAudio(currentPlayingMusicId);
+            audio_player->unloadAudio(currentPlayingMusicId);
+        }
+    }
+    if (sound_system && audio_player && !levelWipePreloadMusicId.empty()) {
+        audio_player->playAudio(levelWipePreloadMusicId, true);
+        currentPlayingMusicId = levelWipePreloadMusicId;
+    } else {
+        std::string music_path;
+        switch (level) {
+            case 1: music_path = "assets/sound/Start_sound.mp3"; break;
+            case 2: music_path = "assets/sound/Stage2_sound.mp3"; break;
+            case 3: music_path = "assets/sound/Stage3_sound.mp3"; break;
+            case 4: music_path = "assets/sound/Win_level_sound.mp3"; break;
+            default: music_path = "assets/sound/Stage3_sound.mp3"; break;
+        }
+        if (sound_system && audio_player) {
+            sound_system->addSound(audio_player, "background_music", music_path);
+            audio_player->playAudio("background_music", true);
+            currentPlayingMusicId = "background_music";
+        }
+    }
+}
+
+void GameManager::applyBackgroundSwap(uint32_t level)
+{
+    if (!(render_system && renderer)) return;
+    const std::string spriteIdToUse = !levelWipePreloadSpriteId.empty() ? levelWipePreloadSpriteId : (level == 2 ? "stage2_background" : "space_background");
+    for (const auto &ent : render_system->entities) {
+        if (!networkManager->mediator->hasComponent<Engine::Components::Sprite>(ent))
+            continue;
+        auto &sp = networkManager->mediator->getComponent<Engine::Components::Sprite>(ent);
+        if (sp.is_background) {
+            std::strncpy(sp.sprite_name.data(), spriteIdToUse.c_str(), sp.sprite_name.size() - 1);
+            sp.sprite_name[sp.sprite_name.size() - 1] = '\0';
+        }
+    }
 }
 
 void GameManager::updatePositions(Engine::Utils::Vec2UInt windowSize)
@@ -949,7 +1028,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addTexture(renderer, "base_player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
     render_system->addTexture(renderer, "ground_enemy_sprite_sheet", "assets/sprites/r-typesheet7.gif");
     render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
-    // Register explosion sprite sheet
+    render_system->addTexture(renderer, "stage2_background_texture", "assets/sprites/stage2_background.png");
     render_system->addTexture(renderer, "enemy_explosion_sheet", "assets/sprites/explosionEnemy1.gif");
 
     render_system->addSprite(renderer, "player_1", "players_sprite_sheet", {32, 17}, {0, 0}, 5, 1);
@@ -960,11 +1039,16 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addSprite(renderer, "weak_player_projectile", "base_player_sprite_sheet", {16, 4}, {249, 90}, 1, 1);
     render_system->addSprite(renderer, "ground_enemy", "ground_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "space_background", "space_background_texture", {1226, 207}, {0, 0}, 1, 1);
+    render_system->addSprite(renderer, "stage2_background", "stage2_background_texture", {1226, 207}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "enemy_explosion", "enemy_explosion_sheet", {32, 32}, {0, 0}, 5, 1);
 
-    sound_system->addSound(audio_player, "background_music", "assets/sound/Stage2_sound.mp3");
+    sound_system->addSound(audio_player, "background_music", "assets/sound/Start_sound.mp3");
     sound_system->addSound(audio_player, "projectile_shoot", "assets/sound/01LASER.BD_00000.wav");
     sound_system->addSound(audio_player, "explosion", "assets/sound/explosion.mp3");
+    if (audio_player) {
+        audio_player->playAudio("background_music", true);
+        currentPlayingMusicId = "background_music";
+    }
 
     const float TARGET_FPS = static_cast<float>(currentFps);
     const float FIXED_DT = 1.0f / TARGET_FPS;
@@ -1003,7 +1087,8 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             fps_timer = 0.0f;
         }
 
-        while (accumulator >= FIXED_DT) {
+        static bool clientGameOver = false;
+        while (accumulator >= FIXED_DT && !clientGameOver) {
             player_control_system->update(networkManager, FIXED_DT);
             physics_system->update(mediator, FIXED_DT);
             enemy_system->update(networkManager, FIXED_DT);
@@ -1018,8 +1103,120 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         
         sound_system->update(audio_player, mediator);
         render_system->update(renderer, mediator, frameTime);
+        if (mediator->hasComponent<Engine::Components::GameState>(0)) {
+            const auto &g = mediator->getComponent<Engine::Components::GameState>(0);
+            if (g.state == static_cast<uint8_t>(Engine::Components::GameStateEnum::GAME_VICTORY)) {
+                clientGameOver = true;
+            }
+        }
 
-        renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
+        bool found = false;
+        for (uint32_t e = 0; e < MAX_ENTITIES; ++e) {
+            if (!mediator->hasComponent<Engine::Components::PlayerInfo>(e))
+                continue;
+            if (!mediator->hasComponent<Engine::Components::LevelInfo>(e))
+                continue;
+            const auto &linfo = mediator->getComponent<Engine::Components::LevelInfo>(e);
+            if (this->currentLevel != linfo.level) {
+                if (!levelWipeActive) {
+                    std::cout << "[HUD] Starting level wipe to " << linfo.level << " from entity " << e << std::endl;
+                    startLevelWipe(linfo.level);
+                } else {
+                    std::cout << "[HUD] Level change requested while wipe active, ignoring: " << linfo.level << std::endl;
+                }
+            }
+            found = true;
+            break;
+        }
+        if (!found) {
+            for (uint32_t e = 0; e < MAX_ENTITIES; ++e) {
+                if (mediator->hasComponent<Engine::Components::GameState>(e)) {
+                    const auto &g = mediator->getComponent<Engine::Components::GameState>(e);
+                    if (g.state == static_cast<uint8_t>(Engine::Components::GameStateEnum::GAME_VICTORY)) {
+                        clientGameOver = true;
+                    }
+                }
+                if (!mediator->hasComponent<Engine::Components::LevelInfo>(e))
+                    continue;
+                const auto &linfo = mediator->getComponent<Engine::Components::LevelInfo>(e);
+                if (this->currentLevel != linfo.level) {
+                    if (!levelWipeActive) {
+                        std::cout << "[HUD] Starting level wipe (fallback) to " << linfo.level << " from entity " << e << std::endl;
+                        startLevelWipe(linfo.level);
+                    } else {
+                        std::cout << "[HUD] Level change requested while wipe active (fallback), ignoring: " << linfo.level << std::endl;
+                    }
+                }
+                break;
+            }
+        }
+        if (levelWipeActive && renderer) {
+            auto now = std::chrono::high_resolution_clock::now();
+            float elapsed = std::chrono::duration<float>(now - levelWipeStart).count();
+            float total = levelWipeDuration;
+            float hold = levelWipeHoldDuration;
+            float pre = (total - hold) / 2.0f;
+            float post = pre;
+            float winW = static_cast<float>(renderer->getWindowWidth());
+            float winH = static_cast<float>(renderer->getWindowHeight());
+            float coverFrac = 0.0f;
+            if (elapsed < 0.0f) elapsed = 0.0f;
+            if (elapsed < pre) {
+                coverFrac = (elapsed / pre);
+            } else if (elapsed < pre + hold) {
+                coverFrac = 1.0f;
+                if (!levelWipeMidApplied) {
+                    applyBackgroundSwap(levelWipeTarget);
+                    applyLevelMusic(levelWipeTarget);
+                    levelWipeMidApplied = true;
+                    this->currentLevel = levelWipeTarget;
+                }
+            } else if (elapsed < pre + hold + post) {
+                float after = elapsed - pre - hold;
+                coverFrac = 1.0f - (after / post);
+            } else {
+                coverFrac = 0.0f;
+            }
+            if (coverFrac < 0.0f) coverFrac = 0.0f;
+            if (coverFrac > 1.0f) coverFrac = 1.0f;
+            float coverW = coverFrac * winW;
+            Engine::Utils::Rect rect(0.0f, 0.0f, coverW, winH);
+            renderer->drawRectangle(rect, levelWipeColor);
+            if (elapsed >= total) {
+                levelWipeActive = false;
+                levelWipePreloadMusicId.clear();
+                levelWipePreloadTextureId.clear();
+                levelWipePreloadSpriteId.clear();
+            }
+        }
+
+        if (renderer) {
+            const unsigned int fontSize = 20;
+            const float padding = 10.0f;
+            float winW = static_cast<float>(renderer->getWindowWidth());
+            float winH = static_cast<float>(renderer->getWindowHeight());
+            float levelX = std::max(0.0f, winW - 250.0f - padding);
+            float levelY = std::max(0.0f, winH - 40.0f - padding);
+            if (!clientGameOver) {
+                renderer->drawText("basic", std::string("Level : ") + std::to_string(this->currentLevel), levelX, levelY, fontSize, 0xFFFF00FF);
+
+                renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 25.0f, 20, 0x00FF00FF);
+            } else {
+                if (audio_player && !currentPlayingMusicId.empty()) {
+                    audio_player->stopAudio(currentPlayingMusicId);
+                    audio_player->unloadAudio(currentPlayingMusicId);
+                    currentPlayingMusicId.clear();
+                }
+                float winW = static_cast<float>(renderer->getWindowWidth());
+                float winH = static_cast<float>(renderer->getWindowHeight());
+                Engine::Utils::Rect rect(0.0f, 0.0f, winW, winH);
+                renderer->drawRectangle(rect, 0x000000FF);
+                const unsigned int bigSize = 48;
+                float textX = winW / 2.0f - 200.0f;
+                float textY = winH / 2.0f - 24.0f;
+                renderer->drawText("basic", "Winner", textX, textY, bigSize, 0xFFFFFFFF);
+            }
+        }
 
         dev_console_system->update(networkManager, renderer);
         renderer->displayWindow();

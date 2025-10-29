@@ -10,6 +10,9 @@
 
 #include <memory>
 
+#include "Event.hpp"
+#include "Entity.hpp"
+
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
 #include "Systems/PhysicsNoEngine.hpp"
@@ -49,6 +52,13 @@ namespace RTypeServer {
             Engine::LuaLoader luaLoader;
 
             int player_nb = 4;
+            int current_level = 1;
+            int enemies_killed = 0;
+            int enemies_to_next_level = 10;
+            bool game_over = false;
+
+            void handleEnemyDestroyed(Engine::Event &event);
+            void spawnEnemiesForLevel(int level);
     };
 }
 
