@@ -20,6 +20,7 @@
 #include "Components/Sound.hpp"
 #include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
+#include "Systems/Collision.hpp"
 #include "Entity.hpp"
 #include "Mediator.hpp"
 #include "NetworkManager.hpp"
@@ -159,7 +160,7 @@ void RTypeServer::Server::gameLoop()
         while (accumulator >= FIXED_DT) {
             if (!have_players_spawned && networkManager->getConnectedPlayers() >= player_nb) {
                 for (int i = 0; i < networkManager->getConnectedPlayers(); i++)
-                    createPlayer();
+                    createPlayer(1000, 200);
                 createEnemy(1000, rand() % 400, ENEMY_TYPES::SIMPLE);
                 createBackground();
                 have_players_spawned = true;
@@ -191,7 +192,7 @@ void RTypeServer::Server::gameLoop()
     }
 }
 
-void RTypeServer::Server::createPlayer()
+void RTypeServer::Server::createPlayer(float x, float y)
 {
     if (!networkManager)
         throw std::runtime_error("Network manager not initialized :(");
@@ -202,6 +203,7 @@ void RTypeServer::Server::createPlayer()
     // signature.set(mediator->getComponentType<Engine::Components::Gravity>());
     signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
     signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
     signature.set(mediator->getComponentType<Engine::Components::PlayerInfo>());
     signature.set(mediator->getComponentType<Engine::Components::ShootingCooldown>());
@@ -214,6 +216,8 @@ void RTypeServer::Server::createPlayer()
     mediator->addComponent(entity, player_rigidbody);
     const Engine::Components::Transform player_transform = {.pos = Engine::Utils::Rect(static_cast<float>(rand() % 500), static_cast<float>(rand() % 500), 33.0f, 16.0f), .rot = 0.0f, .scale = 2.0f};
     mediator->addComponent(entity, player_transform);
+    const Engine::Components::Hitbox player_hitbox = {.bounds = Engine::Utils::Rect(x, y, 66, 66), .active = true, .layer = HITBOX_LAYERS::PLAYER, .damage = 10};
+    mediator->addComponent(entity, player_hitbox);
     const std::string player_sprite_name = std::string("player_") + std::to_string((entity % 5) + 1);
     Engine::Components::Sprite player_sprite = {};
     std::strncpy(player_sprite.sprite_name.data(), player_sprite_name.c_str(), player_sprite.sprite_name.size() - 1);
@@ -229,6 +233,7 @@ void RTypeServer::Server::createPlayer()
     // networkManager->sendComponent<Engine::Components::Gravity>(entity, player_gravity);
     networkManager->sendComponent<Engine::Components::RigidBody>(entity, player_rigidbody);
     networkManager->sendComponent<Engine::Components::Transform>(entity, player_transform);
+    networkManager->sendComponent<Engine::Components::Hitbox>(entity, player_hitbox);
     networkManager->sendComponent<Engine::Components::Sprite>(entity, player_sprite);
     networkManager->sendComponent<Engine::Components::PlayerInfo>(entity, player_info);
     networkManager->sendComponent<Engine::Components::ShootingCooldown>(entity, player_cooldown);

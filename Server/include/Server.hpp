@@ -30,7 +30,7 @@ namespace RTypeServer {
             void initEngine();
             void gameLoop();
 
-            void createPlayer();
+            void createPlayer(float x, float y);
             void createPlayerProjectile(float x, float y);
             void createEnemy(float x, float y, ENEMY_TYPES enemy_type);
             void createBackground();
