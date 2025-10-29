@@ -55,20 +55,18 @@ template <typename T>
 void Engine::ComponentArray<T>::insertEntity(Engine::Entity entity, T component)
 {
     if (entity_to_index_map.find(entity) != entity_to_index_map.end()) {
-        // throw std::runtime_error("Entity already in component array !!!!!!");
         components[entity_to_index_map[entity]] = component;
         return;
     }
 
-    // std::cout << "1" << std::endl;
+    if (size >= MAX_ENTITIES) {
+        throw ComponentArrayError("ComponentArray overflow: too many components inserted");
+    }
+
     entity_to_index_map[entity] = size;
-    // std::cout << "2" << std::endl;
     index_to_entity_map[size] = entity;
-    // std::cout << "3" << std::endl;
     components[size] = component;
-    // std::cout << "4" << std::endl;
     size++;
-    // std::cout << "5 : " << size << std::endl;
 }
 
 template <typename T>
@@ -94,8 +92,14 @@ void Engine::ComponentArray<T>::removeEntity(Engine::Entity entity)
 template <typename T>
 T &Engine::ComponentArray<T>::getComponent(Engine::Entity entity)
 {
+    if (entity >= MAX_ENTITIES) {
+        throw ComponentArrayError("getComponent called with out-of-range entity id");
+    }
+
     if (entity_to_index_map.find(entity) == entity_to_index_map.end()) {
         std::cerr << "[ComponentArray] Warning: getComponent called for missing entity " << entity << ". Inserting default component." << std::endl;
+        if (size >= MAX_ENTITIES)
+            throw ComponentArrayError("ComponentArray overflow when auto-inserting default component");
         insertEntity(entity, T{});
     }
 

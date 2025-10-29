@@ -26,6 +26,7 @@
 #include "Components/Transform.hpp"
 #include "Components/Sprite.hpp"
 #include "Components/LevelInfo.hpp"
+#include "Components/GameState.hpp"
 #include "Entity.hpp"
 
 Engine::NetworkManager::NetworkManager(Role role, const std::string &address, uint16_t port)
@@ -44,6 +45,7 @@ Engine::NetworkManager::NetworkManager(Role role, const std::string &address, ui
     registerComponent<Engine::Components::EnemyInfo>();
     registerComponent<Engine::Components::Sound>();
     registerComponent<Engine::Components::LevelInfo>();
+    registerComponent<Engine::Components::GameState>();
     
     if (role == Role::SERVER) {
         socket.open(boost::asio::ip::udp::v4());

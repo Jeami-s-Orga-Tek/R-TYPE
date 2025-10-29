@@ -50,6 +50,7 @@ namespace RTypeServer {
             int current_level = 1;
             int enemies_killed = 0;
             int enemies_to_next_level = 10;
+            bool game_over = false;
 
             void handleEnemyDestroyed(Engine::Event &event);
             void spawnEnemiesForLevel(int level);

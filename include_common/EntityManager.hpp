@@ -40,6 +40,7 @@ namespace Engine {
             std::queue<Entity> available_entities {};
             std::array<Signature, MAX_ENTITIES> signatures {};
             Entity entity_count = 0;
+            std::array<bool, MAX_ENTITIES> alive {};
     };
 };
 

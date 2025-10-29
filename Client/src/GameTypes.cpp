@@ -28,6 +28,7 @@
 #include "Systems/PlayerControl.hpp"
 #include "Utils.hpp"
 #include "Components/LevelInfo.hpp"
+#include "Components/GameState.hpp"
 
 GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
     : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
@@ -1058,17 +1059,27 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             fps_timer = 0.0f;
         }
 
+        static bool clientGameOver = false;
         while (accumulator >= FIXED_DT) {
-            player_control_system->update(networkManager, FIXED_DT);
-            physics_system->update(mediator, FIXED_DT);
-            collision_system->update(networkManager);
-            enemy_system->update(networkManager, FIXED_DT);
-            accumulator -= FIXED_DT;
-        }
+                if (!clientGameOver) {
+                    player_control_system->update(networkManager, FIXED_DT);
+                    physics_system->update(mediator, FIXED_DT);
+                    collision_system->update(networkManager);
+                    enemy_system->update(networkManager, FIXED_DT);
+                }
+                accumulator -= FIXED_DT;
+            }
         
         sound_system->update(audio_player, mediator);
         render_system->update(renderer, mediator, frameTime);
-    bool found = false;
+        if (mediator->hasComponent<Engine::Components::GameState>(0)) {
+            const auto &g = mediator->getComponent<Engine::Components::GameState>(0);
+            if (g.state == static_cast<uint8_t>(Engine::Components::GameStateEnum::GAME_VICTORY)) {
+                clientGameOver = true;
+            }
+        }
+
+        bool found = false;
         for (uint32_t e = 0; e < MAX_ENTITIES; ++e) {
             if (!mediator->hasComponent<Engine::Components::PlayerInfo>(e))
                 continue;
@@ -1088,6 +1099,12 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         }
         if (!found) {
             for (uint32_t e = 0; e < MAX_ENTITIES; ++e) {
+                if (mediator->hasComponent<Engine::Components::GameState>(e)) {
+                    const auto &g = mediator->getComponent<Engine::Components::GameState>(e);
+                    if (g.state == static_cast<uint8_t>(Engine::Components::GameStateEnum::GAME_VICTORY)) {
+                        clientGameOver = true;
+                    }
+                }
                 if (!mediator->hasComponent<Engine::Components::LevelInfo>(e))
                     continue;
                 const auto &linfo = mediator->getComponent<Engine::Components::LevelInfo>(e);
@@ -1149,9 +1166,25 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             float winH = static_cast<float>(renderer->getWindowHeight());
             float levelX = std::max(0.0f, winW - 250.0f - padding);
             float levelY = std::max(0.0f, winH - 40.0f - padding);
-            renderer->drawText("basic", std::string("Level : ") + std::to_string(this->currentLevel), levelX, levelY, fontSize, 0xFFFF00FF);
+            if (!clientGameOver) {
+                renderer->drawText("basic", std::string("Level : ") + std::to_string(this->currentLevel), levelX, levelY, fontSize, 0xFFFF00FF);
 
-            renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 25.0f, 20, 0x00FF00FF);
+                renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 25.0f, 20, 0x00FF00FF);
+            } else {
+                if (audio_player && !currentPlayingMusicId.empty()) {
+                    audio_player->stopAudio(currentPlayingMusicId);
+                    audio_player->unloadAudio(currentPlayingMusicId);
+                    currentPlayingMusicId.clear();
+                }
+                float winW = static_cast<float>(renderer->getWindowWidth());
+                float winH = static_cast<float>(renderer->getWindowHeight());
+                Engine::Utils::Rect rect(0.0f, 0.0f, winW, winH);
+                renderer->drawRectangle(rect, 0x000000FF);
+                const unsigned int bigSize = 48;
+                float textX = winW / 2.0f - 200.0f;
+                float textY = winH / 2.0f - 24.0f;
+                renderer->drawText("basic", "Winner", textX, textY, bigSize, 0xFFFFFFFF);
+            }
         }
 
         dev_console_system->update(networkManager, renderer);

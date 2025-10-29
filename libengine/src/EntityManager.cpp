@@ -22,8 +22,15 @@ Engine::Entity Engine::EntityManager::createEntity()
     if (entity_count >= MAX_ENTITIES)
         throw Engine::EntityManagerError("Too many entities !!!!");
 
+    if (available_entities.empty())
+        throw Engine::EntityManagerError("No available entity ids to allocate");
+
     Engine::Entity e = available_entities.front();
     available_entities.pop();
+    if (e >= MAX_ENTITIES)
+        throw Engine::EntityManagerError("Allocated entity id out of range");
+
+    alive[e] = true;
     entity_count++;
 
     return (e);
@@ -31,13 +38,17 @@ Engine::Entity Engine::EntityManager::createEntity()
 
 void Engine::EntityManager::destroyEntity(Engine::Entity entity)
 {
-    if (entity > entity_count)
+    if (entity >= MAX_ENTITIES)
         return;
-    //     throw std::runtime_error("Trying to delete non-existent entity !!!!");
+
+    if (!alive[entity])
+        return;
 
     signatures[entity].reset();
+    alive[entity] = false;
     available_entities.push(entity);
-    entity_count--;
+    if (entity_count > 0)
+        entity_count--;
 }
 
 void Engine::EntityManager::setSignature(Entity entity, Signature signature)
