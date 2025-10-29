@@ -85,6 +85,11 @@ endif()
 
 add_executable(r-type_client ${SOURCES})
 
+target_sources(r-type_client PRIVATE
+  src/EditorState.cpp
+  include/EditorState.hpp
+)
+
 # target_compile_options(r-type_client PRIVATE -g3 -fsanitize=address,leak -fno-omit-frame-pointer)
 # target_link_options(r-type_client PRIVATE -g3 -fsanitize=address,leak -fno-omit-frame-pointer)
 
