@@ -11,10 +11,6 @@
 #include "Utils.hpp"
 #include "dlfcn_compat.hpp"
 #include "GameTypes.hpp"
-#include <signal.h>
-#include <execinfo.h>
-#include <unistd.h>
-
 
 int main()
 {
