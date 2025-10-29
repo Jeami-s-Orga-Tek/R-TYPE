@@ -21,7 +21,7 @@ namespace Engine {
         class BrickBreaking : public Engine::System {
             public:
                 public:
-                void init(std::shared_ptr<Engine::NetworkManager> networkManager, uint &score) {
+                void init(std::shared_ptr<Engine::NetworkManager> networkManager, int &score) {
                     scoreRef = &score;
                     ballCount = 5;
                     gameOver = false;
@@ -31,11 +31,11 @@ namespace Engine {
                 }
                 
                 bool isGameOver() const { return gameOver; }
-                uint getBallCount() const { return ballCount; }
+                int getBallCount() const { return ballCount; }
                 
             private:
-                uint* scoreRef = nullptr;
-                uint ballCount = 0;
+                int *scoreRef = nullptr;
+                int ballCount = 0;
                 bool gameOver = false;
                 
                 void handleCollision(std::shared_ptr<Engine::NetworkManager> networkManager, Event &event) {

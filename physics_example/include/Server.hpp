@@ -54,7 +54,7 @@ namespace Example {
             std::shared_ptr<Engine::Systems::Collision> collision_system {};
             std::shared_ptr<Engine::Systems::BrickBreaking> brick_breaking_system {};
 
-            uint score = 0;
+            int score = 0;
             bool gameOverDisplayed = false;
     };
 }
