@@ -949,7 +949,6 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addTexture(renderer, "base_player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
     render_system->addTexture(renderer, "ground_enemy_sprite_sheet", "assets/sprites/r-typesheet7.gif");
     render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
-    // Register explosion sprite sheet
     render_system->addTexture(renderer, "enemy_explosion_sheet", "assets/sprites/explosionEnemy1.gif");
 
     render_system->addSprite(renderer, "player_1", "players_sprite_sheet", {32, 17}, {0, 0}, 5, 1);
@@ -1019,10 +1018,25 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         sound_system->update(audio_player, mediator);
         render_system->update(renderer, mediator, frameTime);
 
+        int lives = 0;
+        if (player_control_system) {
+            for (auto e : player_control_system->entities) {
+                if (mediator->hasComponent<Engine::Components::PlayerInfo>(e)) {
+                    auto& info = mediator->getComponent<Engine::Components::PlayerInfo>(e);
+                    lives = static_cast<int>(info.health);
+                    break;
+                }
+            }
+        }
         renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
+        if (lives >= 1)
+            renderer->drawText("basic", "Lives " + std::to_string(lives), 10.0f, 30.0f, 20 , 0xFFFFFFFF);
+        else
+            renderer->drawText("basic", "GAME OVER", 30.0f, 100.0f, 80 , 0xFFFFFFFF);
 
         dev_console_system->update(networkManager, renderer);
         renderer->displayWindow();
+
 
         auto frame_end_time = std::chrono::high_resolution_clock::now();
         auto frame_processing_time = frame_end_time - frame_start_time;

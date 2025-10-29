@@ -14,6 +14,8 @@ namespace Engine {
     namespace Components {
         typedef struct PlayerInfo_s {
             uint32_t player_id;
+            int health;
+            int max_health;
         } PlayerInfo;
     };
 };

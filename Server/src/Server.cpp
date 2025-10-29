@@ -224,7 +224,7 @@ void RTypeServer::Server::createPlayer(float x, float y)
     player_sprite.sprite_name[player_sprite.sprite_name.size() - 1] = '\0';
     player_sprite.frame_nb = 1;
     mediator->addComponent(entity, player_sprite);
-    const Engine::Components::PlayerInfo player_info = {.player_id = entity};
+    const Engine::Components::PlayerInfo player_info = {.player_id = entity, .health = 5, .max_health = 5};
     mediator->addComponent(entity, player_info);
     const Engine::Components::ShootingCooldown player_cooldown = {.cooldown_time = 5, .cooldown = 0};
     mediator->addComponent(entity, player_cooldown);

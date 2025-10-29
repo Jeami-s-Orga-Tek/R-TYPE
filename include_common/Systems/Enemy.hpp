@@ -93,6 +93,33 @@ namespace Engine {
                     HITBOX_LAYERS layerA = event.getParam<HITBOX_LAYERS>(2);
                     HITBOX_LAYERS layerB = event.getParam<HITBOX_LAYERS>(3);
 
+                    if ((layerA == HITBOX_LAYERS::PLAYER && layerB == HITBOX_LAYERS::ENEMY) ||
+                            (layerA == HITBOX_LAYERS::ENEMY && layerB == HITBOX_LAYERS::PLAYER)) {
+                        Entity player = (layerA == HITBOX_LAYERS::PLAYER) ? entityA : entityB;
+                        Entity enemy = (layerA == HITBOX_LAYERS::ENEMY) ? entityA : entityB;
+                        if (networkManager->getRole() == NetworkManager::Role::SERVER) {
+                            auto &mediator = networkManager->mediator;
+                            if (mediator->hasComponent<Components::PlayerInfo>(player)) {
+                                auto &playerInfo = mediator->getComponent<Components::PlayerInfo>(player);
+
+                                playerInfo.health -= 1;
+                                if (playerInfo.health < 0)
+                                    playerInfo.health = 0;
+                                if (playerInfo.health > playerInfo.max_health)
+                                    playerInfo.health = playerInfo.max_health;
+                                networkManager->sendComponent(player, playerInfo);
+
+                                if (playerInfo.health <= 0) {
+                                    if (mediator->hasComponent<Components::Transform>(player)) {
+                                        const auto &tr = mediator->getComponent<Components::Transform>(player);
+                                        playExplosion(networkManager, tr.pos.x, tr.pos.y);
+                                    }
+                                    mediator->destroyEntity(player);
+                                }
+                            }
+                        }
+                    }
+
                     if (layerA == HITBOX_LAYERS::ENEMY && layerB == HITBOX_LAYERS::PLAYER_PROJECTILE)
                         damageEnemy(networkManager, entityA, entityB);
                     else if (layerA == HITBOX_LAYERS::PLAYER_PROJECTILE && layerB == HITBOX_LAYERS::ENEMY)
