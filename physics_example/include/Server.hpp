@@ -38,8 +38,8 @@ namespace Example {
             void createBrick(float x, float y);
             void createDeathFloor();
         private:
-            std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
-            std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
+            Engine::NetworkManager *(*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
+            Engine::Mediator *(*createMediatorFunc)();
             std::shared_ptr<Engine::NetworkManager> networkManager;
             std::shared_ptr<Engine::Mediator> mediator;
 

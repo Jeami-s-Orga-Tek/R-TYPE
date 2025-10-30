@@ -76,14 +76,14 @@ void RTypeServer::Server::loadEngineLib()
     #endif
 
     Engine::DLLoader loader;
-    createMediatorFunc = loader.getFunction<std::shared_ptr<Engine::Mediator>(*)()>(libName, "createMediator");
-    createNetworkManagerFunc = loader.getFunction<std::shared_ptr<Engine::NetworkManager>(*)(Engine::NetworkManager::Role, const std::string &, uint16_t)>(libName, "createNetworkManager");
+    createMediatorFunc = loader.getFunction<Engine::Mediator*(*)()>(libName, "createMediator");
+    createNetworkManagerFunc = loader.getFunction<Engine::NetworkManager*(*)(Engine::NetworkManager::Role, const std::string &, uint16_t)>(libName, "createNetworkManager");
 }
 
 void RTypeServer::Server::startServer(Engine::NetworkManager::Role role, const std::string &ip, uint16_t port, int player_nb)
 {
     this->player_nb = player_nb;
-    networkManager = createNetworkManagerFunc(role, ip, port);
+    networkManager = std::shared_ptr<Engine::NetworkManager>(createNetworkManagerFunc(role, ip, port));
 }
 
 void RTypeServer::Server::initEngine()

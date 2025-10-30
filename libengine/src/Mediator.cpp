@@ -116,8 +116,8 @@ Engine::Signature Engine::Mediator::getSignature(Entity entity)
     return (entityManager->getSignature(entity));
 }
 
-extern "C" std::shared_ptr<Engine::Mediator> createMediator() {
-    return (std::make_shared<Engine::Mediator>());
+extern "C" Engine::Mediator *createMediator() {
+    return (new Engine::Mediator());
 }
 
 extern "C" void deleteMediator(Engine::Mediator *mediator) {

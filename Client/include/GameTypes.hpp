@@ -140,8 +140,8 @@ class GameManager {
         std::shared_ptr<Engine::Systems::DevConsole> dev_console_system {};
         std::shared_ptr<Engine::Systems::Animate> animate_system {};
 
-        std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
-        std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();
+        Engine::NetworkManager *(*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
+        Engine::Mediator *(*createMediatorFunc)();
         std::shared_ptr<Engine::NetworkManager> networkManager;
 
         std::shared_ptr<Engine::Renderer> renderer;

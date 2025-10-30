@@ -49,9 +49,9 @@ Engine::AudioPlayers::SFML::~SFML()
 {
 }
 
-extern "C" std::shared_ptr<Engine::AudioPlayers::SFML> createAudioPlayer()
+extern "C" Engine::AudioPlayers::SFML *createAudioPlayer()
 {
-	return (std::make_shared<Engine::AudioPlayers::SFML>());
+	return (new Engine::AudioPlayers::SFML());
 }
 
 extern "C" void deleteAudioPlayer(Engine::AudioPlayers::SFML *audio_player)

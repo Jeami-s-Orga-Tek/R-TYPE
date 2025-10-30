@@ -22,7 +22,7 @@ ControlsConfig::ControlsConfig(Engine::Utils::Vec2UInt windowSize) : windowSize(
 
 bool ControlsConfig::loadResources()
 {
-    if (!FontControlsText.loadFromFile("/usr/share/fonts/google-carlito-fonts/Carlito-Regular.ttf")) {
+    if (!FontControlsText.loadFromFile("assets/r-type.otf")) {
         std::cerr << "Error loading font for controls" << std::endl;
         return false;
     }

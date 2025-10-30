@@ -40,13 +40,13 @@ void Example::Game::loadEngineLib()
     #endif
 
     Engine::DLLoader loader;
-    createNetworkManagerFunc = loader.getFunction<std::shared_ptr<Engine::NetworkManager>(*)(Engine::NetworkManager::Role, const std::string &, uint16_t)>(libName, "createNetworkManager");
-    createMediatorFunc = loader.getFunction<std::shared_ptr<Engine::Mediator>(*)()>(libName, "createMediator");
+    createNetworkManagerFunc = loader.getFunction<Engine::NetworkManager*(*)(Engine::NetworkManager::Role, const std::string &, uint16_t)>(libName, "createNetworkManager");
+    createMediatorFunc = loader.getFunction<Engine::Mediator*(*)()>(libName, "createMediator");
 }
 
 void Example::Game::initEngine()
 {
-    networkManager = createNetworkManagerFunc(Engine::NetworkManager::Role::CLIENT, "0.0.0.0", 8123);
+    networkManager = std::shared_ptr<Engine::NetworkManager>(createNetworkManagerFunc(Engine::NetworkManager::Role::CLIENT, "0.0.0.0", 8123));
 
     if (!networkManager)
         throw std::runtime_error("Network manager not initialized before engine :(");
@@ -155,14 +155,14 @@ void Example::Game::gameLoop()
 
     {
         Engine::DLLoader loader;
-        auto createRendererFunc = loader.getFunction<std::shared_ptr<Engine::Renderer>(*)()>(renderer_lib_name, "createRenderer");
-        renderer = createRendererFunc();
+        auto createRendererFunc = loader.getFunction<Engine::Renderer*(*)()>(renderer_lib_name, "createRenderer");
+        renderer = std::shared_ptr<Engine::Renderer>(createRendererFunc());
     }
 
     {
         Engine::DLLoader loader;
-        auto createAudioPlayerFunc = loader.getFunction<std::shared_ptr<Engine::AudioPlayer>(*)()>(audio_player_lib_name, "createAudioPlayer");
-        audio_player = createAudioPlayerFunc();
+        auto createAudioPlayerFunc = loader.getFunction<Engine::AudioPlayer*(*)()>(audio_player_lib_name, "createAudioPlayer");
+        audio_player = std::shared_ptr<Engine::AudioPlayer>(createAudioPlayerFunc());
     }
 
     renderer->createWindow(800, 600, "R du TYPE");

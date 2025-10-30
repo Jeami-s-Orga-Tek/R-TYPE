@@ -57,8 +57,8 @@ GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
     #endif
 
     Engine::DLLoader loader;
-    createMediatorFunc = loader.getFunction<std::shared_ptr<Engine::Mediator>(*)()>(libName, "createMediator");
-    createNetworkManagerFunc = loader.getFunction<std::shared_ptr<Engine::NetworkManager>(*)(Engine::NetworkManager::Role, const std::string &, uint16_t)>(libName, "createNetworkManager");
+    createMediatorFunc = loader.getFunction<Engine::Mediator*(*)()>(libName, "createMediator");
+    createNetworkManagerFunc = loader.getFunction<Engine::NetworkManager*(*)(Engine::NetworkManager::Role, const std::string &, uint16_t)>(libName, "createNetworkManager");
 
     if (!font.loadFromFile("assets/r-type.otf")) {
         std::cerr << "Unable to load font" << std::endl;
@@ -757,7 +757,7 @@ void GameManager::updateStatusTextPosition(bool isParametersMode)
 
 bool GameManager::connectToServer(const std::string& serverIP, unsigned short port)
 {
-    networkManager = createNetworkManagerFunc(Engine::NetworkManager::Role::CLIENT, serverIP, port);
+    networkManager = std::shared_ptr<Engine::NetworkManager>(createNetworkManagerFunc(Engine::NetworkManager::Role::CLIENT, serverIP, port));
 
     luaLoader.setMediator(networkManager->mediator);
     luaLoader.setNetworkManager(networkManager);
@@ -1010,14 +1010,14 @@ void GameManager::gameDemo(sf::RenderWindow &window)
 
     {
         Engine::DLLoader loader;
-        auto createRendererFunc = loader.getFunction<std::shared_ptr<Engine::Renderer>(*)()>(renderer_lib_name, "createRenderer");
-        renderer = createRendererFunc();
+        auto createRendererFunc = loader.getFunction<Engine::Renderer*(*)()>(renderer_lib_name, "createRenderer");
+        renderer = std::shared_ptr<Engine::Renderer>(createRendererFunc());
     }
 
     {
         Engine::DLLoader loader;
-        auto createAudioPlayerFunc = loader.getFunction<std::shared_ptr<Engine::AudioPlayer>(*)()>(audio_player_lib_name, "createAudioPlayer");
-        audio_player = createAudioPlayerFunc();
+        auto createAudioPlayerFunc = loader.getFunction<Engine::AudioPlayer*(*)()>(audio_player_lib_name, "createAudioPlayer");
+        audio_player = std::shared_ptr<Engine::AudioPlayer>(createAudioPlayerFunc());
     }
 
     renderer->createWindow(800, 600, "R du TYPE");

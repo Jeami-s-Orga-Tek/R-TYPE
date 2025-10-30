@@ -33,8 +33,8 @@ namespace Engine {
                     #endif
 
                     Engine::DLLoader loader;
-                    auto createPhysicsEngineFunc = loader.getFunction<std::shared_ptr<Engine::PhysicsEngine>(*)()>(physics_engine_lib_name, "createPhysicsEngine");
-                    physics_engine = createPhysicsEngineFunc();
+                    auto createPhysicsEngineFunc = loader.getFunction<Engine::PhysicsEngine*(*)()>(physics_engine_lib_name, "createPhysicsEngine");
+                    physics_engine = std::shared_ptr<Engine::PhysicsEngine>(createPhysicsEngineFunc());
 
                     Utils::Vec2 gravity{0.0f, 9.81f};
                     physics_engine->init(gravity);

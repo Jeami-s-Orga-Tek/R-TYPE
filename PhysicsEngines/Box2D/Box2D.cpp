@@ -184,7 +184,7 @@ Engine::PhysicsEngines::Box2D::~Box2D()
     world = nullptr;
 }
 
-extern "C" std::shared_ptr<Engine::PhysicsEngines::Box2D> createPhysicsEngine()
+extern "C" Engine::PhysicsEngines::Box2D *createPhysicsEngine()
 {
-    return (std::make_shared<Engine::PhysicsEngines::Box2D>());
+    return (new Engine::PhysicsEngines::Box2D());
 }

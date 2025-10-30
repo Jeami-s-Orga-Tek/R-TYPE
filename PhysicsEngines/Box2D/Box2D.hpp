@@ -56,6 +56,6 @@ namespace Engine {
     };
 };
 
-extern "C" std::shared_ptr<Engine::PhysicsEngines::Box2D> createPhysicsEngine();
+extern "C" Engine::PhysicsEngines::Box2D *createPhysicsEngine();
 
 #endif /* !BOX2D_HPP_ */

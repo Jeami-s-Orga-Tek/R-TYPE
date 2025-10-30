@@ -33,7 +33,7 @@ namespace Engine {
     };
 };
 
-extern "C" std::shared_ptr<Engine::AudioPlayers::SFML> createAudioPlayer();
+extern "C" Engine::AudioPlayers::SFML *createAudioPlayer();
 
 extern "C" void deleteAudioPlayer(Engine::AudioPlayers::SFML *audio_player);
 

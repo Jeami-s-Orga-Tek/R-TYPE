@@ -61,7 +61,7 @@ namespace Engine {
     };
 };
 
-extern "C" std::shared_ptr<Engine::Renderers::SFML> createRenderer();
+extern "C" Engine::Renderers::SFML *createRenderer();
 
 extern "C" void deleteRenderer(Engine::Renderers::SFML *renderer);
 

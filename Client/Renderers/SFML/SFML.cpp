@@ -341,9 +341,9 @@ Engine::Renderers::SFML::~SFML()
 {
 }
 
-extern "C" std::shared_ptr<Engine::Renderers::SFML> createRenderer()
+extern "C" Engine::Renderers::SFML *createRenderer()
 {
-	return (std::make_shared<Engine::Renderers::SFML>());
+	return (new Engine::Renderers::SFML());
 }
 
 extern "C" void deleteRenderer(Engine::Renderers::SFML *renderer)

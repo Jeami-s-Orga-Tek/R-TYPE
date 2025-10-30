@@ -108,7 +108,7 @@ void Engine::Mediator::setSystemSignature(Signature signature)
     systemManager->setSignature<T>(signature);
 }
 
-extern "C" std::shared_ptr<Engine::Mediator> createMediator();
+extern "C" Engine::Mediator *createMediator();
 
 extern "C" void deleteMediator(Engine::Mediator *mediator);
 
