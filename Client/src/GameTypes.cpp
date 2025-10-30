@@ -1049,7 +1049,6 @@ void GameManager::gameDemo(sf::RenderWindow &window)
                  renderer->drawText("basic", "Returning to menu..." + std::to_string(static_cast<int>(t)), 30.0f, 200.0f, 20, 0xFFFFFFFF);
 
                 if (gameOverClock.getElapsedTime().asSeconds() >= 5.0f) {
-                    currentState = State::MENU;
                     gameOver = false;
                     return;
                 }
