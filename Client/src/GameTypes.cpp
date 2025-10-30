@@ -1029,6 +1029,8 @@ void GameManager::gameDemo(sf::RenderWindow &window)
                     continue;
                 auto &playerInfo = mediator->getComponent<Engine::Components::PlayerInfo>(e);
                 myLives = (myLives < 0) ? playerInfo.health : std::min(myLives, playerInfo.health);
+                if (lives == 0)
+                    mediator->destroyEntity(e);
             }
 
             if (!gameOver && myLives >= 0)
