@@ -183,6 +183,8 @@ class GameManager {
         bool connectToServer(const std::string& serverIP, unsigned short port);
 
         int lives = 5;
+        bool gameOver = false;
+        sf::Clock gameOverClock;
 };
 
 #endif /* !GAMETYPES_HPP_ */

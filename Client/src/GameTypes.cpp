@@ -367,6 +367,7 @@ void GameManager::render(sf::RenderWindow& window) {
     } else if (currentState == State::GAME) {
         // window.close();
         gameDemo(window);
+        currentState = State::MENU;
     } else if (currentState == State::SETTINGS) {
         parameters.draw(window);
         backButton.draw(window);
@@ -1026,26 +1027,31 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             for (auto e : snapshot) {
                 if (!mediator->hasComponent<Engine::Components::PlayerInfo>(e))
                     continue;
-
                 auto &playerInfo = mediator->getComponent<Engine::Components::PlayerInfo>(e);
-
-                if (myLives < 0)
-                    myLives = playerInfo.health;
-                else
-                    myLives = std::min(myLives, playerInfo.health);
-
-                if (playerInfo.health <= 0) {
-                    mediator->destroyEntity(e);
-                }
+                myLives = (myLives < 0) ? playerInfo.health : std::min(myLives, playerInfo.health);
             }
 
-            if (myLives >= 0)
+            if (!gameOver && myLives >= 0)
                 lives = std::max(0, myLives);
 
-            if (lives > 0)
+            if (!gameOver && lives <= 0) {
+                gameOver = true;
+                gameOverClock.restart();
+            }
+
+            if (!gameOver) {
                 renderer->drawText("basic", "Lives " + std::to_string(lives), 10.0f, 30.0f, 20, 0xFFFFFFFF);
-            else
+            } else {
                 renderer->drawText("basic", "GAME OVER", 30.0f, 100.0f, 80, 0xFFFFFFFF);
+                 float t = gameOverClock.getElapsedTime().asSeconds();
+                 renderer->drawText("basic", "Returning to menu..." + std::to_string(static_cast<int>(t)), 30.0f, 200.0f, 20, 0xFFFFFFFF);
+
+                if (gameOverClock.getElapsedTime().asSeconds() >= 5.0f) {
+                    currentState = State::MENU;
+                    gameOver = false;
+                    return;
+                }
+            }
         }
 
         renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
