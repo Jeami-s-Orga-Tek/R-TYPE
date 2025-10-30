@@ -1022,36 +1022,36 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         if (player_control_system) {
             std::vector<Engine::Entity> snapshot(player_control_system->entities.begin(),
                                                  player_control_system->entities.end());
-
-            int myLives = -1;
             for (auto e : snapshot) {
                 if (!mediator->hasComponent<Engine::Components::PlayerInfo>(e))
                     continue;
-                auto &playerInfo = mediator->getComponent<Engine::Components::PlayerInfo>(e);
-                myLives = (myLives < 0) ? playerInfo.health : std::min(myLives, playerInfo.health);
+                const auto &info = mediator->getComponent<Engine::Components::PlayerInfo>(e);
+                if (lives < 0)
+                    lives = info.health;
+                else
+                    lives = std::min(lives, info.health);
                 if (lives == 0)
                     mediator->destroyEntity(e);
             }
+        }
+        if (!gameOver && lives >= 0)
+            lives = std::max(0, lives);
 
-            if (!gameOver && myLives >= 0)
-                lives = std::max(0, myLives);
+        if (!gameOver && lives <= 0) {
+            gameOver = true;
+            gameOverClock.restart();
+        }
 
-            if (!gameOver && lives <= 0) {
-                gameOver = true;
-                gameOverClock.restart();
-            }
+        if (!gameOver) {
+            renderer->drawText("basic", "Lives " + std::to_string(lives), 10.0f, 30.0f, 20, 0xFFFFFFFF);
+        } else {
+            renderer->drawText("basic", "GAME OVER", 30.0f, 100.0f, 80, 0xFFFFFFFF);
+             float t = gameOverClock.getElapsedTime().asSeconds();
+             renderer->drawText("basic", "Returning to menu..." + std::to_string(static_cast<int>(t)), 30.0f, 200.0f, 20, 0xFFFFFFFF);
 
-            if (!gameOver) {
-                renderer->drawText("basic", "Lives " + std::to_string(lives), 10.0f, 30.0f, 20, 0xFFFFFFFF);
-            } else {
-                renderer->drawText("basic", "GAME OVER", 30.0f, 100.0f, 80, 0xFFFFFFFF);
-                 float t = gameOverClock.getElapsedTime().asSeconds();
-                 renderer->drawText("basic", "Returning to menu..." + std::to_string(static_cast<int>(t)), 30.0f, 200.0f, 20, 0xFFFFFFFF);
-
-                if (gameOverClock.getElapsedTime().asSeconds() >= 5.0f) {
-                    gameOver = false;
-                    return;
-                }
+            if (gameOverClock.getElapsedTime().asSeconds() >= 5.0f) {
+                gameOver = false;
+                return;
             }
         }
 
