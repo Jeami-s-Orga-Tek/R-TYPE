@@ -332,23 +332,12 @@ void RTypeServer::Server::createEnemyProjectile(float x, float y)
     mediator->addComponent(entity, projectile_rigidbody);
     const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Rect(x, y, 33.0f, 16.0f), .rot = 0.0f, .scale = 2.0f};
     mediator->addComponent(entity, projectile_transform);
-    Engine::Components::Sprite projectile_sprite{};
-    std::snprintf(projectile_sprite.sprite_name.data(), projectile_sprite.sprite_name.size(), "%s", "weak_player_projectile");
-    projectile_sprite.frame_nb = 1;
-    projectile_sprite.scrolling = false;
-    projectile_sprite.is_background = false;
+    const Engine::Components::Sprite projectile_sprite = {.sprite_name = "weak_player_projectile", .frame_nb = 1};
     mediator->addComponent(entity, projectile_sprite);
-
     const Engine::Utils::Rect hitbox_rect(x, y, 32, 8);
-    const Engine::Components::Hitbox projectile_hitbox = {
-            .bounds = hitbox_rect,
-            .active = true,
-            .layer = HITBOX_LAYERS::ENEMY_PROJECTILE,
-            .damage = 10
-    };
+    const Engine::Components::Hitbox projectile_hitbox = {.bounds = hitbox_rect, .active = true, .layer = HITBOX_LAYERS::ENEMY_PROJECTILE, .damage = 10};
     mediator->addComponent(entity, projectile_hitbox);
-
-    const Engine::Components::Sound projectile_sound = { .sound_name = "projectile_shoot" };
+    const Engine::Components::Sound projectile_sound = {.sound_name = "projectile_shoot"};
     mediator->addComponent(entity, projectile_sound);
 
     networkManager->sendEntity(entity, signature);

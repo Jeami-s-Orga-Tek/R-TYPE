@@ -93,43 +93,79 @@ namespace Engine {
                     HITBOX_LAYERS layerA = event.getParam<HITBOX_LAYERS>(2);
                     HITBOX_LAYERS layerB = event.getParam<HITBOX_LAYERS>(3);
 
-                    if ((layerA == HITBOX_LAYERS::PLAYER && layerB == HITBOX_LAYERS::ENEMY) ||
-                            (layerA == HITBOX_LAYERS::ENEMY && layerB == HITBOX_LAYERS::PLAYER)) {
-                        Entity player = (layerA == HITBOX_LAYERS::PLAYER) ? entityA : entityB;
-                        if (networkManager->getRole() == NetworkManager::Role::SERVER) {
-                            auto &mediator = networkManager->mediator;
-                            if (mediator->hasComponent<Components::PlayerInfo>(player)) {
-                                auto &playerInfo = mediator->getComponent<Components::PlayerInfo>(player);
-
-                                playerInfo.health -= 1;
-                                if (playerInfo.health < 0)
-                                    playerInfo.health = 0;
-                                if (playerInfo.health > playerInfo.max_health)
-                                    playerInfo.health = playerInfo.max_health;
-                                networkManager->sendComponent(player, playerInfo);
-
-                                if (playerInfo.health <= 0) {
-                                    if (mediator->hasComponent<Components::Transform>(player)) {
-                                        const auto &tr = mediator->getComponent<Components::Transform>(player);
-                                        playExplosion(networkManager, tr.pos.x, tr.pos.y);
-                                    }
-                                    mediator->destroyEntity(player);
-                                }
-                            }
-                        }
-                    }
-
+                    if (layerA == HITBOX_LAYERS::PLAYER && layerB == HITBOX_LAYERS::ENEMY)
+                        damageEnemyToPlayer(networkManager, entityA);
+                    else if (layerA == HITBOX_LAYERS::ENEMY && layerB == HITBOX_LAYERS::PLAYER)
+                        damageEnemyToPlayer(networkManager, entityB);
+//                    if (layerA == HITBOX_LAYERS::ENEMY_PROJECTILE && layerB == HITBOX_LAYERS::PLAYER)
+//                        damagePlayer(networkManager, entityA, entityB);
+//                    else if (layerA == HITBOX_LAYERS::PLAYER && layerB == HITBOX_LAYERS::ENEMY_PROJECTILE)
+//                        damagePlayer(networkManager, entityB, entityA);
                     if (layerA == HITBOX_LAYERS::ENEMY && layerB == HITBOX_LAYERS::PLAYER_PROJECTILE)
                         damageEnemy(networkManager, entityA, entityB);
                     else if (layerA == HITBOX_LAYERS::PLAYER_PROJECTILE && layerB == HITBOX_LAYERS::ENEMY)
                         damageEnemy(networkManager, entityB, entityA);
                 }
-                
+
+                void damageEnemyToPlayer(std::shared_ptr<Engine::NetworkManager> networkManager, Entity player) {
+                    if (networkManager->getRole() != NetworkManager::Role::SERVER)
+                        return;
+
+                    auto &mediator = networkManager->mediator;
+                    if (!mediator->hasComponent<Components::PlayerInfo>(player))
+                        return;
+
+                    auto &playerInfo = mediator->getComponent<Components::PlayerInfo>(player);
+
+                    playerInfo.health -= 1;
+                    if (playerInfo.health < 0)
+                        playerInfo.health = 0;
+                    if (playerInfo.health > playerInfo.max_health)
+                        playerInfo.health = playerInfo.max_health;
+                    networkManager->sendComponent(player, playerInfo);
+
+                    if (playerInfo.health <= 0) {
+                        if (mediator->hasComponent<Components::Transform>(player)) {
+                            const auto &tr = mediator->getComponent<Components::Transform>(player);
+                            playExplosion(networkManager, tr.pos.x, tr.pos.y);
+                        }
+                        mediator->destroyEntity(player);
+                    }
+                }
+
+//                void damagePlayer(std::shared_ptr<Engine::NetworkManager> networkManager, Entity player, Entity projectile) {
+//                    if (networkManager->getRole() != NetworkManager::Role::SERVER)
+//                        return;
+//
+//                    auto &mediator = networkManager->mediator;
+//
+//                    if (mediator->hasComponent<Components::PlayerInfo>(player)) {
+//                        auto &playerInfo = mediator->getComponent<Components::PlayerInfo>(player);
+//
+//                        playerInfo.health -= 1;
+//                        if (playerInfo.health < 0)
+//                            playerInfo.health = 0;
+//                        if (playerInfo.health > playerInfo.max_health)
+//                            playerInfo.health = playerInfo.max_health;
+//
+//                        networkManager->sendComponent(player, playerInfo);
+//
+//                        if (playerInfo.health <= 0) {
+//                            if (mediator->hasComponent<Components::Transform>(player)) {
+//                                const auto &tr = mediator->getComponent<Components::Transform>(player);
+//                                playExplosion(networkManager, tr.pos.x, tr.pos.y);
+//                            }
+//                            mediator->destroyEntity(player);
+//                        }
+//                    }
+//                    mediator->destroyEntity(projectile);
+//                }
+
                 void damageEnemy(std::shared_ptr<Engine::NetworkManager> networkManager, Entity enemy, Entity projectile) {
                     if (!networkManager->mediator->hasComponent<Components::EnemyInfo>(enemy) || !networkManager->mediator->hasComponent<Components::Hitbox>(projectile)) {
                         return;
                     }
-                    
+
                     auto &enemyComp = networkManager->mediator->getComponent<Components::EnemyInfo>(enemy);
                     auto &hitbox = networkManager->mediator->getComponent<Components::Hitbox>(projectile);
 
@@ -144,10 +180,10 @@ namespace Engine {
                         }
                         networkManager->mediator->destroyEntity(enemy);
                     }
-                    
+
                     networkManager->mediator->destroyEntity(projectile);
                 }
-                
+
                 void updateEnemyAI(std::shared_ptr<Engine::NetworkManager> networkManager, Entity enemy, float dt) {
                     auto &enemyComp = networkManager->mediator->getComponent<Components::EnemyInfo>(enemy);
                     auto &transform = networkManager->mediator->getComponent<Components::Transform>(enemy);
