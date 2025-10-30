@@ -96,7 +96,6 @@ namespace Engine {
                     if ((layerA == HITBOX_LAYERS::PLAYER && layerB == HITBOX_LAYERS::ENEMY) ||
                             (layerA == HITBOX_LAYERS::ENEMY && layerB == HITBOX_LAYERS::PLAYER)) {
                         Entity player = (layerA == HITBOX_LAYERS::PLAYER) ? entityA : entityB;
-                        Entity enemy = (layerA == HITBOX_LAYERS::ENEMY) ? entityA : entityB;
                         if (networkManager->getRole() == NetworkManager::Role::SERVER) {
                             auto &mediator = networkManager->mediator;
                             if (mediator->hasComponent<Components::PlayerInfo>(player)) {
