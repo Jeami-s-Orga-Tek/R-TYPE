@@ -1018,21 +1018,37 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         sound_system->update(audio_player, mediator);
         render_system->update(renderer, mediator, frameTime);
 
-        int lives = 0;
         if (player_control_system) {
-            for (auto e : player_control_system->entities) {
-                if (mediator->hasComponent<Engine::Components::PlayerInfo>(e)) {
-                    auto& info = mediator->getComponent<Engine::Components::PlayerInfo>(e);
-                    lives = static_cast<int>(info.health);
-                    break;
+            std::vector<Engine::Entity> snapshot(player_control_system->entities.begin(),
+                                                 player_control_system->entities.end());
+
+            int myLives = -1;
+            for (auto e : snapshot) {
+                if (!mediator->hasComponent<Engine::Components::PlayerInfo>(e))
+                    continue;
+
+                auto &playerInfo = mediator->getComponent<Engine::Components::PlayerInfo>(e);
+
+                if (myLives < 0)
+                    myLives = playerInfo.health;
+                else
+                    myLives = std::min(myLives, playerInfo.health);
+
+                if (playerInfo.health <= 0) {
+                    mediator->destroyEntity(e);
                 }
             }
+
+            if (myLives >= 0)
+                lives = std::max(0, myLives);
+
+            if (lives > 0)
+                renderer->drawText("basic", "Lives " + std::to_string(lives), 10.0f, 30.0f, 20, 0xFFFFFFFF);
+            else
+                renderer->drawText("basic", "GAME OVER", 30.0f, 100.0f, 80, 0xFFFFFFFF);
         }
+
         renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
-        if (lives >= 1)
-            renderer->drawText("basic", "Lives " + std::to_string(lives), 10.0f, 30.0f, 20 , 0xFFFFFFFF);
-        else
-            renderer->drawText("basic", "GAME OVER", 30.0f, 100.0f, 80 , 0xFFFFFFFF);
 
         dev_console_system->update(networkManager, renderer);
         renderer->displayWindow();
