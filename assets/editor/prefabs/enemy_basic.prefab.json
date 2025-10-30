@@ -1,0 +1,16 @@
+{
+  "name": "enemy_basic",
+  "category": "Enemies",
+  "components": {
+    "Transform": {
+      "x": 0.0,
+      "y": 0.0,
+      "rot": 0.0,
+      "scale": 1.0
+    },
+    "Sprite": {
+      "name": "enemy_basic",
+      "is_background": false
+    }
+  }
+}

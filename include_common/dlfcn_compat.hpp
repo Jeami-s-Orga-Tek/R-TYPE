@@ -1,11 +1,12 @@
 /*
 ** EPITECH PROJECT, 2025
-** R-TYPE
+** G-CPP-500-BDX-5-1-rtype-1
 ** File description:
-** dlfcn_compat
+** dlfcn_compat.hpp
 */
 
-#pragma once
+#ifndef DLFCN_COMPAT_HPP
+#define DLFCN_COMPAT_HPP
 
 #if defined(_WIN32)
 #ifndef WIN32_LEAN_AND_MEAN
@@ -22,4 +23,7 @@ inline char* dlerror() { return (char*)NULL; }
 #else
 #include <dlfcn.h>
 #endif
+
+#endif // DLFCN_COMPAT_HPP
+
 

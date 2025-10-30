@@ -1,0 +1,16 @@
+{
+  "name": "player",
+  "category": "Player",
+  "components": {
+    "Transform": {
+      "x": 0.0,
+      "y": 0.0,
+      "rot": 0.0,
+      "scale": 1.0
+    },
+    "Sprite": {
+      "name": "player_ship",
+      "is_background": false
+    }
+  }
+}

@@ -30,7 +30,7 @@
 #include "Systems/Render.hpp"
 #include "Systems/PlayerControl.hpp"
 #include "Utils.hpp"
-#include "EditorState.hpp"
+#include "editor/EditorState.hpp"
 
 GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
     : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),

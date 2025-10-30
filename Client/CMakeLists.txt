@@ -42,6 +42,38 @@ CPMAddPackage(
   DOWNLOAD_ONLY YES
 )
 
+CPMAddPackage(
+  NAME imgui
+  GITHUB_REPOSITORY ocornut/imgui
+  GIT_TAG v1.90.4-docking
+)
+
+if(imgui_ADDED)
+  set(IMGUI_DIR ${imgui_SOURCE_DIR} CACHE INTERNAL "Path to Dear ImGui")
+
+  if(NOT TARGET imgui)
+    add_library(imgui STATIC
+      ${imgui_SOURCE_DIR}/imgui.cpp
+      ${imgui_SOURCE_DIR}/imgui_draw.cpp
+      ${imgui_SOURCE_DIR}/imgui_tables.cpp
+      ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+      ${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
+    )
+    target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${imgui_SOURCE_DIR}/backends)
+  endif()
+endif()
+
+CPMAddPackage(
+  NAME imgui-sfml
+  GITHUB_REPOSITORY SFML/imgui-sfml
+  GIT_TAG v2.6
+  OPTIONS "IMGUI_DIR=${imgui_SOURCE_DIR}" "IMGUI_SFML_FIND_SFML=OFF"
+)
+
+if(TARGET ImGui-SFML)
+  target_include_directories(ImGui-SFML PUBLIC $<BUILD_INTERFACE:${imgui_SOURCE_DIR}>)
+endif()
+
 if(lua_ADDED)
   file(GLOB lua_sources ${lua_SOURCE_DIR}/*.c)
   list(REMOVE_ITEM lua_sources "${lua_SOURCE_DIR}/lua.c" "${lua_SOURCE_DIR}/luac.c")
@@ -86,15 +118,33 @@ endif()
 add_executable(r-type_client ${SOURCES})
 
 target_sources(r-type_client PRIVATE
-  src/EditorState.cpp
-  include/EditorState.hpp
+  src/editor/EditorState.cpp
+  include/editor/EditorState.hpp
+  src/editor/EditorUI.cpp
+  include/editor/EditorUI.hpp
+  src/editor/EditorLayout.cpp
+  include/editor/EditorLayout.hpp
+  src/editor/EditorDocument.cpp
+  include/editor/EditorDocument.hpp
+  src/editor/PrefabCatalog.cpp
+  include/editor/PrefabCatalog.hpp
+  src/editor/EditorSelection.cpp
+  include/editor/EditorSelection.hpp
+  src/editor/panels/PalettePanel.cpp
+  include/editor/panels/PalettePanel.hpp
+  src/editor/panels/OutlinerPanel.cpp
+  include/editor/panels/OutlinerPanel.hpp
 )
 
 # target_compile_options(r-type_client PRIVATE -g3 -fsanitize=address,leak -fno-omit-frame-pointer)
 # target_link_options(r-type_client PRIVATE -g3 -fsanitize=address,leak -fno-omit-frame-pointer)
 
 link_directories(${CMAKE_BINARY_DIR}/libengine)
-target_include_directories(r-type_client PRIVATE ${SFML_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+target_include_directories(r-type_client PRIVATE
+  ${SFML_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+  ${imgui_SOURCE_DIR}
+)
 target_link_libraries(r-type_client PRIVATE
   engine
   LuaLoader
@@ -113,6 +163,9 @@ target_link_libraries(r-type_client PRIVATE
   ${RENDERER_LIB}
   ${AUDIOPLAYER_LIB}
   ${PHYSICSENGINE_LIB}
+  imgui
+  nlohmann_json::nlohmann_json
+  ImGui-SFML::ImGui-SFML
 )
 
 target_link_libraries(r-type_client PRIVATE ${CMAKE_DL_LIBS})
