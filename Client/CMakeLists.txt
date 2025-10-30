@@ -30,11 +30,7 @@ CPMAddPackage("gh:sfml/sfml#2.6.2")
 if(RENDERER STREQUAL "Raylib" OR AUDIOPLAYER STREQUAL "Raylib")
   find_package(raylib QUIET)
   if (NOT raylib_FOUND)
-    CPMAddPackage(
-      NAME raylib
-      GITHUB_REPOSITORY raysan5/raylib
-      VERSION 5.0
-    )
+    CPMAddPackage("gh:raysan5/raylib#5.0")
   endif()
 endif()
 
