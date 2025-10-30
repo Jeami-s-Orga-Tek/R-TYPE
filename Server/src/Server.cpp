@@ -328,7 +328,7 @@ void RTypeServer::Server::createEnemyProjectile(float x, float y)
 
     Engine::Entity entity = mediator->createEntity();
 
-    const Engine::Components::RigidBody projectile_rigidbody = {.velocity = Engine::Utils::Vec2(200.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
+    const Engine::Components::RigidBody projectile_rigidbody = {.velocity = Engine::Utils::Vec2(-200.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
     mediator->addComponent(entity, projectile_rigidbody);
     const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Rect(x, y, 33.0f, 16.0f), .rot = 0.0f, .scale = 2.0f};
     mediator->addComponent(entity, projectile_transform);
