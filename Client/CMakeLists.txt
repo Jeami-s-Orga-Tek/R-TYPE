@@ -126,6 +126,12 @@ target_sources(r-type_client PRIVATE
   include/editor/EditorLayout.hpp
   src/editor/EditorDocument.cpp
   include/editor/EditorDocument.hpp
+  src/editor/Command.cpp
+  include/editor/Command.hpp
+  src/editor/CommandStack.cpp
+  include/editor/CommandStack.hpp
+  src/editor/ComponentRegistry.cpp
+  include/editor/ComponentRegistry.hpp
   src/editor/PrefabCatalog.cpp
   include/editor/PrefabCatalog.hpp
   src/editor/EditorSelection.cpp
@@ -134,6 +140,8 @@ target_sources(r-type_client PRIVATE
   include/editor/panels/PalettePanel.hpp
   src/editor/panels/OutlinerPanel.cpp
   include/editor/panels/OutlinerPanel.hpp
+  src/editor/panels/InspectorPanel.cpp
+  include/editor/panels/InspectorPanel.hpp
 )
 
 # target_compile_options(r-type_client PRIVATE -g3 -fsanitize=address,leak -fno-omit-frame-pointer)

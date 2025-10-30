@@ -12,12 +12,15 @@
 #include <filesystem>
 #include <memory>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
+#include "editor/CommandStack.hpp"
 #include "editor/EditorDocument.hpp"
 #include "editor/EditorLayout.hpp"
 #include "editor/EditorSelection.hpp"
 #include "editor/PrefabCatalog.hpp"
+#include "editor/panels/InspectorPanel.hpp"
 #include "editor/panels/OutlinerPanel.hpp"
 #include "editor/panels/PalettePanel.hpp"
 
@@ -55,7 +58,8 @@ private:
     void placePrefabAtPosition(const Prefab& prefab, const sf::Vector2f& position);
     void deleteSelection();
     void duplicateSelection();
-    std::string makeUniqueName(const std::string& base) const;
+    std::string makeUniqueName(const std::string& base,
+        const std::unordered_set<std::string>* reserved = nullptr) const;
     void enterWorkspace();
 
     sf::RenderWindow& m_window;
@@ -72,6 +76,8 @@ private:
     EditorSelection m_selection;
     PalettePanel m_palettePanel;
     OutlinerPanel m_outlinerPanel;
+    CommandStack m_history;
+    InspectorPanel m_inspectorPanel;
     std::filesystem::path m_layoutPath;
     bool m_layoutDirty {false};
     Mode m_mode {Mode::Splash};

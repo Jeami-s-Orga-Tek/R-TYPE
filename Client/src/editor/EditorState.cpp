@@ -15,6 +15,7 @@
 #include <filesystem>
 #include <iterator>
 #include <optional>
+#include <utility>
 #include <stdexcept>
 #include <string>
 #include <unordered_set>
@@ -43,17 +44,24 @@ constexpr ImGuiWindowFlags kPanelWindowFlags = ImGuiWindowFlags_NoCollapse | ImG
 namespace rtype::editor {
 
 EditorState::EditorState(sf::RenderWindow& window)
-    : m_window(window),
-      m_resourcesReady(false),
-      m_hintPulseTimer(0.f),
-      m_ui(std::make_unique<EditorUI>(window)),
-      m_layout(),
-      m_document(),
-      m_layoutPath(kLayoutFile),
-      m_layoutDirty(false),
-      m_mode(Mode::Splash)
+    : m_window(window)
+    , m_resourcesReady(false)
+    , m_hintPulseTimer(0.f)
+    , m_ui(std::make_unique<EditorUI>(window))
+    , m_layout()
+    , m_document()
+    , m_catalog()
+    , m_selection()
+    , m_palettePanel()
+    , m_outlinerPanel()
+    , m_history()
+    , m_inspectorPanel(m_document, m_selection, m_layout, m_history)
+    , m_layoutPath(kLayoutFile)
+    , m_layoutDirty(false)
+    , m_mode(Mode::Splash)
 {
     m_overlay.setFillColor(sf::Color(15, 15, 20, static_cast<sf::Uint8>(kOverlayAlpha)));
+    m_history.setLevel(m_document.level());
 }
 
 EditorState::~EditorState() = default;
@@ -218,9 +226,8 @@ void EditorState::drawWorkspacePanels()
         const char* placeholder;
     };
 
-    static constexpr std::array<PanelDesc, 5> kPanels = {{{PanelId::Palette, "Palette", "Palette placeholder"},
+    static constexpr std::array<PanelDesc, 4> kPanels = {{{PanelId::Palette, "Palette", "Palette placeholder"},
                                                           {PanelId::Log, "Console", "Log placeholder"},
-                                                          {PanelId::Inspector, "Inspector", "Inspector placeholder"},
                                                           {PanelId::Toolbar, "Toolbar", "Toolbar placeholder"},
                                                           {PanelId::Outliner, "Outliner", "Outliner placeholder"}}};
 
@@ -274,6 +281,11 @@ void EditorState::drawWorkspacePanels()
         }
     }
 
+    m_inspectorPanel.draw(m_window);
+    if (m_inspectorPanel.consumeLayoutChanged()) {
+        m_layoutDirty = true;
+    }
+
     drawOpenLevelPopup();
     drawSaveAsPopup();
 
@@ -286,10 +298,14 @@ void EditorState::drawWorkspacePanels()
         auto [index, newName] = *renameCommit;
         auto& entities = m_document.level().entities;
         if (index < entities.size()) {
-            entities[index].name = newName;
-            m_document.markDirty();
-            m_selection.setSingle(index);
-            pushStatus("Renamed entity to " + newName);
+            const std::string before = entities[index].name;
+            auto command = makeRenameEntityCommand(index, before, newName);
+            if (command) {
+                m_history.push(std::move(command));
+                m_document.markDirty();
+                m_selection.setSingle(index);
+                pushStatus("Renamed entity to " + m_document.level().entities[index].name);
+            }
         }
     }
 }
@@ -324,6 +340,8 @@ void EditorState::drawToolbarPanel()
         m_saveAsBuffer = kDefaultLevelName;
         m_selection.clear();
         m_pendingPlacementPrefab.clear();
+        m_history.clear();
+        m_history.setLevel(m_document.level());
         pushStatus("New level created");
     }
     ImGui::SameLine();
@@ -435,12 +453,50 @@ void EditorState::handleKeyShortcut(const sf::Event::KeyEvent& keyEvent, State& 
             m_selection.clear();
             m_pendingPlacementPrefab.clear();
             m_saveAsBuffer = kDefaultLevelName;
+            m_history.clear();
+            m_history.setLevel(m_document.level());
             pushStatus("New level created");
             return;
         case sf::Keyboard::O:
             refreshLevelList();
             m_openPopupRequested = true;
             return;
+        case sf::Keyboard::Z: {
+            if (shift) {
+                if (m_history.canRedo()) {
+                    const auto& labels = m_history.history();
+                    const std::size_t cursorPos = m_history.cursor();
+                    const std::string label = (cursorPos < labels.size()) ? labels[cursorPos] : std::string{"Command"};
+                    m_history.redo();
+                    m_selection.clamp(m_document.level().entities.size());
+                    m_document.markDirty();
+                    pushStatus("Redo: " + label);
+                }
+            } else {
+                if (m_history.canUndo()) {
+                    const auto& labels = m_history.history();
+                    const std::size_t cursorPos = m_history.cursor();
+                    const std::string label = (cursorPos > 0 && cursorPos - 1 < labels.size()) ? labels[cursorPos - 1] : std::string{"Command"};
+                    m_history.undo();
+                    m_selection.clamp(m_document.level().entities.size());
+                    m_document.markDirty();
+                    pushStatus("Undo: " + label);
+                }
+            }
+            return;
+        }
+        case sf::Keyboard::Y: {
+            if (m_history.canRedo()) {
+                const auto& labels = m_history.history();
+                const std::size_t cursorPos = m_history.cursor();
+                const std::string label = (cursorPos < labels.size()) ? labels[cursorPos] : std::string{"Command"};
+                m_history.redo();
+                m_selection.clamp(m_document.level().entities.size());
+                m_document.markDirty();
+                pushStatus("Redo: " + label);
+            }
+            return;
+        }
         case sf::Keyboard::S: {
             if (shift) {
                 m_saveAsBuffer = m_document.hasPath() ? m_document.currentPath().filename().string() : kDefaultLevelName;
@@ -589,12 +645,21 @@ void EditorState::placePrefabAtPosition(const Prefab& prefab, const sf::Vector2f
     transformJson["scale"] = transformJson.value("scale", 1.f);
     entity.componentsJson["Transform"] = transformJson.dump();
 
-    level.entities.push_back(std::move(entity));
+    const std::size_t insertIndex = level.entities.size();
+    auto command = makeCreateEntityCommand(std::move(entity), insertIndex);
+    if (command) {
+        m_history.push(std::move(command));
+        m_document.markDirty();
 
-    const std::size_t newIndex = level.entities.size() - 1;
-    m_selection.setSingle(newIndex);
-    m_document.markDirty();
-    pushStatus("Placed " + level.entities[newIndex].name);
+        auto& entities = level.entities;
+        const std::size_t newIndex = std::min(insertIndex, entities.empty() ? std::size_t{0} : entities.size() - 1);
+        if (!entities.empty()) {
+            m_selection.setSingle(newIndex);
+            pushStatus("Placed " + entities[newIndex].name);
+        } else {
+            m_selection.clear();
+        }
+    }
 }
 
 void EditorState::deleteSelection()
@@ -604,25 +669,31 @@ void EditorState::deleteSelection()
         return;
     }
 
-    auto& entities = m_document.level().entities;
+    auto& level = m_document.level();
     std::vector<std::size_t> indices = selected;
-    std::sort(indices.rbegin(), indices.rend());
+    std::sort(indices.begin(), indices.end());
 
-    std::size_t removed = 0;
+    std::vector<EntityRecord> removed;
+    removed.reserve(indices.size());
     for (std::size_t index : indices) {
-        if (index < entities.size()) {
-            entities.erase(entities.begin() + static_cast<std::ptrdiff_t>(index));
-            ++removed;
+        if (index < level.entities.size()) {
+            removed.push_back(EntityRecord{index, level.entities[index]});
         }
     }
 
-    if (removed > 0) {
-        m_selection.clear();
-        m_document.markDirty();
-        pushStatus(std::to_string(removed) + (removed > 1 ? " entities deleted" : " entity deleted"));
+    if (removed.empty()) {
+        return;
     }
 
-    m_selection.clamp(entities.size());
+    const std::size_t removedCount = removed.size();
+    auto command = makeDeleteEntitiesCommand(std::move(removed));
+    if (command) {
+        m_history.push(std::move(command));
+        m_selection.clear();
+        m_document.markDirty();
+        m_selection.clamp(level.entities.size());
+        pushStatus(std::to_string(removedCount) + (removedCount > 1 ? " entities deleted" : " entity deleted"));
+    }
 }
 
 void EditorState::duplicateSelection()
@@ -632,37 +703,59 @@ void EditorState::duplicateSelection()
         return;
     }
 
-    auto& entities = m_document.level().entities;
+    auto& level = m_document.level();
     std::vector<std::size_t> indices = selected;
     std::sort(indices.begin(), indices.end());
 
-    std::vector<std::size_t> newSelection;
+    std::vector<EntityRecord> copies;
+    copies.reserve(indices.size());
+    std::size_t baseIndex = level.entities.size();
+    std::unordered_set<std::string> pendingNames;
+    pendingNames.reserve(indices.size());
+
     for (std::size_t index : indices) {
-        if (index >= entities.size()) {
+        if (index >= level.entities.size()) {
             continue;
         }
-        auto copy = entities[index];
+        auto copy = level.entities[index];
         const std::string baseName = copy.name.empty() ? std::string{"entity"} : copy.name;
-        copy.name = makeUniqueName(baseName + "_copy");
-        entities.push_back(std::move(copy));
-        newSelection.push_back(entities.size() - 1);
+        std::string uniqueName = makeUniqueName(baseName + "_copy", &pendingNames);
+        pendingNames.insert(uniqueName);
+        copy.name = std::move(uniqueName);
+        copies.push_back(EntityRecord{baseIndex + copies.size(), std::move(copy)});
     }
 
-    if (!newSelection.empty()) {
+    if (copies.empty()) {
+        return;
+    }
+
+    const std::size_t createdCount = copies.size();
+    auto command = makeDuplicateEntitiesCommand(std::move(copies));
+    if (command) {
+        m_history.push(std::move(command));
         m_selection.clear();
-        for (std::size_t index : newSelection) {
-            m_selection.add(index);
+        const std::size_t firstIndex = level.entities.size() >= createdCount ? level.entities.size() - createdCount : 0;
+        for (std::size_t offset = 0; offset < createdCount; ++offset) {
+            const std::size_t newIndex = firstIndex + offset;
+            if (newIndex < level.entities.size()) {
+                m_selection.add(newIndex);
+            }
         }
         m_document.markDirty();
-        pushStatus(std::to_string(newSelection.size()) + (newSelection.size() > 1 ? " duplicates created" : " duplicate created"));
+        pushStatus(std::to_string(createdCount) + (createdCount > 1 ? " duplicates created" : " duplicate created"));
     }
 }
 
-std::string EditorState::makeUniqueName(const std::string& candidate) const
+std::string EditorState::makeUniqueName(const std::string& candidate,
+    const std::unordered_set<std::string>* reserved) const
 {
     std::unordered_set<std::string> existingNames;
+    existingNames.reserve(m_document.level().entities.size() + (reserved ? reserved->size() : 0));
     for (const auto& entity : m_document.level().entities) {
         existingNames.insert(entity.name);
+    }
+    if (reserved) {
+        existingNames.insert(reserved->begin(), reserved->end());
     }
 
     if (!existingNames.contains(candidate)) {
@@ -698,6 +791,8 @@ void EditorState::drawOpenLevelPopup()
                         m_saveAsBuffer = filename;
                         m_selection.clear();
                         m_pendingPlacementPrefab.clear();
+                        m_history.clear();
+                        m_history.setLevel(m_document.level());
                         pushStatus("Loaded " + filename);
                         ImGui::CloseCurrentPopup();
                     } else {
