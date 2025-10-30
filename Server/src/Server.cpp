@@ -168,6 +168,7 @@ void RTypeServer::Server::gameLoop()
 
             if (have_players_spawned && rand() % 100 == 0) {
                 createEnemy(1000, rand() % 400, static_cast<ENEMY_TYPES>(rand() % 2));
+                createEnemyProjectile(900.0f, static_cast<float>(rand() % 400));
             }
 
             player_control_system->update(networkManager, FIXED_DT);
@@ -308,6 +309,54 @@ void RTypeServer::Server::createEnemy(float x, float y, ENEMY_TYPES enemy_type)
     networkManager->sendComponent(entity, enemy_sprite);
     networkManager->sendComponent(entity, enemy_hitbox);
     networkManager->sendComponent(entity, enemy_enemyinfo);
+}
+
+
+void RTypeServer::Server::createEnemyProjectile(float x, float y)
+{
+    if (!networkManager)
+        throw std::runtime_error("Network manager not initialized :(");
+    if (!mediator)
+        throw std::runtime_error("Mediator not initialized :(");
+
+    Engine::Signature signature;
+    signature.set(mediator->getComponentType<Engine::Components::RigidBody>());
+    signature.set(mediator->getComponentType<Engine::Components::Transform>());
+    signature.set(mediator->getComponentType<Engine::Components::Sprite>());
+    signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
+    signature.set(mediator->getComponentType<Engine::Components::Sound>());
+
+    Engine::Entity entity = mediator->createEntity();
+
+    const Engine::Components::RigidBody projectile_rigidbody = {.velocity = Engine::Utils::Vec2(200.0f, 0.0f), .acceleration = Engine::Utils::Vec2(0.0f, 0.0f)};
+    mediator->addComponent(entity, projectile_rigidbody);
+    const Engine::Components::Transform projectile_transform = {.pos = Engine::Utils::Rect(x, y, 33.0f, 16.0f), .rot = 0.0f, .scale = 2.0f};
+    mediator->addComponent(entity, projectile_transform);
+    Engine::Components::Sprite projectile_sprite{};
+    std::snprintf(projectile_sprite.sprite_name.data(), projectile_sprite.sprite_name.size(), "%s", "weak_player_projectile");
+    projectile_sprite.frame_nb = 1;
+    projectile_sprite.scrolling = false;
+    projectile_sprite.is_background = false;
+    mediator->addComponent(entity, projectile_sprite);
+
+    const Engine::Utils::Rect hitbox_rect(x, y, 32, 8);
+    const Engine::Components::Hitbox projectile_hitbox = {
+            .bounds = hitbox_rect,
+            .active = true,
+            .layer = HITBOX_LAYERS::ENEMY_PROJECTILE,
+            .damage = 10
+    };
+    mediator->addComponent(entity, projectile_hitbox);
+
+    const Engine::Components::Sound projectile_sound = { .sound_name = "projectile_shoot" };
+    mediator->addComponent(entity, projectile_sound);
+
+    networkManager->sendEntity(entity, signature);
+    networkManager->sendComponent(entity, projectile_rigidbody);
+    networkManager->sendComponent(entity, projectile_transform);
+    networkManager->sendComponent(entity, projectile_sprite);
+    networkManager->sendComponent(entity, projectile_hitbox);
+    networkManager->sendComponent(entity, projectile_sound);
 }
 
 void RTypeServer::Server::createBackground()

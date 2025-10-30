@@ -33,6 +33,7 @@ namespace RTypeServer {
             void createPlayer(float x, float y);
             void createPlayerProjectile(float x, float y);
             void createEnemy(float x, float y, ENEMY_TYPES enemy_type);
+            void createEnemyProjectile(float x, float y);
             void createBackground();
         private:
             std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
