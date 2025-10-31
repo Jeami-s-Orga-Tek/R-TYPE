@@ -109,7 +109,7 @@ void RTypeServer::Server::initEngine()
     // collision_system = mediator->registerSystem<Engine::Systems::Collision>();
 
     enemy_system = mediator->registerSystem<Engine::Systems::EnemySystem>();
-    enemy_system->init(networkManager);
+    enemy_system->init(networkManager, [this](float x, float y) { this->createEnemyProjectile(x, y); });
 
     {
         Engine::Signature signature;
@@ -117,6 +117,7 @@ void RTypeServer::Server::initEngine()
         signature.set(networkManager->mediator->getComponentType<Engine::Components::RigidBody>());
         signature.set(networkManager->mediator->getComponentType<Engine::Components::Hitbox>());
         signature.set(networkManager->mediator->getComponentType<Engine::Components::EnemyInfo>());
+        signature.set(mediator->getComponentType<Engine::Components::ShootingCooldown>());
         networkManager->mediator->setSystemSignature<Engine::Systems::EnemySystem>(signature);
     }
 
@@ -168,7 +169,7 @@ void RTypeServer::Server::gameLoop()
 
             if (have_players_spawned && rand() % 100 == 0) {
                 createEnemy(1000, rand() % 400, static_cast<ENEMY_TYPES>(rand() % 2));
-                createEnemyProjectile(900.0f, static_cast<float>(rand() % 400));
+//                createEnemyProjectile(900.0f, static_cast<float>(rand() % 400));
             }
 
             player_control_system->update(networkManager, FIXED_DT);
@@ -289,6 +290,7 @@ void RTypeServer::Server::createEnemy(float x, float y, ENEMY_TYPES enemy_type)
     signature.set(mediator->getComponentType<Engine::Components::Sprite>());
     signature.set(mediator->getComponentType<Engine::Components::Hitbox>());
     signature.set(mediator->getComponentType<Engine::Components::EnemyInfo>());
+    signature.set(mediator->getComponentType<Engine::Components::ShootingCooldown>());
 
     Engine::Entity entity = mediator->createEntity();
 
@@ -302,6 +304,8 @@ void RTypeServer::Server::createEnemy(float x, float y, ENEMY_TYPES enemy_type)
     mediator->addComponent(entity, enemy_hitbox);
     const Engine::Components::EnemyInfo enemy_enemyinfo = {.health = 20, .maxHealth = 20, .type = static_cast<int>(enemy_type), .scoreValue = 100, .speed = 50.0f, .isActive = true};
     mediator->addComponent(entity, enemy_enemyinfo);
+    const Engine::Components::ShootingCooldown enemy_cooldown = {.cooldown_time = 5, .cooldown = 0};
+    mediator->addComponent(entity, enemy_cooldown);
 
     networkManager->sendEntity(entity, signature);
     networkManager->sendComponent(entity, enemy_rigidbody);
@@ -309,6 +313,7 @@ void RTypeServer::Server::createEnemy(float x, float y, ENEMY_TYPES enemy_type)
     networkManager->sendComponent(entity, enemy_sprite);
     networkManager->sendComponent(entity, enemy_hitbox);
     networkManager->sendComponent(entity, enemy_enemyinfo);
+    networkManager->sendComponent(entity, enemy_cooldown);
 }
 
 

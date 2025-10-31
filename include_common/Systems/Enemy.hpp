@@ -19,6 +19,7 @@
 #include "Components/Sprite.hpp"
 #include "Components/Sound.hpp"
 #include "Components/Animation.hpp"
+#include "Components/ShootingCooldown.hpp"
 #include "Entity.hpp"
 #include "Event.hpp"
 #include "System.hpp"
@@ -76,17 +77,40 @@ namespace Engine {
         class EnemySystem : public System {
             public:
                 void init(std::shared_ptr<Engine::NetworkManager> networkManager) {
-                    networkManager->mediator->addEventListener(static_cast<EventId>(EventsIds::COLLISION), 
+                    networkManager->mediator->addEventListener(static_cast<EventId>(EventsIds::COLLISION),
                         [this, networkManager](Event &event) { handleCollision(networkManager, event); });
                 }
-                
+
+                void init(std::shared_ptr<Engine::NetworkManager> networkManager,
+                          const std::function<void(float, float)> &projCreator) {
+                    init(networkManager);
+                    enemyProjectileCreator = projCreator;
+                }
+
                 void update(std::shared_ptr<Engine::NetworkManager> networkManager, float dt) {
+                    auto mediator = networkManager->mediator;
+
                     for (auto entity : entities) {
                         updateEnemyAI(networkManager, entity, dt);
+
+                        auto &enemy_cooldown = mediator->getComponent<Components::ShootingCooldown>(entity);
+                        auto &transform = mediator->getComponent<Components::Transform>(entity);
+
+                        if (enemy_cooldown.cooldown > 0)
+                            enemy_cooldown.cooldown--;
+
+                        if (enemy_cooldown.cooldown <= 0) {
+                            if (networkManager->getRole() == NetworkManager::Role::SERVER && enemyProjectileCreator) {
+                                enemyProjectileCreator(transform.pos.x, transform.pos.y);
+                            }
+                            enemy_cooldown.cooldown = enemy_cooldown.cooldown_time;
+                        }
                     }
                 }
                 
             private:
+                std::function<void(float, float)> enemyProjectileCreator;
+
                 void handleCollision(std::shared_ptr<Engine::NetworkManager> networkManager, Event &event) {
                     Entity entityA = event.getParam<Entity>(0);
                     Entity entityB = event.getParam<Entity>(1);
