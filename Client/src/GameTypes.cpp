@@ -1009,14 +1009,12 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     #endif
 
     {
-        Engine::DLLoader loader;
-        auto createRendererFunc = loader.getFunction<Engine::Renderer*(*)()>(renderer_lib_name, "createRenderer");
+        auto createRendererFunc = renderer_loader.getFunction<Engine::Renderer*(*)()>(renderer_lib_name, "createRenderer");
         renderer = std::shared_ptr<Engine::Renderer>(createRendererFunc());
     }
 
     {
-        Engine::DLLoader loader;
-        auto createAudioPlayerFunc = loader.getFunction<Engine::AudioPlayer*(*)()>(audio_player_lib_name, "createAudioPlayer");
+        auto createAudioPlayerFunc = audio_player_loader.getFunction<Engine::AudioPlayer*(*)()>(audio_player_lib_name, "createAudioPlayer");
         audio_player = std::shared_ptr<Engine::AudioPlayer>(createAudioPlayerFunc());
     }
 

@@ -21,6 +21,7 @@
 #include "Systems/SoundPlayer.hpp"
 #include "Systems/PaddleControl.hpp"
 #include "Systems/BrickBreaking.hpp"
+#include "DLLoader.hpp"
 
 namespace Example {
     class Game {
@@ -43,6 +44,8 @@ namespace Example {
             std::shared_ptr<Engine::NetworkManager> networkManager;
             std::shared_ptr<Engine::Mediator> mediator;
 
+            Engine::DLLoader renderer_loader;
+            Engine::DLLoader audio_player_loader;
             std::shared_ptr<Engine::Renderer> renderer;
             std::shared_ptr<Engine::AudioPlayer> audio_player;
 

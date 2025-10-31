@@ -32,6 +32,7 @@
 #include "Renderer.hpp"
 #include "Utils.hpp"
 #include "AudioPlayer.hpp"
+#include "DLLoader.hpp"
 
 #include "Systems/PhysicsNoEngine.hpp"
 #include "Systems/Render.hpp"
@@ -144,6 +145,8 @@ class GameManager {
         Engine::Mediator *(*createMediatorFunc)();
         std::shared_ptr<Engine::NetworkManager> networkManager;
 
+        Engine::DLLoader renderer_loader;
+        Engine::DLLoader audio_player_loader;
         std::shared_ptr<Engine::Renderer> renderer;
         std::shared_ptr<Engine::AudioPlayer> audio_player;
 
