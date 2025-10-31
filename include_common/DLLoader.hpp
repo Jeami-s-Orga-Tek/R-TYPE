@@ -20,10 +20,14 @@ namespace Engine {
             DLLoader() {};
 
             ~DLLoader() {
-                if (this->handle == nullptr)
-                    return;
-                dlclose(this->handle);
+                if (this->handle != nullptr) {
+                    dlclose(this->handle);
+                    this->handle = nullptr;
+                }
             };
+
+            DLLoader(const DLLoader &) = delete;
+            DLLoader & operator=(const DLLoader &) = delete;
 
             template<typename FuncType>
             FuncType getFunction(const std::string &filename, const std::string &funcName) {
