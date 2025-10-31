@@ -323,6 +323,212 @@ private:
     std::string m_json;
 };
 
+class AddWaveCommand : public Command {
+public:
+    AddWaveCommand(level::Level::Wave wave, std::size_t index)
+        : m_wave(std::move(wave))
+        , m_index(index)
+    {
+    }
+
+    void apply(CmdContext& ctx) override
+    {
+        auto& waves = ctx.lvl.waves;
+        const std::size_t insertIndex = std::min(m_index, waves.size());
+        waves.insert(waves.begin() + static_cast<std::ptrdiff_t>(insertIndex), m_wave);
+        m_index = insertIndex;
+    }
+
+    void revert(CmdContext& ctx) override
+    {
+        auto& waves = ctx.lvl.waves;
+        if (m_index < waves.size()) {
+            waves.erase(waves.begin() + static_cast<std::ptrdiff_t>(m_index));
+        }
+    }
+
+    const char* name() const override { return "Add Wave"; }
+
+private:
+    level::Level::Wave m_wave;
+    std::size_t m_index;
+};
+
+class RemoveWaveCommand : public Command {
+public:
+    explicit RemoveWaveCommand(std::vector<WaveRecord> removed)
+        : m_removed(std::move(removed))
+    {
+        std::sort(m_removed.begin(), m_removed.end(), [](const WaveRecord& a, const WaveRecord& b) {
+            return a.index < b.index;
+        });
+    }
+
+    void apply(CmdContext& ctx) override
+    {
+        auto& waves = ctx.lvl.waves;
+        for (auto it = m_removed.rbegin(); it != m_removed.rend(); ++it) {
+            if (it->index < waves.size()) {
+                waves.erase(waves.begin() + static_cast<std::ptrdiff_t>(it->index));
+            }
+        }
+    }
+
+    void revert(CmdContext& ctx) override
+    {
+        auto& waves = ctx.lvl.waves;
+        for (const auto& record : m_removed) {
+            const std::size_t insertIndex = std::min(record.index, waves.size());
+            waves.insert(waves.begin() + static_cast<std::ptrdiff_t>(insertIndex), record.wave);
+        }
+    }
+
+    const char* name() const override { return "Remove Waves"; }
+
+private:
+    std::vector<WaveRecord> m_removed;
+};
+
+class SetWaveCommand : public Command {
+public:
+    SetWaveCommand(std::size_t index, level::Level::Wave before, level::Level::Wave after)
+        : m_index(index)
+        , m_before(std::move(before))
+        , m_after(std::move(after))
+    {
+    }
+
+    void apply(CmdContext& ctx) override
+    {
+        auto& waves = ctx.lvl.waves;
+        if (m_index < waves.size()) {
+            waves[m_index] = m_after;
+        } else if (m_index == waves.size()) {
+            waves.push_back(m_after);
+        }
+    }
+
+    void revert(CmdContext& ctx) override
+    {
+        auto& waves = ctx.lvl.waves;
+        if (m_index < waves.size()) {
+            waves[m_index] = m_before;
+        } else if (m_index == waves.size()) {
+            waves.push_back(m_before);
+        }
+    }
+
+    const char* name() const override { return "Edit Wave"; }
+
+private:
+    std::size_t m_index;
+    level::Level::Wave m_before;
+    level::Level::Wave m_after;
+};
+
+class AddTriggerCommand : public Command {
+public:
+    AddTriggerCommand(level::Level::Trigger trigger, std::size_t index)
+        : m_trigger(std::move(trigger))
+        , m_index(index)
+    {
+    }
+
+    void apply(CmdContext& ctx) override
+    {
+        auto& triggers = ctx.lvl.triggers;
+        const std::size_t insertIndex = std::min(m_index, triggers.size());
+        triggers.insert(triggers.begin() + static_cast<std::ptrdiff_t>(insertIndex), m_trigger);
+        m_index = insertIndex;
+    }
+
+    void revert(CmdContext& ctx) override
+    {
+        auto& triggers = ctx.lvl.triggers;
+        if (m_index < triggers.size()) {
+            triggers.erase(triggers.begin() + static_cast<std::ptrdiff_t>(m_index));
+        }
+    }
+
+    const char* name() const override { return "Add Trigger"; }
+
+private:
+    level::Level::Trigger m_trigger;
+    std::size_t m_index;
+};
+
+class RemoveTriggerCommand : public Command {
+public:
+    explicit RemoveTriggerCommand(std::vector<TriggerRecord> removed)
+        : m_removed(std::move(removed))
+    {
+        std::sort(m_removed.begin(), m_removed.end(), [](const TriggerRecord& a, const TriggerRecord& b) {
+            return a.index < b.index;
+        });
+    }
+
+    void apply(CmdContext& ctx) override
+    {
+        auto& triggers = ctx.lvl.triggers;
+        for (auto it = m_removed.rbegin(); it != m_removed.rend(); ++it) {
+            if (it->index < triggers.size()) {
+                triggers.erase(triggers.begin() + static_cast<std::ptrdiff_t>(it->index));
+            }
+        }
+    }
+
+    void revert(CmdContext& ctx) override
+    {
+        auto& triggers = ctx.lvl.triggers;
+        for (const auto& record : m_removed) {
+            const std::size_t insertIndex = std::min(record.index, triggers.size());
+            triggers.insert(triggers.begin() + static_cast<std::ptrdiff_t>(insertIndex), record.trigger);
+        }
+    }
+
+    const char* name() const override { return "Remove Triggers"; }
+
+private:
+    std::vector<TriggerRecord> m_removed;
+};
+
+class SetTriggerCommand : public Command {
+public:
+    SetTriggerCommand(std::size_t index, level::Level::Trigger before, level::Level::Trigger after)
+        : m_index(index)
+        , m_before(std::move(before))
+        , m_after(std::move(after))
+    {
+    }
+
+    void apply(CmdContext& ctx) override
+    {
+        auto& triggers = ctx.lvl.triggers;
+        if (m_index < triggers.size()) {
+            triggers[m_index] = m_after;
+        } else if (m_index == triggers.size()) {
+            triggers.push_back(m_after);
+        }
+    }
+
+    void revert(CmdContext& ctx) override
+    {
+        auto& triggers = ctx.lvl.triggers;
+        if (m_index < triggers.size()) {
+            triggers[m_index] = m_before;
+        } else if (m_index == triggers.size()) {
+            triggers.push_back(m_before);
+        }
+    }
+
+    const char* name() const override { return "Edit Trigger"; }
+
+private:
+    std::size_t m_index;
+    level::Level::Trigger m_before;
+    level::Level::Trigger m_after;
+};
+
 } // namespace
 
 std::unique_ptr<Command> makeCreateEntityCommand(level::Level::EntityDesc entity, std::size_t insertIndex)
@@ -372,6 +578,40 @@ std::unique_ptr<Command> makeRemoveComponentCommand(std::size_t index,
     std::string jsonValue)
 {
     return std::make_unique<RemoveComponentCommand>(index, std::move(componentName), std::move(jsonValue));
+}
+
+std::unique_ptr<Command> makeAddWaveCommand(level::Level::Wave wave, std::size_t insertIndex)
+{
+    return std::make_unique<AddWaveCommand>(std::move(wave), insertIndex);
+}
+
+std::unique_ptr<Command> makeRemoveWaveCommand(std::vector<WaveRecord> removed)
+{
+    return std::make_unique<RemoveWaveCommand>(std::move(removed));
+}
+
+std::unique_ptr<Command> makeSetWaveCommand(std::size_t index,
+    level::Level::Wave before,
+    level::Level::Wave after)
+{
+    return std::make_unique<SetWaveCommand>(index, std::move(before), std::move(after));
+}
+
+std::unique_ptr<Command> makeAddTriggerCommand(level::Level::Trigger trigger, std::size_t insertIndex)
+{
+    return std::make_unique<AddTriggerCommand>(std::move(trigger), insertIndex);
+}
+
+std::unique_ptr<Command> makeRemoveTriggerCommand(std::vector<TriggerRecord> removed)
+{
+    return std::make_unique<RemoveTriggerCommand>(std::move(removed));
+}
+
+std::unique_ptr<Command> makeSetTriggerCommand(std::size_t index,
+    level::Level::Trigger before,
+    level::Level::Trigger after)
+{
+    return std::make_unique<SetTriggerCommand>(index, std::move(before), std::move(after));
 }
 
 } // namespace rtype::editor

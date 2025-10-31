@@ -35,6 +35,16 @@ struct EntityRecord {
     level::Level::EntityDesc entity;
 };
 
+struct WaveRecord {
+    std::size_t index;
+    level::Level::Wave wave;
+};
+
+struct TriggerRecord {
+    std::size_t index;
+    level::Level::Trigger trigger;
+};
+
 std::unique_ptr<Command> makeCreateEntityCommand(level::Level::EntityDesc entity, std::size_t insertIndex);
 std::unique_ptr<Command> makeDeleteEntitiesCommand(std::vector<EntityRecord> removed);
 std::unique_ptr<Command> makeMoveEntitiesCommand(std::vector<std::size_t> indices,
@@ -52,6 +62,16 @@ std::unique_ptr<Command> makeAddComponentCommand(std::size_t index,
 std::unique_ptr<Command> makeRemoveComponentCommand(std::size_t index,
                                                     std::string componentName,
                                                     std::string jsonValue);
+std::unique_ptr<Command> makeAddWaveCommand(level::Level::Wave wave, std::size_t insertIndex);
+std::unique_ptr<Command> makeRemoveWaveCommand(std::vector<WaveRecord> removed);
+std::unique_ptr<Command> makeSetWaveCommand(std::size_t index,
+                                            level::Level::Wave before,
+                                            level::Level::Wave after);
+std::unique_ptr<Command> makeAddTriggerCommand(level::Level::Trigger trigger, std::size_t insertIndex);
+std::unique_ptr<Command> makeRemoveTriggerCommand(std::vector<TriggerRecord> removed);
+std::unique_ptr<Command> makeSetTriggerCommand(std::size_t index,
+                                               level::Level::Trigger before,
+                                               level::Level::Trigger after);
 
 } // namespace rtype::editor
 

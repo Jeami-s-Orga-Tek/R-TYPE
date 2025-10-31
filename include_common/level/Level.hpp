@@ -37,6 +37,25 @@ struct Level {
     };
 
     std::vector<EntityDesc> entities;
+
+    struct Wave {
+        std::string name;
+        std::vector<EntityDesc> entities;
+    };
+
+    struct TriggerAction {
+        std::string type;
+        std::unordered_map<std::string, std::string> params;
+    };
+
+    struct Trigger {
+        std::string type;
+        std::unordered_map<std::string, std::string> params;
+        std::vector<TriggerAction> actions;
+    };
+
+    std::vector<Wave> waves;
+    std::vector<Trigger> triggers;
 };
 
 } // namespace rtype::level
