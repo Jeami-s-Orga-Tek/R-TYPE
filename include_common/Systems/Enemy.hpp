@@ -154,13 +154,16 @@ namespace Engine {
                             const auto &tr = mediator->getComponent<Components::Transform>(player);
                             playExplosion(networkManager, tr.pos.x, tr.pos.y);
                         }
+                        networkManager->sendDestroyEntity(player);
                         mediator->destroyEntity(player);
                     }
                 }
                 if (mediator->hasComponent<Components::Hitbox>(projectile)) {
                     const auto &hb = mediator->getComponent<Components::Hitbox>(projectile);
-                    if (hb.layer == HITBOX_LAYERS::ENEMY_PROJECTILE)
+                    if (hb.layer == HITBOX_LAYERS::ENEMY_PROJECTILE) {
+                        networkManager->sendDestroyEntity(projectile);
                         mediator->destroyEntity(projectile);
+                    }
                 }
             }
 
