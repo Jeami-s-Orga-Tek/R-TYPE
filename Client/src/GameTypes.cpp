@@ -445,6 +445,7 @@ void GameManager::render(sf::RenderWindow& window) {
         trophy.draw(window);
     } else if (currentState == State::GAME) {
         // window.close();
+        connectToServer("127.0.0.1", 8080);
         gameDemo(window);
     } else if (currentState == State::SETTINGS) {
         parameters.draw(window);
@@ -546,17 +547,19 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
     Engine::Utils::Vec2Int mousePos(sfMousePos.x, sfMousePos.y);
 
     if (currentState == State::LAUNCH) {
-        if (connectToServer("127.0.0.1", 8080)) {
-            statusText.setString("Connected to the server !");
-            statusText.setFillColor(sf::Color::Green);
-            isConnected = ServerState::CONNECT;
-            currentState = State::MENU;
-        } else {
-            statusText.setString("Connection failed");
-            statusText.setFillColor(sf::Color::Red);
-            isConnected = ServerState::DISCONNECT;
-            currentState = State::ERRORSERVER;
-        }
+        // if (connectToServer("127.0.0.1", 8080)) {
+        //     statusText.setString("Connected to the server !");
+        //     statusText.setFillColor(sf::Color::Green);
+        //     isConnected = ServerState::CONNECT;
+        //     currentState = State::MENU;
+        // } else {
+        //     statusText.setString("Connection failed");
+        //     statusText.setFillColor(sf::Color::Red);
+        //     isConnected = ServerState::DISCONNECT;
+        //     currentState = State::ERRORSERVER;
+        // }
+        isConnected = ServerState::CONNECT;
+        currentState = State::MENU;
     } else if (currentState == State::MENU) {
         if (username.isClicked(mousePos)) {
             isEditingUsername = true;
@@ -1243,8 +1246,6 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         }
 
         dev_console_system->update(networkManager, renderer);
-        // Renderer-based overlay: draw a full-screen transparent rectangle
-        // using the Parameters overlay color packing it to the renderer color format.
         {
             sf::Color overlay = parameters.getOverlayColor(this->currentLevel);
             if (overlay.a > 0 && renderer) {
