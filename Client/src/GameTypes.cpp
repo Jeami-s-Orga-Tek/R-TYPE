@@ -11,6 +11,9 @@
 #include <chrono>
 #include <thread>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <unistd.h>
 
 #include "AudioPlayer.hpp"
 #include "Components/Animation.hpp"
@@ -1066,6 +1069,56 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     renderer->loadFont("dev", "assets/dev.ttf");
     renderer->loadFont("basic", "assets/r-type.otf");
 
+    auto read_total_cpu = []() -> unsigned long long {
+        std::ifstream file("/proc/stat");
+        if (!file) return 0ULL;
+        std::string line;
+        std::getline(file, line);
+        std::istringstream ss(line);
+        std::string cpu_label;
+        ss >> cpu_label; // skip "cpu"
+        unsigned long long value = 0ULL;
+        unsigned long long sum = 0ULL;
+        while (ss >> value) sum += value;
+        return sum;
+    };
+
+    auto read_proc_cpu = []() -> unsigned long long {
+        std::ifstream file("/proc/self/stat");
+        if (!file) return 0ULL;
+        std::string content;
+        std::getline(file, content);
+        std::istringstream ss(content);
+        std::string token;
+        for (int i = 1; i <= 13; ++i) {
+            if (!(ss >> token)) return 0ULL;
+        }
+        unsigned long long utime = 0ULL, stime = 0ULL;
+        ss >> utime >> stime;
+        return utime + stime;
+    };
+
+    auto read_proc_mem_kb = []() -> unsigned long long {
+        std::ifstream file("/proc/self/status");
+        if (!file) return 0ULL;
+        std::string line;
+        while (std::getline(file, line)) {
+            if (line.rfind("VmRSS:", 0) == 0) {
+                std::istringstream ss(line);
+                std::string key, unit;
+                unsigned long long val = 0ULL;
+                ss >> key >> val >> unit;
+                return val;
+            }
+        }
+        return 0ULL;
+    };
+
+    unsigned long long prev_total_cpu = read_total_cpu();
+    unsigned long long prev_proc_cpu = read_proc_cpu();
+    double cpu_percent = 0.0;
+    unsigned long long mem_kb = read_proc_mem_kb();
+
     uint32_t current_player_id = 0;
     bool is_player_id_set = false;
 
@@ -1244,7 +1297,26 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             }
         }
 
-        renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
+        {
+            unsigned long long total_cpu = read_total_cpu();
+            unsigned long long proc_cpu = read_proc_cpu();
+            if (total_cpu > prev_total_cpu) {
+                cpu_percent = static_cast<double>(proc_cpu - prev_proc_cpu) * 100.0 / static_cast<double>(total_cpu - prev_total_cpu);
+            } else {
+                cpu_percent = 0.0;
+            }
+            prev_total_cpu = total_cpu;
+            prev_proc_cpu = proc_cpu;
+
+            mem_kb = read_proc_mem_kb();
+
+            std::ostringstream hud_ss;
+            hud_ss << mediator->getEntityCount() << " entites | FPS " << static_cast<int>(fps)
+                   << " | CPU " << std::fixed << std::setprecision(1) << cpu_percent << "%"
+                   << " | RAM " << std::fixed << std::setprecision(1) << (static_cast<double>(mem_kb) / 1024.0) << "MB";
+            std::string hud_str = hud_ss.str();
+            renderer->drawText("basic", hud_str, 0.0f, 0.0f, 20, 0x00FF00FF);
+        }
 
         dev_console_system->update(networkManager, renderer);
         renderer->displayWindow();
