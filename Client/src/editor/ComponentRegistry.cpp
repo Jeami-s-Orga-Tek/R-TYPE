@@ -59,6 +59,8 @@ const std::vector<ComponentSpec>& specs()
             {
                 makeStringField("name"),
                 makeBoolField("is_background"),
+                makeBoolField("scrolling"),
+                makeFloatField("frame_nb", 0.f, 1000.f, 1.f),
             }
         },
         ComponentSpec{
@@ -66,8 +68,74 @@ const std::vector<ComponentSpec>& specs()
             {
                 makeFloatField("w", 0.f, 1000.f, 1.f),
                 makeFloatField("h", 0.f, 1000.f, 1.f),
+                makeBoolField("active"),
+                makeStringField("layer"),
+                makeFloatField("damage", 0.f, 1000.f, 1.f),
             }
-        }
+        },
+        ComponentSpec{
+            "Gravity",
+            {
+                makeFloatField("force_x", -1000.f, 1000.f, 0.1f),
+                makeFloatField("force_y", -1000.f, 1000.f, 0.1f),
+                makeFloatField("density", 0.f, 100.f, 0.1f),
+                makeFloatField("friction", 0.f, 1.f, 0.01f),
+                makeFloatField("restitution", 0.f, 1.f, 0.01f),
+            }
+        },
+        ComponentSpec{
+            "Animation",
+            {
+                makeFloatField("total_frames", 0.f, 100.f, 1.f),
+                makeFloatField("pause", 0.f, 10.f, 0.01f),
+                makeFloatField("pause_timer", 0.f, 10.f, 0.01f),
+                makeBoolField("is_playing"),
+                makeBoolField("destroy_at_end"),
+                makeBoolField("looping"),
+            }
+        },
+        ComponentSpec{
+            "RigidBody",
+            {
+                makeFloatField("velocity_x", -10000.f, 10000.f, 1.f),
+                makeFloatField("velocity_y", -10000.f, 10000.f, 1.f),
+                makeFloatField("acceleration_x", -10000.f, 10000.f, 1.f),
+                makeFloatField("acceleration_y", -10000.f, 10000.f, 1.f),
+                makeBoolField("has_body_been_created"),
+            }
+        },
+        ComponentSpec{
+            "Sound",
+            {
+                makeStringField("sound_name"),
+                makeBoolField("looping"),
+                makeBoolField("has_played"),
+            }
+        },
+        ComponentSpec{
+            "EnemyInfo",
+            {
+                makeFloatField("health", 0.f, 10000.f, 1.f),
+                makeFloatField("maxHealth", 0.f, 10000.f, 1.f),
+                makeFloatField("type", 0.f, 10.f, 1.f),
+                makeFloatField("scoreValue", 0.f, 10000.f, 1.f),
+                makeFloatField("speed", 0.f, 10000.f, 0.1f),
+                makeBoolField("isActive"),
+            }
+        },
+        ComponentSpec{
+            "ShootingCooldown",
+            {
+                makeFloatField("cooldown_time", 0.f, 10000.f, 1.f),
+                makeFloatField("cooldown", 0.f, 10000.f, 1.f),
+            }
+        },
+        ComponentSpec{
+            "PlayerInfo",
+            {
+                makeFloatField("player_id", 0.f, 10000.f, 1.f),
+            }
+        },
     };
 
     return kSpecs;
