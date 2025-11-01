@@ -36,6 +36,26 @@ namespace Engine {
 
                 void update(std::shared_ptr<NetworkManager> networkManager, float dt) {
                     std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
+                    
+                    if (game_over_state) {
+                        game_over_time += dt;
+                    }
+
+                    bool local_player_exists = false;
+                    for (const auto &entity : entities) {
+                        auto &player_info = mediator->getComponent<Components::PlayerInfo>(entity);
+                        if (player_info.player_id == networkManager->player_id) {
+                            local_player_exists = true;
+                            local_player_has_ever_existed = true;
+                            break;
+                        }
+                    }
+
+                    if (!local_player_exists && local_player_has_ever_existed && !game_over_state) {
+                        game_over_state = true;
+                        game_over_time = 0.0f;
+                    }
+                    
                     for (const auto &entity : entities) {
                         auto &player_info = mediator->getComponent<Components::PlayerInfo>(entity);
                         auto &player_cooldown = mediator->getComponent<Components::ShootingCooldown>(entity);
@@ -44,6 +64,13 @@ namespace Engine {
                             player_cooldown.cooldown--;
 
                         uint32_t player_id = player_info.player_id;
+
+                        if (player_id == networkManager->player_id) {
+                            if (player_info.health <= 0 && !game_over_state) {
+                                game_over_state = true;
+                                game_over_time = 0.0f;
+                            }
+                        }
 
                         auto it = player_id_to_buttons.find(player_id);
                         if (it == player_id_to_buttons.end())
@@ -159,10 +186,63 @@ namespace Engine {
                     player_id_to_buttons[player_id] = buttons;
                 }
 
+                void setCurrentPlayerID(uint32_t playerID) {
+                    current_player_id = playerID;
+                }
+
+                bool isGameOver() const {
+                    return (game_over_state);
+                }
+
+                float getGameOverTime() const {
+                    return (game_over_time);
+                }
+
+                void resetGameOver() {
+                    game_over_state = false;
+                    game_over_time = 0.0f;
+                    local_player_has_ever_existed = false;
+                }
+
+                int getCurrentPlayerHealth(std::shared_ptr<NetworkManager> networkManager) const {
+                    std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
+                    for (const auto &entity : entities) {
+                        if (!mediator->hasComponent<Components::PlayerInfo>(entity))
+                            continue;
+                        const auto &player_info = mediator->getComponent<Components::PlayerInfo>(entity);
+                        if (player_info.player_id == current_player_id) {
+                            return (player_info.health);
+                        }
+                    }
+                    return (-1);
+                }
+
+                int getLocalPlayerHealth(std::shared_ptr<NetworkManager> networkManager) const {
+                    std::shared_ptr<Engine::Mediator> mediator = networkManager->mediator;
+                    uint32_t localPlayerId = networkManager->player_id;
+                    for (const auto &entity : entities) {
+                        if (!mediator->hasComponent<Components::PlayerInfo>(entity))
+                            continue;
+                        const auto &player_info = mediator->getComponent<Components::PlayerInfo>(entity);
+                        if (player_info.player_id == localPlayerId) {
+                            return (player_info.health);
+                        }
+                    }
+                    if (game_over_state) {
+                        return (0);
+                    }
+                    return (-1);
+                }
+
             private:
                 // std::bitset<5> buttons {};
                 std::function<void(float, float)> playerProjectileCreator;
                 std::unordered_map<uint32_t, std::bitset<5>> player_id_to_buttons;
+
+                bool game_over_state = false;
+                float game_over_time = 0.0f;
+                uint32_t current_player_id = 0;
+                bool local_player_has_ever_existed = false;
         };
     };
 };

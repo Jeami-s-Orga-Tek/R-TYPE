@@ -949,6 +949,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addTexture(renderer, "players_sprite_sheet", "assets/sprites/vaisseaux.gif");
     render_system->addTexture(renderer, "base_player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
     render_system->addTexture(renderer, "ground_enemy_sprite_sheet", "assets/sprites/r-typesheet7.gif");
+    render_system->addTexture(renderer, "small_enemy_sprite_sheet", "assets/sprites/r-typesheet8.gif");
     render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
     render_system->addTexture(renderer, "enemy_explosion_sheet", "assets/sprites/explosionEnemy1.gif");
 
@@ -959,6 +960,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addSprite(renderer, "player_5", "players_sprite_sheet", {32, 17}, {0, 68}, 5, 1);
     render_system->addSprite(renderer, "weak_player_projectile", "base_player_sprite_sheet", {16, 4}, {249, 90}, 1, 1);
     render_system->addSprite(renderer, "ground_enemy", "ground_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
+    render_system->addSprite(renderer, "small_enemy", "small_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "space_background", "space_background_texture", {1226, 207}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "enemy_explosion", "enemy_explosion_sheet", {32, 32}, {0, 0}, 5, 1);
 
@@ -980,6 +982,9 @@ void GameManager::gameDemo(sf::RenderWindow &window)
 
     renderer->loadFont("dev", "assets/dev.ttf");
     renderer->loadFont("basic", "assets/r-type.otf");
+
+    uint32_t current_player_id = 0;
+    bool is_player_id_set = false;
 
     while (renderer->isWindowOpen()) {
         frame_start_time = std::chrono::high_resolution_clock::now();
@@ -1019,39 +1024,28 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         sound_system->update(audio_player, mediator);
         render_system->update(renderer, mediator, frameTime);
 
-        if (player_control_system) {
-            std::vector<Engine::Entity> snapshot(player_control_system->entities.begin(),
-                                                 player_control_system->entities.end());
-            for (auto e : snapshot) {
-                if (!mediator->hasComponent<Engine::Components::PlayerInfo>(e))
-                    continue;
-                const auto &info = mediator->getComponent<Engine::Components::PlayerInfo>(e);
-                if (lives < 0)
-                    lives = info.health;
-                else
-                    lives = std::min(lives, info.health);
-                if (lives == 0)
-                    mediator->destroyEntity(e);
-            }
-        }
-        if (!gameOver && lives >= 0)
-            lives = std::max(0, lives);
-
-        if (!gameOver && lives <= 0) {
-            gameOver = true;
-            gameOverClock.restart();
+        if (player_control_system && !is_player_id_set) {
+            current_player_id = networkManager->player_id;
+            player_control_system->setCurrentPlayerID(current_player_id);
+            is_player_id_set = true;
+            player_control_system->resetGameOver();
         }
 
-        if (!gameOver) {
-            renderer->drawText("basic", "Lives " + std::to_string(lives), 10.0f, 30.0f, 20, 0xFFFFFFFF);
-        } else {
-            renderer->drawText("basic", "GAME OVER", 30.0f, 100.0f, 80, 0xFFFFFFFF);
-             float t = gameOverClock.getElapsedTime().asSeconds();
-             renderer->drawText("basic", "Returning to menu..." + std::to_string(static_cast<int>(t)), 30.0f, 200.0f, 20, 0xFFFFFFFF);
-
-            if (gameOverClock.getElapsedTime().asSeconds() >= 5.0f) {
-                gameOver = false;
-                return;
+        if (player_control_system && is_player_id_set) {
+            if (!player_control_system->isGameOver()) {
+                int localHealth = player_control_system->getLocalPlayerHealth(networkManager);
+                if (localHealth >= 0) {
+                    renderer->drawText("basic", "Lives " + std::to_string(localHealth), 10.0f, 30.0f, 20, 0xFFFFFFFF);
+                }
+            } else {
+                renderer->drawText("basic", "GAME OVER", 30.0f, 100.0f, 80, 0xFFFFFFFF);
+                float game_over_time = player_control_system->getGameOverTime();
+                renderer->drawText("basic", "Returning to menu..." + std::to_string(static_cast<int>(game_over_time)), 30.0f, 200.0f, 20, 0xFFFFFFFF);
+                
+                if (game_over_time >= 5.0f) {
+                    player_control_system->resetGameOver();
+                    return;
+                }
             }
         }
 
@@ -1059,7 +1053,6 @@ void GameManager::gameDemo(sf::RenderWindow &window)
 
         dev_console_system->update(networkManager, renderer);
         renderer->displayWindow();
-
 
         auto frame_end_time = std::chrono::high_resolution_clock::now();
         auto frame_processing_time = frame_end_time - frame_start_time;

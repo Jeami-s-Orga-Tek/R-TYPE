@@ -30,11 +30,12 @@ namespace RTypeServer {
             void initEngine();
             void gameLoop();
 
-            void createPlayer(float x, float y);
+            void createPlayer(float x, float y, uint32_t assigned_player_id);
             void createPlayerProjectile(float x, float y);
             void createEnemy(float x, float y, ENEMY_TYPES enemy_type);
             void createEnemyProjectile(float x, float y);
             void createBackground();
+            void createPlayerExplosion(float x, float y);
         private:
             std::shared_ptr<Engine::NetworkManager> (*createNetworkManagerFunc)(Engine::NetworkManager::Role, const std::string &, uint16_t);
             std::shared_ptr<Engine::Mediator> (*createMediatorFunc)();

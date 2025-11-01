@@ -182,8 +182,6 @@ class GameManager {
         void updateStatusTextPosition(bool isParametersMode = false);
         bool connectToServer(const std::string& serverIP, unsigned short port);
 
-        int lives = -1;
-        bool gameOver = false;
         sf::Clock gameOverClock;
 };
 

@@ -153,6 +153,7 @@ namespace Engine {
                             const auto &tr = mediator->getComponent<Components::Transform>(player);
                             playExplosion(networkManager, tr.pos.x, tr.pos.y);
                         }
+                        networkManager->sendDestroyEntity(player);
                         mediator->destroyEntity(player);
                     }
                 }
