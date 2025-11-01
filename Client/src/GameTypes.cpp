@@ -446,6 +446,7 @@ void GameManager::render(sf::RenderWindow& window) {
     } else if (currentState == State::GAME) {
         // window.close();
         gameDemo(window);
+        currentState = State::MENU;
     } else if (currentState == State::SETTINGS) {
         parameters.draw(window);
         backButton.draw(window);
@@ -1025,6 +1026,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addTexture(renderer, "players_sprite_sheet", "assets/sprites/vaisseaux.gif");
     render_system->addTexture(renderer, "base_player_sprite_sheet", "assets/sprites/r-typesheet1.gif");
     render_system->addTexture(renderer, "ground_enemy_sprite_sheet", "assets/sprites/r-typesheet7.gif");
+    render_system->addTexture(renderer, "small_enemy_sprite_sheet", "assets/sprites/r-typesheet8.gif");
     render_system->addTexture(renderer, "space_background_texture", "assets/sprites/space_background.gif");
     render_system->addTexture(renderer, "stage2_background_texture", "assets/sprites/stage2_background.png");
     render_system->addTexture(renderer, "enemy_explosion_sheet", "assets/sprites/explosionEnemy1.gif");
@@ -1036,6 +1038,7 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     render_system->addSprite(renderer, "player_5", "players_sprite_sheet", {32, 17}, {0, 68}, 5, 1);
     render_system->addSprite(renderer, "weak_player_projectile", "base_player_sprite_sheet", {16, 4}, {249, 90}, 1, 1);
     render_system->addSprite(renderer, "ground_enemy", "ground_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
+    render_system->addSprite(renderer, "small_enemy", "small_enemy_sprite_sheet", {33, 33}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "space_background", "space_background_texture", {1226, 207}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "stage2_background", "stage2_background_texture", {1226, 207}, {0, 0}, 1, 1);
     render_system->addSprite(renderer, "enemy_explosion", "enemy_explosion_sheet", {32, 32}, {0, 0}, 5, 1);
@@ -1062,6 +1065,9 @@ void GameManager::gameDemo(sf::RenderWindow &window)
 
     renderer->loadFont("dev", "assets/dev.ttf");
     renderer->loadFont("basic", "assets/r-type.otf");
+
+    uint32_t current_player_id = 0;
+    bool is_player_id_set = false;
 
     while (renderer->isWindowOpen()) {
         frame_start_time = std::chrono::high_resolution_clock::now();
@@ -1197,8 +1203,6 @@ void GameManager::gameDemo(sf::RenderWindow &window)
             float levelY = std::max(0.0f, winH - 40.0f - padding);
             if (!clientGameOver) {
                 renderer->drawText("basic", std::string("Level : ") + std::to_string(this->currentLevel), levelX, levelY, fontSize, 0xFFFF00FF);
-
-                renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 25.0f, 20, 0x00FF00FF);
             } else {
                 if (audio_player && !currentPlayingMusicId.empty()) {
                     audio_player->stopAudio(currentPlayingMusicId);
@@ -1215,6 +1219,32 @@ void GameManager::gameDemo(sf::RenderWindow &window)
                 renderer->drawText("basic", "Winner", textX, textY, bigSize, 0xFFFFFFFF);
             }
         }
+        if (player_control_system && !is_player_id_set) {
+            current_player_id = networkManager->player_id;
+            player_control_system->setCurrentPlayerID(current_player_id);
+            is_player_id_set = true;
+            player_control_system->resetGameOver();
+        }
+
+        if (player_control_system && is_player_id_set) {
+            if (!player_control_system->isGameOver()) {
+                int localHealth = player_control_system->getLocalPlayerHealth(networkManager);
+                if (localHealth >= 0) {
+                    renderer->drawText("basic", "Lives " + std::to_string(localHealth), 10.0f, 30.0f, 20, 0xFFFFFFFF);
+                }
+            } else {
+                renderer->drawText("basic", "GAME OVER", 30.0f, 100.0f, 80, 0xFFFFFFFF);
+                float game_over_time = player_control_system->getGameOverTime();
+                renderer->drawText("basic", "Returning to menu..." + std::to_string(static_cast<int>(game_over_time)), 30.0f, 200.0f, 20, 0xFFFFFFFF);
+                
+                if (game_over_time >= 5.0f) {
+                    player_control_system->resetGameOver();
+                    return;
+                }
+            }
+        }
+
+        renderer->drawText("basic", std::to_string(mediator->getEntityCount()) + " entites pour FPS " + std::to_string((int)(fps)), 0.0f, 0.0f, 20, 0x00FF00FF);
 
         dev_console_system->update(networkManager, renderer);
         renderer->displayWindow();

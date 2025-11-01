@@ -200,6 +200,8 @@ class GameManager {
         void handleWindowResize(sf::Event& event);
         void updateStatusTextPosition(bool isParametersMode = false);
         bool connectToServer(const std::string& serverIP, unsigned short port);
+
+        sf::Clock gameOverClock;
 };
 
 #endif /* !GAMETYPES_HPP_ */
