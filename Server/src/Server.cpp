@@ -200,12 +200,15 @@ void RTypeServer::Server::gameLoop()
         accumulator += frame_time;
 
         while (accumulator >= FIXED_DT) {
-            if (!have_players_spawned && networkManager->getConnectedPlayers() >= player_nb) {
-                for (int i = 0; i < networkManager->getConnectedPlayers(); i++)
-                    createPlayer();
-                createEnemy(1000, rand() % 400, ENEMY_TYPES::SIMPLE);
-                createBackground();
-                have_players_spawned = true;
+            int connected = networkManager->getConnectedPlayers();
+            while (players_spawned_count < connected) {
+                createPlayer(players_spawned_count);
+                players_spawned_count++;
+                if (!have_players_spawned) {
+                    createEnemy(1000, rand() % 400, ENEMY_TYPES::SIMPLE);
+                    createBackground();
+                    have_players_spawned = true;
+                }
             }
 
             if (!game_over) {
@@ -236,7 +239,7 @@ void RTypeServer::Server::gameLoop()
     }
 }
 
-void RTypeServer::Server::createPlayer()
+void RTypeServer::Server::createPlayer(int client_index)
 {
     if (!networkManager)
         throw std::runtime_error("Network manager not initialized :(");
@@ -265,7 +268,11 @@ void RTypeServer::Server::createPlayer()
     player_sprite.sprite_name[player_sprite.sprite_name.size() - 1] = '\0';
     player_sprite.frame_nb = 1;
     mediator->addComponent(entity, player_sprite);
-    const Engine::Components::PlayerInfo player_info = {.player_id = entity};
+    uint32_t assigned_player_id = static_cast<uint32_t>(entity);
+    if (client_index >= 0) {
+        assigned_player_id = static_cast<uint32_t>(client_index);
+    }
+    const Engine::Components::PlayerInfo player_info = {.player_id = assigned_player_id};
     mediator->addComponent(entity, player_info);
     const Engine::Components::ShootingCooldown player_cooldown = {.cooldown_time = 5, .cooldown = 0};
     mediator->addComponent(entity, player_cooldown);

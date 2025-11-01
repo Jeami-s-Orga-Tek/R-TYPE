@@ -63,6 +63,7 @@ public:
     Engine::Utils::Vec2UInt getResolutionSize(ResolutionMode resolution) const;
     
     sf::Color applyColorBlindFilter(const sf::Color& originalColor) const;
+    sf::Color getOverlayColor(unsigned int level = 0) const;
 
 private:
     sf::Text ParamsText;

@@ -33,7 +33,7 @@ namespace RTypeServer {
             void initEngine();
             void gameLoop();
 
-            void createPlayer();
+            void createPlayer(int client_index = -1);
             void createPlayerProjectile(float x, float y);
             void createEnemy(float x, float y, ENEMY_TYPES enemy_type);
             void createBackground();
@@ -53,6 +53,7 @@ namespace RTypeServer {
 
             int player_nb = 4;
             int current_level = 1;
+            int players_spawned_count = 0;
             int enemies_killed = 0;
             int enemies_to_next_level = 10;
             bool game_over = false;
