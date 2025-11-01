@@ -43,6 +43,12 @@ CPMAddPackage(
 )
 
 CPMAddPackage(
+  NAME nlohmann_json
+  GITHUB_REPOSITORY nlohmann/json
+  VERSION 3.11.2
+)
+
+CPMAddPackage(
   NAME imgui
   GITHUB_REPOSITORY ocornut/imgui
   GIT_TAG v1.90.4-docking
