@@ -13,7 +13,12 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include <unistd.h>
+#if defined(_WIN32)
+#  include <windows.h>
+#  include <psapi.h>
+#else
+#  include <unistd.h>
+#endif
 
 #include "AudioPlayer.hpp"
 #include "Components/Animation.hpp"
@@ -1069,6 +1074,41 @@ void GameManager::gameDemo(sf::RenderWindow &window)
     renderer->loadFont("dev", "assets/dev.ttf");
     renderer->loadFont("basic", "assets/r-type.otf");
 
+    // Platform-specific CPU / memory helpers
+#if defined(_WIN32)
+    auto filetime_to_ull = [](const FILETIME &ft) {
+        return (static_cast<unsigned long long>(ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+    };
+
+    auto read_total_cpu = [filetime_to_ull]() -> unsigned long long {
+        FILETIME idleTime, kernelTime, userTime;
+        if (!GetSystemTimes(&idleTime, &kernelTime, &userTime)) {
+            return 0ULL;
+        }
+        unsigned long long k = filetime_to_ull(kernelTime);
+        unsigned long long u = filetime_to_ull(userTime);
+        // total is kernel + user (idle is separate)
+        return k + u;
+    };
+
+    auto read_proc_cpu = [filetime_to_ull]() -> unsigned long long {
+        FILETIME creationTime, exitTime, kernelTime, userTime;
+        if (!GetProcessTimes(GetCurrentProcess(), &creationTime, &exitTime, &kernelTime, &userTime)) {
+            return 0ULL;
+        }
+        unsigned long long k = filetime_to_ull(kernelTime);
+        unsigned long long u = filetime_to_ull(userTime);
+        return k + u;
+    };
+
+    auto read_proc_mem_kb = []() -> unsigned long long {
+        PROCESS_MEMORY_COUNTERS pmc;
+        if (!GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc))) {
+            return 0ULL;
+        }
+        return static_cast<unsigned long long>(pmc.WorkingSetSize) / 1024ULL;
+    };
+#else
     auto read_total_cpu = []() -> unsigned long long {
         std::ifstream file("/proc/stat");
         if (!file) return 0ULL;
@@ -1113,6 +1153,8 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         }
         return 0ULL;
     };
+#endif
+
 
     unsigned long long prev_total_cpu = read_total_cpu();
     unsigned long long prev_proc_cpu = read_proc_cpu();
