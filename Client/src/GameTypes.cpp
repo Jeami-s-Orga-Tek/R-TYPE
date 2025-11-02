@@ -35,6 +35,7 @@
 #include "Utils.hpp"
 #include "Components/LevelInfo.hpp"
 #include "Components/GameState.hpp"
+#include "editor/EditorState.hpp"
 
 GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
     : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
@@ -122,6 +123,7 @@ GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
     applyButtonLocker = Button(sf::Vector2f(mid_window_x - 50, windowSize.y - 200), sf::Vector2f(100, 40), "Apply", font);
 
     leaderboard = Button(sf::Vector2f(mid_window_x - 350, windowSize.y - 100), sf::Vector2f(200, 50), "Leaderboard", font);
+    editorButton = Button(sf::Vector2f(mid_window_x - 120, windowSize.y - 100), sf::Vector2f(200, 50), "Editor", font);
     trophy.leaderboardRectangle.setSize(sf::Vector2f(mid_window_x, mid_window_y + 150));
     trophy.leaderboardRectangle.setPosition(sf::Vector2f(mid_window_x - 200, mid_window_y - 200));
 
@@ -221,6 +223,7 @@ void GameManager::applyBackgroundSwap(uint32_t level)
         }
     }
 }
+GameManager::~GameManager() = default;
 
 void GameManager::updatePositions(Engine::Utils::Vec2UInt windowSize)
 {
@@ -252,6 +255,8 @@ void GameManager::updatePositions(Engine::Utils::Vec2UInt windowSize)
                                             sf::Vector2f(100, 40));
     leaderboard.updatePositionAndSize(sf::Vector2f(50,  100),
                                             sf::Vector2f(125, 40));
+    editorButton.updatePositionAndSize(sf::Vector2f(50, 160),
+                                            sf::Vector2f(125, 40));
     trophy.leaderboardRectangle.setPosition(sf::Vector2f(mid_window_x - 200,mid_window_y - 200));
 
     float buttonWidth = std::min(120.0f, windowSize.x * 0.15f);
@@ -277,7 +282,25 @@ void GameManager::handleEvents(sf::RenderWindow& window)
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
             currentState = State::QUIT;
+            continue;
         }
+
+        if (currentState == State::EDITOR) {
+            if (editorState) {
+                State previousState = currentState;
+                editorState->handleEvent(event, currentState);
+                if (previousState == State::EDITOR && currentState != State::EDITOR) {
+                    editorState->onExit();
+                    updateStatusTextPosition(false);
+                    statusText.setString("");
+                    statusText.setFillColor(sf::Color::Yellow);
+                    Engine::Utils::Vec2UInt size(window.getSize().x, window.getSize().y);
+                    updatePositions(size);
+                }
+            }
+            continue;
+        }
+
         if (event.type == sf::Event::KeyPressed) {
             handleKeyPress(event, window);
         }
@@ -350,14 +373,17 @@ void GameManager::handleEvents(sf::RenderWindow& window)
             fps30Button.setHovered(false);
             fps60Button.setHovered(false);
             backButton.setHovered(false);
+            editorButton.setHovered(false);
         }
-        launch.handleEvent(event, window);
-        if (currentState == State::CONTROLS) {
-            controlsConfig.handleEvent(event, window);
+        if (currentState != State::EDITOR) {
+            launch.handleEvent(event, window);
+            if (currentState == State::CONTROLS) {
+                controlsConfig.handleEvent(event, window);
+            }
+            lobby.handleEvent(event, window);
+            player.handleEvent(event, window);
+            errorServer.handleEvent(event, window);
         }
-        lobby.handleEvent(event, window);
-        player.handleEvent(event, window);
-        errorServer.handleEvent(event, window);
     }
 }
 
@@ -372,12 +398,18 @@ void GameManager::update()
         launch.update();
     } else if (currentState == State::MENU) {
         player.update();
+    } else if (currentState == State::EDITOR) {
+        if (editorState) {
+            editorState->update(deltaTime);
+        }
     } else if (currentState == State::LOCKER) {
         player.update();
     } else if (currentState == State::LOBBY) {
-        if ((waitingPlayersCounter == 1 && gameMode == GameMode::SOLO) || (waitingPlayersCounter == 2 && gameMode == GameMode::DUO) ||
-            (waitingPlayersCounter == 3 && gameMode == GameMode::TRIO) || (waitingPlayersCounter == 4 && gameMode == GameMode::SQUAD)) {
-            currentState = State::GAME;
+        if (networkManager && isConnected == ServerState::CONNECT) {
+            if ((waitingPlayersCounter == 1 && gameMode == GameMode::SOLO) || (waitingPlayersCounter == 2 && gameMode == GameMode::DUO) ||
+                (waitingPlayersCounter == 3 && gameMode == GameMode::TRIO) || (waitingPlayersCounter == 4 && gameMode == GameMode::SQUAD)) {
+                currentState = State::GAME;
+            }
         }
         player.update();
     } else if (currentState == State::ERRORSERVER) {
@@ -400,6 +432,7 @@ void GameManager::render(sf::RenderWindow& window) {
         paramButton.updatePositionAndSize(sf::Vector2f(50, window.getSize().y - 100), sf::Vector2f(125, 40));
         paramButton.draw(window);
         leaderboard.draw(window);
+        editorButton.draw(window);
         if (isChooseMode) {
             soloButton.draw(window);
             duoButton.draw(window);
@@ -444,13 +477,22 @@ void GameManager::render(sf::RenderWindow& window) {
 
         username.draw(window);
         player.draw(window);
+    } else if (currentState == State::EDITOR) {
+        if (editorState) {
+            editorState->render();
+        }
     } else if (currentState == State::LEADERBOARD) {
         trophy.draw(window);
     } else if (currentState == State::GAME) {
-        // window.close();
-        connectToServer("127.0.0.1", 8080);
-        gameDemo(window);
-        currentState = State::MENU;
+        if (networkManager && isConnected == ServerState::CONNECT) {
+            gameDemo(window);
+            currentState = State::MENU;
+        } else {
+            currentState = State::MENU;
+            updateStatusTextPosition(false);
+            statusText.setString("Connect to the server first");
+            statusText.setFillColor(sf::Color::Red);
+        }
     } else if (currentState == State::SETTINGS) {
         parameters.draw(window);
         backButton.draw(window);
@@ -516,8 +558,32 @@ bool GameManager::shouldClose() const
     return currentState == State::QUIT;
 }
 
+void GameManager::activateEditor(sf::RenderWindow& window)
+{
+    if (!editorState) {
+        editorState = std::make_unique<rtype::editor::EditorState>(window);
+    }
+
+    if (currentState != State::EDITOR) {
+        editorState->onEnter();
+    }
+
+    currentState = State::EDITOR;
+    isChooseMode = false;
+    isEditingUsername = false;
+    statusText.setString("");
+    statusText.setFillColor(sf::Color::Yellow);
+    paramButton.setHovered(false);
+    leaderboard.setHovered(false);
+    editorButton.setHovered(false);
+}
+
 void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow&)
 {
+    if (currentState == State::EDITOR) {
+        return;
+    }
+
     if (event.key.code == sf::Keyboard::Escape) {
         if (currentState == State::SETTINGS) {
             currentState = State::MENU;
@@ -547,22 +613,14 @@ void GameManager::handleKeyPress(sf::Event& event, sf::RenderWindow&)
 void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
     if (event.mouseButton.button != sf::Mouse::Left) return;
 
+    if (currentState == State::EDITOR) {
+        return;
+    }
+
     sf::Vector2i sfMousePos = sf::Mouse::getPosition(window);
     Engine::Utils::Vec2Int mousePos(sfMousePos.x, sfMousePos.y);
 
     if (currentState == State::LAUNCH) {
-        // if (connectToServer("127.0.0.1", 8080)) {
-        //     statusText.setString("Connected to the server !");
-        //     statusText.setFillColor(sf::Color::Green);
-        //     isConnected = ServerState::CONNECT;
-        //     currentState = State::MENU;
-        // } else {
-        //     statusText.setString("Connection failed");
-        //     statusText.setFillColor(sf::Color::Red);
-        //     isConnected = ServerState::DISCONNECT;
-        //     currentState = State::ERRORSERVER;
-        // }
-        isConnected = ServerState::CONNECT;
         currentState = State::MENU;
     } else if (currentState == State::MENU) {
         if (username.isClicked(mousePos)) {
@@ -595,6 +653,10 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             updateStatusTextPosition(true);
             statusText.setString("");
         }
+        if (editorButton.isClicked(mousePos)) {
+            activateEditor(window);
+            return;
+        }
         if (lockerButton.isClicked(mousePos)) {
             currentState = State::LOCKER;
             updateStatusTextPosition(true);
@@ -606,9 +668,24 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             statusText.setString("");
         }
         if (playButton.isClicked(mousePos)) {
-            currentState = State::LOBBY;
-            updateStatusTextPosition(true);
-            statusText.setString("");
+            if (isConnected == ServerState::CONNECT) {
+                currentState = State::LOBBY;
+                updateStatusTextPosition(true);
+                statusText.setString("");
+            } else {
+                if (connectToServer("127.0.0.1", 8080)) {
+                    statusText.setString("Connected to the server !");
+                    statusText.setFillColor(sf::Color::Green);
+                    isConnected = ServerState::CONNECT;
+                    currentState = State::LOBBY;
+                    updateStatusTextPosition(true);
+                    statusText.setString("");
+                } else {
+                    statusText.setString("Connection failed");
+                    statusText.setFillColor(sf::Color::Red);
+                    isConnected = ServerState::DISCONNECT;
+                }
+            }
         }
     } else if (currentState == State::SETTINGS) {
         if (backButton.isClicked(mousePos)) {
@@ -691,6 +768,10 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
     sf::Vector2i sfMousePos = sf::Mouse::getPosition(window);
     Engine::Utils::Vec2Int mousePos(sfMousePos.x, sfMousePos.y);
     
+    if (currentState == State::EDITOR) {
+        return;
+    }
+
     if (currentState == State::MENU) {
         paramButton.setHovered(paramButton.isClicked(mousePos));
         if (isChooseMode) {
@@ -703,6 +784,7 @@ void GameManager::handleMouseMove(sf::RenderWindow& window)
         lockerButton.setHovered(lockerButton.isClicked(mousePos));
         modeButton.setHovered(modeButton.isClicked(mousePos));
         playButton.setHovered(playButton.isClicked(mousePos));
+        editorButton.setHovered(editorButton.isClicked(mousePos));
     } else if (currentState == State::SETTINGS) {
         backButton.setHovered(backButton.isClicked(mousePos));
         fps30Button.setHovered(fps30Button.isClicked(mousePos));

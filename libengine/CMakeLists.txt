@@ -26,7 +26,10 @@ add_library(engine SHARED ${SOURCES})
 
 target_link_libraries(engine PRIVATE $<$<BOOL:${WIN32}>:ws2_32>)
 
-target_include_directories(engine PRIVATE ${Boost_INCLUDE_DIRS})
+target_include_directories(engine
+  PRIVATE ${Boost_INCLUDE_DIRS}
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 target_link_libraries(engine PRIVATE
   Boost::system
   Boost::asio
@@ -34,3 +37,4 @@ target_link_libraries(engine PRIVATE
   Boost::type_index
   pthread
 )
+target_link_libraries(engine PUBLIC nlohmann_json::nlohmann_json)

@@ -42,6 +42,10 @@
 #include "Systems/Animate.hpp"
 #include <chrono>
 
+namespace rtype::editor {
+    class EditorState;
+}
+
 enum class State {
     LAUNCH,
     MENU,
@@ -52,6 +56,7 @@ enum class State {
     ERRORSERVER,
     SETTINGS,
     CONTROLS,
+    EDITOR,
     QUIT
 };
 
@@ -109,6 +114,7 @@ class GameManager {
         Leaderboard trophy;
 
         Button leaderboard;
+    Button editorButton;
 
         sf::Text statusText;
         sf::Text fpsDisplay;
@@ -163,10 +169,11 @@ class GameManager {
     std::string levelWipePreloadSpriteId;
     std::string currentPlayingMusicId;
     std::string levelWipePreloadMusicId;
+        std::unique_ptr<rtype::editor::EditorState> editorState;
     public:
         GameManager(Engine::Utils::Vec2UInt windowSize);
 
-        ~GameManager() = default;
+    ~GameManager();
 
         void handleEvents(sf::RenderWindow& window);
         void update();
@@ -192,6 +199,8 @@ class GameManager {
 
         State getCurrentState() const { return currentState; }
         int getCurrentFps() const { return currentFps; }
+
+        void activateEditor(sf::RenderWindow& window);
         
     private:
         void handleKeyPress(sf::Event& event, sf::RenderWindow& window);

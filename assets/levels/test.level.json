@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "meta": {
+    "name": "Test",
+    "author": "edouard"
+  },
+  "entities": [
+    {
+      "name": "enemy_basic",
+      "layer": "gameplay",
+      "components": {
+        "Transform": {
+          "x": 128,
+          "y": 64,
+          "rot": 0,
+          "scale": 1
+        },
+        "Sprite": {
+          "name": "enemy_basic",
+          "is_background": false
+        }
+      }
+    }
+  ]
+}
