@@ -448,6 +448,7 @@ void GameManager::render(sf::RenderWindow& window) {
         trophy.draw(window);
     } else if (currentState == State::GAME) {
         // window.close();
+        connectToServer("127.0.0.1", 8080);
         gameDemo(window);
         currentState = State::MENU;
     } else if (currentState == State::SETTINGS) {
@@ -496,6 +497,17 @@ void GameManager::render(sf::RenderWindow& window) {
         indicator.setPosition(750, 20);
         window.draw(indicator);
     }
+    // Apply a very transparent overlay based on the selected color-blind mode
+    // and the current level/world so the whole screen gets a subtle tint.
+    {
+        sf::Color overlay = parameters.getOverlayColor(this->currentLevel);
+        if (overlay.a > 0) {
+            sf::RectangleShape overlayRect(sf::Vector2f(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)));
+            overlayRect.setPosition(0.f, 0.f);
+            overlayRect.setFillColor(overlay);
+            window.draw(overlayRect);
+        }
+    }
     window.display();
 }
 
@@ -539,17 +551,19 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
     Engine::Utils::Vec2Int mousePos(sfMousePos.x, sfMousePos.y);
 
     if (currentState == State::LAUNCH) {
-        if (connectToServer("127.0.0.1", 8080)) {
-            statusText.setString("Connected to the server !");
-            statusText.setFillColor(sf::Color::Green);
-            isConnected = ServerState::CONNECT;
-            currentState = State::MENU;
-        } else {
-            statusText.setString("Connection failed");
-            statusText.setFillColor(sf::Color::Red);
-            isConnected = ServerState::DISCONNECT;
-            currentState = State::ERRORSERVER;
-        }
+        // if (connectToServer("127.0.0.1", 8080)) {
+        //     statusText.setString("Connected to the server !");
+        //     statusText.setFillColor(sf::Color::Green);
+        //     isConnected = ServerState::CONNECT;
+        //     currentState = State::MENU;
+        // } else {
+        //     statusText.setString("Connection failed");
+        //     statusText.setFillColor(sf::Color::Red);
+        //     isConnected = ServerState::DISCONNECT;
+        //     currentState = State::ERRORSERVER;
+        // }
+        isConnected = ServerState::CONNECT;
+        currentState = State::MENU;
     } else if (currentState == State::MENU) {
         if (username.isClicked(mousePos)) {
             isEditingUsername = true;
@@ -1159,7 +1173,22 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         }
         
         sound_system->update(audio_player, mediator);
-        render_system->update(renderer, mediator, frameTime);
+
+        render_system->drawBackgrounds(renderer, mediator, frameTime);
+        {
+            sf::Color overlay = parameters.getOverlayColor(this->currentLevel);
+            if (overlay.a > 0 && renderer) {
+                float winW = static_cast<float>(renderer->getWindowWidth());
+                float winH = static_cast<float>(renderer->getWindowHeight());
+                Engine::Utils::Rect rect(0.0f, 0.0f, winW, winH);
+                unsigned int packed = (static_cast<unsigned int>(overlay.r) << 24) |
+                                      (static_cast<unsigned int>(overlay.g) << 16) |
+                                      (static_cast<unsigned int>(overlay.b) << 8)  |
+                                      (static_cast<unsigned int>(overlay.a));
+                renderer->drawRectangle(rect, packed);
+            }
+        }
+        render_system->drawEntities(renderer, mediator, frameTime);
         if (mediator->hasComponent<Engine::Components::GameState>(0)) {
             const auto &g = mediator->getComponent<Engine::Components::GameState>(0);
             if (g.state == static_cast<uint8_t>(Engine::Components::GameStateEnum::GAME_VICTORY)) {
@@ -1319,6 +1348,19 @@ void GameManager::gameDemo(sf::RenderWindow &window)
         }
 
         dev_console_system->update(networkManager, renderer);
+        {
+            sf::Color overlay = parameters.getOverlayColor(this->currentLevel);
+            if (overlay.a > 0 && renderer) {
+                float winW = static_cast<float>(renderer->getWindowWidth());
+                float winH = static_cast<float>(renderer->getWindowHeight());
+                Engine::Utils::Rect rect(0.0f, 0.0f, winW, winH);
+                unsigned int packed = (static_cast<unsigned int>(overlay.r) << 24) |
+                                      (static_cast<unsigned int>(overlay.g) << 16) |
+                                      (static_cast<unsigned int>(overlay.b) << 8)  |
+                                      (static_cast<unsigned int>(overlay.a));
+                renderer->drawRectangle(rect, packed);
+            }
+        }
         renderer->displayWindow();
 
         auto frame_end_time = std::chrono::high_resolution_clock::now();

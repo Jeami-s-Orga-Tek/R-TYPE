@@ -55,6 +55,7 @@ namespace RTypeServer {
 
             int player_nb = 4;
             int current_level = 1;
+            int players_spawned_count = 0;
             int enemies_killed = 0;
             int enemies_to_next_level = 10;
             bool game_over = false;

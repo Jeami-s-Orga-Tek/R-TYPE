@@ -112,25 +112,30 @@ namespace Engine {
                         renderer->drawSprite(sprite_name);
                 }
 
-                void update(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator, float deltaTime = 0.016f) {
+                void drawBackgrounds(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator, float deltaTime = 0.016f) {
                     for (const auto &entity : entities) {
                         auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
 
                         if (entity_sprite.is_background) {
                             const auto &transform = mediator->getComponent<Components::Transform>(entity);
-
                             drawSprite(renderer, entity_sprite, transform, deltaTime);
                         }
                     }
+                }
+
+                void drawEntities(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator, float deltaTime = 0.016f) {
                     for (const auto &entity : entities) {
                         auto &entity_sprite = mediator->getComponent<Components::Sprite>(entity);
 
                         if (!entity_sprite.is_background) {
                             const auto &transform = mediator->getComponent<Components::Transform>(entity);
-
                             drawSprite(renderer, entity_sprite, transform, deltaTime);
                         }
                     }
+                }
+                void update(std::shared_ptr<Engine::Renderer> renderer, std::shared_ptr<Mediator> mediator, float deltaTime = 0.016f) {
+                    drawBackgrounds(renderer, mediator, deltaTime);
+                    drawEntities(renderer, mediator, deltaTime);
                 };
 
             private:

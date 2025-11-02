@@ -325,3 +325,36 @@ sf::Color Parameters::applyColorBlindFilter(const sf::Color& originalColor) cons
             return originalColor;
     }
 }
+
+sf::Color Parameters::getOverlayColor(unsigned int level) const
+{
+    sf::Uint8 alpha = 40;
+    switch (currentColorBlindMode) {
+        case ColorBlindMode::NORMAL:
+            return sf::Color(0, 0, 0, 0);
+        case ColorBlindMode::PROTANOPIA: {
+            sf::Uint8 r = 0;
+            sf::Uint8 g = 180 + (level == 2 ? 30 : 0);
+            sf::Uint8 b = 200 + (level == 2 ? 20 : 0);
+            return sf::Color(r, g, b, alpha);
+        }
+        case ColorBlindMode::DEUTERANOPIA: {
+            sf::Uint8 r = 200 + (level == 2 ? 20 : 0);
+            sf::Uint8 g = 0;
+            sf::Uint8 b = 180 + (level == 2 ? 30 : 0);
+            return sf::Color(r, g, b, alpha);
+        }
+        case ColorBlindMode::TRITANOPIA: {
+            sf::Uint8 r = 220 + (level == 2 ? 10 : 0);
+            sf::Uint8 g = 200 + (level == 2 ? 20 : 0);
+            sf::Uint8 b = 0;
+            return sf::Color(r, g, b, alpha);
+        }
+        case ColorBlindMode::MONOCHROME: {
+            sf::Uint8 a = 80;
+            return sf::Color(0, 0, 0, a);
+        }
+        default:
+            return sf::Color(0, 0, 0, 0);
+    }
+}
