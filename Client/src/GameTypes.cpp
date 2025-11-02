@@ -654,7 +654,9 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
             statusText.setString("");
         }
         if (editorButton.isClicked(mousePos)) {
+            #ifndef _WIN32
             activateEditor(window);
+            #endif
             return;
         }
         if (lockerButton.isClicked(mousePos)) {
