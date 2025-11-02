@@ -1,4 +1,4 @@
-# R‑TYPE — Online Shoot’em Up + Game Engine (C++17)
+# R‑TYPE — Online Shoot’em Up + Game Engine (C++20)
 
 _Multiplayer R‑Type‑like with an in‑house engine (ECS), an authoritative UDP server, and a graphical SFML client._
 
@@ -37,13 +37,13 @@ Project layout (excerpt):
 
 ### Prerequisites (Linux — e.g., Fedora 41)
 ```bash
-sudo dnf install cmake ninja-build gcc-c++ SFML-devel
+sudo dnf install cmake ninja-build gcc-c++
 # Boost is fetched automatically for the server via CPM.cmake
 ```
 
 _Ubuntu/Debian:_
 ```bash
-sudo apt-get install cmake ninja-build g++ libsfml-dev
+sudo apt-get install cmake ninja-build g++
 ```
 
 
@@ -66,24 +66,27 @@ From the **repository root**:
 ```
 
 ### Run the server
+
 ```bash
 ./r-type_server [--ip <bind_ip>] [--port <port>] [--max-players <n>]
 ```
-- `--ip <bind_ip>`: IP address to bind the server (default: 127.0.0.1)
-- `--port <port>`: UDP port to listen on (default: 8080)
-- `--max-players <n>`: Maximum number of players (default: 1)
-- **Authoritative** server (game logic runs server-side).
-- Async I/O loop, session handling, ping/heartbeat.
-- Files: `Server/src/main.cpp`, `Server/src/net/UdpServer.*`, `Server/src/util/Log.hpp`.
+- `--ip <bind_ip>`: IP address to bind the server (default: `127.0.0.1`)
+- `--port <port>`: UDP port to listen on (default: `8080`)
+- `--max-players <n>`: Maximum number of simultaneous players (default: `1`)
+
+- The server is authoritative: all game logic runs server-side.
+- Handles async I/O, session management, and heartbeat/ping.
+- You can run the server on a remote machine and connect clients over the network.
 
 ### Run the client
 ```bash
 ./r-type_client [--ip <server_ip>] [--port <port>]
 ```
-- `--ip <server_ip>`: IP address of the server to connect to (default: 127.0.0.1)
-- `--port <port>`: UDP port of the server (default: 8080)
-- The client connects when clicking **Play** (see `Client/src/GameTypes.cpp`).
-- **Important:** run **from the project root** so it can access `assets/`, `sound/`, `sprite/`.
+- `--ip <server_ip>`: IP address of the server to connect to (default: `127.0.0.1`)
+- `--port <port>`: UDP port of the server (default: `8080`)
+
+- The client connects to the server when you click **Play** in the UI.
+- **Important:** Run the client from the project root so it can access `assets/`, `sound/`, and `sprite/` directories.
 
 ---
 
@@ -111,7 +114,7 @@ From the **repository root**:
 - **Sessions & timeouts:** via heartbeat/ping.
 
 ### Build system
-- **C++17**, **CMake ≥ 3.10**, **Ninja**.
+- **C++20**, **CMake ≥ 3.10**, **Ninja**.
 - **Client:** **SFML 2.6.x** (`sfml-graphics`, `sfml-window`, `sfml-system`).
 - **Server:** **Boost 1.86** (Asio) via **CPM.cmake** (no system-wide install required).
 - **Output:** `CMAKE_RUNTIME_OUTPUT_DIRECTORY = <repo root>` → binaries at the top level.
@@ -146,154 +149,130 @@ From the **repository root**:
 
 ```mermaid
 classDiagram
-direction LR
-class EntityTypedef {
-    +using Entity : uint32_t
-    +using ComponentType : uint16_t
-    +using Signature : bitset~64~
-}
+    direction LR
+    class EntityManager {
+        -available_entities : queue
+        -signatures : array
+        -entity_count : uint32_t
+        +createEntity() Entity
+        +destroyEntity(e: Entity) void
+        +setSignature(e: Entity, s: Signature) void
+        +getSignature(e: Entity) Signature
+    }
+    class ComponentManager {
+        -component_types : unordered_map
+        -component_arrays : unordered_map
+        +registerComponent<T>() void
+        +addComponent<T>(e: Entity, c: T) void
+        +removeComponent<T>(e: Entity) void
+        +getComponent<T>(e: Entity) T
+        +getComponentType<T>() ComponentType
+        +entityDestroyed(e: Entity) void
+    }
+    class SystemManager {
+        +registerSystem<T>() void
+        +setSignature<T>(s: Signature) void
+        +entityDestroyed(e: Entity) void
+        +entitySignatureChanged(e: Entity, s: Signature) void
+    }
+    class Mediator {
+        -entityManager : EntityManager
+        -componentManager : ComponentManager
+        -systemManager : SystemManager
+        -eventManager : EventManager
+        +init() void
+        +createEntity() Entity
+        +destroyEntity(e: Entity) void
+        +addComponent<T>(e: Entity, c: T) void
+        +getComponent<T>(e: Entity) T
+        +getComponentType<T>() ComponentType
+        +setSignature(e: Entity, s: Signature) void
+        +registerSystem<T>() void
+        +setSystemSignature<T>(s: Signature) void
+        +addEventListener(id: uint32_t, fn) void
+        +sendEvent(e: Event) void
+        +sendEventById(id: uint32_t) void
+    }
+    class NetworkManager {
+        -role : string %% "CLIENT" or "SERVER"
+        -ip : string
+        -port : uint16_t
+        -mediator : Mediator
+        +sendEntity(e: Entity, sig: Signature) void
+        +sendComponent<T>(e: Entity, c: T) void
+        +receive() void
+        +connect() void
+        +disconnect() void
+    }
+    class Transform {
+        +pos : Rect
+        +rot : float
+        +scale : float
+    }
+    class Sprite {
+        +sprite_name : string
+        +frame_nb : int
+    }
+    class RigidBody {
+        +velocity : Vec2
+        +acceleration : Vec2
+    }
+    class Gravity {
+        +force : Vec2
+    }
+    class Hitbox {
+        +bounds : Rect
+        +active : bool
+        +layer : int
+        +damage : int
+    }
+    class PlayerInfo {
+        +player_id : uint32_t
+        +health : int
+        +max_health : int
+    }
+    class EnemyInfo {
+        +enemy_type : int
+        +health : int
+    }
+    class Animation {
+        +frames : int
+        +speed : float
+    }
+    class Sound {
+        +sound_name : string
+    }
+    class LevelInfo {
+        +level : int
+    }
+    class GameState {
+        +state : int
+    }
 
-class EntityManager {
-    -available_entities : queue
-    -signatures : array
-    -entity_count : Entity
-    +createEntity() Entity
-    +destroyEntity(e: Entity) void
-    +setSignature(e: Entity, s: Signature) void
-    +getSignature(e: Entity) Signature
-}
-
-class ComponentArrayT~T~ {
-    +insertEntity(e: Entity, c: T) void
-    +removeEntity(e: Entity) void
-    +getComponent(e: Entity) T
-    +entityDestroyed(e: Entity) void
-}
-
-class ComponentManager {
-    -component_types : unordered_map
-    -component_arrays : unordered_map
-    +registerComponentT~T~() void
-    +addComponentT~T~(e: Entity, c: T) void
-    +removeComponentT~T~(e: Entity) void
-    +getComponentT~T~(e: Entity) T
-    +getComponentTypeT~T~() ComponentType
-    +entityDestroyed(e: Entity) void
-}
-
-class SystemManager {
-    +registerSystemT~T~() void
-    +setSignatureT~T~(s: Signature) void
-    +entityDestroyed(e: Entity) void
-    +entitySignatureChanged(e: Entity, s: Signature) void
-}
-
-class Event {
-    +setParamT~T~(id: uint32_t, value: T) void
-    +getParamT~T~(id: uint32_t) T
-}
-
-class EventManager {
-    +addListener(id: uint32_t, fn) void
-    +sendEvent(e: Event) void
-    +sendEventById(id: uint32_t) void
-}
-
-class Mediator {
-    -entityManager : EntityManager
-    -componentManager : ComponentManager
-    -systemManager : SystemManager
-    -eventManager : EventManager
-    +init() void
-    +createEntity() Entity
-    +destroyEntity(e: Entity) void
-    +addComponentT~T~(e: Entity, c: T) void
-    +getComponentT~T~(e: Entity) T
-    +getComponentTypeT~T~() ComponentType
-    +setSignature(e: Entity, s: Signature) void
-    +registerSystemT~T~() void
-    +setSystemSignatureT~T~(s: Signature) void
-    +addEventListener(id: uint32_t, fn) void
-    +sendEvent(e: Event) void
-    +sendEventById(id: uint32_t) void
-}
-
-class Transform {
-}
-
-class RigidBody {
-}
-
-class Hitbox {
-}
-
-class Sprite {
-}
-
-class Sound {
-}
-
-class PhysicsEngine {
-    +step(dt: float) void
-    +addBody(e: Entity, rb: RigidBody) void
-    +removeBody(e: Entity) void
-}
-
-class PhysicsUsingEngineSystem {
-}
-
-class PhysicsNoEngineSystem {
-}
-
-class Protocol {
-    +append_u8(out, v) void
-    +append_u16be(out, v) void
-    +append_u32be(out, v) void
-    +read_u8(data, off, size) uint8
-    +read_u16be(data, off, size) uint16
-    +read_u32be(data, off, size) uint32
-    +writeHelloBody(out, HelloBody) void
-    +readHelloBody(data, size, off) HelloBody
-    +writeWelcomeBody(out, WelcomeBody) void
-    +readWelcomeBody(data, size, off) WelcomeBody
-}
-
-class UdpServer {
-    -socket
-    -remote
-    -rxBuf[1500]
-    -timer
-    -nextPlayerId : uint32
-    -sessions : unordered_map
-    -protocol : Protocol
-    +start_receive() void
-    +handle_receive() void
-    +send_pong(to) void
-    +send_welcome(to, playerId) void
-    +send_ping(to) void
-    +start_heartbeat() void
-}
-
-<<type>> EntityTypedef
-<<template>> ComponentArrayT
-<<interface>> PhysicsEngine
-
-Mediator *-- EntityManager
-Mediator *-- ComponentManager
-Mediator *-- SystemManager
-Mediator *-- EventManager
-ComponentManager o-- ComponentArrayT
-ComponentManager o-- Transform
-ComponentManager o-- RigidBody
-ComponentManager o-- Hitbox
-ComponentManager o-- Sprite
-ComponentManager o-- Sound
-SystemManager o-- PhysicsUsingEngineSystem
-SystemManager o-- PhysicsNoEngineSystem
-PhysicsUsingEngineSystem ..> PhysicsEngine : uses
-PhysicsNoEngineSystem ..> RigidBody : integrates
-UdpServer *-- Protocol
-Mediator o-- UdpServer : events/messages
+    Mediator *-- EntityManager
+    Mediator *-- ComponentManager
+    Mediator *-- SystemManager
+    Mediator *-- EventManager
+    Mediator o-- NetworkManager : network
+    ComponentManager o-- Transform
+    ComponentManager o-- Sprite
+    ComponentManager o-- RigidBody
+    ComponentManager o-- Gravity
+    ComponentManager o-- Hitbox
+    ComponentManager o-- PlayerInfo
+    ComponentManager o-- EnemyInfo
+    ComponentManager o-- Animation
+    ComponentManager o-- Sound
+    ComponentManager o-- LevelInfo
+    ComponentManager o-- GameState
+    SystemManager o-- PlayerControl
+    SystemManager o-- PhysicsNoEngineSystem
+    SystemManager o-- RenderSystem
+    SystemManager o-- EnemySystem
+    SystemManager o-- Collision
+    SystemManager o-- Animate
+    SystemManager o-- SoundSystem
+    SystemManager o-- DevConsole
 ```
 ---
 
