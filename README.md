@@ -67,16 +67,21 @@ From the **repository root**:
 
 ### Run the server
 ```bash
-./r-type_server
+./r-type_server [--ip <bind_ip>] [--port <port>] [--max-players <n>]
 ```
+- `--ip <bind_ip>`: IP address to bind the server (default: 127.0.0.1)
+- `--port <port>`: UDP port to listen on (default: 8080)
+- `--max-players <n>`: Maximum number of players (default: 1)
 - **Authoritative** server (game logic runs server-side).
 - Async I/O loop, session handling, ping/heartbeat.
 - Files: `Server/src/main.cpp`, `Server/src/net/UdpServer.*`, `Server/src/util/Log.hpp`.
 
 ### Run the client
 ```bash
-./r-type_client
+./r-type_client [--ip <server_ip>] [--port <port>]
 ```
+- `--ip <server_ip>`: IP address of the server to connect to (default: 127.0.0.1)
+- `--port <port>`: UDP port of the server (default: 8080)
 - The client connects when clicking **Play** (see `Client/src/GameTypes.cpp`).
 - **Important:** run **from the project root** so it can access `assets/`, `sound/`, `sprite/`.
 

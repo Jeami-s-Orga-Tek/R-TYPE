@@ -50,7 +50,6 @@ int main(const int argc, const char *argv[])
 
     try {
         server.loadEngineLib();
-        //TEMP
         server.startServer(Engine::NetworkManager::Role::SERVER, server_ip, server_port, players_nb);
         server.initEngine();
     } catch (const std::exception &e) {
