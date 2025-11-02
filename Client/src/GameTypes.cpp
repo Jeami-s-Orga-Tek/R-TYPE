@@ -37,7 +37,7 @@
 #include "Components/GameState.hpp"
 #include "editor/EditorState.hpp"
 
-GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
+GameManager::GameManager(Engine::Utils::Vec2UInt windowSize, const std::string &serverIP, uint16_t serverPort)
     : launch(windowSize), parameters(windowSize), controlsConfig(windowSize), lobby(windowSize), errorServer(windowSize), player(windowSize),
       waitingPlayersCounter(1),
       gameMode(GameMode::SOLO),
@@ -51,7 +51,9 @@ GameManager::GameManager(Engine::Utils::Vec2UInt windowSize)
       isConfiguringControls(false),
       currentFps(60),
       isEditingUsername(false),
-      cursorPos(0)
+      cursorPos(0),
+      serverIP(serverIP),
+      serverPort(serverPort)
 {
 
     #if defined(_WIN32)
@@ -675,7 +677,7 @@ void GameManager::handleMouseClick(sf::Event& event, sf::RenderWindow& window) {
                 updateStatusTextPosition(true);
                 statusText.setString("");
             } else {
-                if (connectToServer("127.0.0.1", 8080)) {
+                if (connectToServer(serverIP, serverPort)) {
                     statusText.setString("Connected to the server !");
                     statusText.setFillColor(sf::Color::Green);
                     isConnected = ServerState::CONNECT;

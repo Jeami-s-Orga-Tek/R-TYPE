@@ -7,12 +7,16 @@
 
 #include <exception>
 #include <iostream>
+#include <cstdint>
 
 #include "Server.hpp"
 
 int main(const int argc, const char *argv[])
 {
     int players_nb = 1;
+    std::string server_ip = "127.0.0.1";
+    uint16_t server_port = 8080;
+    
     for (int i = 1; i < argc - 1; ++i) {
         if (std::string(argv[i]) == "--max-players") {
             try {
@@ -25,7 +29,20 @@ int main(const int argc, const char *argv[])
                 std::cerr << "Invalid number of players. 1 or more pls :) " << std::endl;
                 return (84);
             }
-            break;
+        } else if (std::string(argv[i]) == "--ip") {
+            server_ip = std::string(argv[i + 1]);
+        } else if (std::string(argv[i]) == "--port") {
+            try {
+                int port_value = std::stoi(argv[i + 1]);
+                if (port_value < 1 || port_value > 65535) {
+                    std::cerr << "Invalid port number. Must be between 1 and 65535." << std::endl;
+                    return (84);
+                }
+                server_port = static_cast<uint16_t>(port_value);
+            } catch (const std::exception &e) {
+                std::cerr << "Invalid port number: " << e.what() << std::endl;
+                return (84);
+            }
         }
     }
 
@@ -34,7 +51,7 @@ int main(const int argc, const char *argv[])
     try {
         server.loadEngineLib();
         //TEMP
-        server.startServer(Engine::NetworkManager::Role::SERVER, "127.0.0.1", 8080, players_nb);
+        server.startServer(Engine::NetworkManager::Role::SERVER, server_ip, server_port, players_nb);
         server.initEngine();
     } catch (const std::exception &e) {
         std::cerr << "ERROR WHEN INIT SERVER :( : " << e.what() << std::endl;

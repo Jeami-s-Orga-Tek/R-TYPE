@@ -114,7 +114,7 @@ class GameManager {
         Leaderboard trophy;
 
         Button leaderboard;
-    Button editorButton;
+        Button editorButton;
 
         sf::Text statusText;
         sf::Text fpsDisplay;
@@ -138,6 +138,9 @@ class GameManager {
 
         bool isEditingUsername;
         size_t cursorPos;
+        
+        std::string serverIP;
+        uint16_t serverPort;
         std::shared_ptr<Engine::Systems::PhysicsNoEngineSystem> physics_system {};
         std::shared_ptr<Engine::Systems::RenderSystem> render_system {};
         std::shared_ptr<Engine::Systems::PlayerControl> player_control_system {};
@@ -158,22 +161,22 @@ class GameManager {
 
         Engine::LuaLoader luaLoader;
         uint32_t currentLevel = 1;
-    bool levelWipeActive = false;
-    std::chrono::high_resolution_clock::time_point levelWipeStart;
-    float levelWipeDuration = 2.0f;
-    float levelWipeHoldDuration = 0.6f;
-    uint32_t levelWipeTarget = 1;
-    bool levelWipeMidApplied = false;
-    unsigned int levelWipeColor = 0x000000FF;
-    std::string levelWipePreloadTextureId;
-    std::string levelWipePreloadSpriteId;
-    std::string currentPlayingMusicId;
-    std::string levelWipePreloadMusicId;
+        bool levelWipeActive = false;
+        std::chrono::high_resolution_clock::time_point levelWipeStart;
+        float levelWipeDuration = 2.0f;
+        float levelWipeHoldDuration = 0.6f;
+        uint32_t levelWipeTarget = 1;
+        bool levelWipeMidApplied = false;
+        unsigned int levelWipeColor = 0x000000FF;
+        std::string levelWipePreloadTextureId;
+        std::string levelWipePreloadSpriteId;
+        std::string currentPlayingMusicId;
+        std::string levelWipePreloadMusicId;
         std::unique_ptr<rtype::editor::EditorState> editorState;
     public:
-        GameManager(Engine::Utils::Vec2UInt windowSize);
+        GameManager(Engine::Utils::Vec2UInt windowSize, const std::string &serverIP = "127.0.0.1", uint16_t serverPort = 8080);
 
-    ~GameManager();
+        ~GameManager();
 
         void handleEvents(sf::RenderWindow& window);
         void update();
@@ -185,9 +188,10 @@ class GameManager {
         void cycleGraphicsQuality();
         void cycleColorBlindMode();
         void applyCurrentResolution(sf::RenderWindow& window);
-    void startLevelWipe(uint32_t newLevel);
-    void applyLevelMusic(uint32_t level);
-    void applyBackgroundSwap(uint32_t level);
+
+        void startLevelWipe(uint32_t newLevel);
+        void applyLevelMusic(uint32_t level);
+        void applyBackgroundSwap(uint32_t level);
 
         void createMediator();
         void initMediator();
@@ -208,7 +212,7 @@ class GameManager {
         void handleMouseMove(sf::RenderWindow& window);
         void handleWindowResize(sf::Event& event);
         void updateStatusTextPosition(bool isParametersMode = false);
-        bool connectToServer(const std::string& serverIP, unsigned short port);
+        bool connectToServer(const std::string &serverIP, unsigned short port);
 
         sf::Clock gameOverClock;
 };

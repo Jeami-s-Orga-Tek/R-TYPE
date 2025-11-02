@@ -153,15 +153,11 @@ void Example::Game::gameLoop()
     const std::string audio_player_lib_name = "libaudioplayer.so";
     #endif
 
-    {
-        auto createRendererFunc = renderer_loader.getFunction<Engine::Renderer*(*)()>(renderer_lib_name, "createRenderer");
-        renderer = std::shared_ptr<Engine::Renderer>(createRendererFunc());
-    }
+    auto createRendererFunc = renderer_loader.getFunction<Engine::Renderer*(*)()>(renderer_lib_name, "createRenderer");
+    renderer = std::shared_ptr<Engine::Renderer>(createRendererFunc());
 
-    {
-        auto createAudioPlayerFunc = audio_player_loader.getFunction<Engine::AudioPlayer*(*)()>(audio_player_lib_name, "createAudioPlayer");
-        audio_player = std::shared_ptr<Engine::AudioPlayer>(createAudioPlayerFunc());
-    }
+    auto createAudioPlayerFunc = audio_player_loader.getFunction<Engine::AudioPlayer*(*)()>(audio_player_lib_name, "createAudioPlayer");
+    audio_player = std::shared_ptr<Engine::AudioPlayer>(createAudioPlayerFunc());
 
     renderer->createWindow(800, 600, "R du TYPE");
 
@@ -194,8 +190,8 @@ void Example::Game::gameLoop()
     const float x_spacing = 10.0f;
     const float y_spacing = 8.0f;
 
-    for (int row = 0; row < rows; ++row) {
-        for (int col = 0; col < cols; ++col) {
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
             float x = x_offset + col * (brick_width + x_spacing);
             float y = y_offset + row * (brick_height + y_spacing);
             createBrick(x, y);
