@@ -1,5 +1,6 @@
 
 cmake_minimum_required(VERSION 3.10)
+cmake_policy(SET CMP0079 NEW)
 
 project(r-type_client)
 
@@ -26,6 +27,58 @@ if(NOT DEFINED ENV{CPM_SOURCE_CACHE})
 endif()
 
 CPMAddPackage("gh:sfml/sfml#2.6.2")
+
+if(RENDERER STREQUAL "Raylib" OR AUDIOPLAYER STREQUAL "Raylib")
+  find_package(raylib QUIET)
+  if (NOT raylib_FOUND)
+    CPMAddPackage("gh:raysan5/raylib#5.0")
+  endif()
+endif()
+
+if(RENDERER STREQUAL "SDL" OR AUDIOPLAYER STREQUAL "SDL")
+  find_package(SDL2 QUIET)
+  if (NOT SDL2_FOUND)
+    CPMAddPackage(
+      NAME SDL2
+      GITHUB_REPOSITORY libsdl-org/SDL
+      VERSION 2.30.8
+      OPTIONS "SDL2_DISABLE_INSTALL ON"
+    )
+  endif()
+  
+  find_package(SDL2_image QUIET)
+  if (NOT SDL2_image_FOUND)
+    CPMAddPackage(
+      NAME SDL2_image
+      GITHUB_REPOSITORY libsdl-org/SDL_image
+      VERSION 2.8.2
+      OPTIONS "SDL2IMAGE_INSTALL OFF"
+    )
+  endif()
+  
+  find_package(SDL2_ttf QUIET)
+  if (NOT SDL2_ttf_FOUND)
+    CPMAddPackage(
+      NAME SDL2_ttf
+      GITHUB_REPOSITORY libsdl-org/SDL_ttf
+      VERSION 2.22.0
+      OPTIONS "SDL2TTF_INSTALL OFF"
+    )
+  endif()
+  
+  if(AUDIOPLAYER STREQUAL "SDL")
+    find_package(SDL2_mixer QUIET)
+    if (NOT SDL2_mixer_FOUND)
+      CPMAddPackage(
+        NAME SDL2_mixer
+        GITHUB_REPOSITORY libsdl-org/SDL_mixer
+        VERSION 2.8.0
+        OPTIONS "SDL2MIXER_INSTALL OFF"
+      )
+    endif()
+  endif()
+endif()
+
 CPMAddPackage(
   NAME Boost
   VERSION 1.86.0
@@ -65,6 +118,7 @@ if(imgui_ADDED)
       ${imgui_SOURCE_DIR}/imgui_widgets.cpp
       ${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
     )
+    set_target_properties(imgui PROPERTIES POSITION_INDEPENDENT_CODE ON)
     target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${imgui_SOURCE_DIR}/backends)
   endif()
 endif()
@@ -78,6 +132,7 @@ CPMAddPackage(
 
 if(TARGET ImGui-SFML)
   target_include_directories(ImGui-SFML PUBLIC $<BUILD_INTERFACE:${imgui_SOURCE_DIR}>)
+  target_link_libraries(ImGui-SFML PRIVATE imgui)
 endif()
 
 if(lua_ADDED)
